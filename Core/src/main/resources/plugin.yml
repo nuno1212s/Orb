@@ -1,0 +1,18 @@
+name: Core
+main: com.nuno1212s.core.main.Main
+version: 1.0
+author: Nuno1212SsS
+
+commands:
+   group:
+      description: Group commands
+   setcansave:
+      description: Set can save
+   chat:
+      description: Chat options
+   ping:
+      description: Ping options
+   confirm:
+      description: Confirm
+   deny:
+      description: Confirm

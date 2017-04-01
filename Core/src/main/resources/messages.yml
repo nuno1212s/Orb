@@ -1,0 +1,12 @@
+Prefix: '&7[&6Novus&7] '
+Messages:
+  PLAYER_ONLY: '&cApenas jogadores podem realizar esta ação.'
+  #Cash related messages
+  CASH: '&cYou have &6%cashAmount% &ccash'
+  CASH_OTHER: '&cThe player &7%playerName% &chas &6%cashAmount% &ccash'
+  CASH_UPDATED: '&cYou now have &6%cashAmount%&c cash'
+  CASH_UPDATE: "&cYou set &7%player%'s &ccash to &6%cashAmount%"
+  ADDED_CASH: '&cYou received &6%cashAmount% &ccash'
+  ADDED_CASH_TO_PLAYER: '&cYou added &6%cashAmount% &ccash to the player &7%player%'
+  REMOVED_CASH: '&6%cashAmount% &ccash have been removed from your account'
+  REMOVED_CASH_FROM_PLAYER: '&cYou removed &6%cashAmount% &ccash from the player &7%player%'

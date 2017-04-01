@@ -1,0 +1,12 @@
+name: NovusHub
+main: Main
+version: 1.0
+author: Willer
+depend: [NovusCore, Citizens, HolographicDisplays]
+
+commands:
+   servernpc:
+      description: Npc commands
+   spawn:
+      description: tp to spawn
+      aliases: setspawn

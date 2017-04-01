@@ -1,0 +1,20 @@
+Host: localhost
+Username: root
+Database: dbname
+Password: none
+Port: 3306
+
+ServerName: Hub1
+CanSave: false
+
+header:
+   - '&b&lNovus Network &b[BETA]'
+   - '&a&k!!! &eVocê está jogando em &6&lplay.novusmc.net &a&k!!!'
+   - ''
+footer:
+   - ''
+   - '&eTeamSpeak: &fts.novusmc.net'
+   - '&eFórum: &fforum.novusmc.net'
+   - '&eTwitter: &fwww.twitter.com/Novus_MC'
+   - '&eFacebook: &fwww.fb.com/NovusMc'
+   - '&eCash, VIPs e muito mais em &b&lLOJA.NOVUSMC.net!'

@@ -1,0 +1,6 @@
+Scoreboard:
+  Lines: 2
+  Text:
+    1: 'Rank:'
+    0: '%rankName%'
+    -1: '&7[&6Novus&7]'

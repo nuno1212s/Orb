@@ -1,0 +1,6 @@
+*.xml
+!pom.xml
+/target/
+/.settings/
+*.class
+*.jar
