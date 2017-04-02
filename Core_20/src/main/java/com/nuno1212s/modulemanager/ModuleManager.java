@@ -1,9 +1,11 @@
 package com.nuno1212s.modulemanager;
 
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -13,9 +15,12 @@ public class ModuleManager {
 
     private ArrayList<Module> modules;
 
-    File moduleFolder;
+    private File moduleFolder;
+
+    private Plugin enabler;
 
     public ModuleManager(JavaPlugin p) {
+        enabler = p;
         modules = new ArrayList<>();
         moduleFolder = new File(p.getDataFolder() + File.separator + "Modules" + File.separator);
 
@@ -60,7 +65,7 @@ public class ModuleManager {
             List<Module> moduleSorted = new ArrayList<>();
             dep_resolve(modules.get(0), moduleSorted, new ArrayList<>());
             for (Module module : moduleSorted) {
-                module.onEnable();
+                module.onEnable(enabler);
                 module.setEnabled(true);
                 modules.remove(module);
             }
@@ -78,6 +83,11 @@ public class ModuleManager {
         while (!modules.isEmpty()) {
             List<Module> moduleSorted = new ArrayList<>();
             dep_resolve(modules.get(0), moduleSorted, new ArrayList<>());
+            /*
+            We want to reverse the array because if plugin a depends on b,
+            b needs to start first and shutdown after a.
+             */
+            Collections.reverse(moduleSorted);
             for (Module module : moduleSorted) {
                 module.onDisable();
                 module.setEnabled(false);
@@ -88,6 +98,12 @@ public class ModuleManager {
 
     }
 
+    /**
+     * Depth first sorting algorithm
+     * @param a
+     * @param resolved
+     * @param unresolved
+     */
     void dep_resolve(Module a, List<Module> resolved, List<Module> unresolved) {
         unresolved.add(a);
         for (Module m : a.getDependencies()) {

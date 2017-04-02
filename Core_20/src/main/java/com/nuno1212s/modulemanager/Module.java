@@ -3,6 +3,7 @@ package com.nuno1212s.modulemanager;
 import com.nuno1212s.main.Main;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +39,7 @@ public abstract class Module {
         return modules;
     }
 
-    public abstract void onEnable();
+    public abstract void onEnable(Plugin enabler);
 
     public abstract void onDisable();
 

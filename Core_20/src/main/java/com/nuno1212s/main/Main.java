@@ -6,6 +6,7 @@ import com.nuno1212s.modulemanager.ModuleManager;
 import com.nuno1212s.mysql.MySql;
 import com.nuno1212s.permissionmanager.PermissionManager;
 import com.nuno1212s.playermanager.PlayerManager;
+import com.nuno1212s.serverstatus.ServerManager;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -28,16 +29,22 @@ public class Main extends JavaPlugin {
     private PlayerManager playerManager;
 
     @Getter
+    private ServerManager serverManager;
+
+    @Getter
     private MySql mySql;
 
     @Override
     public void onEnable() {
         ins = this;
 
+        this.saveDefaultConfig();
+
         mySql = new MySql(this);
-        moduleManager = new ModuleManager(this);
+        serverManager = new ServerManager(this);
         permissionManager = new PermissionManager();
         playerManager = new PlayerManager();
+        moduleManager = new ModuleManager(this);
 
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerDisconnectListener(), this);
@@ -46,6 +53,7 @@ public class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        serverManager.save();
         moduleManager.disable();
         mySql.closeConnection();
     }

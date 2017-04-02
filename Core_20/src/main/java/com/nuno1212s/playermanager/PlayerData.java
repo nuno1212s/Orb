@@ -2,10 +2,7 @@ package com.nuno1212s.playermanager;
 
 import com.nuno1212s.main.Main;
 import com.nuno1212s.util.Callback;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.bukkit.Bukkit;
 
 import java.util.UUID;
@@ -16,18 +13,19 @@ import java.util.UUID;
 @Getter
 @Setter
 @RequiredArgsConstructor
+@ToString
 public class PlayerData {
 
-    final UUID playerID;
+    protected final UUID playerID;
 
     @NonNull
-    short groupID;
+    protected short groupID;
 
     @NonNull
-    String playerName;
+    protected String playerName;
 
     @NonNull
-    long cash;
+    protected long cash;
 
     /**
      * All classes that extend Player Data and have their independent server groups

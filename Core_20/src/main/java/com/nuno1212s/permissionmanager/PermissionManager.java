@@ -17,14 +17,39 @@ public class PermissionManager {
     private Map<UUID, PermissionAttachment> playerAttachments;
 
     public PermissionManager() {
-        groups = new ArrayList<>();
         playerAttachments = new HashMap<>();
-        //TODO: Load groups from the mysql database
+        groups = Main.getIns().getMySql().getGroups();
+    }
+
+    public static boolean isApplicable(Group g) {
+        return g.getGroupType() == GroupType.GLOBAL
+                ||
+                (g.getGroupType() == GroupType.LOCAL
+                && g.getApplicableServer().equalsIgnoreCase(
+                        Main.getIns().getServerManager().getServerType()));
+    }
+
+    public Group getDefaultGroup() {
+        for (Group group : this.groups) {
+            if (group.isDefaultGroup()) {
+                return group;
+            }
+        }
+        return null;
     }
 
     public Group getGroup(short groupID) {
         for (Group group : this.groups) {
             if (group.getGroupID() == groupID) {
+                return group;
+            }
+        }
+        return null;
+    }
+
+    public Group getGroup(String groupName) {
+        for (Group group : this.groups) {
+            if (group.getGroupName().equalsIgnoreCase(groupName)) {
                 return group;
             }
         }

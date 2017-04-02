@@ -2,6 +2,7 @@ package com.nuno1212s.events;
 
 import com.nuno1212s.playermanager.PlayerData;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
@@ -12,6 +13,7 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 public class CoreLoginEvent extends Event {
 
     @Getter
+    @Setter
     private PlayerData playerInfo;
 
     @Getter

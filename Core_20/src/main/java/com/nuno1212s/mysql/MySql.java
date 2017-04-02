@@ -1,6 +1,9 @@
 package com.nuno1212s.mysql;
 
 import com.nuno1212s.main.Main;
+import com.nuno1212s.permissionmanager.Group;
+import com.nuno1212s.permissionmanager.GroupType;
+import com.nuno1212s.permissionmanager.PermissionManager;
 import com.nuno1212s.playermanager.PlayerData;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -8,9 +11,9 @@ import lombok.Cleanup;
 import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import javax.swing.plaf.nimbus.State;
 import java.sql.*;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Handles mysql database connections
@@ -71,28 +74,28 @@ public class MySql {
     }
 
     public void createTables() {
-        @Cleanup
-        Connection c;
-        try {
-            c = getConnection();
-
-            Statement st = c.createStatement();
+        try (Connection c = getConnection();
+             Statement st = c.createStatement()){
 
             String stm = "CREATE TABLE IF NOT EXISTS playerData(UUID char(40) NOT NULL PRIMARY KEY, " +
                     "GROUPID SMALLINT, " +
-                    "PLAYERNAME varchar(25), " +
+                    "PLAYERNAME varchar(16), " +
+                    "PREMIUM BOOL," +
+                    "LASTIP varchar(255)," +
+                    "LASTLOGIN TIMESTAMP," +
                     "CASH BIGINT)";
 
             st.execute(stm);
 
             String stm2 = "CREATE TABLE IF NOT EXISTS groupData(GROUPID SMALLINT, GROUPNAME varchar(25)," +
                     "PREFIX varchar(32), SUFFIX varchar(32)," +
-                    " SCOREBOARD varchar(32), GROUPTYPE varchar(6)," +
-                    " PERMISSIONS TEXT)";
+                    "SCOREBOARD varchar(32)," +
+                    "ISDEFAULT BOOL," +
+                    "APPLICABLESERVER varchar(25)," +
+                    "GROUPTYPE varchar(6)," +
+                    "PERMISSIONS TEXT)";
 
             st.execute(stm2);
-
-            st.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -101,35 +104,33 @@ public class MySql {
 
     public PlayerData getPlayerData(UUID playerID, String playerName) {
 
-        @Cleanup
-        Connection c;
-
-        try {
-            c = getConnection();
+        try (Connection c = getConnection();
+             PreparedStatement select =
+                     (playerName == null ?
+                             c.prepareStatement("SELECT GROUPID, PLAYERNAME, CASH FROM playerData WHERE UUID=?") :
+                             c.prepareStatement("SELECT GROUPID, CASH FROM playerData WHERE UUID=?"))
+        ) {
             if (playerName == null) {
-                @Cleanup
-                PreparedStatement select = c.prepareStatement("SELECT GROUPID, PLAYERNAME, CASH FROM playerData WHERE UUID=?");
                 select.setString(1, playerID.toString());
-                @Cleanup
-                ResultSet resultSet = select.executeQuery();
-                if (resultSet.next()) {
-                    short groupid = resultSet.getShort("GROUPID");
-                    long cash = resultSet.getLong("CASH");
-                    playerName = resultSet.getString("PLAYERNAME");
-                    return new PlayerData(playerID, groupid, playerName, cash);
+                try (ResultSet resultSet = select.executeQuery()) {
+                    if (resultSet.next()) {
+                        short groupid = resultSet.getShort("GROUPID");
+                        long cash = resultSet.getLong("CASH");
+                        playerName = resultSet.getString("PLAYERNAME");
+                        return new PlayerData(playerID, groupid, playerName, cash);
+                    }
                 }
             } else {
-                @Cleanup
-                PreparedStatement select = c.prepareStatement("SELECT GROUPID, CASH FROM playerData WHERE UUID=?");
                 select.setString(1, playerID.toString());
-                @Cleanup
-                ResultSet resultSet = select.executeQuery();
-                if (resultSet.next()) {
-                    short groupid = resultSet.getShort("GROUPID");
-                    long cash = resultSet.getLong("CASH");
-                    return new PlayerData(playerID, groupid, playerName, cash);
+                try (ResultSet resultSet = select.executeQuery()) {
+                    if (resultSet.next()) {
+                        short groupid = resultSet.getShort("GROUPID");
+                        long cash = resultSet.getLong("CASH");
+                        return new PlayerData(playerID, groupid, playerName, cash);
+                    }
                 }
             }
+
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -140,14 +141,10 @@ public class MySql {
 
     public void savePlayer(PlayerData d) {
 
-        @Cleanup
-        Connection c;
+        try (Connection c = getConnection();
+             PreparedStatement st = c.prepareStatement("INSERT INTO playerData (UUID, GROUPID, PLAYERNAME, CASH) values(?, ?, ?, ?) " +
+                     "ON DUPLICATE KEY UPDATE GROUPID=?, CASH=?, PLAYERNAME=?")) {
 
-        try {
-            c = getConnection();
-
-            PreparedStatement st = c.prepareStatement("INSERT INTO playerData (UUID, GROUPID, PLAYERNAME, CASH) values(?, ?, ?, ?) " +
-                    "ON DUPLICATE KEY UPDATE GROUPID=?, CASH=?, PLAYERNAME=?");
 
             st.setString(1, d.getPlayerID().toString());
             st.setShort(2, d.getGroupID());
@@ -159,11 +156,48 @@ public class MySql {
 
             st.executeUpdate();
 
-            st.close();
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<Group> getGroups() {
+
+        try (Connection c = getConnection();
+             PreparedStatement st = c.prepareStatement("SELECT * FROM groupData");
+             ResultSet resultSet = st.executeQuery()) {
+
+            List<Group> groups = new ArrayList<>();
+
+            while (resultSet.next()) {
+                short groupID = resultSet.getShort("GROUPID");
+                String groupName = resultSet.getString("GROUPNAME");
+                String prefix = resultSet.getString("PREFIX");
+                String suffix = resultSet.getString("SUFFIX");
+                String scoreboardName = resultSet.getString("SCOREBOARD");
+                boolean isDefault = resultSet.getBoolean("ISDEFAULT");
+                String applicableServer = resultSet.getString("APPLICABLESERVER");
+                GroupType type = GroupType.valueOf(resultSet.getString("GROUPTYPE"));
+                String permissions1 = resultSet.getString("PERMISSIONS");
+                List<String> permissions;
+                if (!permissions1.equalsIgnoreCase("")) {
+                    permissions = Arrays.asList(permissions1.split(","));
+                } else {
+                    permissions = new ArrayList<>();
+                }
+                Group e = new Group(groupID, groupName, prefix, suffix, scoreboardName, applicableServer, isDefault, type, permissions);
+                if (PermissionManager.isApplicable(e)) {
+                    groups.add(e);
+                }
+            }
+
+            return groups;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+
     }
 
 }

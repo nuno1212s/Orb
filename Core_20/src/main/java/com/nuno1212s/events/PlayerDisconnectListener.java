@@ -16,6 +16,8 @@ public class PlayerDisconnectListener implements Listener {
     public void onQuit(PlayerQuitEvent e) {
         PlayerData p = Main.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
 
+        Main.getIns().getPermissionManager().unregisterPermissions(e.getPlayer());
+
         p.save(new Callback() {
             @Override
             public void callback(Object... args) {
