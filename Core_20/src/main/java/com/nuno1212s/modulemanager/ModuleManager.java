@@ -1,8 +1,5 @@
 package com.nuno1212s.modulemanager;
 
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.java.JavaPlugin;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,12 +14,10 @@ public class ModuleManager {
 
     private File moduleFolder;
 
-    private Plugin enabler;
+    public ModuleManager(File dataFolder) {
 
-    public ModuleManager(JavaPlugin p) {
-        enabler = p;
         modules = new ArrayList<>();
-        moduleFolder = new File(p.getDataFolder() + File.separator + "Modules" + File.separator);
+        moduleFolder = new File(dataFolder + File.separator + "Modules" + File.separator);
 
         if (!moduleFolder.exists()) {
             moduleFolder.mkdirs();
@@ -65,7 +60,7 @@ public class ModuleManager {
             List<Module> moduleSorted = new ArrayList<>();
             dep_resolve(modules.get(0), moduleSorted, new ArrayList<>());
             for (Module module : moduleSorted) {
-                module.onEnable(enabler);
+                module.onEnable();
                 module.setEnabled(true);
                 modules.remove(module);
             }

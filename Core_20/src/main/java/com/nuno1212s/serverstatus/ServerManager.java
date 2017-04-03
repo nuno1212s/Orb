@@ -20,8 +20,8 @@ public class ServerManager {
 
     private File dataFile;
 
-    public ServerManager(JavaPlugin p) {
-        dataFile = new File(p.getDataFolder(), "serverInfo.json");
+    public ServerManager(File dataFolder) {
+        dataFile = new File(dataFolder, "serverInfo.json");
         if (!dataFile.exists()) {
             try {
                 dataFile.createNewFile();

@@ -1,6 +1,7 @@
 package com.nuno1212s.playermanager;
 
 import com.nuno1212s.main.Main;
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.util.Callback;
 import lombok.*;
 import org.bukkit.Bukkit;
@@ -42,8 +43,8 @@ public class PlayerData {
      * @param c The callback for when it is done saving
      */
     public void save(Callback c) {
-        Bukkit.getServer().getScheduler().runTaskAsynchronously(Main.getIns(), () -> {
-            Main.getIns().getMySql().savePlayer(this);
+        MainData.getIns().getScheduler().runTaskAsync(() -> {
+            MainData.getIns().getMySql().savePlayer(this);
             c.callback();
         });
     }

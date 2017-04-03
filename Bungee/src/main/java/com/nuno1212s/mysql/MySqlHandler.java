@@ -1,6 +1,9 @@
 package com.nuno1212s.mysql;
 
 import com.nuno1212s.confighandler.Config;
+import com.nuno1212s.permissionmanager.Group;
+import com.nuno1212s.permissionmanager.GroupType;
+import com.nuno1212s.permissionmanager.PermissionManager;
 import com.nuno1212s.permissions.PermissionsGroup;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -11,10 +14,7 @@ import com.nuno1212s.permissions.PermissionsGroupManager;
 import com.nuno1212s.playermanager.PlayerData;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class MySqlHandler {
 
@@ -283,6 +283,45 @@ public class MySqlHandler {
         } finally {
             closeConnection(c);
         }
+    }
+
+    public List<Group> getGroups() {
+
+        try (Connection c = getConnection();
+             PreparedStatement st = c.prepareStatement("SELECT * FROM groupData");
+             ResultSet resultSet = st.executeQuery()) {
+
+            List<Group> groups = new ArrayList<>();
+
+            while (resultSet.next()) {
+                short groupID = resultSet.getShort("GROUPID");
+                String groupName = resultSet.getString("GROUPNAME");
+                String prefix = resultSet.getString("PREFIX");
+                String suffix = resultSet.getString("SUFFIX");
+                String scoreboardName = resultSet.getString("SCOREBOARD");
+                boolean isDefault = resultSet.getBoolean("ISDEFAULT");
+                String applicableServer = resultSet.getString("APPLICABLESERVER");
+                GroupType type = GroupType.valueOf(resultSet.getString("GROUPTYPE"));
+                String permissions1 = resultSet.getString("PERMISSIONS");
+                List<String> permissions;
+                if (!permissions1.equalsIgnoreCase("")) {
+                    permissions = Arrays.asList(permissions1.split(","));
+                } else {
+                    permissions = new ArrayList<>();
+                }
+                Group e = new Group(groupID, groupName, prefix, suffix, scoreboardName, applicableServer, isDefault, type, permissions);
+                if (PermissionManager.isApplicable(e)) {
+                    groups.add(e);
+                }
+            }
+
+            return groups;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+
     }
 
     public List<PermissionsGroup> loadGroups() {

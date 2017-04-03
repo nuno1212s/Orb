@@ -1,17 +1,13 @@
 package com.nuno1212s.mysql;
 
-import com.nuno1212s.main.Main;
+import com.nuno1212s.config.Config;
 import com.nuno1212s.permissionmanager.Group;
 import com.nuno1212s.permissionmanager.GroupType;
 import com.nuno1212s.permissionmanager.PermissionManager;
 import com.nuno1212s.playermanager.PlayerData;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import lombok.Cleanup;
-import lombok.Getter;
-import org.bukkit.configuration.file.FileConfiguration;
 
-import javax.swing.plaf.nimbus.State;
 import java.sql.*;
 import java.util.*;
 
@@ -26,11 +22,7 @@ public class MySql {
 
     private HikariDataSource dataSource;
 
-    private Main m;
-
-    public MySql(Main m) {
-        this.m = m;
-        FileConfiguration config = this.m.getConfig();
+    public MySql(Config config) {
         this.host = config.getString("Host");
         this.username = config.getString("Username");
         this.database = config.getString("Database");

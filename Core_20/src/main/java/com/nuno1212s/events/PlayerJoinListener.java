@@ -1,6 +1,6 @@
 package com.nuno1212s.events;
 
-import com.nuno1212s.main.Main;
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -21,22 +21,22 @@ public class PlayerJoinListener implements Listener {
      */
     @EventHandler
     public void onPlayerLogin(AsyncPlayerPreLoginEvent e) {
-        PlayerData coreData = Main.getIns().getMySql().getPlayerData(e.getUniqueId(), e.getName());
+        PlayerData coreData = MainData.getIns().getMySql().getPlayerData(e.getUniqueId(), e.getName());
         if (coreData == null) {
-            coreData = new PlayerData(e.getUniqueId(), Main.getIns().getPermissionManager().getDefaultGroup().getGroupID(), e.getName(), 0);
+            coreData = new PlayerData(e.getUniqueId(), MainData.getIns().getPermissionManager().getDefaultGroup().getGroupID(), e.getName(), 0);
         }
         CoreLoginEvent event = new CoreLoginEvent(e, coreData);
         Bukkit.getServer().getPluginManager().callEvent(event);
         //After the event being called, all the modules had the opportunity to modify the player data class
         PlayerData finalData = event.getPlayerInfo();
         System.out.println(finalData);
-        Main.getIns().getPlayerManager().addToCache(e.getUniqueId(), finalData);
+        MainData.getIns().getPlayerManager().addToCache(e.getUniqueId(), finalData);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoin(PlayerJoinEvent e) {
-        Main.getIns().getPlayerManager().validatePlayerJoin(e.getPlayer().getUniqueId());
-        Main.getIns().getPermissionManager().injectPermission(e.getPlayer());
+        MainData.getIns().getPlayerManager().validatePlayerJoin(e.getPlayer().getUniqueId());
+        MainData.getIns().getPermissionManager().getPlayerPermissions().injectPermission(e.getPlayer());
     }
 
 }

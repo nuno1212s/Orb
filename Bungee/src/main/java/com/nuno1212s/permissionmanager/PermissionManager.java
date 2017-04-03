@@ -1,9 +1,8 @@
 package com.nuno1212s.permissionmanager;
 
-import com.nuno1212s.main.MainData;
-import lombok.Getter;
+import com.nuno1212s.mysql.MySqlHandler;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * Handles permissions
@@ -12,25 +11,12 @@ public class PermissionManager {
 
     private List<Group> groups;
 
-    @Getter
-    private PlayerPermissions playerPermissions;
-
-
-    public PermissionManager(boolean bukkit) {
-        groups = MainData.getIns().getMySql().getGroups();
-
-        if (bukkit) {
-            this.playerPermissions = new PlayerPermissions();
-        }
-
+    public PermissionManager() {
+        groups = MySqlHandler.getIns().getGroups();
     }
 
     public static boolean isApplicable(Group g) {
-        return g.getGroupType() == GroupType.GLOBAL
-                ||
-                (g.getGroupType() == GroupType.LOCAL
-                && g.getApplicableServer().equalsIgnoreCase(
-                        MainData.getIns().getServerManager().getServerType()));
+        return g.getGroupType() == GroupType.GLOBAL;
     }
 
     public Group getDefaultGroup() {
@@ -59,7 +45,5 @@ public class PermissionManager {
         }
         return null;
     }
-
-
 
 }

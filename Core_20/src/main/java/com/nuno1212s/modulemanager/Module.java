@@ -1,9 +1,8 @@
 package com.nuno1212s.modulemanager;
 
-import com.nuno1212s.main.Main;
+import com.nuno1212s.main.MainData;
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +27,7 @@ public abstract class Module {
 
     public List<Module> getDependencies() {
         ArrayList<Module> modules = new ArrayList<>();
-        ModuleManager ins = Main.getIns().getModuleManager();
+        ModuleManager ins = MainData.getIns().getModuleManager();
         for (String dependency : this.dependencies) {
             Module module = ins.getModule(dependency);
             if (module == null) {
@@ -39,7 +38,7 @@ public abstract class Module {
         return modules;
     }
 
-    public abstract void onEnable(Plugin enabler);
+    public abstract void onEnable();
 
     public abstract void onDisable();
 
