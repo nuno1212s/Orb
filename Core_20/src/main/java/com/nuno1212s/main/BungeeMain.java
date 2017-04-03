@@ -36,6 +36,9 @@ public class BungeeMain extends Plugin {
 
     @Override
     public void onDisable() {
-
+        MainData ins = MainData.getIns();
+        ins.getServerManager().save();
+        ins.getModuleManager().disable();
+        ins.getMySql().closeConnection();
     }
 }

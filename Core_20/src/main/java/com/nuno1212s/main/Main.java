@@ -44,9 +44,10 @@ public class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        /*serverManager.save();
-        moduleManager.disable();
-        mySql.closeConnection();*/
+        MainData ins = MainData.getIns();
+        ins.getServerManager().save();
+        ins.getModuleManager().disable();
+        ins.getMySql().closeConnection();
     }
 
 }

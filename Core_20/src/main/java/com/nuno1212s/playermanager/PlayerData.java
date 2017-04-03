@@ -1,10 +1,8 @@
 package com.nuno1212s.playermanager;
 
-import com.nuno1212s.main.Main;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.util.Callback;
 import lombok.*;
-import org.bukkit.Bukkit;
 
 import java.util.UUID;
 
@@ -27,6 +25,8 @@ public class PlayerData {
 
     @NonNull
     protected long cash;
+
+    protected long lastLogin;
 
     /**
      * All classes that extend Player Data and have their independent server groups
