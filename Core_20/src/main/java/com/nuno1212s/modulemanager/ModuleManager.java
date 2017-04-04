@@ -1,6 +1,9 @@
 package com.nuno1212s.modulemanager;
 
+import lombok.Getter;
+
 import java.io.File;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -12,10 +15,14 @@ public class ModuleManager {
 
     private ArrayList<Module> modules;
 
+    @Getter
     private File moduleFolder;
+
+    private GlobalClassLoader loader;
 
     public ModuleManager(File dataFolder) {
 
+        loader = new GlobalClassLoader();
         modules = new ArrayList<>();
         moduleFolder = new File(dataFolder + File.separator + "Modules" + File.separator);
 
@@ -31,7 +38,12 @@ public class ModuleManager {
 
         for (File file : files) {
             if (file.getName().endsWith(".jar")) {
-                ModuleLoader moduleLoader = new ModuleLoader(file);
+                ModuleLoader moduleLoader = null;
+                try {
+                    moduleLoader = new ModuleLoader(file, this.getClass().getClassLoader(), this.loader);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
                 moduleLoader.load();
                 Module module = moduleLoader.getMainClass();
                 modules.add(module);
@@ -85,6 +97,7 @@ public class ModuleManager {
             Collections.reverse(moduleSorted);
             for (Module module : moduleSorted) {
                 module.onDisable();
+                module.disable();
                 module.setEnabled(false);
                 modules.remove(module);
             }

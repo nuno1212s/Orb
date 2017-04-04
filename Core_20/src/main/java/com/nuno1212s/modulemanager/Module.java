@@ -4,6 +4,7 @@ import com.nuno1212s.main.MainData;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,19 @@ public abstract class Module {
     @Setter
     boolean enabled;
 
+    @Setter
+    @Getter
+    private ModuleLoader initLoader;
+
+    public File getDataFolder() {
+        File moduleFolder = MainData.getIns().getDataFolder();
+        File dataFolder = new File(moduleFolder + File.separator + this.moduleName + File.separator);
+        if (!dataFolder.exists()) {
+            dataFolder.mkdirs();
+        }
+        return dataFolder;
+    }
+
     public List<Module> getDependencies() {
         ArrayList<Module> modules = new ArrayList<>();
         ModuleManager ins = MainData.getIns().getModuleManager();
@@ -36,6 +50,10 @@ public abstract class Module {
             modules.add(module);
         }
         return modules;
+    }
+
+    public void disable() {
+        this.initLoader.shutdown();
     }
 
     public abstract void onEnable();

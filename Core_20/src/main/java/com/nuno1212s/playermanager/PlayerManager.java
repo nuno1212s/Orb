@@ -24,6 +24,10 @@ public class PlayerManager {
         this.cache.put(player, coreData);
     }
 
+    public PlayerData getCachedPlayer(UUID player) {
+        return (PlayerData) this.cache.get(player);
+    }
+
     public void validatePlayerJoin(UUID player) {
         PlayerData playerInfo = (PlayerData) this.cache.get(player);
         this.cache.remove(player);
@@ -38,6 +42,17 @@ public class PlayerManager {
         synchronized (players) {
             for (PlayerData player : players) {
                 if (player.getPlayerID().equals(playerID)) {
+                    return player;
+                }
+            }
+        }
+        return null;
+    }
+
+    public PlayerData getPlayer(String playerName) {
+        synchronized (players) {
+            for (PlayerData player : players) {
+                if (player.getPlayerName().equals(playerName)) {
                     return player;
                 }
             }

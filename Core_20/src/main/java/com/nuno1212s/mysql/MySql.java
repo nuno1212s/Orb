@@ -67,14 +67,14 @@ public class MySql {
 
     public void createTables() {
         try (Connection c = getConnection();
-             Statement st = c.createStatement()){
+             Statement st = c.createStatement()) {
 
             String stm = "CREATE TABLE IF NOT EXISTS playerData(UUID char(40) NOT NULL PRIMARY KEY, " +
                     "GROUPID SMALLINT, " +
                     "PLAYERNAME varchar(16), " +
                     "PREMIUM BOOL," +
-                    "LASTIP varchar(255)," +
                     "LASTLOGIN TIMESTAMP," +
+                    "TELL BOOL," +
                     "CASH BIGINT)";
 
             st.execute(stm);
@@ -99,8 +99,8 @@ public class MySql {
         try (Connection c = getConnection();
              PreparedStatement select =
                      (playerName == null ?
-                             c.prepareStatement("SELECT GROUPID, PLAYERNAME, CASH FROM playerData WHERE UUID=?") :
-                             c.prepareStatement("SELECT GROUPID, CASH FROM playerData WHERE UUID=?"))
+                             c.prepareStatement("SELECT GROUPID, PLAYERNAME, CASH, PREMIUM, LASTLOGIN, TELL FROM playerData WHERE UUID=?") :
+                             c.prepareStatement("SELECT GROUPID, CASH, PREMIUM, LASTLOGIN, TELL FROM playerData WHERE UUID=?"))
         ) {
             if (playerName == null) {
                 select.setString(1, playerID.toString());
@@ -109,7 +109,12 @@ public class MySql {
                         short groupid = resultSet.getShort("GROUPID");
                         long cash = resultSet.getLong("CASH");
                         playerName = resultSet.getString("PLAYERNAME");
-                        return new PlayerData(playerID, groupid, playerName, cash);
+                        boolean premium = resultSet.getBoolean("PREMIUM");
+                        long lastLogin = resultSet.getDate("LASTLOGIN").getTime();
+                        boolean tell = resultSet.getBoolean("TELL");
+                        PlayerData playerData = new PlayerData(playerID, groupid, playerName, cash, lastLogin, premium);
+                        playerData.setTell(tell);
+                        return playerData;
                     }
                 }
             } else {
@@ -118,7 +123,12 @@ public class MySql {
                     if (resultSet.next()) {
                         short groupid = resultSet.getShort("GROUPID");
                         long cash = resultSet.getLong("CASH");
-                        return new PlayerData(playerID, groupid, playerName, cash);
+                        boolean premium = resultSet.getBoolean("PREMIUM");
+                        long lastLogin = resultSet.getDate("LASTLOGIN").getTime();
+                        boolean tell = resultSet.getBoolean("TELL");
+                        PlayerData playerData = new PlayerData(playerID, groupid, playerName, cash, lastLogin, premium);
+                        playerData.setTell(tell);
+                        return playerData;
                     }
                 }
             }
@@ -131,20 +141,54 @@ public class MySql {
         return null;
     }
 
+    public PlayerData getPlayerData(String playerName) {
+
+        try (Connection c = getConnection();
+             PreparedStatement select =
+                     c.prepareStatement("SELECT UUID, GROUPID, PLAYERNAME, CASH, PREMIUM, LASTLOGIN FROM playerData WHERE playerName=?")
+        ) {
+            select.setString(1, playerName);
+            try (ResultSet resultSet = select.executeQuery()) {
+                if (resultSet.next()) {
+                    UUID playerID = UUID.fromString(resultSet.getString("UUID"));
+                    short groupid = resultSet.getShort("GROUPID");
+                    long cash = resultSet.getLong("CASH");
+                    boolean premium = resultSet.getBoolean("PREMIUM");
+                    long lastLogin = resultSet.getDate("LASTLOGIN").getTime();
+                    boolean tell = resultSet.getBoolean("TELL");
+                    PlayerData playerData = new PlayerData(playerID, groupid, playerName, cash, lastLogin, premium);
+                    playerData.setTell(tell);
+                    return playerData;
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     public void savePlayer(PlayerData d) {
 
         try (Connection c = getConnection();
-             PreparedStatement st = c.prepareStatement("INSERT INTO playerData (UUID, GROUPID, PLAYERNAME, CASH) values(?, ?, ?, ?) " +
-                     "ON DUPLICATE KEY UPDATE GROUPID=?, CASH=?, PLAYERNAME=?")) {
+             PreparedStatement st = c.prepareStatement("INSERT INTO playerData (UUID, GROUPID, PLAYERNAME, CASH, PREMIUM, LASTLOGIN, TELL) values(?, ?, ?, ?, ?, ?, ?) " +
+                     "ON DUPLICATE KEY UPDATE GROUPID=?, CASH=?, PLAYERNAME=?, LASTLOGIN=?, PREMIUM=?, TELL=?")) {
 
 
             st.setString(1, d.getPlayerID().toString());
             st.setShort(2, d.getGroupID());
             st.setString(3, d.getPlayerName());
             st.setLong(4, d.getCash());
-            st.setShort(5, d.getGroupID());
-            st.setLong(6, d.getCash());
-            st.setString(7, d.getPlayerName());
+            st.setBoolean(5, d.isPremium());
+            st.setString(6, "CURRENT_TIMESTAMP");
+            st.setBoolean(7, d.isTell());
+            st.setShort(8, d.getGroupID());
+            st.setLong(9, d.getCash());
+            st.setString(10, d.getPlayerName());
+            st.setString(11, "CURRENT_TIMESTAMP");
+            st.setBoolean(12, d.isPremium());
+            st.setBoolean(13, d.isTell());
 
             st.executeUpdate();
 

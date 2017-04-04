@@ -1,16 +1,16 @@
 package com.nuno1212s.modulemanager;
 
+import com.nuno1212s.config.BukkitConfig;
+import com.nuno1212s.config.BungeeConfig;
+import com.nuno1212s.config.Config;
+import com.nuno1212s.main.MainData;
 import lombok.Cleanup;
 import lombok.Getter;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.jar.JarFile;
@@ -19,15 +19,19 @@ import java.util.zip.ZipEntry;
 /**
  * Loads a module
  */
-public class ModuleLoader {
+public class ModuleLoader extends URLClassLoader {
 
     File moduleFile;
 
     @Getter
     Module mainClass;
 
-    public ModuleLoader(File moduleFile) {
+    private GlobalClassLoader globalLoader;
+
+    public ModuleLoader(File moduleFile, ClassLoader loader, GlobalClassLoader mainLoader) throws MalformedURLException {
+        super(new URL[]{moduleFile.toURI().toURL()}, loader);
         this.moduleFile = moduleFile;
+        this.globalLoader = mainLoader;
     }
 
     public void load() {
@@ -39,8 +43,11 @@ public class ModuleLoader {
             }
             @Cleanup
             InputStream stream = file.getInputStream(entry);
-            YamlConfiguration yamlConfiguration = YamlConfiguration.loadConfiguration(new InputStreamReader(stream));
-            getMainClass(yamlConfiguration);
+            if (MainData.getIns().isBungee()) {
+                getMainClass(new BungeeConfig(stream));
+            } else {
+                getMainClass(new BukkitConfig(stream));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -54,14 +61,50 @@ public class ModuleLoader {
         mainClass.setDependencies(annotation.dependencies());
     }
 
-    public void getMainClass(YamlConfiguration yml) {
+    public void getMainClass(Config yml) {
         String mainClassPath = yml.getString("MainClass");
 
-        try (URLClassLoader loader = new URLClassLoader(new URL[]{moduleFile.toURL()}, this.getClass().getClassLoader())){
-            Class toLoad = Class.forName(mainClassPath, true, loader);
+        try {
+            Class toLoad = Class.forName(mainClassPath, true, this);
             Object mainClass = toLoad.newInstance();
             setMainClass(mainClass);
-        } catch (IOException | ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected Class<?> findClass(String name) throws ClassNotFoundException {
+        return find(name);
+    }
+
+    private Class<?> find(String className) {
+
+        Class<?> result = null;
+
+        result = this.globalLoader.getClass(className);
+
+        if (result != null) {
+            return result;
+        }
+
+        try {
+            result = super.findClass(className);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        if (result != null) {
+            this.globalLoader.setClass(className, result);
+        }
+
+        return result;
+    }
+
+    public void shutdown() {
+        try {
+            this.close();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

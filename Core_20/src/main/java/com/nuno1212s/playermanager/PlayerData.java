@@ -15,18 +15,27 @@ import java.util.UUID;
 @ToString
 public class PlayerData {
 
-    protected final UUID playerID;
+    @NonNull
+    @Setter
+    protected UUID playerID;
 
     @NonNull
     protected short groupID;
 
     @NonNull
+    @Setter
     protected String playerName;
 
     @NonNull
     protected long cash;
 
+    @NonNull
     protected long lastLogin;
+
+    @NonNull
+    protected boolean premium;
+
+    protected boolean tell;
 
     /**
      * All classes that extend Player Data and have their independent server groups

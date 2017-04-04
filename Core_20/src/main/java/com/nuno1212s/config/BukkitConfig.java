@@ -1,6 +1,10 @@
 package com.nuno1212s.config;
 
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+
+import java.io.File;
+import java.io.InputStream;
 
 /**
  * Handles bukkit config
@@ -11,6 +15,14 @@ public class BukkitConfig extends Config {
 
     public BukkitConfig(FileConfiguration config) {
         this.config = config;
+    }
+
+    public BukkitConfig(File f) {
+        this.config = YamlConfiguration.loadConfiguration(f);
+    }
+
+    public BukkitConfig(InputStream stream) {
+        this.config = YamlConfiguration.loadConfiguration(stream);
     }
 
     @Override

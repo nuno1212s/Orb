@@ -7,6 +7,7 @@ import com.nuno1212s.permissionmanager.PermissionManager;
 import com.nuno1212s.playermanager.PlayerManager;
 import com.nuno1212s.scheduler.BungeeScheduler;
 import com.nuno1212s.serverstatus.ServerManager;
+import lombok.Getter;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.io.File;
@@ -16,9 +17,14 @@ import java.io.File;
  */
 public class BungeeMain extends Plugin {
 
+    @Getter
+    static BungeeMain ins;
+
     @Override
     public void onEnable() {
+        ins = this;
         MainData main = new MainData();
+        main.setBungee(true);
         if (!this.getDataFolder().exists()) {
             this.getDataFolder().mkdirs();
         }
@@ -32,6 +38,7 @@ public class BungeeMain extends Plugin {
         main.setPlayerManager(new PlayerManager());
         main.setModuleManager(new ModuleManager(this.getDataFolder()));
         main.setScheduler(new BungeeScheduler(this.getProxy().getScheduler(), this));
+        main.setDataFolder(this.getDataFolder());
     }
 
     @Override

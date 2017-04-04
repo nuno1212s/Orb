@@ -14,6 +14,12 @@ public class BungeeConfig extends Config {
 
     Configuration c;
 
+    public BungeeConfig(InputStream stream) {
+
+        c = ConfigurationProvider.getProvider(YamlConfiguration.class).load(stream);
+
+    }
+
     public BungeeConfig(Plugin p, File config) {
 
         if (!config.exists()) {

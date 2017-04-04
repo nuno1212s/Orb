@@ -10,6 +10,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.File;
+
 /**
  * MainM class
  */
@@ -42,10 +44,17 @@ public class MainData {
     @Setter(value = AccessLevel.PROTECTED)
     private Scheduler scheduler;
 
+    @Getter
+    @Setter(value = AccessLevel.PROTECTED)
+    private File dataFolder;
+
+    @Getter
+    @Setter(value = AccessLevel.PROTECTED)
+    private boolean isBungee = false;
+
     public MainData() {
         ins = this;
     }
-
 
 
 }
