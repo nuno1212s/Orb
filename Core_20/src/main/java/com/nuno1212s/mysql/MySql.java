@@ -145,7 +145,7 @@ public class MySql {
 
         try (Connection c = getConnection();
              PreparedStatement select =
-                     c.prepareStatement("SELECT UUID, GROUPID, PLAYERNAME, CASH, PREMIUM, LASTLOGIN FROM playerData WHERE playerName=?")
+                     c.prepareStatement("SELECT UUID, GROUPID, PLAYERNAME, CASH, PREMIUM, LASTLOGIN, TELL FROM playerData WHERE playerName=?")
         ) {
             select.setString(1, playerName);
             try (ResultSet resultSet = select.executeQuery()) {
@@ -172,8 +172,8 @@ public class MySql {
     public void savePlayer(PlayerData d) {
 
         try (Connection c = getConnection();
-             PreparedStatement st = c.prepareStatement("INSERT INTO playerData (UUID, GROUPID, PLAYERNAME, CASH, PREMIUM, LASTLOGIN, TELL) values(?, ?, ?, ?, ?, ?, ?) " +
-                     "ON DUPLICATE KEY UPDATE GROUPID=?, CASH=?, PLAYERNAME=?, LASTLOGIN=?, PREMIUM=?, TELL=?")) {
+             PreparedStatement st = c.prepareStatement("INSERT INTO playerData (UUID, GROUPID, PLAYERNAME, CASH, PREMIUM, LASTLOGIN, TELL) values(?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?) " +
+                     "ON DUPLICATE KEY UPDATE GROUPID=?, CASH=?, PLAYERNAME=?, LASTLOGIN=CURRENT_TIMESTAMP, PREMIUM=?, TELL=?")) {
 
 
             st.setString(1, d.getPlayerID().toString());
@@ -181,14 +181,12 @@ public class MySql {
             st.setString(3, d.getPlayerName());
             st.setLong(4, d.getCash());
             st.setBoolean(5, d.isPremium());
-            st.setString(6, "CURRENT_TIMESTAMP");
-            st.setBoolean(7, d.isTell());
-            st.setShort(8, d.getGroupID());
-            st.setLong(9, d.getCash());
-            st.setString(10, d.getPlayerName());
-            st.setString(11, "CURRENT_TIMESTAMP");
-            st.setBoolean(12, d.isPremium());
-            st.setBoolean(13, d.isTell());
+            st.setBoolean(6, d.isTell());
+            st.setShort(7, d.getGroupID());
+            st.setLong(8, d.getCash());
+            st.setString(9, d.getPlayerName());
+            st.setBoolean(10, d.isPremium());
+            st.setBoolean(11, d.isTell());
 
             st.executeUpdate();
 

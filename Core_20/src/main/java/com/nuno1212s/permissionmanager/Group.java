@@ -35,4 +35,25 @@ public class Group {
 
     }
 
+    public boolean hasPermission(String permission) {
+        String mainPermissionBody = permission.contains(".") ? permission.split(".")[0] : permission;
+        String secondaryPermissionBody = permission.contains(".") ? permission.split(".")[1] : null;
+        for (String s : this.permissions) {
+            if (s.contains(".")) {
+                if (s.split(".")[0].equalsIgnoreCase(mainPermissionBody)) {
+                    String scnd = s.split(".")[1];
+
+                    if (scnd.equals("*")) {
+                        return true;
+                    }
+
+                    return scnd.equalsIgnoreCase(secondaryPermissionBody);
+                }
+            } else {
+                return s.equalsIgnoreCase(permission);
+            }
+        }
+        return false;
+    }
+
 }

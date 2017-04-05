@@ -23,7 +23,7 @@ public class PlayerJoinListener implements Listener {
     public void onPlayerLogin(AsyncPlayerPreLoginEvent e) {
         PlayerData coreData = MainData.getIns().getMySql().getPlayerData(e.getUniqueId(), e.getName());
         if (coreData == null) {
-            coreData = new PlayerData(e.getUniqueId(), MainData.getIns().getPermissionManager().getDefaultGroup().getGroupID(), e.getName(), 0);
+            coreData = new PlayerData(e.getUniqueId(), MainData.getIns().getPermissionManager().getDefaultGroup().getGroupID(), e.getName(), 0, System.currentTimeMillis(), true);
         }
         CoreLoginEvent event = new CoreLoginEvent(e, coreData);
         Bukkit.getServer().getPluginManager().callEvent(event);

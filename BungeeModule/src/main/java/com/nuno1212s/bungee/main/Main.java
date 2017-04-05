@@ -2,11 +2,14 @@ package com.nuno1212s.bungee.main;
 
 import com.google.common.cache.CacheBuilder;
 import com.nuno1212s.bungee.events.LoginEvent;
+import com.nuno1212s.bungee.events.PermissionCheckListener;
 import com.nuno1212s.bungee.events.PluginMessage;
 import com.nuno1212s.bungee.events.QuitEvent;
 import com.nuno1212s.bungee.loginhandler.MojangAPIConnector;
 import com.nuno1212s.bungee.loginhandler.events.PlayerLoginEvent;
 import com.nuno1212s.bungee.loginhandler.events.PluginMessageListener;
+import com.nuno1212s.bungee.motd.MOTDCommand;
+import com.nuno1212s.bungee.motd.ServerMOTD;
 import com.nuno1212s.config.BungeeConfig;
 import com.nuno1212s.config.Config;
 import com.nuno1212s.main.BungeeMain;
@@ -36,6 +39,9 @@ public class Main extends Module {
     @Getter
     private MojangAPIConnector connector;
 
+    @Getter
+    private ServerMOTD motdManager;
+
     @Override
     public void onEnable() {
         ins = this;
@@ -43,11 +49,16 @@ public class Main extends Module {
 
         Config c = new BungeeConfig(BungeeMain.getIns(), new File(this.getDataFolder(), "config.yml"));
 
+        motdManager = new ServerMOTD(this.getDataFolder());
+        getProxy().getPluginManager().registerListener(plugin, motdManager);
         getProxy().getPluginManager().registerListener(plugin, new LoginEvent());
         getProxy().getPluginManager().registerListener(plugin, new PlayerLoginEvent(this));
         getProxy().getPluginManager().registerListener(plugin, new PluginMessageListener());
         getProxy().getPluginManager().registerListener(plugin, new QuitEvent());
         getProxy().getPluginManager().registerListener(plugin, new PluginMessage());
+        getProxy().getPluginManager().registerListener(plugin, new PermissionCheckListener());
+
+        getProxy().getPluginManager().registerCommand(plugin, new MOTDCommand());
 
         ConcurrentMap<Object, Object> requestCache = CacheBuilder.newBuilder()
                 .expireAfterWrite(10, TimeUnit.MINUTES).build().asMap();
@@ -62,7 +73,6 @@ public class Main extends Module {
         getProxy().registerChannel("TELLINFO");
         getProxy().registerChannel("GROUPUPDATE");
 
-
     }
 
     private ProxyServer getProxy() {
@@ -71,6 +81,6 @@ public class Main extends Module {
 
     @Override
     public void onDisable() {
-
+        this.motdManager.save();
     }
 }

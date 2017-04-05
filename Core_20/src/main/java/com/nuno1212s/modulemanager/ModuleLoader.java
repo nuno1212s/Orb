@@ -32,6 +32,7 @@ public class ModuleLoader extends URLClassLoader {
         super(new URL[]{moduleFile.toURI().toURL()}, loader);
         this.moduleFile = moduleFile;
         this.globalLoader = mainLoader;
+        this.globalLoader.addLoader(this);
     }
 
     public void load() {
@@ -53,12 +54,13 @@ public class ModuleLoader extends URLClassLoader {
         }
     }
 
-    public void setMainClass(Object j) {
-        this.mainClass = (Module) j;
+    public void setMainClass(Module j) {
+        this.mainClass =  j;
         ModuleData annotation = j.getClass().getAnnotation(ModuleData.class);
         mainClass.setModuleName(annotation.name());
         mainClass.setVersion(annotation.version());
         mainClass.setDependencies(annotation.dependencies());
+        this.mainClass.setInitLoader(this);
     }
 
     public void getMainClass(Config yml) {
@@ -66,7 +68,16 @@ public class ModuleLoader extends URLClassLoader {
 
         try {
             Class toLoad = Class.forName(mainClassPath, true, this);
-            Object mainClass = toLoad.newInstance();
+            Class<? extends Module> subClass;
+
+            try {
+                subClass = toLoad.asSubclass(Module.class);
+            } catch (ClassCastException e) {
+                System.out.println("The module's " + toLoad.getName() + " main class does not extend Module");
+                return;
+            }
+            Module mainClass = subClass.newInstance();
+
             setMainClass(mainClass);
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
@@ -78,7 +89,10 @@ public class ModuleLoader extends URLClassLoader {
         return find(name);
     }
 
-    private Class<?> find(String className) {
+    private Class<?> find(String className) throws ClassNotFoundException {
+        if (className.startsWith("org.bukkit.") || className.startsWith("net.minecraft.")) {
+            throw new ClassNotFoundException(className);
+        }
 
         Class<?> result = null;
 
@@ -104,6 +118,7 @@ public class ModuleLoader extends URLClassLoader {
     public void shutdown() {
         try {
             this.close();
+            this.globalLoader.removeLoader(this);
         } catch (IOException e) {
             e.printStackTrace();
         }

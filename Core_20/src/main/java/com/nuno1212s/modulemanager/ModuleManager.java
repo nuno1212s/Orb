@@ -57,7 +57,7 @@ public class ModuleManager {
         enable((ArrayList<Module>) this.modules.clone());
     }
 
-    public Module getModule(String name) {
+    Module getModule(String name) {
         for (Module module : modules) {
             if (module.getModuleName().equalsIgnoreCase(name)) {
                 return module;
@@ -66,7 +66,7 @@ public class ModuleManager {
         return null;
     }
 
-    public void enable(List<Module> modules) {
+    private void enable(List<Module> modules) {
 
         while (!modules.isEmpty()) {
             List<Module> moduleSorted = new ArrayList<>();
@@ -108,11 +108,12 @@ public class ModuleManager {
 
     /**
      * Depth first sorting algorithm
-     * @param a
-     * @param resolved
-     * @param unresolved
+     *
+     * @param a The module to solve
+     * @param resolved The list where all should be stored
+     * @param unresolved Temp list.
      */
-    void dep_resolve(Module a, List<Module> resolved, List<Module> unresolved) {
+    private void dep_resolve(Module a, List<Module> resolved, List<Module> unresolved) {
         unresolved.add(a);
         for (Module m : a.getDependencies()) {
             if (resolved.contains(m)) {

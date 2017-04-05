@@ -1,6 +1,7 @@
 package com.nuno1212s.playermanager;
 
 import com.nuno1212s.main.MainData;
+import com.nuno1212s.permissionmanager.Group;
 import com.nuno1212s.util.Callback;
 import lombok.*;
 
@@ -56,6 +57,14 @@ public class PlayerData {
             MainData.getIns().getMySql().savePlayer(this);
             c.callback();
         });
+    }
+
+    /**
+     * Get the main player group
+     * @return
+     */
+    public final Group getMainGroup() {
+        return MainData.getIns().getPermissionManager().getGroup(this.groupID);
     }
 
 }

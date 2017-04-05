@@ -37,7 +37,8 @@ public class ServerManager {
         try (FileReader in = new FileReader(dataFile)) {
             json = (JSONObject) new JSONParser().parse(in);
         } catch (IOException | ParseException e) {
-            e.printStackTrace();
+            this.serverName = "Default";
+            this.serverType = "Default";
             return;
         }
 

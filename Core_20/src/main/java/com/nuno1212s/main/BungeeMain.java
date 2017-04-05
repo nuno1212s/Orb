@@ -28,6 +28,7 @@ public class BungeeMain extends Plugin {
         if (!this.getDataFolder().exists()) {
             this.getDataFolder().mkdirs();
         }
+        main.setDataFolder(this.getDataFolder());
         main.setMySql(
                 new MySql(
                         new BungeeConfig(this,
@@ -38,7 +39,6 @@ public class BungeeMain extends Plugin {
         main.setPlayerManager(new PlayerManager());
         main.setModuleManager(new ModuleManager(this.getDataFolder()));
         main.setScheduler(new BungeeScheduler(this.getProxy().getScheduler(), this));
-        main.setDataFolder(this.getDataFolder());
     }
 
     @Override

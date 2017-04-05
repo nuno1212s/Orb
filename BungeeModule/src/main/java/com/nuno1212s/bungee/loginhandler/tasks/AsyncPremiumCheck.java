@@ -81,7 +81,8 @@ public class AsyncPremiumCheck implements Runnable {
                     event.setCancelReason(ChatColor.RED + "You can't join with a premium username while using a cracked account!");
                     return;
                 } else {
-                    d = new PlayerData(connection.getUniqueId(),
+
+                    d = new PlayerData(premiumId,
                             MainData.getIns().getPermissionManager().getDefaultGroup().getGroupID(),
                             connection.getName(),
                             0,

@@ -1,7 +1,6 @@
 package com.nuno1212s.bungee.loginhandler;
 
 import net.md_5.bungee.BungeeCord;
-import net.md_5.bungee.api.ProxyServer;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
@@ -81,8 +80,6 @@ public class MojangAPIConnector {
                     logger.log(Level.SEVERE, "IP-Address is unknown to us", ex);
                 }
             }
-
-            System.out.println(addresses);
 
             this.sslFactory = new BalancedSSLFactory(HttpsURLConnection.getDefaultSSLSocketFactory(), addresses);
         }

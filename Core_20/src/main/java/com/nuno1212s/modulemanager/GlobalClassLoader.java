@@ -24,6 +24,10 @@ public class GlobalClassLoader {
         this.loaders.add(loader);
     }
 
+    public void removeLoader(ModuleLoader loader) {
+        this.loaders.remove(loader);
+    }
+
     public void setClass(String name, Class<?> c) {
         this.classes.put(name, c);
     }
