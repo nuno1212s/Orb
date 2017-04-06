@@ -7,6 +7,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * MOTD command
@@ -31,9 +32,12 @@ public class MOTDCommand extends Command {
 
             for (int i = 1; i < args.length; i++) {
                 motd.append(args[i]);
+                motd.append(" ");
             }
 
-            int id = Main.getIns().getMotdManager().addMOTD(motd.toString());
+            String motdText = motd.toString();
+            motdText = motdText.replace("%newLine", "\n");
+            int id = Main.getIns().getMotdManager().addMOTD(ChatColor.translateAlternateColorCodes('&', motdText));
             commandSender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "MOTD added. ID: " + String.valueOf(id)));
         } else if (commandName.equalsIgnoreCase("remove")) {
             int id;
@@ -64,6 +68,35 @@ public class MOTDCommand extends Command {
             motds.forEach((motdid, motd) -> {
                 commandSender.sendMessage(TextComponent.fromLegacyText("ID: " + String.valueOf(motdid) + ". " + motd));
             });
+
+        } else if (commandName.equalsIgnoreCase("addtimer")) {
+
+            Timer t = new Timer();
+
+            if (args.length < 3) {
+                commandSender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "/motd addtimer <timername> <timeinseconds>"));
+                return;
+            }
+
+            t.setStartTime(System.currentTimeMillis());
+
+            long timeInMillis;
+
+            try {
+                int timeInSeconds = Integer.parseInt(args[2]);
+                timeInMillis = TimeUnit.SECONDS.toMillis(timeInSeconds);
+            } catch (NumberFormatException e) {
+                commandSender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Time must be a number"));
+                return;
+            }
+
+            t.setLastTime(timeInMillis);
+            t.setTimerSignature("%" + args[1] + "%");
+
+            Main.getIns().getMotdManager().addTimer(t);
+
+            commandSender.sendMessage(TextComponent.fromLegacyText(
+                    ChatColor.GREEN + "Timer added. Timer name: " + t.getTimerSignature() + ". Timer time: " + t.toTime()));
 
         }
 

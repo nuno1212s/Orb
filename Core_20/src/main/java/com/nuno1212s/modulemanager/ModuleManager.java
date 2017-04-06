@@ -97,8 +97,8 @@ public class ModuleManager {
             Collections.reverse(moduleSorted);
             for (Module module : moduleSorted) {
                 module.onDisable();
-                module.disable();
                 module.setEnabled(false);
+                module.disable();
                 modules.remove(module);
             }
             moduleSorted.clear();

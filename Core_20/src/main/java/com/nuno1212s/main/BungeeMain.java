@@ -37,8 +37,8 @@ public class BungeeMain extends Plugin {
         main.setServerManager(new ServerManager(this.getDataFolder()));
         main.setPermissionManager(new PermissionManager(false));
         main.setPlayerManager(new PlayerManager());
-        main.setModuleManager(new ModuleManager(this.getDataFolder()));
         main.setScheduler(new BungeeScheduler(this.getProxy().getScheduler(), this));
+        main.setModuleManager(new ModuleManager(this.getDataFolder()));
     }
 
     @Override

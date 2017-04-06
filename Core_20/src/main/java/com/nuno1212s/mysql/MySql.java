@@ -4,6 +4,7 @@ import com.nuno1212s.config.Config;
 import com.nuno1212s.permissionmanager.Group;
 import com.nuno1212s.permissionmanager.GroupType;
 import com.nuno1212s.permissionmanager.PermissionManager;
+import com.nuno1212s.playermanager.CorePlayerData;
 import com.nuno1212s.playermanager.PlayerData;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -112,7 +113,7 @@ public class MySql {
                         boolean premium = resultSet.getBoolean("PREMIUM");
                         long lastLogin = resultSet.getDate("LASTLOGIN").getTime();
                         boolean tell = resultSet.getBoolean("TELL");
-                        PlayerData playerData = new PlayerData(playerID, groupid, playerName, cash, lastLogin, premium);
+                        PlayerData playerData = new CorePlayerData(playerID, groupid, playerName, cash, lastLogin, premium);
                         playerData.setTell(tell);
                         return playerData;
                     }
@@ -126,7 +127,7 @@ public class MySql {
                         boolean premium = resultSet.getBoolean("PREMIUM");
                         long lastLogin = resultSet.getDate("LASTLOGIN").getTime();
                         boolean tell = resultSet.getBoolean("TELL");
-                        PlayerData playerData = new PlayerData(playerID, groupid, playerName, cash, lastLogin, premium);
+                        PlayerData playerData = new CorePlayerData(playerID, groupid, playerName, cash, lastLogin, premium);
                         playerData.setTell(tell);
                         return playerData;
                     }
@@ -156,7 +157,7 @@ public class MySql {
                     boolean premium = resultSet.getBoolean("PREMIUM");
                     long lastLogin = resultSet.getDate("LASTLOGIN").getTime();
                     boolean tell = resultSet.getBoolean("TELL");
-                    PlayerData playerData = new PlayerData(playerID, groupid, playerName, cash, lastLogin, premium);
+                    PlayerData playerData = new CorePlayerData(playerID, groupid, playerName, cash, lastLogin, premium);
                     playerData.setTell(tell);
                     return playerData;
                 }

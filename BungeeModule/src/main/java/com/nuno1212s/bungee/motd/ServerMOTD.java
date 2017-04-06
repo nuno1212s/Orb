@@ -34,10 +34,10 @@ public class ServerMOTD implements Listener {
 
         dataFile = new File(dataFolder, "motd.json");
 
+        reloadConfig();
+
         Tick t = new Tick(this);
         MainData.getIns().getScheduler().runTaskTimer(t, 0, 20);
-
-        reloadConfig();
 
     }
 
@@ -120,7 +120,7 @@ public class ServerMOTD implements Listener {
     }
 
     public String getCurrentMOTD() {
-        String s = this.motds.get(new Random().nextInt(this.motds.size()));
+        String s = this.motds.get(new Random().nextInt(this.motds.size()) + 1);
 
         for (Timer activeTimer : this.activeTimers) {
             if (s.contains(activeTimer.getTimerSignature())) {

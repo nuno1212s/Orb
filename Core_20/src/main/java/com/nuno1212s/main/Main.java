@@ -35,8 +35,8 @@ public class Main extends JavaPlugin {
         data.setServerManager(new ServerManager(this.getDataFolder()));
         data.setPermissionManager(new PermissionManager(true));
         data.setPlayerManager(new PlayerManager());
-        data.setModuleManager(new ModuleManager(this.getDataFolder()));
         data.setScheduler(new BukkitScheduler(this.getServer().getScheduler(), this));
+        data.setModuleManager(new ModuleManager(this.getDataFolder()));
 
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerDisconnectListener(), this);

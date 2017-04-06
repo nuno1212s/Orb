@@ -14,7 +14,7 @@ import java.util.UUID;
 @Setter
 @RequiredArgsConstructor
 @ToString
-public class PlayerData {
+public abstract class PlayerData {
 
     @NonNull
     @Setter
@@ -38,13 +38,21 @@ public class PlayerData {
 
     protected boolean tell;
 
+    public PlayerData(PlayerData coreData) {
+        this.playerID = coreData.getPlayerID();
+        this.groupID = coreData.getGroupID();
+        this.playerName = coreData.getPlayerName();
+        this.cash = coreData.getCash();
+        this.lastLogin = coreData.getLastLogin();
+        this.premium = coreData.isPremium();
+        this.tell = coreData.isTell();
+    }
+
     /**
      * All classes that extend Player Data and have their independent server groups
      * should implement this method
      */
-    public short getServerGroup() {
-        return -1;
-    }
+    public abstract short getServerGroup();
 
     /**
      * All classes that extend Player Data should override this method and do their own
@@ -52,12 +60,7 @@ public class PlayerData {
      *
      * @param c The callback for when it is done saving
      */
-    public void save(Callback c) {
-        MainData.getIns().getScheduler().runTaskAsync(() -> {
-            MainData.getIns().getMySql().savePlayer(this);
-            c.callback();
-        });
-    }
+    public abstract void save(Callback c);
 
     /**
      * Get the main player group
