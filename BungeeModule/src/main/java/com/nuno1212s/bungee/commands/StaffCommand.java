@@ -33,7 +33,7 @@ public class StaffCommand extends Command {
 
 
             PlayerData pd = MainData.getIns().getPlayerManager().getPlayer(sender.getName());
-            if (!pd.getMainGroup().hasPermission("novus.bungee.command.staff")) {
+            if (!pd.getMainGroup().hasPermission("staff.command")) {
                 sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', "&cWithout permission..")));
                 return;
             }
