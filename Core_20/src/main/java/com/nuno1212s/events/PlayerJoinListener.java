@@ -1,6 +1,8 @@
 package com.nuno1212s.events;
 
 import com.nuno1212s.main.MainData;
+import com.nuno1212s.permissionmanager.util.PlayerGroupData;
+import com.nuno1212s.playermanager.CorePlayerData;
 import com.nuno1212s.playermanager.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -23,7 +25,7 @@ public class PlayerJoinListener implements Listener {
     public void onPlayerLogin(AsyncPlayerPreLoginEvent e) {
         PlayerData coreData = MainData.getIns().getMySql().getPlayerData(e.getUniqueId(), e.getName());
         if (coreData == null) {
-            coreData = new PlayerData(e.getUniqueId(), MainData.getIns().getPermissionManager().getDefaultGroup().getGroupID(), e.getName(), 0, System.currentTimeMillis(), true);
+            coreData = new CorePlayerData(e.getUniqueId(), new PlayerGroupData(), e.getName(), 0, System.currentTimeMillis(), true);
         }
         CoreLoginEvent event = new CoreLoginEvent(e, coreData);
         Bukkit.getServer().getPluginManager().callEvent(event);

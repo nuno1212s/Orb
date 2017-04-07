@@ -52,6 +52,10 @@ public abstract class Module {
         return modules;
     }
 
+    protected void registerCommand(String[] names, Object commandExecutor) {
+        MainData.getIns().getCommandRegister().registerCommand(names, commandExecutor);
+    }
+
     public void disable() {
         this.initLoader.shutdown();
     }

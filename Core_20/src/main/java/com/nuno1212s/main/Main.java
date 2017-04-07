@@ -1,5 +1,6 @@
 package com.nuno1212s.main;
 
+import com.nuno1212s.command.CommandRegister;
 import com.nuno1212s.config.BukkitConfig;
 import com.nuno1212s.events.PlayerDisconnectListener;
 import com.nuno1212s.events.PlayerJoinListener;
@@ -13,7 +14,17 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandMap;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 
 /**
  * Main plugin class
@@ -36,6 +47,13 @@ public class Main extends JavaPlugin {
         data.setPermissionManager(new PermissionManager(true));
         data.setPlayerManager(new PlayerManager());
         data.setScheduler(new BukkitScheduler(this.getServer().getScheduler(), this));
+        data.setCommandRegister(new CommandRegister() {
+            @Override
+            public void registerCommand(String[] aliases, Object commandExecutor) {
+                register(aliases);
+                getCommand(aliases[0]).setExecutor((CommandExecutor) commandExecutor);
+            }
+        });
         data.setModuleManager(new ModuleManager(this.getDataFolder()));
 
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
@@ -49,6 +67,61 @@ public class Main extends JavaPlugin {
         ins.getServerManager().save();
         ins.getModuleManager().disable();
         ins.getMySql().closeConnection();
+    }
+
+    public void register(String... aliases) {
+        PluginCommand command = getCommand(aliases[0], this);
+
+        command.setAliases(Arrays.asList(aliases));
+        getCommandMap().register(this.getDescription().getName(), command);
+    }
+
+    private static PluginCommand getCommand(String name, Plugin plugin) {
+        PluginCommand command = null;
+
+        try {
+            Constructor<PluginCommand> c = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
+            c.setAccessible(true);
+
+            command = c.newInstance(name, plugin);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+
+        return command;
+    }
+
+    private static CommandMap getCommandMap() {
+        CommandMap commandMap = null;
+
+        try {
+            if (Bukkit.getPluginManager() instanceof SimplePluginManager) {
+                Field f = SimplePluginManager.class.getDeclaredField("commandMap");
+                f.setAccessible(true);
+
+                commandMap = (CommandMap) f.get(Bukkit.getPluginManager());
+            }
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        return commandMap;
     }
 
 }

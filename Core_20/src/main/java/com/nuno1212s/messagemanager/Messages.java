@@ -21,31 +21,32 @@ public class Messages {
 
     private Map<String, Message> messages;
 
-    File messageFile;
+    private List<File> registeredFiles;
 
-    public Messages(JavaPlugin j) {
-        messageFile = new File(j.getDataFolder(), "messages.json");
-        if (!messageFile.exists()) {
-            j.saveResource("messages.json", false);
-        }
-        this.messages = reloadMessages(messageFile);
+    public Messages(File j) {
+        this.registeredFiles = new ArrayList<>();
+        this.registeredFiles.add(j);
+        reloadMessages();
     }
 
-    public Map<String, Message> reloadMessages(File f) {
+    public void reloadMessages() {
         Map<String, Message> messages = new HashMap<>();
 
-        JSONObject messageObject;
-        try {
-            messageObject = (JSONObject) new JSONParser().parse(new FileReader(f));
-        } catch (IOException | ParseException e) {
-            e.printStackTrace();
-            return null;
-        }
+        registeredFiles.forEach(f -> {
+            JSONObject messageObject;
+            try {
+                messageObject = (JSONObject) new JSONParser().parse(new FileReader(f));
+            } catch (IOException | ParseException e) {
+                e.printStackTrace();
+                return;
+            }
 
-        messageObject.keySet().forEach(messageName -> {
-            messages.put((String) messageName, new Message(readFromValue(messageObject.get(messageName))));
+
+            messageObject.keySet().forEach(messageName -> {
+                messages.put((String) messageName, new Message(readFromValue(messageObject.get(messageName))));
+            });
         });
-        return messages;
+
     }
 
     @SuppressWarnings("unchecked")

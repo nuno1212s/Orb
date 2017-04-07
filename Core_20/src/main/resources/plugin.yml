@@ -1,4 +1,4 @@
-name: Core
-main: com.nuno1212s.bungee.main.Main
-version: 1.0
+name: ${project.name}
+main: com.nuno1212s.main.Main
+version: ${project.version}
 author: Nuno1212SsS

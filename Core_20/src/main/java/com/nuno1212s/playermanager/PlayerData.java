@@ -2,8 +2,10 @@ package com.nuno1212s.playermanager;
 
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.Group;
+import com.nuno1212s.permissionmanager.util.PlayerGroupData;
 import com.nuno1212s.util.Callback;
 import lombok.*;
+import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
@@ -21,7 +23,7 @@ public abstract class PlayerData {
     protected UUID playerID;
 
     @NonNull
-    protected short groupID;
+    protected PlayerGroupData groups;
 
     @NonNull
     @Setter
@@ -40,12 +42,35 @@ public abstract class PlayerData {
 
     public PlayerData(PlayerData coreData) {
         this.playerID = coreData.getPlayerID();
-        this.groupID = coreData.getGroupID();
+        this.groups = coreData.getGroups();
         this.playerName = coreData.getPlayerName();
         this.cash = coreData.getCash();
         this.lastLogin = coreData.getLastLogin();
         this.premium = coreData.isPremium();
         this.tell = coreData.isTell();
+    }
+
+    /**
+     * Set the main player group
+     *
+     * @param groupID The ID of the group to set
+     * @param duration The duration of the group (-1 = Permanent)
+     */
+    public void setMainGroup(short groupID, long duration) {
+        this.groups.setCurrentGroup(groupID, duration);
+    }
+
+    public short getGroupID() {
+        return this.groups.getActiveGroup();
+    }
+
+    /**
+     * Get the main player group
+     *
+     * @return The main player group
+     */
+    public final Group getMainGroup() {
+        return MainData.getIns().getPermissionManager().getGroup(this.groups.getActiveGroup());
     }
 
     /**
@@ -63,11 +88,21 @@ public abstract class PlayerData {
     public abstract void save(Callback c);
 
     /**
-     * Get the main player group
+     * Set the server group
+     *
+     * @param groupID the ID of the group
+     */
+    public abstract void setServerGroup(short groupID, long duration);
+
+    /**
+     * Get the group to be displayed on the scoreboard and the chat
+     *
      * @return
      */
-    public final Group getMainGroup() {
-        return MainData.getIns().getPermissionManager().getGroup(this.groupID);
+    public abstract Group getRepresentingGroup();
+
+    public void checkExpiration(Player p) {
+        this.groups.checkExpiration(p);
     }
 
 }

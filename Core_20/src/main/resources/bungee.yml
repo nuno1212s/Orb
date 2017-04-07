@@ -1,4 +1,4 @@
-name: Core
+name: ${project.name}
 main: com.nuno1212s.main.BungeeMain
-version: 1.0
+version: ${project.version}
 author: Nuno1212SsS

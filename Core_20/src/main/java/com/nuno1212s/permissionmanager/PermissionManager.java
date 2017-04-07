@@ -15,6 +15,9 @@ public class PermissionManager {
     @Getter
     private PlayerPermissions playerPermissions;
 
+    @Getter
+    private int maxGroupsPerPlayer;
+
 
     public PermissionManager(boolean bukkit) {
         groups = MainData.getIns().getMySql().getGroups();
@@ -22,6 +25,8 @@ public class PermissionManager {
         if (bukkit) {
             this.playerPermissions = new PlayerPermissions();
         }
+
+        this.maxGroupsPerPlayer = 6;
 
     }
 

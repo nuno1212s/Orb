@@ -12,7 +12,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.projectlombok:lombok:1.16.8" level="project" />
-    <orderEntry type="module" module-name="Core" />
+    <orderEntry type="library" name="Maven: com.nuno1212s:Core:1.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.zaxxer:HikariCP:2.4.3" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.12" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: net.citizensnpcs:citizens:2.0.20-SNAPSHOT" level="project" />

@@ -70,24 +70,14 @@ public class AsyncPremiumCheck implements Runnable {
                     //Cracked account
                     UUID uuidForPlayer = UUID.randomUUID();
                     connection.setUniqueId(uuidForPlayer);
-                    d = new PlayerData(connection.getUniqueId(),
-                            MainData.getIns().getPermissionManager().getDefaultGroup().getGroupID(),
-                            connection.getName(),
-                            0,
-                            System.currentTimeMillis(),
-                            false);
+                    d = MainData.getIns().getPlayerManager().buildNewPlayerData(uuidForPlayer, username);
                 } else if (!connection.isOnlineMode()) {
                     event.setCancelled(true);
                     event.setCancelReason(ChatColor.RED + "You can't join with a premium username while using a cracked account!");
                     return;
                 } else {
 
-                    d = new PlayerData(premiumId,
-                            MainData.getIns().getPermissionManager().getDefaultGroup().getGroupID(),
-                            connection.getName(),
-                            0,
-                            System.currentTimeMillis(),
-                            true);
+                    d = MainData.getIns().getPlayerManager().buildNewPlayerData(premiumId, connection.getName());
                     //Check if player did not change name
                     PlayerData nameCheck = MainData.getIns().getMySql().getPlayerData(premiumId, null);
                     if (nameCheck != null) {

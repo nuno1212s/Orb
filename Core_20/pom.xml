@@ -5,9 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.nuno1212s</groupId>
-    <artifactId>Core_2.0</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-
+    <artifactId>Core</artifactId>
+    <version>1.1</version>
 
     <dependencies>
         <dependency>
@@ -86,7 +85,7 @@
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
                 <includes>
-                    <include>plugin.yml</include>
+                    <include>*</include>
                 </includes>
             </resource>
         </resources>

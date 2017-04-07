@@ -2,6 +2,7 @@ package com.nuno1212s.playermanager;
 
 import com.google.common.cache.CacheBuilder;
 import com.nuno1212s.main.Main;
+import com.nuno1212s.permissionmanager.util.PlayerGroupData;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -18,6 +19,10 @@ public class PlayerManager {
     public PlayerManager() {
         players = Collections.synchronizedList(new ArrayList<>());
         cache = CacheBuilder.newBuilder().expireAfterWrite(5, TimeUnit.SECONDS).build().asMap();
+    }
+
+    public PlayerData buildNewPlayerData(UUID playerID, String playerName) {
+        return new CorePlayerData(playerID, new PlayerGroupData(), playerName, 0, System.currentTimeMillis(), true);
     }
 
     public void addToCache(UUID player, PlayerData coreData) {

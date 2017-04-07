@@ -1,5 +1,7 @@
 package com.nuno1212s.main;
 
+import com.nuno1212s.command.CommandRegister;
+import com.nuno1212s.messagemanager.Messages;
 import com.nuno1212s.modulemanager.ModuleManager;
 import com.nuno1212s.mysql.MySql;
 import com.nuno1212s.permissionmanager.PermissionManager;
@@ -47,6 +49,14 @@ public class MainData {
     @Getter
     @Setter(value = AccessLevel.PROTECTED)
     private File dataFolder;
+
+    @Getter
+    @Setter(value = AccessLevel.PROTECTED)
+    private Messages messageManager;
+
+    @Getter
+    @Setter(value = AccessLevel.PROTECTED)
+    private CommandRegister commandRegister;
 
     @Getter
     @Setter(value = AccessLevel.PROTECTED)
