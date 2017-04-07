@@ -105,4 +105,8 @@ public abstract class PlayerData {
         this.groups.checkExpiration(p);
     }
 
+    public String getNameWithPrefix() {
+        return this.getRepresentingGroup().getGroupPrefix() + this.getPlayerName();
+    }
+
 }

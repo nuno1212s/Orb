@@ -1,9 +1,11 @@
-package com.nuno1212s.commands;
+package com.nuno1212s.bungee.commands;
 
 import com.google.common.collect.ImmutableSet;
-import com.nuno1212s.confighandler.Config;
+import com.nuno1212s.bungee.loginhandler.SessionData;
+import com.nuno1212s.bungee.loginhandler.SessionHandler;
+import com.nuno1212s.bungee.playermanager.BungeePlayerData;
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
-import com.nuno1212s.playermanager.PlayerManager;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
@@ -14,8 +16,6 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
-import com.nuno1212s.loginhandling.SessionData;
-import com.nuno1212s.loginhandling.SessionHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +35,13 @@ public class TellCommand extends Command implements TabExecutor{
 
             SessionData session = SessionHandler.getIns().getSession(player.getUniqueId());
             if (session == null || !session.isAuthenticated()) {
-                sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', Config.getIns().getC().getString("Message.NotLoggedIn", "&cNão podes fazer este comando sem estar logado."))));
+                sender.sendMessage(TextComponent.fromLegacyText(
+                        ChatColor.translateAlternateColorCodes('&', "&cNão podes fazer este comando sem estar logado.")));
+
                 return;
             }
 
-            PlayerData d = PlayerManager.getIns().getPlayer(player.getUniqueId());
+            PlayerData d = MainData.getIns().getPlayerManager().getPlayer(player.getUniqueId());
 
             if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("on")) {
@@ -65,13 +67,13 @@ public class TellCommand extends Command implements TabExecutor{
                         return;
                     }
 
-                    PlayerData vpd = PlayerManager.getIns().getPlayer(victim.getName());
-                    if (!vpd.getTell() && !d.hasPermission("novus.staff")) {
-                        player.sendMessage(new ComponentBuilder("Este jogador têm o tell desativado.").color(ChatColor.RED).create());
+                    PlayerData vpd = MainData.getIns().getPlayerManager().getPlayer(victim.getName());
+                    if (!vpd.isTell() && !d.getMainGroup().hasPermission("novus.staff")) {
+                        player.sendMessage(new ComponentBuilder("Este jogador tem o tell desativado.").color(ChatColor.RED).create());
                         return;
                     }
 
-                    if (!d.getTell()) {
+                    if (!d.isTell()) {
                         player.sendMessage(new ComponentBuilder("Não podes enviar tells com o teu tell desativado.").color(ChatColor.RED).create());
                         return;
                     }
@@ -112,8 +114,8 @@ public class TellCommand extends Command implements TabExecutor{
                     message.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Responder a " + victim.getName()).color(ChatColor.YELLOW).create()));
                     player.sendMessage(message);
 
-                    PlayerManager.getIns().lastTell.put(victim.getName(), player.getName());
-                    PlayerManager.getIns().lastTell.put(player.getName(), victim.getName());
+                    ((BungeePlayerData) MainData.getIns().getPlayerManager().getPlayer(victim.getUniqueId())).setReply(player.getUniqueId());
+                    ((BungeePlayerData) MainData.getIns().getPlayerManager().getPlayer(player.getUniqueId())).setReply(victim.getUniqueId());
                 } else {
 
                     player.sendMessage(new ComponentBuilder("Jogador não encontrado.").color(ChatColor.RED).create());

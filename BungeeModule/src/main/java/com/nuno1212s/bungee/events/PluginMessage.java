@@ -43,7 +43,7 @@ public class PluginMessage implements Listener {
                 return;
             }
             PlayerData d = MainData.getIns().getPlayerManager().getPlayer(p.getUniqueId());
-            d.setGroupID(dataInput.readShort());
+            d.setMainGroup(dataInput.readShort(), 1000);
         }
     }
 

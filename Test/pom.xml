@@ -13,14 +13,29 @@
             <id>wmc-central</id>
             <url>http://localhost/repo</url>
         </repository>
+
     </repositories>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>my-snapshots</id>
+            <name>My internal repository</name>
+            <url>http://198.27.67.207:8081/nexus/content/repositories/snapshots</url>
+        </snapshotRepository>
+
+        <repository>
+            <id>my-releases</id>
+            <name>My internal repository</name>
+            <url>http://198.27.67.207:8081/nexus/content/repositories/releases</url>
+        </repository>
+    </distributionManagement>
 
 
     <dependencies>
         <dependency>
             <groupId>com.nuno1212s</groupId>
             <artifactId>Core_2.0</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>1.1</version>
             <scope>provided</scope>
         </dependency>
 
@@ -30,6 +45,7 @@
             <version>1.8.8-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

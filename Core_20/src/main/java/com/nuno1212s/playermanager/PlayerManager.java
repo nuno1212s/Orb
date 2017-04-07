@@ -3,6 +3,7 @@ package com.nuno1212s.playermanager;
 import com.google.common.cache.CacheBuilder;
 import com.nuno1212s.main.Main;
 import com.nuno1212s.permissionmanager.util.PlayerGroupData;
+import lombok.Getter;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -12,6 +13,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class PlayerManager {
 
+    @Getter
     private final List<PlayerData> players;
 
     private Map<Object, Object> cache;

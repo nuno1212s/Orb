@@ -1,6 +1,7 @@
 package com.nuno1212s.bungee.events;
 
 import com.nuno1212s.bungee.main.Main;
+import com.nuno1212s.bungee.playermanager.BungeePlayerData;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.Callback;
@@ -40,6 +41,12 @@ public class LoginEvent implements Listener {
             });
 
         }
+    }
+
+    @EventHandler
+    public void onBungeeLogin(BungeeCoreLogin core) {
+        BungeePlayerData p = new BungeePlayerData(core.getData());
+        core.setData(p);
     }
 
 }

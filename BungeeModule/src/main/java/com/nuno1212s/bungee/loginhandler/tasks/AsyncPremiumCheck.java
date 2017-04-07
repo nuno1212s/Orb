@@ -2,13 +2,9 @@ package com.nuno1212s.bungee.loginhandler.tasks;
 
 import com.nuno1212s.bungee.events.BungeeCoreLogin;
 import com.nuno1212s.bungee.main.Main;
-import com.nuno1212s.events.CoreLoginEvent;
-import com.nuno1212s.main.BungeeMain;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
-import com.nuno1212s.playermanager.PlayerManager;
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.PendingConnection;
 import net.md_5.bungee.api.event.PreLoginEvent;
 
@@ -71,6 +67,11 @@ public class AsyncPremiumCheck implements Runnable {
                     UUID uuidForPlayer = UUID.randomUUID();
                     connection.setUniqueId(uuidForPlayer);
                     d = MainData.getIns().getPlayerManager().buildNewPlayerData(uuidForPlayer, username);
+
+                    BungeeCoreLogin event = new BungeeCoreLogin(d);
+                    Main.getPlugin().getProxy().getPluginManager().callEvent(event);
+
+                    d = event.getData();
                 } else if (!connection.isOnlineMode()) {
                     event.setCancelled(true);
                     event.setCancelReason(ChatColor.RED + "You can't join with a premium username while using a cracked account!");
@@ -78,6 +79,12 @@ public class AsyncPremiumCheck implements Runnable {
                 } else {
 
                     d = MainData.getIns().getPlayerManager().buildNewPlayerData(premiumId, connection.getName());
+
+                    BungeeCoreLogin event = new BungeeCoreLogin(d);
+                    Main.getPlugin().getProxy().getPluginManager().callEvent(event);
+
+                    d = event.getData();
+
                     //Check if player did not change name
                     PlayerData nameCheck = MainData.getIns().getMySql().getPlayerData(premiumId, null);
                     if (nameCheck != null) {

@@ -69,12 +69,12 @@ public class SCommand extends Command {
     }
 
     private String getMessage(String[] args) {
-        String msg = "";
+        StringBuilder msg = new StringBuilder();
         for (String s : args) {
-            msg = msg + s + " ";
+            msg.append(s);
+            msg.append(" ");
         }
-        msg = ChatColor.translateAlternateColorCodes('&', msg);
-        return msg;
+        return ChatColor.translateAlternateColorCodes('&', msg.toString());
     }
 
 }

@@ -1,6 +1,9 @@
 package com.nuno1212s.bungee.main;
 
 import com.google.common.cache.CacheBuilder;
+import com.nuno1212s.bungee.commands.RCommand;
+import com.nuno1212s.bungee.commands.StaffCommand;
+import com.nuno1212s.bungee.commands.TellCommand;
 import com.nuno1212s.bungee.events.LoginEvent;
 import com.nuno1212s.bungee.events.PermissionCheckListener;
 import com.nuno1212s.bungee.events.PluginMessage;
@@ -59,6 +62,9 @@ public class Main extends Module {
         getProxy().getPluginManager().registerListener(plugin, new PermissionCheckListener());
 
         getProxy().getPluginManager().registerCommand(plugin, new MOTDCommand());
+        getProxy().getPluginManager().registerCommand(plugin, new RCommand());
+        getProxy().getPluginManager().registerCommand(plugin, new StaffCommand());
+        getProxy().getPluginManager().registerCommand(plugin, new TellCommand());
 
         ConcurrentMap<Object, Object> requestCache = CacheBuilder.newBuilder()
                 .expireAfterWrite(10, TimeUnit.MINUTES).build().asMap();
