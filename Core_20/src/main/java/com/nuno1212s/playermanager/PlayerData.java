@@ -19,14 +19,12 @@ import java.util.UUID;
 public abstract class PlayerData {
 
     @NonNull
-    @Setter
     protected UUID playerID;
 
     @NonNull
     protected PlayerGroupData groups;
 
     @NonNull
-    @Setter
     protected String playerName;
 
     @NonNull
@@ -97,7 +95,7 @@ public abstract class PlayerData {
     /**
      * Get the group to be displayed on the scoreboard and the chat
      *
-     * @return
+     * @return The group that represents the player
      */
     public abstract Group getRepresentingGroup();
 

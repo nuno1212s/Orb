@@ -1,5 +1,6 @@
-package com.nuno1212s.events;
+package com.nuno1212s.events.listeners;
 
+import com.nuno1212s.events.CoreLoginEvent;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.util.PlayerGroupData;
 import com.nuno1212s.playermanager.CorePlayerData;
@@ -31,7 +32,6 @@ public class PlayerJoinListener implements Listener {
         Bukkit.getServer().getPluginManager().callEvent(event);
         //After the event being called, all the modules had the opportunity to modify the player data class
         PlayerData finalData = event.getPlayerInfo();
-        System.out.println(finalData);
         MainData.getIns().getPlayerManager().addToCache(e.getUniqueId(), finalData);
     }
 

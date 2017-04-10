@@ -101,8 +101,8 @@ public class MySql {
         try (Connection c = getConnection();
              PreparedStatement select =
                      (playerName == null ?
-                             c.prepareStatement("SELECT GROUPDATA, PLAYERNAME, CASH, PREMIUM, LASTLOGIN, TELL FROM playerData WHERE UUID=?") :
-                             c.prepareStatement("SELECT GROUPDATA, CASH, PREMIUM, LASTLOGIN, TELL FROM playerData WHERE UUID=?"))
+                             c.prepareStatement("SELECT GROUPDATA, PLAYERNAME, CASH, PREMIUM, LASTLOGIN, TELL FROM playerData WHERE UUID=? LIMIT 1") :
+                             c.prepareStatement("SELECT GROUPDATA, CASH, PREMIUM, LASTLOGIN, TELL FROM playerData WHERE UUID=? LIMIT 1"))
         ) {
             if (playerName == null) {
                 select.setString(1, playerID.toString());
@@ -147,7 +147,7 @@ public class MySql {
 
         try (Connection c = getConnection();
              PreparedStatement select =
-                     c.prepareStatement("SELECT UUID, GROUPDATA, PLAYERNAME, CASH, PREMIUM, LASTLOGIN, TELL FROM playerData WHERE playerName=?")
+                     c.prepareStatement("SELECT UUID, GROUPDATA, PLAYERNAME, CASH, PREMIUM, LASTLOGIN, TELL FROM playerData WHERE playerName=? LIMIT 1")
         ) {
             select.setString(1, playerName);
             try (ResultSet resultSet = select.executeQuery()) {

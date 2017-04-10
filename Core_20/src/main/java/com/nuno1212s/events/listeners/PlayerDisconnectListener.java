@@ -1,4 +1,4 @@
-package com.nuno1212s.events;
+package com.nuno1212s.events.listeners;
 
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;

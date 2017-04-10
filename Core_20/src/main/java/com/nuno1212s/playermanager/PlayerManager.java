@@ -2,7 +2,9 @@ package com.nuno1212s.playermanager;
 
 import com.google.common.cache.CacheBuilder;
 import com.nuno1212s.main.Main;
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.util.PlayerGroupData;
+import com.nuno1212s.util.Pair;
 import lombok.Getter;
 
 import java.util.*;
@@ -65,6 +67,18 @@ public class PlayerManager {
             }
         }
         return null;
+    }
+
+    public Pair<PlayerData, Boolean> getOrLoadPlayer(String playerName) {
+        synchronized (players) {
+            for (PlayerData player : players) {
+                if (player.getPlayerName().equalsIgnoreCase(playerName)) {
+                    return new Pair<>(player, false);
+                }
+            }
+        }
+
+        return new Pair<>(MainData.getIns().getMySql().getPlayerData(playerName), true);
     }
 
 }

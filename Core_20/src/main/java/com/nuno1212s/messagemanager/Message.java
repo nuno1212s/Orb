@@ -1,7 +1,10 @@
 package com.nuno1212s.messagemanager;
 
+import com.nuno1212s.main.MainData;
+import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.Pair;
 import lombok.AllArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -39,6 +42,24 @@ public class Message {
 
     public void sendTo(CommandSender... players) {
         send(players);
+    }
+
+    public void sendTo(PlayerData d) {
+        if(!Bukkit.isPrimaryThread()) {
+            MainData.getIns().getScheduler().runTask(() -> {
+                Player p = Bukkit.getPlayer(d.getPlayerID());
+                if (p == null) {
+                    return;
+                }
+                send(p);
+            });
+        } else {
+            Player p = Bukkit.getPlayer(d.getPlayerID());
+            if (p == null) {
+                return;
+            }
+            send(p);
+        }
     }
 
     private void send(CommandSender... players) {

@@ -1,22 +1,22 @@
 package com.nuno1212s.main;
 
+import com.nuno1212s.command.CashCommand;
 import com.nuno1212s.command.CommandRegister;
 import com.nuno1212s.config.BukkitConfig;
-import com.nuno1212s.events.PlayerDisconnectListener;
-import com.nuno1212s.events.PlayerJoinListener;
+import com.nuno1212s.events.listeners.PlayerDisconnectListener;
+import com.nuno1212s.events.listeners.PlayerJoinListener;
 import com.nuno1212s.modulemanager.ModuleManager;
 import com.nuno1212s.mysql.MySql;
 import com.nuno1212s.permissionmanager.PermissionManager;
 import com.nuno1212s.playermanager.PlayerManager;
 import com.nuno1212s.scheduler.BukkitScheduler;
 import com.nuno1212s.serverstatus.ServerManager;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -54,10 +54,13 @@ public class Main extends JavaPlugin {
                 getCommand(aliases[0]).setExecutor((CommandExecutor) commandExecutor);
             }
         });
+
         data.setModuleManager(new ModuleManager(this.getDataFolder()));
 
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerDisconnectListener(), this);
+
+        MainData.getIns().getCommandRegister().registerCommand(new String[]{"cash"}, new CashCommand());
 
     }
 
