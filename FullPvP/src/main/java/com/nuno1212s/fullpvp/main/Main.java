@@ -5,6 +5,7 @@ import com.nuno1212s.fullpvp.mysql.MySql;
 import com.nuno1212s.fullpvp.economy.CoinCommand;
 import com.nuno1212s.fullpvp.events.PlayerJoinListener;
 import com.nuno1212s.fullpvp.scoreboard.ScoreboardManager;
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.modulemanager.ModuleData;
 import lombok.Getter;
@@ -36,8 +37,15 @@ public class Main extends Module {
 
         File file = new File(this.getDataFolder(), "scoreboard.json");
         if (!file.exists()) {
-            com.nuno1212s.main.Main.getIns().saveResource("scoreboard.json", false);
+            saveResource(file, "scoreboard.json");
         }
+
+        File messageFile = new File(this.getDataFolder(), "messages.json");
+        if (!messageFile.exists()) {
+            saveResource(messageFile, "messages.json");
+        }
+
+        MainData.getIns().getMessageManager().addMessageFile(messageFile);
 
         scoreboardManager = new ScoreboardManager(file);
 

@@ -79,6 +79,7 @@ public class ScoreboardManager {
 
     private void setScoreboardPrefixes(PVPPlayerData d) {
         Scoreboard b = this.scoreboards.get(d.getPlayerID()).getScoreboard();
+
         for (PlayerData playerData : MainData.getIns().getPlayerManager().getPlayers()) {
             if (!(playerData instanceof PVPPlayerData)) {
                 continue;
@@ -104,6 +105,7 @@ public class ScoreboardManager {
         message = message.replace("%coins%", String.valueOf(d.getCoins()));
         message = message.replace("%cash%", String.valueOf(d.getCash()));
         message = message.replace("%group%", String.valueOf(d.getRepresentingGroup().getGroupPrefix()));
+
         return message;
     }
 

@@ -2,11 +2,13 @@ package com.nuno1212s.messagemanager;
 
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
+import com.nuno1212s.util.ActionBarAPI;
 import com.nuno1212s.util.Pair;
 import lombok.AllArgsConstructor;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONArray;
 
@@ -41,6 +43,12 @@ public class Message {
     }
 
     public void sendTo(CommandSender... players) {
+        if (!Bukkit.isPrimaryThread()) {
+            MainData.getIns().getScheduler().runTask(() -> {
+                sendTo(players);
+            });
+            return;
+        }
         send(players);
     }
 
@@ -100,6 +108,7 @@ public class Message {
                         continue;
                     }
                     //ActionBarAPI.sendActionBar((Player) player, message);
+                    ActionBarAPI.sendActionBar((Player) player, message);
                 }
             } else if (messageType == Messages.MessageType.SOUND) {
                 List s = (List) this.messages.get(messageType);

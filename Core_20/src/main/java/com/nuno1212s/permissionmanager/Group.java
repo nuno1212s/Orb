@@ -14,7 +14,7 @@ public class Group {
 
     private String groupName, groupPrefix, groupSuffix, scoreboardName, applicableServer;
 
-    private boolean defaultGroup;
+    private boolean defaultGroup, overrides;
 
     private GroupType groupType;
 
@@ -22,7 +22,7 @@ public class Group {
 
     public Group(short groupID, String groupName, String groupPrefix, String groupSuffix
             , String scoreboardName, String applicableServer, boolean defaultGroup
-            , GroupType groupType, List<String> permissions) {
+            , GroupType groupType, List<String> permissions, boolean overrides) {
         this.groupID = groupID;
         this.groupName = groupName;
         this.groupPrefix = groupPrefix;
@@ -32,6 +32,7 @@ public class Group {
         this.applicableServer = applicableServer;
         this.groupType = groupType;
         this.permissions = permissions;
+        this.overrides = overrides;
 
     }
 

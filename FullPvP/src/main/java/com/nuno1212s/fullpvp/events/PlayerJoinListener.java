@@ -3,9 +3,11 @@ package com.nuno1212s.fullpvp.events;
 import com.nuno1212s.events.CoreLoginEvent;
 import com.nuno1212s.fullpvp.main.Main;
 import com.nuno1212s.fullpvp.playermanager.PVPPlayerData;
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 /**
  * Handles player join events
@@ -18,6 +20,11 @@ public class PlayerJoinListener implements Listener {
         PVPPlayerData data = new PVPPlayerData(playerInfo);
         Main.getIns().getMysql().loadPlayerData(data);
         e.setPlayerInfo(data);
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e) {
+        Main.getIns().getScoreboardManager().createScoreboard(((PVPPlayerData) MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId())), e.getPlayer());
     }
 
 }

@@ -87,7 +87,8 @@ public class MySql {
                     "ISDEFAULT BOOL," +
                     "APPLICABLESERVER varchar(25)," +
                     "GROUPTYPE varchar(6)," +
-                    "PERMISSIONS TEXT)";
+                    "PERMISSIONS TEXT," +
+                    "OVERRIDES BOOL)";
 
             st.execute(stm2);
 
@@ -220,7 +221,8 @@ public class MySql {
                 } else {
                     permissions = new ArrayList<>();
                 }
-                Group e = new Group(groupID, groupName, prefix, suffix, scoreboardName, applicableServer, isDefault, type, permissions);
+                boolean overrides = resultSet.getBoolean("OVERRIDES");
+                Group e = new Group(groupID, groupName, prefix, suffix, scoreboardName, applicableServer, isDefault, type, permissions, overrides);
                 if (PermissionManager.isApplicable(e)) {
                     groups.add(e);
                 }

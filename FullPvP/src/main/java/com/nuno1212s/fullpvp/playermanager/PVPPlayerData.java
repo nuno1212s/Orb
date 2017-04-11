@@ -1,5 +1,6 @@
 package com.nuno1212s.fullpvp.playermanager;
 
+import com.nuno1212s.fullpvp.main.Main;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.Group;
 import com.nuno1212s.permissionmanager.util.PlayerGroupData;
@@ -19,13 +20,21 @@ public class PVPPlayerData extends PlayerData {
 
     long coins;
 
+    long lastDatabaseAccess;
+
     public PVPPlayerData(PlayerData d) {
         super(d);
+        this.coins = 0;
+        this.groupData = new PlayerGroupData();
     }
 
     @Override
     public Group getRepresentingGroup() {
-        return null;
+        Group mainGroup = super.getMainGroup();
+        if (mainGroup.isOverrides()) {
+            return mainGroup;
+        }
+        return MainData.getIns().getPermissionManager().getGroup(this.groupData.getActiveGroup());
     }
 
     @Override
@@ -42,6 +51,7 @@ public class PVPPlayerData extends PlayerData {
     public void save(Callback c) {
         MainData.getIns().getScheduler().runTaskAsync(() -> {
             MainData.getIns().getMySql().savePlayer(this);
+            Main.getIns().getMysql().savePlayerData(this);
             c.callback();
         });
     }

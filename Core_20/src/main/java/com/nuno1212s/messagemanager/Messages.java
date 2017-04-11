@@ -1,5 +1,6 @@
 package com.nuno1212s.messagemanager;
 
+import com.nuno1212s.util.ActionBarAPI;
 import com.nuno1212s.util.Pair;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.json.simple.JSONArray;
@@ -24,13 +25,20 @@ public class Messages {
     private List<File> registeredFiles;
 
     public Messages(File j) {
+        new ActionBarAPI();
         this.registeredFiles = new ArrayList<>();
         this.registeredFiles.add(j);
         reloadMessages();
     }
 
+    public void addMessageFile(File messageFile) {
+        this.registeredFiles.add(messageFile);
+        reloadMessages();
+    }
+
     public void reloadMessages() {
-        Map<String, Message> messages = new HashMap<>();
+
+        this.messages = new HashMap<>();
 
         registeredFiles.forEach(f -> {
             JSONObject messageObject;

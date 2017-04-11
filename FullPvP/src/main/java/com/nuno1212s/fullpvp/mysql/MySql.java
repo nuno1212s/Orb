@@ -45,7 +45,7 @@ public class MySql {
     public void savePlayerData(PVPPlayerData playerData) {
 
         try (Connection c = MainData.getIns().getMySql().getConnection();
-            PreparedStatement st = c.prepareStatement("INSERT INTO pvpData(UUID, COINS, GROUPDATA) values(?, ?, ?) ON DUPLICATE UPDATE COINS=?, GROUPDATA=?"))
+            PreparedStatement st = c.prepareStatement("INSERT INTO pvpData(UUID, COINS, GROUPDATA) values(?, ?, ?) ON DUPLICATE KEY UPDATE COINS=?, GROUPDATA=?"))
         {
             st.setString(1, playerData.getPlayerID().toString());
             st.setLong(2, playerData.getCoins());

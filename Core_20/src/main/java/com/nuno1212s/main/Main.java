@@ -2,9 +2,11 @@ package com.nuno1212s.main;
 
 import com.nuno1212s.command.CashCommand;
 import com.nuno1212s.command.CommandRegister;
+import com.nuno1212s.command.ReloadMessages;
 import com.nuno1212s.config.BukkitConfig;
 import com.nuno1212s.events.listeners.PlayerDisconnectListener;
 import com.nuno1212s.events.listeners.PlayerJoinListener;
+import com.nuno1212s.messagemanager.Messages;
 import com.nuno1212s.modulemanager.ModuleManager;
 import com.nuno1212s.mysql.MySql;
 import com.nuno1212s.permissionmanager.PermissionManager;
@@ -21,6 +23,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -55,12 +58,18 @@ public class Main extends JavaPlugin {
             }
         });
 
+        File j = new File(this.getDataFolder(), "messages.json");
+        if (!j.exists()) {
+            this.saveResource("messages.json", false);
+        }
+        data.setMessageManager(new Messages(j));
         data.setModuleManager(new ModuleManager(this.getDataFolder()));
 
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerDisconnectListener(), this);
 
         MainData.getIns().getCommandRegister().registerCommand(new String[]{"cash"}, new CashCommand());
+        MainData.getIns().getCommandRegister().registerCommand(new String[]{"reloadmessages"}, new ReloadMessages());
 
     }
 
