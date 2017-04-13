@@ -9,6 +9,8 @@ import com.nuno1212s.util.Callback;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
  * The Player Data for the full pvp server
  */
@@ -18,14 +20,22 @@ public class PVPPlayerData extends PlayerData {
 
     PlayerGroupData groupData;
 
-    long coins;
-
     long lastDatabaseAccess;
+
+    volatile long coins;
 
     public PVPPlayerData(PlayerData d) {
         super(d);
         this.coins = 0;
         this.groupData = new PlayerGroupData();
+    }
+
+    public synchronized final void setCoins(long coins) {
+        this.coins = coins;
+    }
+
+    public synchronized final long getCoins() {
+        return this.coins;
     }
 
     @Override

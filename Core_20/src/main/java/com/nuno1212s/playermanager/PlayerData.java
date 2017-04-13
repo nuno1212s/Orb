@@ -107,4 +107,12 @@ public abstract class PlayerData {
         return this.getRepresentingGroup().getGroupPrefix() + this.getPlayerName();
     }
 
+    public synchronized final long getCash() {
+        return this.cash;
+    }
+
+    public synchronized final void setCash(long cash) {
+        this.cash = cash;
+    }
+
 }

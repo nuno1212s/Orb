@@ -4,6 +4,7 @@ import com.nuno1212s.events.PlayerInformationUpdateEvent;
 import com.nuno1212s.fullpvp.main.Main;
 import com.nuno1212s.fullpvp.playermanager.PVPPlayerData;
 import com.nuno1212s.main.MainData;
+import com.nuno1212s.messagemanager.Message;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.Pair;
 import com.nuno1212s.util.TimeUtil;
@@ -13,6 +14,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.LinkedHashMap;
+import java.util.function.BiConsumer;
 
 /**
  * Coin command
@@ -177,21 +181,34 @@ public class CoinCommand implements CommandExecutor {
 
                         });
                     }
+                } else if (args[0].equalsIgnoreCase("top")) {
+                    MainData.getIns().getScheduler().runTaskAsync(() -> {
+                        if (!checkDatabase(commandSender)) {
+                            return;
+                        }
+
+                        LinkedHashMap<String, Long> coinTop = CoinTopCommand.getCoinTop();
+
+                        Message coin_top = MainData.getIns().getMessageManager().getMessage("COIN_TOP");
+
+                        coinTop.forEach(new BiConsumer<String, Long>() {
+                            int current = 1;
+                            @Override
+                            public void accept(String playerName, Long coinAmount) {
+                                coin_top.format("%player" + String.valueOf(current) + "%", playerName);
+                                coin_top.format("%coinAmount" + String.valueOf(current) + "%", String.valueOf(coinAmount));
+                                current++;
+                            }
+                        });
+
+                        coin_top.sendTo(commandSender);
+
+                    });
                 } else {
                     MainData.getIns().getScheduler().runTaskAsync(() -> {
 
-                        if (commandSender instanceof Player) {
-                            PVPPlayerData playerData = (PVPPlayerData) MainData.getIns().getPlayerManager().getPlayer(((Player) commandSender).getUniqueId());
-                            if (!commandSender.hasPermission("database.fullaccess")) {
-                                if (playerData.getLastDatabaseAccess() + 5000 > System.currentTimeMillis()) {
-                                    MainData.getIns().getMessageManager().getMessage("DATABASE_DELAY")
-                                            .format("%timeLeft%",
-                                                    new TimeUtil("SS").toTime(playerData.getLastDatabaseAccess() + 5000 - System.currentTimeMillis()))
-                                            .sendTo(commandSender);
-                                    return;
-                                }
-                                playerData.setLastDatabaseAccess(System.currentTimeMillis());
-                            }
+                        if (!checkDatabase(commandSender)) {
+                            return;
                         }
 
                         Pair<PlayerData, Boolean> loaded = MainData.getIns().getPlayerManager().getOrLoadPlayer(args[0]);
@@ -219,4 +236,22 @@ public class CoinCommand implements CommandExecutor {
             }
         return true;
     }
+
+    private boolean checkDatabase(CommandSender commandSender) {
+        if (commandSender instanceof Player) {
+            PVPPlayerData playerData = (PVPPlayerData) MainData.getIns().getPlayerManager().getPlayer(((Player) commandSender).getUniqueId());
+            if (!commandSender.hasPermission("database.fullaccess")) {
+                if (playerData.getLastDatabaseAccess() + 5000 > System.currentTimeMillis()) {
+                    MainData.getIns().getMessageManager().getMessage("DATABASE_DELAY")
+                            .format("%timeLeft%",
+                                    new TimeUtil("SS").toTime(playerData.getLastDatabaseAccess() + 5000 - System.currentTimeMillis()))
+                            .sendTo(commandSender);
+                    return false;
+                }
+                playerData.setLastDatabaseAccess(System.currentTimeMillis());
+            }
+        }
+        return true;
+    }
+
 }

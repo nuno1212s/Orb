@@ -1,3 +1,14 @@
 {
-
+ "COIN_TOP": [
+   "&cTop 10:",
+   "1: %player1% &7:&6 %coinAmount1%",
+   "2: %player2% &7:&6 %coinAmount2%",
+   "3: %player3% &7:&6 %coinAmount3%",
+   "4: %player4% &7:%6 %coinAmount4%",
+   "5: %player5% &7:%6 %coinAmount5%",
+   "6: %player6% &7:%6 %coinAmount6%",
+   "7: %player7% &7:%6 %coinAmount7%",
+   "8: %player8% &7:%6 %coinAmount8%",
+   "9: %player9% &7:%6 %coinAmount9%",
+   "10: %player10% &7:%6 %coinAmount10%"]
 }

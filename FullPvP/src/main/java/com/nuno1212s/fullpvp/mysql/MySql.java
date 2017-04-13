@@ -4,7 +4,10 @@ import com.nuno1212s.fullpvp.playermanager.PVPPlayerData;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.util.PlayerGroupData;
 
+import java.io.IOException;
 import java.sql.*;
+import java.util.LinkedHashMap;
+import java.util.UUID;
 
 /**
  * mysql data class
@@ -40,6 +43,22 @@ public class MySql {
             e.printStackTrace();
         }
 
+    }
+
+    public LinkedHashMap<UUID, Long> getCoinTop(int limit) {
+        try (Connection c = MainData.getIns().getMySql().getConnection();
+            PreparedStatement st = c.prepareStatement("SELECT UUID, COINS FROM pvpData ORDER BY COINS LIMIT ?")) {
+            st.setInt(1, limit);
+            ResultSet resultSet = st.executeQuery();
+            LinkedHashMap<UUID, Long> players = new LinkedHashMap<>();
+            while (resultSet.next()) {
+                players.put(UUID.fromString(resultSet.getString("UUID")), resultSet.getLong("COINS"));
+            }
+            return players;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public void savePlayerData(PVPPlayerData playerData) {

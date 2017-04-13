@@ -15,7 +15,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class PlayerManager {
 
-    @Getter
     private final List<PlayerData> players;
 
     private Map<Object, Object> cache;
@@ -81,4 +80,9 @@ public class PlayerManager {
         return new Pair<>(MainData.getIns().getMySql().getPlayerData(playerName), true);
     }
 
+    public List<PlayerData> getPlayers() {
+        synchronized (players) {
+            return new ArrayList<>(players);
+        }
+    }
 }
