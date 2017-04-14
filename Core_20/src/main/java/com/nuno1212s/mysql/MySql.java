@@ -232,9 +232,83 @@ public class MySql {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return null;
+    }
 
+    public boolean modifyGroup(short groupID, String parameter, String value) {
+
+        try (Connection c = getConnection();
+            PreparedStatement s = c.prepareStatement("SELECT * FROM groupData");
+            PreparedStatement pS = c.prepareStatement("UPDATE groupData SET " + parameter.toUpperCase() + "=? WHERE GROUPID=?")) {
+            ResultSet resultSet = s.executeQuery();
+            ResultSetMetaData metaData = resultSet.getMetaData();
+
+            for (int i = 1; i <= metaData.getColumnCount(); i++) {
+                String columnName = metaData.getColumnName(i);
+                if (columnName.equalsIgnoreCase(parameter)) {
+                    String columnType = metaData.getColumnClassName(i);
+                    pS.setShort(2, groupID);
+                    try {
+                        Class<?> cT = Class.forName(columnType);
+                        if (cT == String.class) {
+                            pS.setString(1, value);
+                        } else if (cT == Boolean.class) {
+                            pS.setBoolean(1, Boolean.parseBoolean(value));
+                        } else if (cT.isInstance(Number.class)) {
+                            parseNumber(pS, 1, (Class<? extends Number>) cT, value);
+                        }
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                        return false;
+                    }
+                    pS.executeUpdate();
+                    resultSet.close();
+                    return true;
+                }
+            }
+            resultSet.close();
+            return false;
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private void parseNumber(PreparedStatement s, int instance, Class<? extends Number> c, String value) {
+
+        try {
+            if (c == Long.class) {
+                s.setLong(instance, Long.parseLong(value));
+            } else if (c == Integer.class) {
+                s.setInt(instance, Integer.parseInt(value));
+            } else if (c == Short.class) {
+                s.setShort(instance, Short.parseShort(value));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addGroup(Group g) {
+        try (Connection c = getConnection();
+            PreparedStatement s = c.prepareStatement("INSERT INTO groupData(GROUPID, GROUPNAME, APPLICABLESERVER, GROUPTYPE, ISDEFAULT, OVERRIDES, PREFIX, SUFFIX, SCOREBOARD)" +
+                    " values(?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+            s.setShort(1, g.getGroupID());
+            s.setString(2, g.getGroupName());
+            s.setString(3, g.getApplicableServer());
+            s.setString(4, g.getGroupType().name());
+            s.setBoolean(5, g.isDefaultGroup());
+            s.setBoolean(6, g.isOverrides());
+            s.setString(7, g.getGroupPrefix());
+            s.setString(8, g.getGroupSuffix());
+            s.setString(9, g.getScoreboardName());
+            s.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -1,8 +1,6 @@
 package com.nuno1212s.main;
 
-import com.nuno1212s.command.CashCommand;
-import com.nuno1212s.command.CommandRegister;
-import com.nuno1212s.command.ReloadMessages;
+import com.nuno1212s.command.*;
 import com.nuno1212s.config.BukkitConfig;
 import com.nuno1212s.events.listeners.PlayerDisconnectListener;
 import com.nuno1212s.events.listeners.PlayerJoinListener;
@@ -18,7 +16,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -62,6 +59,7 @@ public class Main extends JavaPlugin {
         if (!j.exists()) {
             this.saveResource("messages.json", false);
         }
+
         data.setMessageManager(new Messages(j));
         data.setModuleManager(new ModuleManager(this.getDataFolder()));
 
@@ -70,6 +68,8 @@ public class Main extends JavaPlugin {
 
         MainData.getIns().getCommandRegister().registerCommand(new String[]{"cash"}, new CashCommand());
         MainData.getIns().getCommandRegister().registerCommand(new String[]{"reloadmessages"}, new ReloadMessages());
+        MainData.getIns().getCommandRegister().registerCommand(new String[]{"server"}, new ServerSettingCommand());
+        MainData.getIns().getCommandRegister().registerCommand(new String[]{"group"}, new GroupCommand());
 
     }
 
@@ -96,17 +96,8 @@ public class Main extends JavaPlugin {
             c.setAccessible(true);
 
             command = c.newInstance(name, plugin);
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
+        } catch (SecurityException | IllegalArgumentException | IllegalAccessException
+                | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
         }
 
@@ -123,13 +114,8 @@ public class Main extends JavaPlugin {
 
                 commandMap = (CommandMap) f.get(Bukkit.getPluginManager());
             }
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (NoSuchFieldException | SecurityException
+                | IllegalArgumentException | IllegalAccessException e) {
             e.printStackTrace();
         }
 

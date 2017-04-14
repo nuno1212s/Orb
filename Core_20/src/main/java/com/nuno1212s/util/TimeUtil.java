@@ -14,23 +14,29 @@ public class TimeUtil {
     String pattern;
 
     @Getter()
-    boolean useYears, useWeeks, useDays;
+    boolean useYears, useMonths, useWeeks, useDays;
 
     public TimeUtil(String pattern) {
         this.pattern = pattern;
 
-        useYears = pattern.contains("Y");
-        useWeeks = pattern.contains("W");
-        useDays = pattern.contains("D");
+        useYears = pattern.contains("YYYY");
+        useMonths = pattern.contains("mm");
+        useWeeks = pattern.contains("WW");
+        useDays = pattern.contains("DD");
 
     }
 
     public String toTime(long time) {
-        long years = 0, weeks = 0, days = 0, hours, minutes, seconds;
+        long years = 0, months = 0, weeks = 0, days = 0, hours, minutes, seconds;
 
         if (useYears) {
             years = (long) Math.floor((double) TimeUnit.MILLISECONDS.toDays(time) / 365);
             time -= TimeUnit.DAYS.toMillis(years * 365);
+        }
+
+        if (useMonths) {
+            months = (long) Math.floor((double) TimeUnit.MILLISECONDS.toDays(time) / 30);
+            time -= TimeUnit.DAYS.toMillis(months * 30);
         }
 
         if (useWeeks) {
@@ -55,6 +61,10 @@ public class TimeUtil {
 
         if (useYears) {
             b = String.format(b.replace("YYYY", "%04d"), years);
+        }
+
+        if (useMonths) {
+            b = String.format(b.replace("mm", "%02d"), months);
         }
 
         if (useWeeks) {

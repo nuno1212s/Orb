@@ -65,4 +65,21 @@ public class Group {
         return false;
     }
 
+    public void addPermission(String permission) {
+        this.permissions.add(permission);
+    }
+
+    public void removePermission(String permission) {
+        this.permissions.remove(permission);
+    }
+
+    public String permissionsToDB() {
+        StringBuilder builder = new StringBuilder();
+        this.permissions.forEach(perm -> {
+            builder.append(perm);
+            builder.append(",");
+        });
+        return builder.toString();
+    }
+
 }

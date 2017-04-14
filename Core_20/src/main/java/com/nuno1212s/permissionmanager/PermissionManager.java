@@ -10,6 +10,7 @@ import java.util.*;
  */
 public class PermissionManager {
 
+    @Getter
     private List<Group> groups;
 
     @Getter
@@ -28,6 +29,10 @@ public class PermissionManager {
 
         this.maxGroupsPerPlayer = 6;
 
+    }
+
+    public void updateGroups() {
+        groups = MainData.getIns().getMySql().getGroups();
     }
 
     public static boolean isApplicable(Group g) {
