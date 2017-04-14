@@ -3,11 +3,10 @@ package com.nuno1212s.command;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.Group;
 import com.nuno1212s.permissionmanager.GroupType;
-import com.nuno1212s.permissionmanager.PermissionManager;
+import com.nuno1212s.permissionmanager.util.PlayerGroupData;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.Pair;
 import com.nuno1212s.util.TimeUtil;
-import com.sun.org.apache.regexp.internal.RE;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -95,18 +94,34 @@ public class GroupCommand implements CommandExecutor {
                 return true;
             }
 
-            player.getKey().setMainGroup(groupID, time);
-            MainData.getIns().getMessageManager().getMessage("GROUP_CHANGED")
-                    .format("%newGroup%", group.getGroupName())
-                    .format("%time%", new TimeUtil("mm meses:DD dias").toTime(time))
-                    .sendTo(player.getKey());
+            PlayerGroupData.EXTENSION_RESULT extension_result = player.getKey().setMainGroup(groupID, time);
+
+            if (extension_result == PlayerGroupData.EXTENSION_RESULT.EXTENDED_CURRENT) {
+                MainData.getIns().getMessageManager().getMessage("GROUP_EXTENDED_CURRENT")
+                        .format("%newGroup%", group.getGroupName())
+                        .format("%time%", new TimeUtil("mm meses:DD dias").toTime(time))
+                        .sendTo(player.getKey());
+            } else if (extension_result == PlayerGroupData.EXTENSION_RESULT.EXTENDED_AND_ACTIVATED) {
+                MainData.getIns().getMessageManager().getMessage("GROUP_EXTENDED_NEW")
+                        .format("%newGroup%", group.getGroupName())
+                        .format("%time%", new TimeUtil("mm meses:DD dias").toTime(time))
+                        .sendTo(player.getKey());
+            } else {
+                MainData.getIns().getMessageManager().getMessage("GROUP_CHANGED")
+                        .format("%newGroup%", group.getGroupName())
+                        .format("%time%", new TimeUtil("mm meses:DD dias").toTime(time))
+                        .sendTo(player.getKey());
+            }
             MainData.getIns().getMessageManager().getMessage("GROUP_CHANGED_OTHER")
                     .format("%newGroup%", group.getGroupName())
                     .format("%time%", new TimeUtil("mm meses:DD dias").toTime(time))
                     .format("%playerName%", player.getKey().getPlayerName())
                     .sendTo(commandSender);
 
-            player.getKey().save((o) -> {});
+            player.getKey().save((o) -> {
+            });
+
+            MainData.getIns().getEventCaller().callUpdateInformationEvent(player.getKey());
 
             return true;
         } else if (arg.equalsIgnoreCase("setLocal")) {
@@ -137,18 +152,35 @@ public class GroupCommand implements CommandExecutor {
                 return true;
             }
 
-            player.getKey().setServerGroup(groupID, time);
-            MainData.getIns().getMessageManager().getMessage("GROUP_CHANGED")
-                    .format("%newGroup%", group.getGroupPrefix())
-                    .format("%time%", new TimeUtil("mm meses:DD dias").toTime(time))
-                    .sendTo(player.getKey());
+            PlayerGroupData.EXTENSION_RESULT extension_result = player.getKey().setServerGroup(groupID, time);
+
+            if (extension_result == PlayerGroupData.EXTENSION_RESULT.EXTENDED_CURRENT) {
+                MainData.getIns().getMessageManager().getMessage("GROUP_EXTENDED_CURRENT")
+                        .format("%newGroup%", group.getGroupName())
+                        .format("%time%", new TimeUtil("mm meses:DD dias").toTime(time))
+                        .sendTo(player.getKey());
+            } else if (extension_result == PlayerGroupData.EXTENSION_RESULT.EXTENDED_AND_ACTIVATED) {
+                MainData.getIns().getMessageManager().getMessage("GROUP_EXTENDED_NEW")
+                        .format("%newGroup%", group.getGroupName())
+                        .format("%time%", new TimeUtil("mm meses:DD dias").toTime(time))
+                        .sendTo(player.getKey());
+            } else {
+                MainData.getIns().getMessageManager().getMessage("GROUP_CHANGED")
+                        .format("%newGroup%", group.getGroupName())
+                        .format("%time%", new TimeUtil("mm meses:DD dias").toTime(time))
+                        .sendTo(player.getKey());
+            }
             MainData.getIns().getMessageManager().getMessage("GROUP_CHANGED_OTHER")
-                    .format("%newGroup%", group.getGroupPrefix())
+                    .format("%newGroup%", group.getGroupName())
                     .format("%time%", new TimeUtil("mm meses:DD dias").toTime(time))
                     .format("%playerName%", player.getKey().getPlayerName())
                     .sendTo(commandSender);
 
-            player.getKey().save((o) -> {});
+
+            player.getKey().save((o) -> {
+            });
+
+            MainData.getIns().getEventCaller().callUpdateInformationEvent(player.getKey());
 
             return true;
         } else if (arg.equalsIgnoreCase("modify")) {
@@ -174,7 +206,7 @@ public class GroupCommand implements CommandExecutor {
                     return;
                 }
 
-                String parameter = args[2], value = args[3];
+                String parameter = args[2], value = ChatColor.translateAlternateColorCodes('&', args[3].replace("__", " "));
 
                 boolean success = MainData.getIns().getMySql().modifyGroup(groupID, parameter, value);
                 if (success) {
@@ -302,16 +334,17 @@ public class GroupCommand implements CommandExecutor {
                 return true;
             }
 
-            Group ngroup = new Group(groupID, groupName, "", "", "", applicableServer
-            , isDefault, groupType, new ArrayList<>(), overrides);
+            Group nGroup = new Group(groupID, groupName, "", "", "", applicableServer
+                    , isDefault, groupType, new ArrayList<>(), overrides);
+
+            MainData.getIns().getPermissionManager().addGroup(nGroup);
 
             MainData.getIns().getScheduler().runTaskAsync(() -> {
-                MainData.getIns().getMySql().addGroup(ngroup);
+                MainData.getIns().getMySql().addGroup(nGroup);
                 commandSender.sendMessage(ChatColor.RED + "Added group to database.");
             });
 
         }
-
         return true;
     }
 }

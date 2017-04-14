@@ -1,6 +1,7 @@
 package com.nuno1212s.main;
 
 import com.nuno1212s.config.BungeeConfig;
+import com.nuno1212s.events.eventcaller.EventCaller;
 import com.nuno1212s.modulemanager.ModuleManager;
 import com.nuno1212s.mysql.MySql;
 import com.nuno1212s.permissionmanager.PermissionManager;
@@ -28,6 +29,7 @@ public class BungeeMain extends Plugin {
         if (!this.getDataFolder().exists()) {
             this.getDataFolder().mkdirs();
         }
+        main.setEventCaller((o) -> {});
         main.setDataFolder(this.getDataFolder());
         main.setMySql(
                 new MySql(

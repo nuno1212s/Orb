@@ -54,8 +54,8 @@ public abstract class PlayerData {
      * @param groupID The ID of the group to set
      * @param duration The duration of the group (-1 = Permanent)
      */
-    public void setMainGroup(short groupID, long duration) {
-        this.groups.setCurrentGroup(groupID, duration);
+    public PlayerGroupData.EXTENSION_RESULT setMainGroup(short groupID, long duration) {
+        return this.groups.setCurrentGroup(groupID, duration);
     }
 
     public short getGroupID() {
@@ -90,7 +90,7 @@ public abstract class PlayerData {
      *
      * @param groupID the ID of the group
      */
-    public abstract void setServerGroup(short groupID, long duration);
+    public abstract PlayerGroupData.EXTENSION_RESULT setServerGroup(short groupID, long duration);
 
     /**
      * Get the group to be displayed on the scoreboard and the chat

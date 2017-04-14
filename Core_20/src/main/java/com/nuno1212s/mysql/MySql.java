@@ -293,8 +293,8 @@ public class MySql {
 
     public void addGroup(Group g) {
         try (Connection c = getConnection();
-            PreparedStatement s = c.prepareStatement("INSERT INTO groupData(GROUPID, GROUPNAME, APPLICABLESERVER, GROUPTYPE, ISDEFAULT, OVERRIDES, PREFIX, SUFFIX, SCOREBOARD)" +
-                    " values(?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+            PreparedStatement s = c.prepareStatement("INSERT INTO groupData(GROUPID, GROUPNAME, APPLICABLESERVER, GROUPTYPE, ISDEFAULT, OVERRIDES, PREFIX, SUFFIX, SCOREBOARD, PERMISSIONS)" +
+                    " values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
             s.setShort(1, g.getGroupID());
             s.setString(2, g.getGroupName());
             s.setString(3, g.getApplicableServer());
@@ -304,6 +304,7 @@ public class MySql {
             s.setString(7, g.getGroupPrefix());
             s.setString(8, g.getGroupSuffix());
             s.setString(9, g.getScoreboardName());
+            s.setString(10, g.permissionsToDB());
             s.executeUpdate();
 
         } catch (SQLException e) {

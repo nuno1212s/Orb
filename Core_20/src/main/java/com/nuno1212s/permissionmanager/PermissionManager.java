@@ -1,6 +1,7 @@
 package com.nuno1212s.permissionmanager;
 
 import com.nuno1212s.main.MainData;
+import com.nuno1212s.permissionmanager.util.CheckExpirationTimer;
 import lombok.Getter;
 
 import java.util.*;
@@ -25,6 +26,7 @@ public class PermissionManager {
 
         if (bukkit) {
             this.playerPermissions = new PlayerPermissions();
+            MainData.getIns().getScheduler().runTaskTimer(new CheckExpirationTimer(), 0, 20);
         }
 
         this.maxGroupsPerPlayer = 6;
@@ -33,6 +35,10 @@ public class PermissionManager {
 
     public void updateGroups() {
         groups = MainData.getIns().getMySql().getGroups();
+    }
+
+    public void addGroup(Group group) {
+        this.groups.add(group);
     }
 
     public static boolean isApplicable(Group g) {

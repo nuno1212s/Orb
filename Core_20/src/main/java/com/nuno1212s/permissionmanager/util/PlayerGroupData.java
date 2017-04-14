@@ -63,16 +63,18 @@ public class PlayerGroupData {
         return null;
     }
 
-    public void setCurrentGroup(short groupID, long duration) {
+    public EXTENSION_RESULT setCurrentGroup(short groupID, long duration) {
         PlayerGroup g = new PlayerGroup(groupID, -1, duration);
 
         PlayerGroup group = getActiveGroupIns();
 
-        if (checkIfExistsAndExtend(groupID, duration)) {
-            return;
-        }
+        EXTENSION_RESULT extension = checkIfExistsAndExtend(groupID, duration);
 
-        System.out.println("Added new group " + g.getGroupID());
+        if (extension == EXTENSION_RESULT.EXTENDED_CURRENT) {
+            return extension;
+        } else if (extension == EXTENSION_RESULT.EXTENDED_AND_ACTIVATED) {
+            return extension;
+        }
 
         group.deactivate();
 
@@ -89,9 +91,10 @@ public class PlayerGroupData {
             deleteGroup();
         }
 
+        return extension;
     }
 
-    private boolean checkIfExistsAndExtend(short groupID, long duration) {
+    private EXTENSION_RESULT checkIfExistsAndExtend(short groupID, long duration) {
         Iterator<PlayerGroup> groupIterator = this.groups.iterator();
 
         PlayerGroup toActivate = null;
@@ -104,7 +107,7 @@ public class PlayerGroupData {
                 toActivate = group;
                 toActivate.extendDuration(duration);
                 if (group.isActive()) {
-                    return true;
+                    return EXTENSION_RESULT.EXTENDED_CURRENT;
                 }
                 groupIterator.remove();
                 break;
@@ -112,14 +115,19 @@ public class PlayerGroupData {
 
         }
 
-
         if (toActivate != null) {
             this.groups.get(0).deactivate();
             toActivate.activate();
             this.groups.add(0, toActivate);
-            return true;
+            return EXTENSION_RESULT.EXTENDED_AND_ACTIVATED;
         }
-        return false;
+        return EXTENSION_RESULT.NEW_GROUP;
+    }
+
+    public enum EXTENSION_RESULT {
+        EXTENDED_CURRENT,
+        EXTENDED_AND_ACTIVATED,
+        NEW_GROUP
     }
 
     public void checkExpiration(Player p) {
@@ -128,7 +136,9 @@ public class PlayerGroupData {
 
         PlayerGroup activeGroupIns = this.getActiveGroupIns();
         if (activeGroupIns.isActive()) {
-
+            if (activeGroupIns.isPermanent()) {
+                return;
+            }
             long timeLeft = activeGroupIns.getDuration();
             long timeGroupEnd = timeLeft == Long.MAX_VALUE ? Long.MAX_VALUE : activeGroupIns.getActivationTime() + timeLeft;
 
@@ -140,7 +150,8 @@ public class PlayerGroupData {
                 Group group = MainData.getIns().getPermissionManager().getGroup(activeGroupIns.getGroupID());
 
                 MainData.getIns().getMessageManager().getMessage("GROUP_EXPIRED")
-                        .format("%group%", group.getGroupPrefix()).sendTo(p);
+                        .format("%group%", group.getGroupPrefix())
+                        .sendTo(p);
                 expired = true;
             }
         }
@@ -153,15 +164,22 @@ public class PlayerGroupData {
             Group g = MainData.getIns().getPermissionManager().getGroup(nextGroup.getGroupID());
 
             if (nextGroup.isPermanent()) {
-                MainData.getIns().getMessageManager().getMessage("GROUP_CHANGED")
-                        .format("%newGroup%", g.getGroupPrefix()).sendTo(p);
+                MainData.getIns().getMessageManager().getMessage("GROUP_CHANGED_EXPIRED")
+                        .format("%newGroup%", g.getGroupPrefix())
+                        .sendTo(p);
             } else {
-                MainData.getIns().getMessageManager().getMessage("GROUP_CHANGED_TIME")
-                        .format("%newGroup%", g.getGroupPrefix()).format("%time%", new TimeUtil("MM:DD:MM:SS").toTime(nextGroup.getActivationTime()))
+                MainData.getIns().getMessageManager().getMessage("GROUP_CHANGED_EXPIRED_TIME")
+                        .format("%newGroup%", g.getGroupPrefix())
+                        .format("%time%", new TimeUtil("MM:DD:MM:SS").toTime(nextGroup.getActivationTime()))
                         .sendTo(p);
             }
 
         }
+
+        MainData.getIns().getEventCaller().callUpdateInformationEvent
+                (MainData.getIns().getPlayerManager().getPlayer(p.getUniqueId()));
+
+
     }
 
     private void deleteGroup() {

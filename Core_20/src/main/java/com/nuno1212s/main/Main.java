@@ -2,12 +2,15 @@ package com.nuno1212s.main;
 
 import com.nuno1212s.command.*;
 import com.nuno1212s.config.BukkitConfig;
+import com.nuno1212s.events.PlayerInformationUpdateEvent;
+import com.nuno1212s.events.eventcaller.EventCaller;
 import com.nuno1212s.events.listeners.PlayerDisconnectListener;
 import com.nuno1212s.events.listeners.PlayerJoinListener;
 import com.nuno1212s.messagemanager.Messages;
 import com.nuno1212s.modulemanager.ModuleManager;
 import com.nuno1212s.mysql.MySql;
 import com.nuno1212s.permissionmanager.PermissionManager;
+import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.playermanager.PlayerManager;
 import com.nuno1212s.scheduler.BukkitScheduler;
 import com.nuno1212s.serverstatus.ServerManager;
@@ -16,6 +19,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -40,13 +44,18 @@ public class Main extends JavaPlugin {
         MainData data = new MainData();
 
         this.saveDefaultConfig();
-
+        data.setEventCaller(new EventCaller() {
+            @Override
+            public void callUpdateInformationEvent(Object... args) {
+                Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent((PlayerData) args[0]));
+            }
+        });
         data.setDataFolder(this.getDataFolder());
         data.setMySql(new MySql(new BukkitConfig(this.getConfig())));
+        data.setScheduler(new BukkitScheduler(this.getServer().getScheduler(), this));
         data.setServerManager(new ServerManager(this.getDataFolder()));
         data.setPermissionManager(new PermissionManager(true));
         data.setPlayerManager(new PlayerManager());
-        data.setScheduler(new BukkitScheduler(this.getServer().getScheduler(), this));
         data.setCommandRegister(new CommandRegister() {
             @Override
             public void registerCommand(String[] aliases, Object commandExecutor) {
