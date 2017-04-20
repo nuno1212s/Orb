@@ -1,5 +1,6 @@
 package com.nuno1212s.fullpvp.main;
 
+import com.nuno1212s.fullpvp.crates.CrateManager;
 import com.nuno1212s.fullpvp.events.PlayerUpdateListener;
 import com.nuno1212s.fullpvp.mysql.MySql;
 import com.nuno1212s.fullpvp.economy.CoinCommand;
@@ -29,25 +30,19 @@ public class Main extends Module {
     @Getter
     ScoreboardManager scoreboardManager;
 
+    @Getter
+    CrateManager crateManager;
+
     @Override
     public void onEnable() {
         ins = this;
         mysql = new MySql();
         mysql.createTables();
 
-        File file = new File(this.getDataFolder(), "scoreboard.json");
-        if (!file.exists()) {
-            saveResource(file, "scoreboard.json");
-        }
+        MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));
 
-        File messageFile = new File(this.getDataFolder(), "messages.json");
-        if (!messageFile.exists()) {
-            saveResource(messageFile, "messages.json");
-        }
-
-        MainData.getIns().getMessageManager().addMessageFile(messageFile);
-
-        scoreboardManager = new ScoreboardManager(file);
+        scoreboardManager = new ScoreboardManager(getFile("scoreboard.json", true));
+        crateManager = new CrateManager(this);
 
         registerCommand(new String[]{"coins", "coin"}, new CoinCommand());
 
@@ -58,6 +53,6 @@ public class Main extends Module {
 
     @Override
     public void onDisable() {
-
+        crateManager.save();
     }
 }

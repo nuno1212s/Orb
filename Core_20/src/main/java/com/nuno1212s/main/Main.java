@@ -70,7 +70,7 @@ public class Main extends JavaPlugin {
         }
 
         data.setMessageManager(new Messages(j));
-        data.setModuleManager(new ModuleManager(this.getDataFolder()));
+        data.setModuleManager(new ModuleManager(this.getDataFolder(), this.getClassLoader()));
 
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerDisconnectListener(), this);

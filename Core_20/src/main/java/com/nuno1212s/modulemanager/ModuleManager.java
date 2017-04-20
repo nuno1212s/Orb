@@ -20,7 +20,7 @@ public class ModuleManager {
 
     private GlobalClassLoader loader;
 
-    public ModuleManager(File dataFolder) {
+    public ModuleManager(File dataFolder, ClassLoader classLoader) {
 
         loader = new GlobalClassLoader();
         modules = new ArrayList<>();
@@ -40,7 +40,7 @@ public class ModuleManager {
             if (file.getName().endsWith(".jar")) {
                 ModuleLoader moduleLoader = null;
                 try {
-                    moduleLoader = new ModuleLoader(file, this.getClass().getClassLoader(), this.loader);
+                    moduleLoader = new ModuleLoader(file, classLoader, this.loader);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }

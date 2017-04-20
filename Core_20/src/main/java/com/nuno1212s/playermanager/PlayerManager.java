@@ -28,6 +28,10 @@ public class PlayerManager {
         return new CorePlayerData(playerID, new PlayerGroupData(), playerName, 0, System.currentTimeMillis(), true);
     }
 
+    public PlayerData buildNewPiratePlayerData(UUID playerID, String playerName) {
+        return new CorePlayerData(playerID, new PlayerGroupData(), playerName, 0, System.currentTimeMillis(), false);
+    }
+
     public void addToCache(UUID player, PlayerData coreData) {
         this.cache.put(player, coreData);
     }

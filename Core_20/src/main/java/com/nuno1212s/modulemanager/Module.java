@@ -86,6 +86,24 @@ public abstract class Module {
         }
     }
 
+    public File getFile(String fileName, boolean isResource) {
+        File file = new File(getDataFolder(), fileName);
+
+        if (!file.exists()) {
+            if (isResource) {
+                saveResource(file, fileName);
+            } else {
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return file;
+    }
+
     private InputStream getResourceAsStream(String path) {
         URL resource = this.getInitLoader().getResource(path);
         if (resource == null) {
@@ -109,5 +127,24 @@ public abstract class Module {
     public abstract void onEnable();
 
     public abstract void onDisable();
+
+    /**
+     * Method to handle disabling with players on the server (Without server restart)
+     */
+    public void activeDisable() {
+        onDisable();
+    }
+
+    /**
+     * Method to handle enabling with players on the server
+     */
+    public void activeEnable() {
+        onEnable();
+    }
+
+    public void restart() {
+        activeDisable();
+        activeEnable();
+    }
 
 }

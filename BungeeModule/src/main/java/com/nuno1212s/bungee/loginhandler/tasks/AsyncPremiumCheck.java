@@ -66,7 +66,7 @@ public class AsyncPremiumCheck implements Runnable {
                     //Cracked account
                     UUID uuidForPlayer = UUID.randomUUID();
                     connection.setUniqueId(uuidForPlayer);
-                    d = MainData.getIns().getPlayerManager().buildNewPlayerData(uuidForPlayer, username);
+                    d = MainData.getIns().getPlayerManager().buildNewPiratePlayerData(uuidForPlayer, username);
 
                     BungeeCoreLogin event = new BungeeCoreLogin(d);
                     Main.getPlugin().getProxy().getPluginManager().callEvent(event);
