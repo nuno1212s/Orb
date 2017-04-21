@@ -49,6 +49,7 @@ public class CrateManager {
             List<Reward> rewardList = new ArrayList<>();
             rewards.forEach(reward -> {
                 int percentage = ((Long) reward.get("Percentage")).intValue();
+                int rewardID = ((Long) reward.get("RewardID")).intValue();
                 ItemStack item;
                 try {
                     item = itemFrom64((String) reward.get("Item"));
@@ -56,7 +57,7 @@ public class CrateManager {
                     e.printStackTrace();
                     return;
                 }
-                rewardList.add(new Reward(item, percentage));
+                rewardList.add(new Reward(rewardID, item, percentage));
             });
             this.crates.add(new Crate(crate, rewardList));
         });
