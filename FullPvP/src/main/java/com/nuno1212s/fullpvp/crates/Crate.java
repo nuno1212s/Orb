@@ -25,9 +25,14 @@ public class Crate {
         this.crateName = crateName;
         this.rewards = rewards;
 
+        recalculateProbabilities();
+
+    }
+
+    public void recalculateProbabilities() {
         int currentFullProbability = 0;
         for (Reward reward : this.rewards) {
-            currentFullProbability += (int) reward.getProbability();
+            currentFullProbability += (int) reward.getOriginalProbability();
         }
 
         int multiplier = 0;
@@ -44,7 +49,17 @@ public class Crate {
         for (Reward reward : this.rewards) {
             reward.recalculateProbability(multiplier);
         }
+    }
 
+    public int getNextRewardID() {
+        int maxID = -1;
+        for (Reward reward : this.rewards) {
+            int rewardID = reward.getRewardID();
+            if (rewardID > maxID) {
+                maxID = rewardID;
+            }
+        }
+        return ++maxID;
     }
 
     void openCase(Player p) {

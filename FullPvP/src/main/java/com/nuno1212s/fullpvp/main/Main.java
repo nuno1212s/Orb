@@ -1,6 +1,7 @@
 package com.nuno1212s.fullpvp.main;
 
 import com.nuno1212s.fullpvp.crates.CrateManager;
+import com.nuno1212s.fullpvp.crates.commands.CrateCommandManager;
 import com.nuno1212s.fullpvp.events.PlayerUpdateListener;
 import com.nuno1212s.fullpvp.mysql.MySql;
 import com.nuno1212s.fullpvp.economy.CoinCommand;
@@ -43,6 +44,8 @@ public class Main extends Module {
 
         scoreboardManager = new ScoreboardManager(getFile("scoreboard.json", true));
         crateManager = new CrateManager(this);
+
+        registerCommand(new String[]{"crate"}, new CrateCommandManager());
 
         registerCommand(new String[]{"coins", "coin"}, new CoinCommand());
 

@@ -9,13 +9,21 @@ import org.bukkit.inventory.ItemStack;
 public class Reward {
 
     @Getter
+    private int rewardID;
+
+    @Getter
     double probability;
 
-    ItemStack item;
+    @Getter
+    final double originalProbability;
 
-    public Reward(ItemStack item, int probability) {
+    private ItemStack item;
+
+    public Reward(int rewardID, ItemStack item, int probability) {
+        this.rewardID = rewardID;
         this.item = item.clone();
         this.probability = probability;
+        this.originalProbability = getOriginalProbability();
     }
 
     /**

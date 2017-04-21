@@ -30,6 +30,7 @@ public class CrateManager {
     @SuppressWarnings("unchecked")
     public CrateManager(Module mainModule) {
 
+        this.crates = new ArrayList<>();
         this.crateFile = mainModule.getFile("crates.json", false);
 
         JSONObject obj;
@@ -62,12 +63,25 @@ public class CrateManager {
 
     }
 
-    public void reload() {
-
-    }
-
     public void save() {
         animationManager.save();
+    }
+
+    public void addCrate(Crate c) {
+        this.crates.add(c);
+    }
+
+    public void removeCrate(Crate c) {
+        this.crates.remove(c);
+    }
+
+    public Crate getCrate(String crateName) {
+        for (Crate crate : this.crates) {
+            if (crate.getCrateName().equalsIgnoreCase(crateName)) {
+                return crate;
+            }
+        }
+        return null;
     }
 
     static String itemTo64(ItemStack stack) throws IllegalStateException {
