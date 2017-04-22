@@ -1,10 +1,13 @@
-package com.nuno1212s.fullpvp.crates;
+package com.nuno1212s.fullpvp.crates.animations;
 
-import com.nuno1212s.fullpvp.crates.animations.Animation;
+import com.nuno1212s.fullpvp.crates.Crate;
+import com.nuno1212s.fullpvp.crates.CrateManager;
+import com.nuno1212s.fullpvp.crates.animations.AnimationTimer.AnimationTimer;
+import com.nuno1212s.main.MainData;
 import lombok.Getter;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.io.BukkitObjectInputStream;
-import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -13,6 +16,7 @@ import org.json.simple.parser.ParseException;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Handles all animations
@@ -20,11 +24,17 @@ import java.util.List;
 @Getter
 public class AnimationManager {
 
-    List<ItemStack> showItems;
+    private List<ItemStack> showItems;
     
-    File animationStuff;
+    private File animationStuff;
+
+    private AnimationTimer timer;
+
+    private Random random = new Random();
 
     public AnimationManager(File animationStuff) {
+        timer = new AnimationTimer();
+        MainData.getIns().getScheduler().runTaskTimer(timer, 0, 10);
         this.animationStuff = animationStuff;
         showItems = new ArrayList<>();
 
@@ -33,7 +43,7 @@ public class AnimationManager {
         try (Reader r = new FileReader(this.animationStuff)) {
             json = (JSONObject) new JSONParser().parse(r);
         } catch (ParseException | IOException e) {
-            e.printStackTrace();
+            System.out.println("JSON file could not be read. Maybe it's undefined? ");
             return;
         }
 
@@ -73,8 +83,37 @@ public class AnimationManager {
         }
     }
 
-    public void registerAnimation(Animation animation) {
+    public ItemStack getRandomDisplayItem() {
+        return this.showItems.get(random.nextInt(this.showItems.size()));
+    }
 
+    public void addDisplayItem(ItemStack item) {
+        this.showItems.add(item);
+    }
+
+    public void registerAnimation(Animation animation) {
+        this.timer.registerAnimation(animation);
+    }
+
+    public boolean isInventoryBeingUsed(Inventory i) {
+        return this.timer.isInventoryRegistered(i);
+    }
+
+    public void cancelAnimation(Player p, Inventory i) {
+        Animation animation = this.timer.getAnimation(i);
+        this.timer.cancelAnimation(animation);
+        Crate crate = animation.getCrate();
+
+        ItemStack randomReward;
+        try {
+            randomReward = crate.getRandomReward();
+        } catch (Exception e) {
+            e.printStackTrace();
+            MainData.getIns().getMessageManager().getMessage("COULD_NOT_GIVE_REWARD").sendTo(p);
+            return;
+        }
+
+        p.getInventory().addItem(randomReward);
     }
 
 }

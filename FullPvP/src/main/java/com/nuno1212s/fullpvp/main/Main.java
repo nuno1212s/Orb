@@ -18,7 +18,7 @@ import java.io.File;
 /**
  * Full PVP Module Main Class
  */
-@ModuleData(name = "Full PvP", version = "0.1-SNAPSHOT", dependencies = {})
+@ModuleData(name = "Full PvP", version = "1.1-SNAPSHOT", dependencies = {})
 public class Main extends Module {
 
 

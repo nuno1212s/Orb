@@ -6,7 +6,7 @@
 
     <groupId>com.nuno1212s</groupId>
     <artifactId>Core</artifactId>
-    <version>1.1.1</version>
+    <version>1.2</version>
 
     <dependencies>
         <dependency>
@@ -68,6 +68,8 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <finalName>Core</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>

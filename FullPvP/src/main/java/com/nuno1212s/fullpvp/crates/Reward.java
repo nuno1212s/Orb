@@ -1,11 +1,13 @@
 package com.nuno1212s.fullpvp.crates;
 
 import lombok.Getter;
+import lombok.ToString;
 import org.bukkit.inventory.ItemStack;
 
 /**
  * Reward class
  */
+@ToString
 public class Reward {
 
     @Getter
@@ -17,13 +19,14 @@ public class Reward {
     @Getter
     final double originalProbability;
 
+    @Getter
     private ItemStack item;
 
     public Reward(int rewardID, ItemStack item, int probability) {
         this.rewardID = rewardID;
         this.item = item.clone();
         this.probability = probability;
-        this.originalProbability = getOriginalProbability();
+        this.originalProbability = probability;
     }
 
     /**
@@ -32,8 +35,8 @@ public class Reward {
      * Do the calculations to turn it into a 0-100
      * Simple rule of three
      */
-    public void recalculateProbability(int divider) {
-        this.probability *= divider;
+    public void recalculateProbability(double divider) {
+        this.probability = originalProbability * divider;
     }
 
 }

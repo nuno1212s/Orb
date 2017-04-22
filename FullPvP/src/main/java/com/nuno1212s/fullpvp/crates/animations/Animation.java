@@ -1,10 +1,9 @@
 package com.nuno1212s.fullpvp.crates.animations;
 
-import com.nuno1212s.fullpvp.crates.Reward;
+import com.nuno1212s.fullpvp.crates.Crate;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.bukkit.inventory.Inventory;
-
-import java.util.List;
 
 /**
  * Animation class
@@ -12,9 +11,11 @@ import java.util.List;
 @AllArgsConstructor
 public abstract class Animation {
 
+    @Getter
     Inventory toEdit;
 
-    List<Reward> possibleRewards;
+    @Getter
+    Crate crate;
 
     /**
      * Run an animation cycle

@@ -3,8 +3,10 @@ package com.nuno1212s.fullpvp.crates.commands;
 import com.nuno1212s.fullpvp.crates.Crate;
 import com.nuno1212s.fullpvp.crates.Reward;
 import com.nuno1212s.fullpvp.main.Main;
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.util.CommandUtil.Command;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 /**
@@ -24,7 +26,8 @@ public class CrateAddRewardCommand implements Command {
 
     @Override
     public void execute(Player player, String[] args) {
-        if (player.hasPermission("crate.addreward")) {
+        if (!player.hasPermission("crate.addreward")) {
+            MainData.getIns().getMessageManager().getMessage("NO_PERMISSION").sendTo(player);
             return;
         }
         if (args.length < 3) {
@@ -33,6 +36,11 @@ public class CrateAddRewardCommand implements Command {
         }
 
         String crateName = args[1], percentage = args[2];
+
+        if (player.getItemInHand() == null || player.getItemInHand().getType() == Material.AIR) {
+            player.sendMessage(ChatColor.RED + "You are not holding any items.");
+            return;
+        }
 
         Crate c = Main.getIns().getCrateManager().getCrate(crateName);
 
@@ -49,13 +57,14 @@ public class CrateAddRewardCommand implements Command {
             player.sendMessage(ChatColor.RED + "Percentage must be a number");
             return;
         }
+
         Reward r = new Reward(c.getNextRewardID(), player.getItemInHand().clone(), percentageI);
 
         c.getRewards().add(r);
 
         c.recalculateProbabilities();
 
-        player.sendMessage(String.format(ChatColor.RED + "Reward added ID: " + r.getRewardID() + " . Reward Probability: " + "%.3f %", r.getProbability()));
+        player.sendMessage(String.format(ChatColor.RED + "Reward added ID: " + r.getRewardID() + " . Reward Probability: " + "%.3f ", r.getProbability()) + "%");
 
     }
 }

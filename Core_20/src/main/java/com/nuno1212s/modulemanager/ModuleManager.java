@@ -96,10 +96,14 @@ public class ModuleManager {
              */
             Collections.reverse(moduleSorted);
             for (Module module : moduleSorted) {
-                module.onDisable();
-                module.setEnabled(false);
-                module.disable();
-                modules.remove(module);
+                try {
+                    module.onDisable();
+                    module.setEnabled(false);
+                    module.disable();
+                    modules.remove(module);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
             moduleSorted.clear();
         }
@@ -109,8 +113,8 @@ public class ModuleManager {
     /**
      * Depth first sorting algorithm
      *
-     * @param a The module to solve
-     * @param resolved The list where all should be stored
+     * @param a          The module to solve
+     * @param resolved   The list where all should be stored
      * @param unresolved Temp list.
      */
     private void dep_resolve(Module a, List<Module> resolved, List<Module> unresolved) {

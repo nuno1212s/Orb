@@ -1,19 +1,18 @@
 package com.nuno1212s.fullpvp.crates;
 
+import com.nuno1212s.fullpvp.crates.animations.AnimationManager;
 import com.nuno1212s.modulemanager.Module;
 import lombok.Getter;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Handles crates
@@ -32,6 +31,7 @@ public class CrateManager {
 
         this.crates = new ArrayList<>();
         this.crateFile = mainModule.getFile("crates.json", false);
+        this.animationManager = new AnimationManager(mainModule.getFile("animationFile.json", false));
 
         JSONObject obj;
 
@@ -46,7 +46,7 @@ public class CrateManager {
 
         crates.keySet().forEach(crate -> {
             List<Map<String, Object>> rewards = (List<Map<String, Object>>) crates.get(crate);
-            List<Reward> rewardList = new ArrayList<>();
+            Set<Reward> rewardList = new HashSet<>();
             rewards.forEach(reward -> {
                 int percentage = ((Long) reward.get("Percentage")).intValue();
                 int rewardID = ((Long) reward.get("RewardID")).intValue();
@@ -66,6 +66,39 @@ public class CrateManager {
 
     public void save() {
         animationManager.save();
+
+        if (!crateFile.exists()) {
+            try {
+                crateFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        JSONObject obj = new JSONObject(), crates = new JSONObject();
+
+        this.crates.forEach(crate -> {
+            JSONArray rewards = new JSONArray();
+
+            crate.getRewards().forEach(reward -> {
+                JSONObject rewardObject = new JSONObject();
+                rewardObject.put("Percentage", (int) reward.getOriginalProbability());
+                rewardObject.put("RewardID", reward.getRewardID());
+                rewardObject.put("Item", itemTo64(reward.getItem()));
+                rewards.add(rewardObject);
+            });
+
+            crates.put(crate.getCrateName(), rewards);
+        });
+
+        obj.put("Crates", crates);
+
+        try (Writer w = new FileWriter(this.crateFile)) {
+            obj.writeJSONString(w);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void addCrate(Crate c) {
@@ -85,7 +118,7 @@ public class CrateManager {
         return null;
     }
 
-    static String itemTo64(ItemStack stack) throws IllegalStateException {
+    public static String itemTo64(ItemStack stack) throws IllegalStateException {
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
@@ -100,7 +133,7 @@ public class CrateManager {
         }
     }
 
-    static ItemStack itemFrom64(String data) throws IOException {
+    public static ItemStack itemFrom64(String data) throws IOException {
         try {
             ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(data));
             BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
