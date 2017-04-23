@@ -1,8 +1,7 @@
 package com.nuno1212s.messagemanager;
 
+import com.nuno1212s.messagemanager.messagetypes.*;
 import com.nuno1212s.util.ActionBarAPI;
-import com.nuno1212s.util.Pair;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -14,9 +13,7 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * JSON messages
- * <p>
- * Handles multiple messages
+ * Load messages
  */
 public class Messages {
 
@@ -49,7 +46,6 @@ public class Messages {
                 return;
             }
 
-
             messageObject.keySet().forEach(messageName -> {
                 messages.put((String) messageName, new Message(readFromValue(messageObject.get(messageName))));
             });
@@ -58,65 +54,79 @@ public class Messages {
     }
 
     @SuppressWarnings("unchecked")
-    Map<MessageType, Object> readFromValue(Object jsonObject) {
+    private List<IMessage> readFromValue(Object jsonObject) {
+        List<IMessage> messages = new ArrayList<>();
         if (jsonObject instanceof String) {
-            return new Pair<MessageType, Object>(MessageType.TEXT, jsonObject).toMap();
-        } else if (jsonObject instanceof JSONArray) {
-            ArrayList messages = (ArrayList) jsonObject;
-            Map<MessageType, Object> map = new HashMap<>();
-            map.put(MessageType.TEXT, messages);
-            return map;
+            messages.add(new StringMessage((String) jsonObject));
+        } else if (jsonObject instanceof List) {
+            if (((List) jsonObject).get(0) instanceof String) {
+                messages.add(new StringMessage((List<String>) jsonObject));
+            }
         } else if (jsonObject instanceof JSONObject) {
             JSONObject j = (JSONObject) jsonObject;
-            Map<MessageType, Object> map = new HashMap<>();
             for (String s : (Set<String>) j.keySet()) {
-                MessageType messageType = MessageType.valueOf(s.toUpperCase());
+                Messages.MessageType messageType = Messages.MessageType.valueOf(s.toUpperCase());
                 if (messageType == MessageType.TEXT) {
-                    map.put(messageType, j.get(s));
+                    messages.add(new StringMessage((String) j.get(s)));
                 } else if (messageType == MessageType.JSON_TEXT) {
                     Object jsonObj = j.get(s);
                     if (jsonObj instanceof JSONObject) {
-                        map.put(messageType, JSONObject.toJSONString((Map) jsonObj));
+                        messages.add(new JSONMessage(JSONObject.toJSONString((Map) jsonObj)));
                     }
                 } else if (messageType == MessageType.ACTION_BAR) {
                     Object message = j.get(s);
-                    if (!(message instanceof String)) {
-                        continue;
+                    if (message instanceof String) {
+                        messages.add(new ActionBarMessage((String) message
+                                , -1));
+                    } else if (message instanceof JSONObject) {
+                        Object message1 = ((JSONObject) message).get("Message");
+                        Object duration = ((JSONObject) message).get("Duration");
+                        if (duration == null) {
+                            duration = -1;
+                        }
+                        messages.add(new ActionBarMessage((String) message1,
+                                ((Long) duration).intValue()));
                     }
-                    map.put(messageType, message);
                 } else if (messageType == MessageType.TITLE) {
-                    Object jsonArray = j.get(s);
-                    if (jsonArray instanceof JSONArray) {
-                        map.put(messageType, jsonArray);
+                    Object message = j.get(s);
+                    if (message instanceof JSONArray) {
+                        List<String> jsonArrays = (JSONArray) message;
+                        messages.add(new Title(jsonArrays.get(0), jsonArrays.get(1)
+                                , 20, 50, 20));
+                    } else if (message instanceof JSONObject) {
+                        JSONObject object = (JSONObject) message;
+                        String title = (String) object.get("Title");
+                        String subTitle = (String) object.get("SubTitle");
+                        int fadeIn = ((Long) object.get("FadeId")).intValue(),
+                                fadeOut = ((Long) object.get("FadeOut")).intValue(),
+                                stay = ((Long) object.get("Stay")).intValue();
+                        messages.add(new Title(title, subTitle, fadeIn, stay, fadeOut));
                     }
                 } else if (messageType == MessageType.SOUND) {
                     Object jsonArray = j.get(s);
                     if (jsonArray instanceof JSONArray) {
                         List soundDescription = (List) jsonArray;
-                        List<Sound> sounds = new ArrayList<>();
                         if (!soundDescription.isEmpty() && soundDescription.get(0) instanceof JSONObject) {
                             for (Object so : soundDescription) {
                                 if (so instanceof JSONObject) {
                                     JSONObject ob = (JSONObject) so;
                                     String sound_name = (String) ob.get("SOUND_NAME");
                                     float volume = ((Double) ob.get("VOLUME")).floatValue(), pitch = ((Double) ob.get("PITCH")).floatValue();
-                                    sounds.add(new Sound(sound_name, pitch, volume));
+                                    messages.add(new Sound(sound_name, pitch, volume));
                                 }
                             }
                         }
-                        map.put(messageType, sounds);
                     }
                 }
             }
-            return map;
         }
-        throw new IllegalArgumentException("x");
+        return messages;
     }
 
     public Message getMessage(String messageName) {
         if (!messages.containsKey(messageName)) {
             System.out.println("NO MESSAGE FOR " + messageName);
-            return new Message("");
+            return new Message();
         }
         return messages.get(messageName).newInstance();
     }

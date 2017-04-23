@@ -1,4 +1,4 @@
-package com.nuno1212s.messages2_0.messagetypes;
+package com.nuno1212s.messagemanager.messagetypes;
 
 import com.nuno1212s.util.ActionBarAPI;
 import lombok.AllArgsConstructor;
@@ -7,9 +7,6 @@ import org.bukkit.entity.Player;
 
 import java.util.Map;
 
-/**
- * Created by COMP on 23/04/2017.
- */
 @AllArgsConstructor
 public class ActionBarMessage implements IMessage {
 
@@ -19,17 +16,18 @@ public class ActionBarMessage implements IMessage {
 
     @Override
     public void sendTo(Map<String, String> formatting, CommandSender... sender) {
-        String message = this.message;
-        for (Map.Entry<String, String> frmt : formatting.entrySet()) {
-            message = message.replace(frmt.getKey(), frmt.getValue());
-        }
+        String message = IMessage.formatMessage(this.message, formatting);
 
         for (CommandSender commandSender : sender) {
             if (!(commandSender instanceof Player)) {
                 continue;
             }
 
-            ActionBarAPI.sendActionBar((Player) commandSender, message, durationInSeconds);
+            if (durationInSeconds != -1) {
+                ActionBarAPI.sendActionBar((Player) commandSender, message, durationInSeconds);
+            } else {
+                ActionBarAPI.sendActionBar((Player) commandSender, message);
+            }
         }
 
     }

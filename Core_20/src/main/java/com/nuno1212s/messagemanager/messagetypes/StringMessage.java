@@ -1,4 +1,4 @@
-package com.nuno1212s.messages2_0.messagetypes;
+package com.nuno1212s.messagemanager.messagetypes;
 
 import org.bukkit.command.CommandSender;
 
@@ -27,9 +27,7 @@ public class StringMessage implements IMessage {
     @Override
     public void sendTo(Map<String, String> formatting, CommandSender... sender) {
         for (String message : messages) {
-            for (Map.Entry<String, String> frmt : formatting.entrySet()) {
-                message = message.replace(frmt.getKey(), frmt.getValue());
-            }
+            message = IMessage.formatMessage(message, formatting);
 
             for (CommandSender commandSender : sender) {
                 commandSender.sendMessage(message);

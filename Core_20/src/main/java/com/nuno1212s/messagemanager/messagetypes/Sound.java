@@ -1,4 +1,4 @@
-package com.nuno1212s.messages2_0.messagetypes;
+package com.nuno1212s.messagemanager.messagetypes;
 
 import lombok.AllArgsConstructor;
 import org.bukkit.command.CommandSender;
@@ -6,9 +6,6 @@ import org.bukkit.entity.Player;
 
 import java.util.Map;
 
-/**
- * Created by COMP on 23/04/2017.
- */
 @AllArgsConstructor
 public class Sound implements IMessage {
 

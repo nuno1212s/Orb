@@ -1,4 +1,4 @@
-package com.nuno1212s.messages2_0.messagetypes;
+package com.nuno1212s.messagemanager.messagetypes;
 
 import com.nuno1212s.util.TitleAPI;
 import org.bukkit.command.CommandSender;
@@ -6,9 +6,6 @@ import org.bukkit.entity.Player;
 
 import java.util.Map;
 
-/**
- * Created by COMP on 23/04/2017.
- */
 public class Title implements IMessage {
 
     private final String[] messages = new String[2];

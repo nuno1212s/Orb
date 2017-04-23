@@ -30,7 +30,9 @@ public class CorePlayerData extends PlayerData {
     }
 
     @Override
-    public void setServerGroup(short groupID, long duration) {}
+    public PlayerGroupData.EXTENSION_RESULT setServerGroup(short groupID, long duration) {
+        return PlayerGroupData.EXTENSION_RESULT.NEW_GROUP;
+    }
 
     @Override
     public Group getRepresentingGroup() {
