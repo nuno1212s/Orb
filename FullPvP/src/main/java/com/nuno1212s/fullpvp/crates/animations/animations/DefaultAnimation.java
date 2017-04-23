@@ -1,9 +1,10 @@
-package com.nuno1212s.fullpvp.crates.animations;
+package com.nuno1212s.fullpvp.crates.animations.animations;
 
 import com.nuno1212s.fullpvp.crates.Crate;
-import com.nuno1212s.fullpvp.crates.Reward;
+import com.nuno1212s.fullpvp.crates.animations.Animation;
 import com.nuno1212s.fullpvp.main.Main;
-import org.bukkit.inventory.Inventory;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,8 +16,8 @@ public class DefaultAnimation extends Animation {
 
     final static List<Integer> displaySlots = Arrays.asList(4, 13, 22);
 
-    public DefaultAnimation(Inventory inv, Crate crate) {
-        super(inv, crate);
+    public DefaultAnimation(Crate crate) {
+        super(Bukkit.getServer().createInventory(null, 27, ChatColor.RED + crate.getCrateName()), crate);
     }
 
     private int iterations = 0;

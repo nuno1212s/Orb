@@ -12,10 +12,10 @@ import org.bukkit.inventory.Inventory;
 public abstract class Animation {
 
     @Getter
-    Inventory toEdit;
+    protected Inventory toEdit;
 
     @Getter
-    Crate crate;
+    protected Crate crate;
 
     /**
      * Run an animation cycle

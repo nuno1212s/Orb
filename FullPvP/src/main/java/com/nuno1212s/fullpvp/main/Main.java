@@ -3,6 +3,9 @@ package com.nuno1212s.fullpvp.main;
 import com.nuno1212s.fullpvp.crates.CrateManager;
 import com.nuno1212s.fullpvp.crates.commands.CrateCommandManager;
 import com.nuno1212s.fullpvp.events.PlayerUpdateListener;
+import com.nuno1212s.fullpvp.events.animations.InventoryClickEventListener;
+import com.nuno1212s.fullpvp.events.animations.PlayerCloseInventoryListener;
+import com.nuno1212s.fullpvp.events.animations.PlayerInteractListener;
 import com.nuno1212s.fullpvp.mysql.MySql;
 import com.nuno1212s.fullpvp.economy.CoinCommand;
 import com.nuno1212s.fullpvp.events.PlayerJoinListener;
@@ -12,6 +15,7 @@ import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.modulemanager.ModuleData;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 
@@ -20,7 +24,6 @@ import java.io.File;
  */
 @ModuleData(name = "Full PvP", version = "1.1-SNAPSHOT", dependencies = {})
 public class Main extends Module {
-
 
     @Getter
     static Main ins;
@@ -49,9 +52,12 @@ public class Main extends Module {
 
         registerCommand(new String[]{"coins", "coin"}, new CoinCommand());
 
-        Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), com.nuno1212s.main.Main.getIns());
-        Bukkit.getServer().getPluginManager().registerEvents(new PlayerUpdateListener(), com.nuno1212s.main.Main.getIns());
-
+        Plugin plugin = com.nuno1212s.main.Main.getIns();
+        Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), plugin);
+        Bukkit.getServer().getPluginManager().registerEvents(new PlayerUpdateListener(), plugin);
+        Bukkit.getServer().getPluginManager().registerEvents(new PlayerCloseInventoryListener(), plugin);
+        Bukkit.getServer().getPluginManager().registerEvents(new InventoryClickEventListener(), plugin);
+        Bukkit.getServer().getPluginManager().registerEvents(new PlayerInteractListener(), plugin);
     }
 
     @Override

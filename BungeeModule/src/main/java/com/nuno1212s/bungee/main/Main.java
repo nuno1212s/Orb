@@ -84,6 +84,7 @@ public class Main extends Module {
 
     @Override
     public void onDisable() {
+        System.out.println("Saving");
         this.motdManager.save();
     }
 }

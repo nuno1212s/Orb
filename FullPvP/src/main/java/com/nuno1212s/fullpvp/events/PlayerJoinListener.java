@@ -25,6 +25,9 @@ public class PlayerJoinListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Main.getIns().getScoreboardManager().createScoreboard(((PVPPlayerData) MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId())), e.getPlayer());
+
+
+
     }
 
 }

@@ -135,6 +135,10 @@ public class PlayerGroupData {
         boolean expired = false;
 
         PlayerGroup activeGroupIns = this.getActiveGroupIns();
+        if (activeGroupIns == null) {
+            this.groups.get(0).activate();
+            return;
+        }
         if (activeGroupIns.isActive()) {
             if (activeGroupIns.isPermanent()) {
                 return;
@@ -158,6 +162,10 @@ public class PlayerGroupData {
 
         if (expired) {
             PlayerGroup nextGroup = this.getNextGroup();
+
+            if (nextGroup == null) {
+                nextGroup = new PlayerGroup(MainData.getIns().getPermissionManager().getDefaultGroup().getGroupID(), -1, -1);
+            }
 
             nextGroup.activate();
 

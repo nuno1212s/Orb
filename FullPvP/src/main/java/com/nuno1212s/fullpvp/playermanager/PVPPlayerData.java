@@ -53,8 +53,8 @@ public class PVPPlayerData extends PlayerData {
     }
 
     @Override
-    public void setServerGroup(short groupID, long duration) {
-        this.groupData.setCurrentGroup(groupID, duration);
+    public PlayerGroupData.EXTENSION_RESULT setServerGroup(short groupID, long duration) {
+        return this.groupData.setCurrentGroup(groupID, duration);
     }
 
     @Override

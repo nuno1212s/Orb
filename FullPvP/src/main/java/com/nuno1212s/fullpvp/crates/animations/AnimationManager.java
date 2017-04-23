@@ -3,6 +3,7 @@ package com.nuno1212s.fullpvp.crates.animations;
 import com.nuno1212s.fullpvp.crates.Crate;
 import com.nuno1212s.fullpvp.crates.CrateManager;
 import com.nuno1212s.fullpvp.crates.animations.AnimationTimer.AnimationTimer;
+import com.nuno1212s.fullpvp.crates.animations.animations.DefaultAnimation;
 import com.nuno1212s.main.MainData;
 import lombok.Getter;
 import org.bukkit.entity.Player;
@@ -14,6 +15,8 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -24,6 +27,8 @@ import java.util.Random;
 @Getter
 public class AnimationManager {
 
+    private List<Constructor<? extends Animation>> animations;
+
     private List<ItemStack> showItems;
     
     private File animationStuff;
@@ -33,6 +38,15 @@ public class AnimationManager {
     private Random random = new Random();
 
     public AnimationManager(File animationStuff) {
+        animations = new ArrayList<>();
+
+        try {
+            animations.add(DefaultAnimation.class.getConstructor(Crate.class));
+
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+
         timer = new AnimationTimer();
         MainData.getIns().getScheduler().runTaskTimer(timer, 0, 10);
         this.animationStuff = animationStuff;
@@ -81,6 +95,15 @@ public class AnimationManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public Animation getRandomAnimation(Crate c) {
+        try {
+            return this.animations.get(random.nextInt(this.animations.size())).newInstance(c);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public ItemStack getRandomDisplayItem() {

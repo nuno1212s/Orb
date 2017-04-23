@@ -2,8 +2,14 @@ package com.nuno1212s.fullpvp.crates;
 
 import com.nuno1212s.fullpvp.crates.animations.AnimationManager;
 import com.nuno1212s.modulemanager.Module;
+import com.nuno1212s.util.NBTDataStorage.NBTCompound;
+import com.nuno1212s.util.SerializableLocation;
 import lombok.Getter;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.json.simple.JSONArray;
@@ -26,9 +32,15 @@ public class CrateManager {
 
     private File crateFile;
 
+    private Map<Location, Crate> crateBlocks;
+
+    private ItemStack defaultKeyItem;
+
     @SuppressWarnings("unchecked")
     public CrateManager(Module mainModule) {
 
+        this.defaultKeyItem = new ItemStack(Material.BONE);
+        this.crateBlocks = new HashMap<>();
         this.crates = new ArrayList<>();
         this.crateFile = mainModule.getFile("crates.json", false);
         this.animationManager = new AnimationManager(mainModule.getFile("animationFile.json", false));
@@ -62,8 +74,28 @@ public class CrateManager {
             this.crates.add(new Crate(crate, rewardList));
         });
 
+        List<Map<String, Object>> crateBlocks = (List<Map<String, Object>>) obj.get("CrateLocations");
+
+        crateBlocks.forEach(crateLocation -> {
+            String location = (String) crateLocation.get("Location");
+            String crateName = (String) crateLocation.get("CrateName");
+            SerializableLocation loc = new SerializableLocation(location);
+            Crate c = getCrate(crateName);
+            this.crateBlocks.put(loc, c);
+        });
+
+        String defaultKeyItem = (String) obj.get("DefaultKeyItem");
+        try {
+            this.defaultKeyItem = itemFrom64(defaultKeyItem);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
+    /**
+     * Save crate data
+     */
     public void save() {
         animationManager.save();
 
@@ -76,6 +108,8 @@ public class CrateManager {
         }
 
         JSONObject obj = new JSONObject(), crates = new JSONObject();
+
+        JSONArray crateLocations = new JSONArray();
 
         this.crates.forEach(crate -> {
             JSONArray rewards = new JSONArray();
@@ -91,7 +125,25 @@ public class CrateManager {
             crates.put(crate.getCrateName(), rewards);
         });
 
+        this.crateBlocks.forEach((location, crate) -> {
+            SerializableLocation serializableLocation;
+
+            if (!(location instanceof SerializableLocation)) {
+               serializableLocation = new SerializableLocation(location);
+            } else {
+                serializableLocation = (SerializableLocation) location;
+            }
+
+            String s = serializableLocation.toString();
+            JSONObject object = new JSONObject();
+            object.put("Location", s);
+            object.put("CrateName", crate.getCrateName());
+            crateLocations.add(object);
+        });
+
         obj.put("Crates", crates);
+        obj.put("CrateLocations", crateLocations);
+        obj.put("DefaultKeyItem", itemTo64(this.defaultKeyItem));
 
         try (Writer w = new FileWriter(this.crateFile)) {
             obj.writeJSONString(w);
@@ -99,6 +151,50 @@ public class CrateManager {
             e.printStackTrace();
         }
 
+    }
+
+    public Crate getCrateAtLocation(Location l) {
+        for (Map.Entry<Location, Crate> crateLocation : this.crateBlocks.entrySet()) {
+            Location locations = crateLocation.getKey();
+            if (locations.getBlockX() == l.getBlockX() && locations.getBlockY() == l.getBlockY() && locations.getBlockZ() == l.getBlockZ()) {
+                return crateLocation.getValue();
+            }
+        }
+        return null;
+    }
+
+    public boolean isCrateLocation(Location l) {
+        for (Map.Entry<Location, Crate> crateLocation : this.crateBlocks.entrySet()) {
+            Location locations = crateLocation.getKey();
+            if (locations.getBlockX() == l.getBlockX() && locations.getBlockY() == l.getBlockY() && locations.getBlockZ() == l.getBlockZ()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean canOpen(Player p, Crate crateToOpen) {
+        PlayerInventory inventory = p.getInventory();
+        ListIterator<ItemStack> iterator = inventory.iterator();
+        while (iterator.hasNext()) {
+        ItemStack itemStack = iterator.next();
+            if (itemStack.getType() == this.defaultKeyItem.getType()) {
+                NBTCompound compound = new NBTCompound(itemStack);
+                Map<String, Object> values = compound.getValues();
+                if (values.containsKey("KeyData")) {
+                    String keyData = (String) values.get("KeyData");
+                    if (crateToOpen.getCrateName().equalsIgnoreCase(keyData)) {
+                        if (itemStack.getAmount() == 1) {
+                            iterator.remove();
+                        } else {
+                            itemStack.setAmount(itemStack.getAmount() - 1);
+                        }
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public void addCrate(Crate c) {
@@ -117,6 +213,8 @@ public class CrateManager {
         }
         return null;
     }
+
+
 
     public static String itemTo64(ItemStack stack) throws IllegalStateException {
         try {
