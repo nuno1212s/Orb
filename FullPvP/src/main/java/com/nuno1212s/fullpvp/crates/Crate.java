@@ -16,13 +16,19 @@ import java.util.Set;
 @Getter
 public class Crate {
 
-    private String crateName;
+    private String crateName, displayName;
 
     private Set<Reward> rewards;
 
-    public Crate(String crateName, Set<Reward> rewards) {
+    private boolean cash;
+
+    private long keyCost;
+
+    public Crate(String crateName, String displayName, Set<Reward> rewards) {
         this.crateName = crateName;
+        this.displayName = displayName;
         this.rewards = rewards;
+
 
         recalculateProbabilities();
 

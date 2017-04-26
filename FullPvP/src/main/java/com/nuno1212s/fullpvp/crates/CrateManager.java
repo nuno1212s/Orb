@@ -5,11 +5,14 @@ import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.util.NBTDataStorage.NBTCompound;
 import com.nuno1212s.util.SerializableLocation;
 import lombok.Getter;
+import lombok.Setter;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.json.simple.JSONArray;
@@ -34,6 +37,7 @@ public class CrateManager {
 
     private Map<Location, Crate> crateBlocks;
 
+    @Setter
     private ItemStack defaultKeyItem;
 
     @SuppressWarnings("unchecked")
@@ -57,8 +61,11 @@ public class CrateManager {
         Map<String, Object> crates = (JSONObject) obj.get("Crates");
 
         crates.keySet().forEach(crate -> {
-            List<Map<String, Object>> rewards = (List<Map<String, Object>>) crates.get(crate);
+            Map<String, Object> crateStuff =  (Map<String, Object>) crates.get(crate);
+            List<Map<String, Object>> rewards = (List<Map<String, Object>>) crateStuff.get("Rewards");
+            String displayName = (String) crateStuff.get("Rewards");
             Set<Reward> rewardList = new HashSet<>();
+
             rewards.forEach(reward -> {
                 int percentage = ((Long) reward.get("Percentage")).intValue();
                 int rewardID = ((Long) reward.get("RewardID")).intValue();
@@ -71,7 +78,7 @@ public class CrateManager {
                 }
                 rewardList.add(new Reward(rewardID, item, percentage));
             });
-            this.crates.add(new Crate(crate, rewardList));
+            this.crates.add(new Crate(crate, displayName, rewardList));
         });
 
         List<Map<String, Object>> crateBlocks = (List<Map<String, Object>>) obj.get("CrateLocations");
@@ -112,6 +119,7 @@ public class CrateManager {
         JSONArray crateLocations = new JSONArray();
 
         this.crates.forEach(crate -> {
+            JSONObject crateStuff = new JSONObject();
             JSONArray rewards = new JSONArray();
 
             crate.getRewards().forEach(reward -> {
@@ -121,8 +129,10 @@ public class CrateManager {
                 rewardObject.put("Item", itemTo64(reward.getItem()));
                 rewards.add(rewardObject);
             });
+            crateStuff.put("Rewards", rewards);
+            crateStuff.put("DisplayName", crate.getDisplayName());
 
-            crates.put(crate.getCrateName(), rewards);
+            crates.put(crate.getCrateName(), crateStuff);
         });
 
         this.crateBlocks.forEach((location, crate) -> {
@@ -227,7 +237,20 @@ public class CrateManager {
         return null;
     }
 
+    public ItemStack formatKeyItem(Crate c) {
+        ItemStack clone = this.defaultKeyItem.clone();
+        ItemMeta itemMeta = clone.getItemMeta();
+        itemMeta.setDisplayName(itemMeta.getDisplayName().replace("%crateName%", c.getDisplayName()));
+        List<String> lore = itemMeta.getLore() == null ? new ArrayList<>() : itemMeta.getLore(), newLore = new ArrayList<>();
+        lore.forEach(loreLine -> {
+            newLore.add(loreLine.replace("%crateName%", c.getDisplayName()));
+        });
+        clone.setItemMeta(itemMeta);
 
+        NBTCompound compound = new NBTCompound(clone);
+        compound.add("Crate", c.getCrateName());
+        return compound.write(clone);
+    }
 
     public static String itemTo64(ItemStack stack) throws IllegalStateException {
         try {

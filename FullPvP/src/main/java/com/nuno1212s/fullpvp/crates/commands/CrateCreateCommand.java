@@ -20,7 +20,7 @@ public class CrateCreateCommand implements Command {
 
     @Override
     public String usage() {
-        return ChatColor.RED + "/crate create <name>";
+        return ChatColor.RED + "/crate create <name> <displayName>";
     }
 
     @Override
@@ -30,7 +30,7 @@ public class CrateCreateCommand implements Command {
             return;
         }
 
-        if (args.length < 2) {
+        if (args.length < 3) {
             player.sendMessage(this.usage());
             return;
         }
@@ -40,8 +40,8 @@ public class CrateCreateCommand implements Command {
             return;
         }
 
-        Crate c = new Crate(args[1], Sets.newHashSet());
+        Crate c = new Crate(args[1], ChatColor.translateAlternateColorCodes('&', args[2]), Sets.newHashSet());
         Main.getIns().getCrateManager().addCrate(c);
-        player.sendMessage(ChatColor.RED + "The crate with the name " + args[1] + " has been created.");
+        player.sendMessage(ChatColor.RED + "The crate with the name " + args[1] + " and display name " + c.getDisplayName() + " has been created.");
     }
 }
