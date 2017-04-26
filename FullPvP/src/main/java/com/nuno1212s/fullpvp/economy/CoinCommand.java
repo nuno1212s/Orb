@@ -15,6 +15,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.text.NumberFormat;
 import java.util.LinkedHashMap;
 import java.util.function.BiConsumer;
 
@@ -32,7 +33,7 @@ public class CoinCommand implements CommandExecutor {
             }
             PVPPlayerData d = (PVPPlayerData) MainData.getIns().getPlayerManager().getPlayer(((Player) commandSender).getUniqueId());
             MainData.getIns().getMessageManager().getMessage("COINS")
-                    .format("%coinAmount%", String.valueOf(d.getCoins())).sendTo(commandSender);
+                    .format("%coinAmount%", NumberFormat.getInstance().format(d.getCoins())).sendTo(commandSender);
             return true;
         } else {
                 if (args[0].equalsIgnoreCase("set")) {
@@ -71,12 +72,12 @@ public class CoinCommand implements CommandExecutor {
                             Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(d));
 
                             MainData.getIns().getMessageManager().getMessage("COINS_SET_OTHER")
-                                    .format("%coinAmount%", String.valueOf(coins))
+                                    .format("%coinAmount%", NumberFormat.getInstance().format(coins))
                                     .format("%playerName%", d.getPlayerName())
                                     .sendTo(commandSender);
 
                             MainData.getIns().getMessageManager().getMessage("COINS_SET_SELF")
-                                    .format("%coinAmount%", String.valueOf(coins))
+                                    .format("%coinAmount%", NumberFormat.getInstance().format(coins))
                                     .sendTo(d);
 
                             d.save((o) -> {
@@ -120,12 +121,12 @@ public class CoinCommand implements CommandExecutor {
                             Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(d));
 
                             MainData.getIns().getMessageManager().getMessage("COINS_ADD_OTHER")
-                                    .format("%coinAmount%", String.valueOf(coins))
+                                    .format("%coinAmount%", NumberFormat.getInstance().format(coins))
                                     .format("%playerName%", d.getPlayerName())
                                     .sendTo(commandSender);
 
                             MainData.getIns().getMessageManager().getMessage("COINS_ADD_SELF")
-                                    .format("%coinAmount%", String.valueOf(coins))
+                                    .format("%coinAmount%", NumberFormat.getInstance().format(coins))
                                     .sendTo(d);
 
                             d.save((o) -> {
@@ -168,12 +169,12 @@ public class CoinCommand implements CommandExecutor {
                             Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(d));
 
                             MainData.getIns().getMessageManager().getMessage("COINS_REMOVE_OTHER")
-                                    .format("%coinAmount%", String.valueOf(coins))
+                                    .format("%coinAmount%", NumberFormat.getInstance().format(coins))
                                     .format("%playerName%", d.getPlayerName())
                                     .sendTo(commandSender);
 
                             MainData.getIns().getMessageManager().getMessage("COINS_REMOVE_SELF")
-                                    .format("%coinAmount%", String.valueOf(coins))
+                                    .format("%coinAmount%", NumberFormat.getInstance().format(coins))
                                     .sendTo(d);
 
                             d.save((o) -> {
@@ -196,7 +197,7 @@ public class CoinCommand implements CommandExecutor {
                             @Override
                             public void accept(String playerName, Long coinAmount) {
                                 coin_top.format("%player" + String.valueOf(current) + "%", playerName);
-                                coin_top.format("%coinAmount" + String.valueOf(current) + "%", String.valueOf(coinAmount));
+                                coin_top.format("%coinAmount" + String.valueOf(current) + "%", NumberFormat.getInstance().format(coinAmount));
                                 current++;
                             }
                         });
@@ -227,7 +228,7 @@ public class CoinCommand implements CommandExecutor {
                         }
 
                         MainData.getIns().getMessageManager().getMessage("COINS_OTHERS")
-                                .format("%coinAmount%", String.valueOf(((PVPPlayerData) d).getCoins()))
+                                .format("%coinAmount%", NumberFormat.getInstance().format(((PVPPlayerData) d).getCoins()))
                                 .format("%playerName%", d.getPlayerName())
                                 .sendTo(commandSender);
 

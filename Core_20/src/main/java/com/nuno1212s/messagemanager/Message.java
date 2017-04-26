@@ -17,7 +17,6 @@ import java.util.Map;
 /**
  * Message classes
  */
-
 public class Message {
 
     private final List<IMessage> messages;

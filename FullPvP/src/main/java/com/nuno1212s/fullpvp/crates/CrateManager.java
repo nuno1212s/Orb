@@ -173,6 +173,19 @@ public class CrateManager {
         return false;
     }
 
+    public void setCrateAtLocation(Location l, Crate c) {
+        if (isCrateLocation(l)) {
+            return;
+        }
+        this.crateBlocks.put(l, c);
+    }
+
+    public void removeCrateAtLocation(Location l) {
+        if (isCrateLocation(l)) {
+            this.crateBlocks.remove(l);
+        }
+    }
+
     public boolean canOpen(Player p, Crate crateToOpen) {
         PlayerInventory inventory = p.getInventory();
         ListIterator<ItemStack> iterator = inventory.iterator();

@@ -97,7 +97,7 @@ public class Messages {
                         JSONObject object = (JSONObject) message;
                         String title = (String) object.get("Title");
                         String subTitle = (String) object.get("SubTitle");
-                        int fadeIn = ((Long) object.get("FadeId")).intValue(),
+                        int fadeIn = ((Long) object.get("FadeIn")).intValue(),
                                 fadeOut = ((Long) object.get("FadeOut")).intValue(),
                                 stay = ((Long) object.get("Stay")).intValue();
                         messages.add(new Title(title, subTitle, fadeIn, stay, fadeOut));

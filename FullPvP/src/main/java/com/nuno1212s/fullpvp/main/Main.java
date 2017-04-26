@@ -4,6 +4,7 @@ import com.nuno1212s.fullpvp.crates.CrateManager;
 import com.nuno1212s.fullpvp.crates.commands.CrateCommandManager;
 import com.nuno1212s.fullpvp.events.PlayerUpdateListener;
 import com.nuno1212s.fullpvp.events.animations.InventoryClickEventListener;
+import com.nuno1212s.fullpvp.events.animations.PlayerBreakBlockListener;
 import com.nuno1212s.fullpvp.events.animations.PlayerCloseInventoryListener;
 import com.nuno1212s.fullpvp.events.animations.PlayerInteractListener;
 import com.nuno1212s.fullpvp.mysql.MySql;
@@ -58,6 +59,7 @@ public class Main extends Module {
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerCloseInventoryListener(), plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new InventoryClickEventListener(), plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerInteractListener(), plugin);
+        Bukkit.getServer().getPluginManager().registerEvents(new PlayerBreakBlockListener(), plugin);
     }
 
     @Override

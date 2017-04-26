@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -102,8 +103,8 @@ public class ScoreboardManager {
     }
 
     private String format(String message, PVPPlayerData d) {
-        message = message.replace("%coins%", String.valueOf(d.getCoins()));
-        message = message.replace("%cash%", String.valueOf(d.getCash()));
+        message = message.replace("%coins%", NumberFormat.getInstance().format(d.getCoins()));
+        message = message.replace("%cash%", NumberFormat.getInstance().format(d.getCash()));
         message = message.replace("%group%", String.valueOf(d.getRepresentingGroup().getGroupPrefix()));
 
         return message;

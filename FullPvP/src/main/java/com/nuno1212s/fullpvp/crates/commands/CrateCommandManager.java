@@ -19,6 +19,7 @@ public class CrateCommandManager extends CommandManager {
         addCommand(new CrateTestCommand());
         addCommand(new CrateRemoveRewardCommand());
         addCommand(new CrateRewardListCommand());
+        addCommand(new LinkCrateCommand());
 
     }
 
