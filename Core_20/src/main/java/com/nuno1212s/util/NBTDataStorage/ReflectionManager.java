@@ -7,6 +7,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +25,7 @@ public class ReflectionManager {
     Map<Class<?>, Map<Class<?>[], Constructor<?>>> constructorCache = new HashMap<>();
 
     @Getter
-    static ReflectionManager ins;
+    static ReflectionManager ins = new ReflectionManager();
 
     private String version;
 
@@ -33,7 +34,6 @@ public class ReflectionManager {
     public String NMS;
 
     public ReflectionManager() {
-        ins = this;
         String name = Bukkit.getServer().getClass().getPackage().getName();
         String mcVersion = name.substring(name.lastIndexOf('.') + 1).replace("org.bukkit.craftbukkit.", "");
         version = mcVersion + ".";
@@ -135,6 +135,7 @@ public class ReflectionManager {
             return cns;
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
+            System.out.println(Arrays.asList(c.getConstructors()));
         }
         return null;
     }

@@ -40,8 +40,10 @@ public class CrateCreateCommand implements Command {
             return;
         }
 
-        Crate c = new Crate(args[1], ChatColor.translateAlternateColorCodes('&', args[2]), Sets.newHashSet());
+        String displayName = ChatColor.translateAlternateColorCodes('&', args[2]);
+        Crate c = new Crate(args[1], displayName, Sets.newHashSet(), true, 0);
         Main.getIns().getCrateManager().addCrate(c);
-        player.sendMessage(ChatColor.RED + "The crate with the name " + args[1] + " and display name " + c.getDisplayName() + " has been created.");
+        player.sendMessage(ChatColor.RED + "The crate with the name " + args[1] + " and display name "
+                + c.getDisplayName() + " has been created.");
     }
 }

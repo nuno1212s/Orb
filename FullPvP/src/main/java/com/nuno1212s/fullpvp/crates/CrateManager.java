@@ -37,6 +37,7 @@ public class CrateManager {
 
     private Map<Location, Crate> crateBlocks;
 
+    @Getter
     @Setter
     private ItemStack defaultKeyItem;
 
@@ -61,9 +62,11 @@ public class CrateManager {
         Map<String, Object> crates = (JSONObject) obj.get("Crates");
 
         crates.keySet().forEach(crate -> {
-            Map<String, Object> crateStuff =  (Map<String, Object>) crates.get(crate);
+            Map<String, Object> crateStuff = (Map<String, Object>) crates.get(crate);
             List<Map<String, Object>> rewards = (List<Map<String, Object>>) crateStuff.get("Rewards");
-            String displayName = (String) crateStuff.get("Rewards");
+            String displayName = (String) crateStuff.get("DisplayName");
+            boolean cash = (boolean) crateStuff.get("IsCash");
+            long price = (long) crateStuff.get("Price");
             Set<Reward> rewardList = new HashSet<>();
 
             rewards.forEach(reward -> {
@@ -78,7 +81,7 @@ public class CrateManager {
                 }
                 rewardList.add(new Reward(rewardID, item, percentage));
             });
-            this.crates.add(new Crate(crate, displayName, rewardList));
+            this.crates.add(new Crate(crate, displayName, rewardList, cash, price));
         });
 
         List<Map<String, Object>> crateBlocks = (List<Map<String, Object>>) obj.get("CrateLocations");
@@ -131,7 +134,8 @@ public class CrateManager {
             });
             crateStuff.put("Rewards", rewards);
             crateStuff.put("DisplayName", crate.getDisplayName());
-
+            crateStuff.put("IsCash", crate.isCash());
+            crateStuff.put("Price", crate.getKeyCost());
             crates.put(crate.getCrateName(), crateStuff);
         });
 
@@ -139,7 +143,7 @@ public class CrateManager {
             SerializableLocation serializableLocation;
 
             if (!(location instanceof SerializableLocation)) {
-               serializableLocation = new SerializableLocation(location);
+                serializableLocation = new SerializableLocation(location);
             } else {
                 serializableLocation = (SerializableLocation) location;
             }
@@ -200,21 +204,14 @@ public class CrateManager {
         PlayerInventory inventory = p.getInventory();
         ListIterator<ItemStack> iterator = inventory.iterator();
         while (iterator.hasNext()) {
-        ItemStack itemStack = iterator.next();
-            if (itemStack.getType() == this.defaultKeyItem.getType()) {
-                NBTCompound compound = new NBTCompound(itemStack);
-                Map<String, Object> values = compound.getValues();
-                if (values.containsKey("KeyData")) {
-                    String keyData = (String) values.get("KeyData");
-                    if (crateToOpen.getCrateName().equalsIgnoreCase(keyData)) {
-                        if (itemStack.getAmount() == 1) {
-                            iterator.remove();
-                        } else {
-                            itemStack.setAmount(itemStack.getAmount() - 1);
-                        }
-                        return true;
-                    }
+            ItemStack itemStack = iterator.next();
+            if (crateToOpen.checkIsKey(itemStack)) {
+                if (itemStack.getAmount() > 1) {
+                    itemStack.setAmount(itemStack.getAmount() - 1);
+                } else {
+                    inventory.removeItem(itemStack);
                 }
+                return true;
             }
         }
         return false;
@@ -237,19 +234,13 @@ public class CrateManager {
         return null;
     }
 
-    public ItemStack formatKeyItem(Crate c) {
-        ItemStack clone = this.defaultKeyItem.clone();
-        ItemMeta itemMeta = clone.getItemMeta();
-        itemMeta.setDisplayName(itemMeta.getDisplayName().replace("%crateName%", c.getDisplayName()));
-        List<String> lore = itemMeta.getLore() == null ? new ArrayList<>() : itemMeta.getLore(), newLore = new ArrayList<>();
-        lore.forEach(loreLine -> {
-            newLore.add(loreLine.replace("%crateName%", c.getDisplayName()));
-        });
-        clone.setItemMeta(itemMeta);
-
-        NBTCompound compound = new NBTCompound(clone);
-        compound.add("Crate", c.getCrateName());
-        return compound.write(clone);
+    public boolean isCrateKey(ItemStack item) {
+        for (Crate crate : this.crates) {
+            if (crate.checkIsKey(item)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static String itemTo64(ItemStack stack) throws IllegalStateException {

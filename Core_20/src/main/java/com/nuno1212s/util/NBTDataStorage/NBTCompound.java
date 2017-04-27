@@ -175,28 +175,28 @@ public class NBTCompound {
     Object getNBTBase(Object value) {
         if (value instanceof Byte) {
             Class nbtTagByte = reflectionManager.getClass(reflectionManager.NMS + "NBTTagByte");
-            return reflectionManager.invokeConstructor(reflectionManager.getConstructor(nbtTagByte, Byte.class), value);
+            return reflectionManager.invokeConstructor(reflectionManager.getConstructor(nbtTagByte, byte.class), value);
         } else if (value instanceof Byte[]) {
             Class nbtTagByte = reflectionManager.getClass(reflectionManager.NMS + "NBTTagByteArray");
-            return reflectionManager.invokeConstructor(reflectionManager.getConstructor(nbtTagByte, Byte[].class), value);
+            return reflectionManager.invokeConstructor(reflectionManager.getConstructor(nbtTagByte, byte[].class), value);
         } else if (value instanceof Short) {
             Class nbtTagByte = reflectionManager.getClass(reflectionManager.NMS + "NBTTagShort");
-            return reflectionManager.invokeConstructor(reflectionManager.getConstructor(nbtTagByte, Short.class), value);
+            return reflectionManager.invokeConstructor(reflectionManager.getConstructor(nbtTagByte, short.class), value);
         } else if (value instanceof Integer) {
             Class nbtTagByte = reflectionManager.getClass(reflectionManager.NMS + "NBTTagInt");
-            return reflectionManager.invokeConstructor(reflectionManager.getConstructor(nbtTagByte, Integer.class), value);
+            return reflectionManager.invokeConstructor(reflectionManager.getConstructor(nbtTagByte, int.class), value);
         } else if (value instanceof Integer[]) {
             Class nbtTagByte = reflectionManager.getClass(reflectionManager.NMS + "NBTTagIntArray");
-            return reflectionManager.invokeConstructor(reflectionManager.getConstructor(nbtTagByte, Integer[].class), value);
+            return reflectionManager.invokeConstructor(reflectionManager.getConstructor(nbtTagByte, int[].class), value);
         } else if (value instanceof Long) {
             Class nbtTagByte = reflectionManager.getClass(reflectionManager.NMS + "NBTTagLong");
-            return reflectionManager.invokeConstructor(reflectionManager.getConstructor(nbtTagByte, Long.class), value);
+            return reflectionManager.invokeConstructor(reflectionManager.getConstructor(nbtTagByte, long.class), value);
         } else if (value instanceof Float) {
             Class nbtTagByte = reflectionManager.getClass(reflectionManager.NMS + "NBTTagFloat");
-            return reflectionManager.invokeConstructor(reflectionManager.getConstructor(nbtTagByte, Float.class), value);
+            return reflectionManager.invokeConstructor(reflectionManager.getConstructor(nbtTagByte, float.class), value);
         } else if (value instanceof Double) {
             Class nbtTagByte = reflectionManager.getClass(reflectionManager.NMS + "NBTTagDouble");
-            return reflectionManager.invokeConstructor(reflectionManager.getConstructor(nbtTagByte, Double.class), value);
+            return reflectionManager.invokeConstructor(reflectionManager.getConstructor(nbtTagByte, double.class), value);
         } else if (value instanceof String) {
             Class nbtTagByte = reflectionManager.getClass(reflectionManager.NMS + "NBTTagString");
             return reflectionManager.invokeConstructor(reflectionManager.getConstructor(nbtTagByte, String.class), value);

@@ -46,7 +46,13 @@ public class LinkCrateCommand implements Command {
 
         Crate c = Main.getIns().getCrateManager().getCrate(args[1]);
 
+        if (c == null) {
+            player.sendMessage(ChatColor.RED + "A crate with that name does not exist");
+            return;
+        }
+
         Main.getIns().getCrateManager().setCrateAtLocation(targetBlock.getLocation(), c);
+        player.sendMessage(ChatColor.RED + "Chest linked.");
 
     }
 }
