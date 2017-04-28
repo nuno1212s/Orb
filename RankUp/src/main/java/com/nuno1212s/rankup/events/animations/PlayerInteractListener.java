@@ -1,8 +1,8 @@
-package com.nuno1212s.fullpvp.events.animations;
+package com.nuno1212s.rankup.events.animations;
 
-import com.nuno1212s.fullpvp.crates.Crate;
-import com.nuno1212s.fullpvp.crates.CrateManager;
-import com.nuno1212s.fullpvp.main.Main;
+import com.nuno1212s.rankup.crates.Crate;
+import com.nuno1212s.rankup.crates.CrateManager;
+import com.nuno1212s.rankup.main.Main;
 import com.nuno1212s.main.MainData;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

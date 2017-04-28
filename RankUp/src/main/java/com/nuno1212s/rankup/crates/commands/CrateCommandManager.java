@@ -1,4 +1,4 @@
-package com.nuno1212s.fullpvp.crates.commands;
+package com.nuno1212s.rankup.crates.commands;
 
 import com.nuno1212s.util.CommandUtil.CommandManager;
 import org.bukkit.command.Command;

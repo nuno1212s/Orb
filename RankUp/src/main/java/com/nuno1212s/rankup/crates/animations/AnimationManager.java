@@ -1,9 +1,9 @@
-package com.nuno1212s.fullpvp.crates.animations;
+package com.nuno1212s.rankup.crates.animations;
 
-import com.nuno1212s.fullpvp.crates.Crate;
-import com.nuno1212s.fullpvp.crates.CrateManager;
-import com.nuno1212s.fullpvp.crates.animations.AnimationTimer.AnimationTimer;
-import com.nuno1212s.fullpvp.crates.animations.animations.DefaultAnimation;
+import com.nuno1212s.rankup.crates.Crate;
+import com.nuno1212s.rankup.crates.CrateManager;
+import com.nuno1212s.rankup.crates.animations.AnimationTimer.AnimationTimer;
+import com.nuno1212s.rankup.crates.animations.animations.DefaultAnimation;
 import com.nuno1212s.main.MainData;
 import lombok.Getter;
 import org.bukkit.entity.Player;

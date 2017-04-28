@@ -1,9 +1,8 @@
-package com.nuno1212s.fullpvp.crates;
+package com.nuno1212s.rankup.crates;
 
-import com.nuno1212s.fullpvp.crates.animations.Animation;
-import com.nuno1212s.fullpvp.crates.animations.animations.DefaultAnimation;
-import com.nuno1212s.fullpvp.main.Main;
-import com.nuno1212s.fullpvp.playermanager.PVPPlayerData;
+import com.nuno1212s.rankup.crates.animations.Animation;
+import com.nuno1212s.rankup.main.Main;
+import com.nuno1212s.rankup.playermanager.PVPPlayerData;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.util.NBTDataStorage.NBTCompound;
 import lombok.Getter;

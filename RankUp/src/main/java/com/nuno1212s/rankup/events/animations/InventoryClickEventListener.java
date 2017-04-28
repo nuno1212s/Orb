@@ -1,6 +1,6 @@
-package com.nuno1212s.fullpvp.events.animations;
+package com.nuno1212s.rankup.events.animations;
 
-import com.nuno1212s.fullpvp.main.Main;
+import com.nuno1212s.rankup.main.Main;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
