@@ -4,7 +4,9 @@ import lombok.Getter;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -22,7 +24,6 @@ public class ModuleManager {
 
     public ModuleManager(File dataFolder, ClassLoader classLoader) {
 
-        loader = new GlobalClassLoader();
         modules = new ArrayList<>();
         moduleFolder = new File(dataFolder + File.separator + "Modules" + File.separator);
 
@@ -36,21 +37,24 @@ public class ModuleManager {
             return;
         }
 
+        this.loader = new GlobalClassLoader(classLoader);
+
         for (File file : files) {
             if (file.getName().endsWith(".jar")) {
                 ModuleLoader moduleLoader = null;
+
                 try {
-                    moduleLoader = new ModuleLoader(file, classLoader, this.loader);
+                    moduleLoader = new ModuleLoader(file, this.loader);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
+
                 moduleLoader.load();
                 Module module = moduleLoader.getMainClass();
                 modules.add(module);
 
                 System.out.println("Loaded module: " + module.getModuleName());
                 System.out.println("Module Version: " + module.getVersion());
-
             }
         }
 
@@ -119,7 +123,7 @@ public class ModuleManager {
      */
     private void dep_resolve(Module a, List<Module> resolved, List<Module> unresolved) {
         unresolved.add(a);
-        for (Module m : a.getDependencies()) {
+        for (Module m : a.getDependencies(this)) {
             if (resolved.contains(m)) {
                 continue;
             }

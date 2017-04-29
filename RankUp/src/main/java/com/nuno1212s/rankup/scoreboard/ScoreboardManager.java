@@ -1,6 +1,6 @@
 package com.nuno1212s.rankup.scoreboard;
 
-import com.nuno1212s.rankup.playermanager.PVPPlayerData;
+import com.nuno1212s.rankup.playermanager.RUPlayerData;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.Group;
 import com.nuno1212s.playermanager.PlayerData;
@@ -52,7 +52,7 @@ public class ScoreboardManager {
 
     }
 
-    public void createScoreboard(PVPPlayerData d, Player p) {
+    public void createScoreboard(RUPlayerData d, Player p) {
         SimpleScoreboard sc;
 
         if (this.scoreboards.containsKey(d.getPlayerID())) {
@@ -78,14 +78,14 @@ public class ScoreboardManager {
         setScoreboardPrefixes(d);
     }
 
-    private void setScoreboardPrefixes(PVPPlayerData d) {
+    private void setScoreboardPrefixes(RUPlayerData d) {
         Scoreboard b = this.scoreboards.get(d.getPlayerID()).getScoreboard();
 
         for (PlayerData playerData : MainData.getIns().getPlayerManager().getPlayers()) {
-            if (!(playerData instanceof PVPPlayerData)) {
+            if (!(playerData instanceof RUPlayerData)) {
                 continue;
             }
-            PVPPlayerData data = (PVPPlayerData) playerData;
+            RUPlayerData data = (RUPlayerData) playerData;
 
             Group representingGroup = data.getRepresentingGroup();
 
@@ -102,7 +102,7 @@ public class ScoreboardManager {
         }
     }
 
-    private String format(String message, PVPPlayerData d) {
+    private String format(String message, RUPlayerData d) {
         message = message.replace("%coins%", NumberFormat.getInstance().format(d.getCoins()));
         message = message.replace("%cash%", NumberFormat.getInstance().format(d.getCash()));
         message = message.replace("%group%", String.valueOf(d.getRepresentingGroup().getGroupPrefix()));

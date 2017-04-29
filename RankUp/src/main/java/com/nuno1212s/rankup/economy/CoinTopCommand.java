@@ -1,7 +1,7 @@
 package com.nuno1212s.rankup.economy;
 
 import com.nuno1212s.rankup.main.Main;
-import com.nuno1212s.rankup.playermanager.PVPPlayerData;
+import com.nuno1212s.rankup.playermanager.RUPlayerData;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
 
@@ -23,11 +23,11 @@ class CoinTopCommand {
         List<PlayerData> players = MainData.getIns().getPlayerManager().getPlayers();
 
         players.sort((o1, o2) -> {
-                        if (!(o1 instanceof PVPPlayerData) || !(o2 instanceof PVPPlayerData)) {
+                        if (!(o1 instanceof RUPlayerData) || !(o2 instanceof RUPlayerData)) {
                             return 0;
                         }
 
-                        long coins1 = ((PVPPlayerData) o1).getCoins(), coins2 = ((PVPPlayerData) o2).getCoins();
+                        long coins1 = ((RUPlayerData) o1).getCoins(), coins2 = ((RUPlayerData) o2).getCoins();
 
                         return Long.compare(coins1, coins2);
                 }
@@ -37,7 +37,7 @@ class CoinTopCommand {
             players = players.subList(0, 10);
         }
 
-        players.forEach(player -> dataBaseEntries.put(player.getPlayerID(), ((PVPPlayerData) player).getCoins()));
+        players.forEach(player -> dataBaseEntries.put(player.getPlayerID(), ((RUPlayerData) player).getCoins()));
 
         LinkedHashMap<UUID, Long> collect = dataBaseEntries.entrySet().stream()
                 .sorted(Map.Entry.<UUID, Long> comparingByValue().reversed())

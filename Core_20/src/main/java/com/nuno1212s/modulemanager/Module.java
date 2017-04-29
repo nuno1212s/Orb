@@ -41,9 +41,8 @@ public abstract class Module {
         return dataFolder;
     }
 
-    public List<Module> getDependencies() {
+    public List<Module> getDependencies(ModuleManager ins) {
         ArrayList<Module> modules = new ArrayList<>();
-        ModuleManager ins = MainData.getIns().getModuleManager();
         for (String dependency : this.dependencies) {
             Module module = ins.getModule(dependency);
             if (module == null) {

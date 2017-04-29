@@ -2,7 +2,7 @@ package com.nuno1212s.rankup.economy;
 
 import com.nuno1212s.events.PlayerInformationUpdateEvent;
 import com.nuno1212s.rankup.main.Main;
-import com.nuno1212s.rankup.playermanager.PVPPlayerData;
+import com.nuno1212s.rankup.playermanager.RUPlayerData;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.messagemanager.Message;
 import com.nuno1212s.playermanager.PlayerData;
@@ -31,7 +31,7 @@ public class CoinCommand implements CommandExecutor {
                 commandSender.sendMessage(ChatColor.RED + "This command is only for players");
                 return true;
             }
-            PVPPlayerData d = (PVPPlayerData) MainData.getIns().getPlayerManager().getPlayer(((Player) commandSender).getUniqueId());
+            RUPlayerData d = (RUPlayerData) MainData.getIns().getPlayerManager().getPlayer(((Player) commandSender).getUniqueId());
             MainData.getIns().getMessageManager().getMessage("COINS")
                     .format("%coinAmount%", NumberFormat.getInstance().format(d.getCoins())).sendTo(commandSender);
             return true;
@@ -64,11 +64,11 @@ public class CoinCommand implements CommandExecutor {
                             }
 
                             if (loaded.getValue()) {
-                                d = new PVPPlayerData(d);
-                                Main.getIns().getMysql().loadPlayerData((PVPPlayerData) d);
+                                d = new RUPlayerData(d);
+                                Main.getIns().getMysql().loadPlayerData((RUPlayerData) d);
                             }
 
-                            ((PVPPlayerData) d).setCoins(coins);
+                            ((RUPlayerData) d).setCoins(coins);
                             Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(d));
 
                             MainData.getIns().getMessageManager().getMessage("COINS_SET_OTHER")
@@ -113,11 +113,11 @@ public class CoinCommand implements CommandExecutor {
                             }
 
                             if (loaded.getValue()) {
-                                d = new PVPPlayerData(d);
-                                Main.getIns().getMysql().loadPlayerData((PVPPlayerData) d);
+                                d = new RUPlayerData(d);
+                                Main.getIns().getMysql().loadPlayerData((RUPlayerData) d);
                             }
 
-                            ((PVPPlayerData) d).setCoins(((PVPPlayerData) d).getCoins() + coins);
+                            ((RUPlayerData) d).setCoins(((RUPlayerData) d).getCoins() + coins);
                             Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(d));
 
                             MainData.getIns().getMessageManager().getMessage("COINS_ADD_OTHER")
@@ -161,11 +161,11 @@ public class CoinCommand implements CommandExecutor {
                             }
 
                             if (loaded.getValue()) {
-                                d = new PVPPlayerData(d);
-                                Main.getIns().getMysql().loadPlayerData((PVPPlayerData) d);
+                                d = new RUPlayerData(d);
+                                Main.getIns().getMysql().loadPlayerData((RUPlayerData) d);
                             }
 
-                            ((PVPPlayerData) d).setCoins(((PVPPlayerData) d).getCoins() - coins);
+                            ((RUPlayerData) d).setCoins(((RUPlayerData) d).getCoins() - coins);
                             Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(d));
 
                             MainData.getIns().getMessageManager().getMessage("COINS_REMOVE_OTHER")
@@ -223,12 +223,12 @@ public class CoinCommand implements CommandExecutor {
                         }
 
                         if (loaded.getValue()) {
-                            d = new PVPPlayerData(d);
-                            Main.getIns().getMysql().loadPlayerData((PVPPlayerData) d);
+                            d = new RUPlayerData(d);
+                            Main.getIns().getMysql().loadPlayerData((RUPlayerData) d);
                         }
 
                         MainData.getIns().getMessageManager().getMessage("COINS_OTHERS")
-                                .format("%coinAmount%", NumberFormat.getInstance().format(((PVPPlayerData) d).getCoins()))
+                                .format("%coinAmount%", NumberFormat.getInstance().format(((RUPlayerData) d).getCoins()))
                                 .format("%playerName%", d.getPlayerName())
                                 .sendTo(commandSender);
 
@@ -240,7 +240,7 @@ public class CoinCommand implements CommandExecutor {
 
     private boolean checkDatabase(CommandSender commandSender) {
         if (commandSender instanceof Player) {
-            PVPPlayerData playerData = (PVPPlayerData) MainData.getIns().getPlayerManager().getPlayer(((Player) commandSender).getUniqueId());
+            RUPlayerData playerData = (RUPlayerData) MainData.getIns().getPlayerManager().getPlayer(((Player) commandSender).getUniqueId());
             if (!commandSender.hasPermission("database.fullaccess")) {
                 if (playerData.getLastDatabaseAccess() + 5000 > System.currentTimeMillis()) {
                     MainData.getIns().getMessageManager().getMessage("DATABASE_DELAY")

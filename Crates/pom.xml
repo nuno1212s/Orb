@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.nuno1212s</groupId>
-    <artifactId>FullPvP</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <artifactId>Crates</artifactId>
+    <version>1.0</version>
 
     <dependencies>
         <dependency>
@@ -28,13 +28,6 @@
             <artifactId>lombok</artifactId>
             <version>LATEST</version>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.nuno1212s</groupId>
-            <artifactId>Crates</artifactId>
-            <version>1.0</version>
-            <scope>provided+</scope>
         </dependency>
     </dependencies>
 
@@ -60,7 +53,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <finalName>FullPVP</finalName>
+                    <finalName>Crates</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>

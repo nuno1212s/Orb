@@ -1,6 +1,5 @@
 package com.nuno1212s.modulemanager;
 
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,11 +10,14 @@ import java.util.Map;
  */
 public class GlobalClassLoader {
 
-    List<URLClassLoader> loaders;
+    private List<ModuleLoader> loaders;
 
-    Map<String, Class<?>> classes;
+    private Map<String, Class<?>> classes;
 
-    public GlobalClassLoader() {
+    private ClassLoader bukkitLoader;
+
+    public GlobalClassLoader(ClassLoader bukkitLoader) {
+        this.bukkitLoader = bukkitLoader;
         loaders = new ArrayList<>();
         classes = new HashMap<>();
     }
@@ -33,7 +35,31 @@ public class GlobalClassLoader {
     }
 
     public Class<?> getClass(String name) {
-        return this.classes.get(name);
+        if (this.classes.containsKey(name)) {
+            return this.classes.get(name);
+        }
+
+        Class<?> Class = null;
+
+        for (ModuleLoader loader : loaders) {
+            try {
+                Class = loader.find(name, false);
+            } catch (ClassNotFoundException e) {}
+
+            if (Class != null) {
+                return Class;
+            }
+        }
+
+        try {
+            System.out.println("Bukkit class");
+            Class = bukkitLoader.loadClass(name);
+            System.out.println(name);
+        } catch (ClassNotFoundException e) {
+            System.out.println("ERROR: " + name);
+        }
+
+        return Class;
     }
 
 }

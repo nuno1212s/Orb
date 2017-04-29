@@ -3,22 +3,20 @@ package com.nuno1212s.rankup.main;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.modulemanager.ModuleData;
-import com.nuno1212s.rankup.crates.CrateManager;
-import com.nuno1212s.rankup.crates.commands.CrateCommandManager;
 import com.nuno1212s.rankup.economy.CoinCommand;
 import com.nuno1212s.rankup.events.PlayerJoinListener;
 import com.nuno1212s.rankup.events.PlayerUpdateListener;
-import com.nuno1212s.rankup.events.animations.*;
 import com.nuno1212s.rankup.mysql.MySql;
+import com.nuno1212s.rankup.playermanager.RUPlayerData;
 import com.nuno1212s.rankup.scoreboard.ScoreboardManager;
 import lombok.Getter;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
+
 
 /**
  * Main Class
  */
-@ModuleData(name = "Full PvP", version = "1.1-SNAPSHOT", dependencies = {})
+@ModuleData(name = "RankUp", version = "1.1-SNAPSHOT", dependencies = {"Crates"})
 public class Main extends Module {
 
     @Getter
@@ -30,9 +28,6 @@ public class Main extends Module {
     @Getter
     ScoreboardManager scoreboardManager;
 
-    @Getter
-    CrateManager crateManager;
-
     @Override
     public void onEnable() {
         ins = this;
@@ -42,24 +37,27 @@ public class Main extends Module {
         MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));
 
         scoreboardManager = new ScoreboardManager(getFile("scoreboard.json", true));
-        crateManager = new CrateManager(this);
 
-        registerCommand(new String[]{"crate"}, new CrateCommandManager());
+        com.nuno1212s.crates.Main.getIns().setServerEconomyInterface((player, cost) -> {
+                RUPlayerData playerData = (RUPlayerData) MainData.getIns().getPlayerManager().getPlayer(player);
+                if (playerData.getCoins() >= cost) {
+                    playerData.setCoins(playerData.getCoins() - cost);
+                    return true;
+                }
+                return false;
+            });
 
         registerCommand(new String[]{"coins", "coin"}, new CoinCommand());
 
         Plugin plugin = com.nuno1212s.main.Main.getIns();
-        Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), plugin);
-        Bukkit.getServer().getPluginManager().registerEvents(new PlayerUpdateListener(), plugin);
-        Bukkit.getServer().getPluginManager().registerEvents(new PlayerCloseInventoryListener(), plugin);
-        Bukkit.getServer().getPluginManager().registerEvents(new InventoryClickEventListener(), plugin);
-        Bukkit.getServer().getPluginManager().registerEvents(new PlayerInteractListener(), plugin);
-        Bukkit.getServer().getPluginManager().registerEvents(new PlayerBreakBlockListener(), plugin);
-        Bukkit.getServer().getPluginManager().registerEvents(new PlayerChangeItemNameListener(), plugin);
+
+        plugin.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new PlayerUpdateListener(), plugin);
+
     }
 
     @Override
     public void onDisable() {
-        crateManager.save();
+
     }
 }

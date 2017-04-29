@@ -1,6 +1,6 @@
 package com.nuno1212s.rankup.mysql;
 
-import com.nuno1212s.rankup.playermanager.PVPPlayerData;
+import com.nuno1212s.rankup.playermanager.RUPlayerData;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.util.PlayerGroupData;
 
@@ -26,7 +26,7 @@ public class MySql {
 
     }
 
-    public void loadPlayerData(PVPPlayerData playerData) {
+    public void loadPlayerData(RUPlayerData playerData) {
 
         try (Connection c = MainData.getIns().getMySql().getConnection();
              PreparedStatement st = c.prepareStatement("SELECT * FROM pvpData WHERE UUID=? LIMIT 1"))
@@ -60,7 +60,7 @@ public class MySql {
         return null;
     }
 
-    public void savePlayerData(PVPPlayerData playerData) {
+    public void savePlayerData(RUPlayerData playerData) {
 
         try (Connection c = MainData.getIns().getMySql().getConnection();
             PreparedStatement st = c.prepareStatement("INSERT INTO pvpData(UUID, COINS, GROUPDATA) values(?, ?, ?) ON DUPLICATE KEY UPDATE COINS=?, GROUPDATA=?"))

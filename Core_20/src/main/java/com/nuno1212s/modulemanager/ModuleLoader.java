@@ -13,6 +13,8 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
@@ -28,8 +30,10 @@ public class ModuleLoader extends URLClassLoader {
 
     private GlobalClassLoader globalLoader;
 
-    public ModuleLoader(File moduleFile, ClassLoader loader, GlobalClassLoader mainLoader) throws MalformedURLException {
-        super(new URL[]{moduleFile.toURI().toURL()}, loader);
+    private Map<String, Class<?>> localClasses = new HashMap<>();
+
+    public ModuleLoader(File moduleFile, GlobalClassLoader mainLoader) throws MalformedURLException {
+        super(new URL[]{moduleFile.toURI().toURL()});
         this.moduleFile = moduleFile;
         this.globalLoader = mainLoader;
         this.globalLoader.addLoader(this);
@@ -86,30 +90,30 @@ public class ModuleLoader extends URLClassLoader {
 
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
-        return find(name);
+        return find(name, true);
     }
 
-    private Class<?> find(String className) throws ClassNotFoundException {
+    public Class<?> find(String className, boolean global) throws ClassNotFoundException {
         if (className.startsWith("org.bukkit.") || className.startsWith("net.minecraft.")) {
             throw new ClassNotFoundException(className);
         }
 
-        Class<?> result = null;
+        Class<?> result = this.localClasses.get(className);
 
-        result = this.globalLoader.getClass(className);
+        if (result == null) {
+            if (global) {
+                result = this.globalLoader.getClass(className);
+            }
 
-        if (result != null) {
-            return result;
-        }
+            if (result == null) {
+                result = super.findClass(className);
 
-        try {
-            result = super.findClass(className);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+                if (result != null){
+                    globalLoader.setClass(className, result);
+                }
+            }
 
-        if (result != null) {
-            this.globalLoader.setClass(className, result);
+            localClasses.put(className, result);
         }
 
         return result;
