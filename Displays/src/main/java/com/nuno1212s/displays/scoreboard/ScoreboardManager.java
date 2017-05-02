@@ -1,6 +1,6 @@
-package com.nuno1212s.rankup.scoreboard;
+package com.nuno1212s.displays.scoreboard;
 
-import com.nuno1212s.rankup.playermanager.RUPlayerData;
+import com.nuno1212s.displays.Main;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.Group;
 import com.nuno1212s.playermanager.PlayerData;
@@ -46,22 +46,47 @@ public class ScoreboardManager {
 
         Map<String, Object> scoreboardMessages = (Map<String, Object>) json;
 
-        scoreboardMessages.entrySet().forEach((entry) -> {
-            this.scoreboardMessages.put(Integer.parseInt(entry.getKey()), ChatColor.translateAlternateColorCodes('&', (String) entry.getValue()));
-        });
+        scoreboardMessages.entrySet().forEach((entry) ->
+            this.scoreboardMessages.put(Integer.parseInt(entry.getKey()), ChatColor.translateAlternateColorCodes('&', (String) entry.getValue()))
+        );
 
     }
 
-    public void createScoreboard(RUPlayerData d, Player p) {
+    public void handlePlayerJoin(PlayerData d, Player p) {
+        createScoreboard(d, p);
+        setScoreboardPrefixes(d);
+    }
+
+    public void handlePlayerDC(PlayerData d) {
+        this.scoreboards.forEach(((uuid, simpleScoreboard) -> {
+            if (uuid.equals(d.getPlayerID())) {
+                return;
+            }
+            Scoreboard scoreboard = simpleScoreboard.getScoreboard();
+
+            Team team = scoreboard.getTeam(d.getRepresentingGroup().getScoreboardName());
+
+            if (team == null) {
+                return;
+            }
+
+            team.removeEntry(d.getPlayerName());
+        }));
+        this.scoreboards.remove(d.getPlayerID());
+    }
+
+    public void createScoreboard(PlayerData d, Player p) {
         SimpleScoreboard sc;
 
         if (this.scoreboards.containsKey(d.getPlayerID())) {
             sc = this.scoreboards.get(d.getPlayerID());
         } else {
             sc = new SimpleScoreboard(this.scoreboardMessages.get(-1));
+            this.scoreboards.put(d.getPlayerID(), sc);
         }
 
         this.scoreboardMessages.forEach((scoreboardKey, message) -> {
+
             if (scoreboardKey == -1) {
                 return;
             }
@@ -73,21 +98,14 @@ public class ScoreboardManager {
         sc.update();
         sc.send(p);
 
-        this.scoreboards.put(d.getPlayerID(), sc);
-
-        setScoreboardPrefixes(d);
     }
 
-    private void setScoreboardPrefixes(RUPlayerData d) {
+    private void setScoreboardPrefixes(PlayerData d) {
         Scoreboard b = this.scoreboards.get(d.getPlayerID()).getScoreboard();
 
         for (PlayerData playerData : MainData.getIns().getPlayerManager().getPlayers()) {
-            if (!(playerData instanceof RUPlayerData)) {
-                continue;
-            }
-            RUPlayerData data = (RUPlayerData) playerData;
 
-            Group representingGroup = data.getRepresentingGroup();
+            Group representingGroup = playerData.getRepresentingGroup();
 
             Team team = b.getTeam(representingGroup.getScoreboardName());
 
@@ -97,16 +115,32 @@ public class ScoreboardManager {
                 team.setSuffix(representingGroup.getGroupSuffix());
             }
 
-            team.addEntry(data.getPlayerName());
-
+            team.addEntry(playerData.getPlayerName());
         }
+
+        this.scoreboards.forEach(((uuid, simpleScoreboard) -> {
+            if (uuid.equals(d.getPlayerID())) {
+                return;
+            }
+            Scoreboard scoreboard = simpleScoreboard.getScoreboard();
+            Group representingGroup = d.getRepresentingGroup();
+            Team team = scoreboard.getTeam(representingGroup.getScoreboardName());
+
+            if (team == null) {
+                team = scoreboard.registerNewTeam(representingGroup.getScoreboardName());
+                team.setPrefix(representingGroup.getGroupPrefix());
+                team.setSuffix(representingGroup.getGroupSuffix());
+            }
+
+            team.addEntry(d.getPlayerName());
+        }));
+
     }
 
-    private String format(String message, RUPlayerData d) {
-        message = message.replace("%coins%", NumberFormat.getInstance().format(d.getCoins()));
+    private String format(String message, PlayerData d) {
         message = message.replace("%cash%", NumberFormat.getInstance().format(d.getCash()));
         message = message.replace("%group%", String.valueOf(d.getRepresentingGroup().getGroupPrefix()));
-
+        message = Main.getIns().getPlaceHolderManager().format(message, d);
         return message;
     }
 

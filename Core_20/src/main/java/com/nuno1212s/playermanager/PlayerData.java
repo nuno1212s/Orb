@@ -115,4 +115,8 @@ public abstract class PlayerData {
         this.cash = cash;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof PlayerData && ((PlayerData) obj).getPlayerID().equals(this.getPlayerID());
+    }
 }

@@ -4,19 +4,21 @@ import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.modulemanager.ModuleData;
 import com.nuno1212s.rankup.economy.CoinCommand;
+import com.nuno1212s.rankup.events.PlayerDisconnectListener;
 import com.nuno1212s.rankup.events.PlayerJoinListener;
 import com.nuno1212s.rankup.events.PlayerUpdateListener;
 import com.nuno1212s.rankup.mysql.MySql;
 import com.nuno1212s.rankup.playermanager.RUPlayerData;
-import com.nuno1212s.rankup.scoreboard.ScoreboardManager;
 import lombok.Getter;
 import org.bukkit.plugin.Plugin;
+
+import java.text.NumberFormat;
 
 
 /**
  * Main Class
  */
-@ModuleData(name = "RankUp", version = "1.1-SNAPSHOT", dependencies = {"Crates"})
+@ModuleData(name = "RankUp", version = "1.1-SNAPSHOT", dependencies = {"Crates", "Displays"})
 public class Main extends Module {
 
     @Getter
@@ -24,9 +26,6 @@ public class Main extends Module {
 
     @Getter
     MySql mysql;
-
-    @Getter
-    ScoreboardManager scoreboardManager;
 
     @Override
     public void onEnable() {
@@ -36,16 +35,18 @@ public class Main extends Module {
 
         MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));
 
-        scoreboardManager = new ScoreboardManager(getFile("scoreboard.json", true));
-
         com.nuno1212s.crates.Main.getIns().setServerEconomyInterface((player, cost) -> {
-                RUPlayerData playerData = (RUPlayerData) MainData.getIns().getPlayerManager().getPlayer(player);
-                if (playerData.getCoins() >= cost) {
-                    playerData.setCoins(playerData.getCoins() - cost);
-                    return true;
-                }
-                return false;
-            });
+            RUPlayerData playerData = (RUPlayerData) MainData.getIns().getPlayerManager().getPlayer(player);
+            if (playerData.getCoins() >= cost) {
+                playerData.setCoins(playerData.getCoins() - cost);
+                return true;
+            }
+            return false;
+        });
+
+        com.nuno1212s.displays.Main.getIns().getPlaceHolderManager().registerPlaceHolder("%coins%", (d) ->
+                NumberFormat.getInstance().format(((RUPlayerData) d).getCoins())
+        );
 
         registerCommand(new String[]{"coins", "coin"}, new CoinCommand());
 
@@ -53,7 +54,7 @@ public class Main extends Module {
 
         plugin.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), plugin);
         plugin.getServer().getPluginManager().registerEvents(new PlayerUpdateListener(), plugin);
-
+        plugin.getServer().getPluginManager().registerEvents(new PlayerDisconnectListener(), plugin);
     }
 
     @Override

@@ -16,7 +16,7 @@ public class PlayerUpdateListener implements Listener {
     @EventHandler
     public void onUpdate(PlayerInformationUpdateEvent e) {
         PlayerData player = e.getPlayer();
-        Main.getIns().getScoreboardManager().createScoreboard((RUPlayerData) player, Bukkit.getPlayer(player.getPlayerID()));
+        com.nuno1212s.displays.Main.getIns().getScoreboardManager().createScoreboard(player, Bukkit.getPlayer(player.getPlayerID()));
     }
 
 }

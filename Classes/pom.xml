@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.nuno1212s</groupId>
-    <artifactId>RankUp</artifactId>
-    <version>0.1</version>
+    <artifactId>Classes</artifactId>
+    <version>1.0</version>
 
     <dependencies>
         <dependency>
@@ -27,20 +27,6 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>LATEST</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.nuno1212s</groupId>
-            <artifactId>Crates</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.nuno1212s</groupId>
-            <artifactId>Displays</artifactId>
-            <version>1.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 

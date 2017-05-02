@@ -52,12 +52,8 @@ public class GlobalClassLoader {
         }
 
         try {
-            System.out.println("Bukkit class");
             Class = bukkitLoader.loadClass(name);
-            System.out.println(name);
-        } catch (ClassNotFoundException e) {
-            System.out.println("ERROR: " + name);
-        }
+        } catch (ClassNotFoundException e) {}
 
         return Class;
     }

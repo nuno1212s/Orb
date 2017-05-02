@@ -2,6 +2,7 @@ package com.nuno1212s.crates;
 
 import com.nuno1212s.crates.commands.CrateCommandManager;
 import com.nuno1212s.crates.events.*;
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.modulemanager.ModuleData;
 import lombok.Getter;
@@ -30,7 +31,9 @@ public class Main extends Module {
         crateManager = new CrateManager(this);
 
 
-        registerCommand(new String[]{"crate"}, new CrateCommandManager());
+        registerCommand(new String[]{"crate", "crates"}, new CrateCommandManager());
+
+        MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));
 
         Plugin plugin = com.nuno1212s.main.Main.getIns();
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerCloseInventoryListener(), plugin);
