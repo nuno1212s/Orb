@@ -79,7 +79,9 @@ public class GroupCommand implements CommandExecutor {
             try {
                 groupID = Short.parseShort(args[2]);
                 time = Long.parseLong(args[3]);
-                time *= 1000;
+                if (time > 0) {
+                    time *= 1000;
+                }
             } catch (NumberFormatException e) {
                 commandSender.sendMessage(ChatColor.RED + "GroupID and time must be numbers");
                 return true;
@@ -121,7 +123,9 @@ public class GroupCommand implements CommandExecutor {
             player.getKey().save((o) -> {
             });
 
-            MainData.getIns().getEventCaller().callUpdateInformationEvent(player.getKey());
+            if (player.getValue()) {
+                MainData.getIns().getEventCaller().callUpdateInformationEvent(player.getKey());
+            }
 
             return true;
         } else if (arg.equalsIgnoreCase("setLocal")) {
@@ -137,7 +141,9 @@ public class GroupCommand implements CommandExecutor {
             try {
                 groupID = Short.parseShort(args[2]);
                 time = Long.parseLong(args[3]);
-                time *= 1000;
+                if (time > 0) {
+                    time *= 1000;
+                }
             } catch (NumberFormatException e) {
                 commandSender.sendMessage(ChatColor.RED + "GroupID and time must be numbers");
                 return true;
@@ -180,7 +186,9 @@ public class GroupCommand implements CommandExecutor {
             player.getKey().save((o) -> {
             });
 
-            MainData.getIns().getEventCaller().callUpdateInformationEvent(player.getKey());
+            if (player.getValue()) {
+                MainData.getIns().getEventCaller().callUpdateInformationEvent(player.getKey());
+            }
 
             return true;
         } else if (arg.equalsIgnoreCase("modify")) {

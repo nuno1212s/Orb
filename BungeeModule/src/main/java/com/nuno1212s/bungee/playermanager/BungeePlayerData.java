@@ -2,6 +2,7 @@ package com.nuno1212s.bungee.playermanager;
 
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.Group;
+import com.nuno1212s.permissionmanager.util.PlayerGroupData;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.Callback;
 import lombok.Getter;
@@ -29,8 +30,8 @@ public class BungeePlayerData extends PlayerData {
     }
 
     @Override
-    public void setServerGroup(short groupID, long duration) {
-
+    public PlayerGroupData.EXTENSION_RESULT setServerGroup(short groupID, long duration) {
+        return null;
     }
 
     @Override

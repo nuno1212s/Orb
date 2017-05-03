@@ -72,6 +72,12 @@ public class PlayerManager {
         return null;
     }
 
+    /**
+     * Get or load the player data
+     *
+     * @param playerName The name of the player to load
+     * @return The player data and if the data was loaded from the database (false if it is not loaded from the db, true if it is)
+     */
     public Pair<PlayerData, Boolean> getOrLoadPlayer(String playerName) {
         synchronized (players) {
             for (PlayerData player : players) {

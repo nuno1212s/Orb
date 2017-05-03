@@ -76,9 +76,13 @@ public class ModuleManager {
             List<Module> moduleSorted = new ArrayList<>();
             dep_resolve(modules.get(0), moduleSorted, new ArrayList<>());
             for (Module module : moduleSorted) {
-                module.onEnable();
-                module.setEnabled(true);
-                modules.remove(module);
+                try {
+                    module.onEnable();
+                    module.setEnabled(true);
+                    modules.remove(module);
+                } catch (Exception e) {
+                    System.out.println("Could not enable module " + module.getModuleName());
+                }
             }
             moduleSorted.clear();
         }

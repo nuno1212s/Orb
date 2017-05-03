@@ -23,7 +23,7 @@ import java.util.List;
 public class TellCommand extends Command implements TabExecutor{
 
     public TellCommand() {
-        super("tell");
+        super("tell", "", "msg", "message");
     }
 
     @Override

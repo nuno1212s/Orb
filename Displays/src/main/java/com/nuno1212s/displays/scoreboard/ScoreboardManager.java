@@ -46,8 +46,8 @@ public class ScoreboardManager {
 
         Map<String, Object> scoreboardMessages = (Map<String, Object>) json;
 
-        scoreboardMessages.entrySet().forEach((entry) ->
-            this.scoreboardMessages.put(Integer.parseInt(entry.getKey()), ChatColor.translateAlternateColorCodes('&', (String) entry.getValue()))
+        scoreboardMessages.forEach((entry, value) ->
+            this.scoreboardMessages.put(Integer.parseInt(entry), ChatColor.translateAlternateColorCodes('&', (String) value))
         );
 
     }

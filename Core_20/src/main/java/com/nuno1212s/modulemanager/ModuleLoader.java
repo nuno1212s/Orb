@@ -61,6 +61,10 @@ public class ModuleLoader extends URLClassLoader {
     public void setMainClass(Module j) {
         this.mainClass =  j;
         ModuleData annotation = j.getClass().getAnnotation(ModuleData.class);
+        if (annotation == null) {
+            System.out.println("Failed to load module data for module ");
+            return;
+        }
         mainClass.setModuleName(annotation.name());
         mainClass.setVersion(annotation.version());
         mainClass.setDependencies(annotation.dependencies());

@@ -13,7 +13,7 @@ public class ClassInventoryClickListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onInventoryClick(InventoryClickEvent e) {
-        if (Main.getIns().getClassManager().isClassDisplay(e.getInventory().getName())) {
+        if (Main.getIns().getKitManager().isKitDisplay(e.getInventory().getName())) {
             e.setResult(Event.Result.DENY);
         }
     }

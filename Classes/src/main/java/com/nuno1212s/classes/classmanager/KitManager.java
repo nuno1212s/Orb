@@ -15,15 +15,15 @@ import java.util.*;
 /**
  * Manages classes
  */
-public class ClassManager {
+public class KitManager {
 
-    private List<Class> classes;
+    private List<Kit> kits;
 
     @Getter
     private File dataFile;
 
-    public ClassManager(Module m) {
-        classes = new ArrayList<>();
+    public KitManager(Module m) {
+        kits = new ArrayList<>();
         dataFile = m.getFile("classes.json", false);
 
         JSONObject jsonObject;
@@ -36,27 +36,82 @@ public class ClassManager {
         }
 
         for (String o : (Set<String>) jsonObject.keySet()) {
-            this.classes.add(new Class((Map<String, Object>)jsonObject.get(o)));
+            this.kits.add(new Kit((Map<String, Object>)jsonObject.get(o)));
         }
 
     }
 
-    public Class getClassEdit(String name) {
-        for (Class aClass : this.classes) {
-            if (name.startsWith(aClass.getClassName() + " Edit")) {
-                return aClass;
+    public void save() {
+        JSONObject jsonObject = new JSONObject();
+
+        this.kits.forEach(kit ->
+            jsonObject.put(kit.getClassName(), kit.save())
+        );
+
+        try (Writer w = new FileWriter(this.dataFile)) {
+            jsonObject.writeJSONString(w);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Get the class for the name provided
+     *
+     * @param kitName The name of the kit
+     * @return
+     */
+    public Kit getKit(String kitName) {
+        for (Kit aKit : this.kits) {
+            if (kitName.equalsIgnoreCase(aKit.getClassName())) {
+                return aKit;
             }
         }
         return null;
     }
 
-    public boolean isClassDisplay(String inventoryName) {
-        for (Class aClass : this.classes) {
-            if (inventoryName.equalsIgnoreCase(aClass.getClassName())) {
+    /**
+     * Get the class for the id provided
+     *
+     * @param kitID The ID of the kit
+     * @return
+     */
+    public Kit getKit(int kitID) {
+        for (Kit aKit : this.kits) {
+            if (aKit.getId() == kitID) {
+                return aKit;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Get the class for the editing inventory
+     *
+     * @param name The inventory name
+     * @return the kit that matches it
+     */
+    public Kit getKitEdit(String name) {
+        for (Kit aKit : this.kits) {
+            if (name.startsWith(aKit.getClassName() + " Edit")) {
+                return aKit;
+            }
+        }
+        return null;
+    }
+
+    public boolean isKitDisplay(String inventoryName) {
+        for (Kit aKit : this.kits) {
+            if (inventoryName.equalsIgnoreCase(aKit.getClassName())) {
                 return true;
             }
         }
         return false;
+    }
+
+    public void addKit(Kit k) {
+        this.kits.add(k);
     }
 
     public static String itemTo64(ItemStack stack) throws IllegalStateException {

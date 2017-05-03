@@ -1,7 +1,8 @@
 package com.nuno1212s.classes.events;
 
-import com.nuno1212s.classes.classmanager.Class;
+import com.nuno1212s.classes.classmanager.Kit;
 import com.nuno1212s.classes.Main;
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -15,9 +16,10 @@ public class ClassEditInventoryListener implements Listener {
 
     @EventHandler
     public void onClose(InventoryCloseEvent e) {
-        Class classEdit = Main.getIns().getClassManager().getClassEdit(e.getInventory().getName());
-        if (classEdit != null) {
-            classEdit.updateItems(e.getInventory());
+        Kit kitEdit = Main.getIns().getKitManager().getKitEdit(e.getInventory().getName());
+        if (kitEdit != null) {
+            kitEdit.updateItems(e.getInventory());
+            e.getPlayer().sendMessage(ChatColor.RED + "Updated class " + kitEdit.getClassName());
         }
     }
 

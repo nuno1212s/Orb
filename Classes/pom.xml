@@ -54,7 +54,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <finalName>RankUp</finalName>
+                    <finalName>Classes</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>

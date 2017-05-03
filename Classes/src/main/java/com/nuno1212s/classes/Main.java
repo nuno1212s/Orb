@@ -1,27 +1,35 @@
 package com.nuno1212s.classes;
 
-import com.nuno1212s.classes.classmanager.ClassManager;
+import com.nuno1212s.classes.classmanager.KitManager;
+import com.nuno1212s.classes.commands.ClassCommandManager;
 import com.nuno1212s.classes.events.ClassEditInventoryListener;
 import com.nuno1212s.classes.events.ClassInventoryClickListener;
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
+import com.nuno1212s.modulemanager.ModuleData;
 import lombok.Getter;
 import org.bukkit.plugin.Plugin;
 
 /**
  * Main
  */
+@ModuleData(name = "Classes", version = "1.0", dependencies = {})
 public class Main extends Module {
 
     @Getter
     static Main ins;
 
     @Getter
-    ClassManager classManager;
+    KitManager kitManager;
 
     @Override
     public void onEnable() {
         ins = this;
-        classManager = new ClassManager(this);
+        kitManager = new KitManager(this);
+
+        registerCommand(new String[]{"class"}, new ClassCommandManager());
+
+        MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));
 
         Plugin p = com.nuno1212s.main.Main.getIns();
         p.getServer().getPluginManager().registerEvents(new ClassEditInventoryListener(), p);
@@ -30,6 +38,6 @@ public class Main extends Module {
 
     @Override
     public void onDisable() {
-
+        kitManager.save();
     }
 }

@@ -1,0 +1,6 @@
+{
+  "NO_KIT_WITH_THAT_NAME": "&cNão existe um kit com esse nome!",
+  "NO_KIT_PERMISSION": "&cNão tens permissão para receber este kit.",
+  "CANT_USE_KIT": "&cYou have to wait %time% to get this kit",
+  "RECEIVED_KIT": "&cYou have received the kit %kitName%"
+}

@@ -18,7 +18,7 @@ import java.text.NumberFormat;
 /**
  * Main Class
  */
-@ModuleData(name = "RankUp", version = "1.1-SNAPSHOT", dependencies = {"Crates", "Displays"})
+@ModuleData(name = "RankUp", version = "1.1-SNAPSHOT", dependencies = {"Crates", "Displays", "Classes"})
 public class Main extends Module {
 
     @Getter
