@@ -1,6 +1,7 @@
 package com.nuno1212s.classes.classmanager;
 
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -24,11 +25,16 @@ public class Kit {
     @Getter
     private ItemStack[] items;
 
-    public Kit(int id, String className, String permissionNode, ItemStack[] items) {
+    @Getter
+    @Setter
+    private ItemStack displayItem;
+
+    public Kit(int id, String className, String permissionNode, ItemStack[] items, ItemStack displayItem) {
         this.id = id;
         this.className = className;
         this.permission = permissionNode;
         this.items = items;
+        this.displayItem = displayItem;
     }
 
     public Kit(Map<String, Object> data) {
@@ -36,6 +42,11 @@ public class Kit {
         this.className = (String) data.get("ClassName");
         this.permission = (String) data.get("Permission");
         this.items = new ItemStack[((Long) data.get("InventorySize")).intValue()];
+        try {
+            this.displayItem = KitManager.itemFrom64((String) data.get("DisplayItem"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         Map<String, Object> items = (Map<String, Object>) data.get("Items");
         items.forEach((slot, item) -> {
             int slo = Integer.parseInt(slot);
@@ -48,6 +59,29 @@ public class Kit {
             }
             this.items[slo] = itemStack;
         });
+    }
+
+    public Map<String, Object> save() {
+        Map<String, Object> saved = new HashMap<>(), items = new HashMap<>();
+
+        saved.put("ID", this.id);
+        saved.put("ClassName", className);
+        saved.put("Permission", permission);
+        saved.put("InventorySize", this.items.length);
+        saved.put("DisplayItem", KitManager.itemTo64(this.displayItem));
+
+        for (int i = 0; i < this.items.length; i++) {
+            if (this.items[i] == null) {
+                continue;
+            }
+
+            items.put(String.valueOf(i), KitManager.itemTo64(this.items[i]));
+
+        }
+
+        saved.put("Items", items);
+
+        return saved;
     }
 
     public void setItem(int slot, ItemStack item) {
@@ -81,28 +115,6 @@ public class Kit {
             }
             p.getInventory().addItem(item.clone());
         }
-    }
-
-    public Map<String, Object> save() {
-        Map<String, Object> saved = new HashMap<>(), items = new HashMap<>();
-
-        saved.put("ID", this.id);
-        saved.put("ClassName", className);
-        saved.put("Permission", permission);
-        saved.put("InventorySize", this.items.length);
-
-        for (int i = 0; i < this.items.length; i++) {
-            if (this.items[i] == null) {
-                continue;
-            }
-
-            items.put(String.valueOf(i), KitManager.itemTo64(this.items[i]));
-
-        }
-
-        saved.put("Items", items);
-
-        return saved;
     }
 
     @Override
