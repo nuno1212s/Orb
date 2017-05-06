@@ -9,6 +9,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /**
  * Handles chat
  */
@@ -19,15 +21,27 @@ public class ChatListener implements Listener {
         e.setCancelled(true);
         if (Main.getIns().getChatManager().isChatActivated() || e.getPlayer().hasPermission("chat.override")) {
             PlayerData d = MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
+
             String message = e.getPlayer().hasPermission("chat.color") ? ChatColor.translateAlternateColorCodes('&', e.getMessage()) : e.getMessage();
             String playerName = d.getNameWithPrefix();
-            String chatPlayer = playerName + Main.getIns().getChatManager().getSeparator() + message;
+            String playerChat = playerName + Main.getIns().getChatManager().getSeparator() + message;
 
-            Bukkit.getServer().getOnlinePlayers().forEach(player ->
-                player.sendMessage(chatPlayer)
+            AtomicBoolean heard = new AtomicBoolean(false);
+
+            Bukkit.getServer().getOnlinePlayers().forEach(player -> {
+                        if (player.getWorld().getName().equalsIgnoreCase(e.getPlayer().getWorld().getName())) {
+                            if (player.getLocation().distanceSquared(e.getPlayer().getLocation()) < Main.getIns().getChatManager().getRange()) {
+                                heard.set(true);
+                                player.sendMessage(playerChat);
+                            }
+                        }
+                    }
             );
-        }
 
+            if (!heard.get()) {
+                MainData.getIns().getMessageManager().getMessage("NO_ONE_CLOSE").sendTo(e.getPlayer());
+            }
+        }
     }
 
 }

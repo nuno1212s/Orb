@@ -2,6 +2,7 @@ package com.nuno1212s.displays;
 
 import com.nuno1212s.displays.chat.ChatListener;
 import com.nuno1212s.displays.chat.ChatManager;
+import com.nuno1212s.displays.chat.GlobalChatCommand;
 import com.nuno1212s.displays.placeholders.PlaceHolderManager;
 import com.nuno1212s.displays.scoreboard.ScoreboardManager;
 import com.nuno1212s.modulemanager.Module;
@@ -34,6 +35,8 @@ public class Main extends Module {
         placeHolderManager = new PlaceHolderManager();
         chatManager = new ChatManager();
         scoreboardManager = new ScoreboardManager(getFile("scoreboard.json", true));
+
+        registerCommand(new String[]{"g", "global"}, new GlobalChatCommand());
 
         Plugin ins = com.nuno1212s.main.Main.getIns();
         Bukkit.getServer().getPluginManager().registerEvents(new ChatListener(), ins);

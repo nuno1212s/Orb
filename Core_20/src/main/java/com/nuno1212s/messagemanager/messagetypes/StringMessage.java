@@ -34,4 +34,9 @@ public class StringMessage implements IMessage {
             }
         }
     }
+
+    @Override
+    public String toString() {
+        return messages[0];
+    }
 }

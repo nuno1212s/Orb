@@ -94,5 +94,14 @@ public class Message {
         return new Message(this.messages);
     }
 
+    @Override
+    public String toString() {
+        for (IMessage message : this.messages) {
+            if (message instanceof StringMessage) {
+                return message.toString();
+            }
+        }
+        return "";
+    }
 }
 

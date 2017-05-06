@@ -1,8 +1,10 @@
 package com.nuno1212s.classes.classmanager;
 
+import com.nuno1212s.classes.Main;
 import com.nuno1212s.classes.player.KitPlayer;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
+import com.nuno1212s.util.ItemUtils;
 import com.nuno1212s.util.TimeUtil;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,9 +13,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -113,7 +118,30 @@ public class Kit {
     }
 
     public ItemStack getDisplayItem(Player player) {
-        return this.displayItem;
+        ItemStack displayItem = this.displayItem.clone();
+
+        PlayerData playerData = MainData.getIns().getPlayerManager().getPlayer(player.getUniqueId());
+        KitPlayer kitPlayer;
+
+        Map<String, String> placeHolders = new HashMap<>();
+
+        if (playerData instanceof KitPlayer) {
+            kitPlayer = (KitPlayer) playerData;
+            placeHolders.put("%time%", new TimeUtil("DD dias: HH horas: MM minutos: SS segundos")
+                    .toTime(kitPlayer.timeUntilUsage(this.getId())));
+        }
+
+        if (this.getPermission().equalsIgnoreCase("")) {
+            if (!player.hasPermission(this.getPermission())) {
+                placeHolders.put("%canUse%", MainData.getIns().getMessageManager().getMessage("KIT_NO_PERMISSION").toString());
+            } else {
+                placeHolders.put("%canUse%", MainData.getIns().getMessageManager().getMessage("KIT_CAN_USE").toString());
+            }
+        }
+
+        displayItem = ItemUtils.formatItem(displayItem, placeHolders);
+
+        return displayItem;
     }
 
     private void addItems(Player p) {
