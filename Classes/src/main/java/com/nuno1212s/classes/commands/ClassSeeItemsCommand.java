@@ -16,7 +16,7 @@ public class ClassSeeItemsCommand implements Command {
 
     @Override
     public String[] names() {
-        return new String[]{"check"};
+        return new String[]{"seeitems"};
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.nuno1212s.classes.classmanager.Kit;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.util.CommandUtil.Command;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -64,7 +65,7 @@ public class ClassCreateCommand implements Command {
             return;
         }
 
-        Kit k = new Kit(id, className, permission, new ItemStack[size]);
+        Kit k = new Kit(id, className, permission, new ItemStack[size], new ItemStack(Material.AIR));
         Main.getIns().getKitManager().addKit(k);
         player.sendMessage(ChatColor.GREEN + "Class created. ID: " + id);
     }

@@ -2,8 +2,10 @@ package com.nuno1212s.classes;
 
 import com.nuno1212s.classes.classmanager.KitManager;
 import com.nuno1212s.classes.commands.ClassCommandManager;
+import com.nuno1212s.classes.commands.ClassesCommand;
 import com.nuno1212s.classes.events.ClassEditInventoryListener;
 import com.nuno1212s.classes.events.ClassInventoryClickListener;
+import com.nuno1212s.classes.events.ClassesInventoryListener;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.modulemanager.ModuleData;
@@ -28,12 +30,14 @@ public class Main extends Module {
         kitManager = new KitManager(this);
 
         registerCommand(new String[]{"class"}, new ClassCommandManager());
+        registerCommand(new String[]{"classes"}, new ClassesCommand());
 
         MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));
 
         Plugin p = com.nuno1212s.main.Main.getIns();
         p.getServer().getPluginManager().registerEvents(new ClassEditInventoryListener(), p);
         p.getServer().getPluginManager().registerEvents(new ClassInventoryClickListener(), p);
+        p.getServer().getPluginManager().registerEvents(new ClassesInventoryListener(), p);
     }
 
     @Override

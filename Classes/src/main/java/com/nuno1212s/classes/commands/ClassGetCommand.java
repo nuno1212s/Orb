@@ -38,30 +38,6 @@ public class ClassGetCommand implements Command {
             return;
         }
 
-        if (!kit.getPermission().equalsIgnoreCase("")) {
-            if (!player.hasPermission(kit.getPermission())) {
-                MainData.getIns().getMessageManager().getMessage("NO_KIT_PERMISSION").sendTo(player);
-                return;
-            }
-        }
-
-        /*
-        CHECK IF THIS SERVER SUPPORTS KIT USAGES
-         */
-        PlayerData player1 = MainData.getIns().getPlayerManager().getPlayer(player.getUniqueId());
-        if (player1 instanceof KitPlayer) {
-            KitPlayer player11 = (KitPlayer) player1;
-            if (!player11.canUseKit(kit.getId())) {
-                MainData.getIns().getMessageManager().getMessage("CANT_USE_KIT")
-                        .format("%time%", new TimeUtil("DD days:HH hours:MM minutes:SS seconds").toTime(player11.timeUntilUsage(kit.getId())))
-                        .sendTo(player);
-                return;
-            }
-            ((KitPlayer) player1).registerKitUsage(kit.getId(), System.currentTimeMillis());
-        }
-
-        kit.addItems(player);
-        MainData.getIns().getMessageManager().getMessage("RECEIVED_KIT").format("%kitName%", kit.getClassName()).sendTo(player);
-
+        kit.giveKitTo(player);
     }
 }

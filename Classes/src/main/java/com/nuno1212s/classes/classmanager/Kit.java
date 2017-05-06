@@ -1,7 +1,12 @@
 package com.nuno1212s.classes.classmanager;
 
+import com.nuno1212s.classes.player.KitPlayer;
+import com.nuno1212s.main.MainData;
+import com.nuno1212s.playermanager.PlayerData;
+import com.nuno1212s.util.TimeUtil;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -25,7 +30,6 @@ public class Kit {
     @Getter
     private ItemStack[] items;
 
-    @Getter
     @Setter
     private ItemStack displayItem;
 
@@ -108,13 +112,46 @@ public class Kit {
         this.items = updatedItems.getContents();
     }
 
-    public void addItems(Player p) {
+    public ItemStack getDisplayItem(Player player) {
+        return this.displayItem;
+    }
+
+    private void addItems(Player p) {
         for (ItemStack item : items) {
             if (item == null) {
                 continue;
             }
             p.getInventory().addItem(item.clone());
         }
+    }
+
+    public void giveKitTo(Player player) {
+        if (!getPermission().equalsIgnoreCase("")) {
+            if (!player.hasPermission(getPermission())) {
+                MainData.getIns().getMessageManager().getMessage("NO_KIT_PERMISSION").sendTo(player);
+                return;
+            }
+        }
+
+        /*
+        CHECK IF THIS SERVER SUPPORTS KIT USAGES
+         */
+        PlayerData player1 = MainData.getIns().getPlayerManager().getPlayer(player.getUniqueId());
+        if (player1 instanceof KitPlayer) {
+            KitPlayer player11 = (KitPlayer) player1;
+            if (!player11.canUseKit(getId())) {
+                MainData.getIns().getMessageManager().getMessage("CANT_USE_KIT")
+                        .format("%time%", new TimeUtil("DD days:HH hours:MM minutes:SS seconds")
+                                .toTime(player11.timeUntilUsage(getId())))
+                        .sendTo(player);
+                return;
+            }
+            ((KitPlayer) player1).registerKitUsage(getId(), System.currentTimeMillis());
+        }
+
+        addItems(player);
+        MainData.getIns().getMessageManager().getMessage("RECEIVED_KIT").format("%kitName%", getClassName()).sendTo(player);
+
     }
 
     @Override

@@ -4,6 +4,7 @@ import com.nuno1212s.modulemanager.Module;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
@@ -32,6 +33,8 @@ public class KitManager {
         kits = new ArrayList<>();
         dataFile = m.getFile("classes.json", false);
         inventoryFile = m.getFile("displayinventory.json", true);
+
+        load();
     }
 
     public void load() {
@@ -50,6 +53,8 @@ public class KitManager {
         for (String o : (Set<String>) dataFile.keySet()) {
             this.kits.add(new Kit((Map<String, Object>)dataFile.get(o)));
         }
+
+        System.out.println(this.kits);
 
         displayInventory = new DisplayInventory(displayData, this);
 
@@ -143,21 +148,22 @@ public class KitManager {
         this.kits.remove(k);
     }
 
-    public Inventory buildInventory() {
-
-        return null;
+    /**
+     * Builds the inventory
+     * @return
+     */
+    public Inventory buildInventory(Player player) {
+        return this.displayInventory.getInventory(player);
     }
 
 
     public static String itemTo64(ItemStack stack) throws IllegalStateException {
-        try {
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);){
             dataOutput.writeObject(stack);
 
             // Serialize that array
 
-            dataOutput.close();
             return Base64.getEncoder().encodeToString(outputStream.toByteArray());
         } catch (Exception e) {
             throw new IllegalStateException("Unable to save item stack.", e);
@@ -166,12 +172,10 @@ public class KitManager {
 
     public static ItemStack itemFrom64(String data) throws IOException {
         try {
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(data));
-            BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream);
-            try {
+
+            try (ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(data));
+                 BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream)){
                 return (ItemStack) dataInput.readObject();
-            } finally {
-                dataInput.close();
             }
         } catch (ClassNotFoundException e) {
             throw new IOException("Unable to decode class type.", e);
@@ -180,35 +184,3 @@ public class KitManager {
 
 }
 
-class DisplayInventory {
-
-    private String inventoryName;
-
-    private Kit[] items;
-
-    public DisplayInventory(JSONObject displayData, KitManager manager) {
-        int inventorySize = ((Long) displayData.get("InventorySize")).intValue();
-        this.inventoryName = ChatColor.translateAlternateColorCodes('&', (String) displayData.get("InventoryName"));
-        this.items = new Kit[inventorySize];
-        Map<String, Object> items1 = (Map<String, Object>) displayData.get("Items");
-
-        items1.forEach((slot, kitID) -> {
-            int iSlot = Integer.parseInt(slot);
-            int iKitID = ((Long) kitID).intValue();
-            items[iSlot] = manager.getKit(iKitID);
-        });
-    }
-
-    public Inventory getInventory() {
-        Inventory i = Bukkit.getServer().createInventory(null, items.length, inventoryName);
-        for (int i2 = 0; i2 < items.length; i2++) {
-            Kit item = items[i2];
-            if (item == null) {
-                continue;
-            }
-            i.setItem(i2, item.getDisplayItem().clone());
-        }
-        return i;
-    }
-
-}
