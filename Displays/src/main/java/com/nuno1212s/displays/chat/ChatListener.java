@@ -1,8 +1,10 @@
 package com.nuno1212s.displays.chat;
 
 import com.nuno1212s.displays.Main;
+import com.nuno1212s.displays.player.ChatData;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
+import com.nuno1212s.util.TimeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
@@ -22,6 +24,19 @@ public class ChatListener implements Listener {
         if (Main.getIns().getChatManager().isChatActivated() || e.getPlayer().hasPermission("chat.override")) {
             PlayerData d = MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
 
+            if (d instanceof ChatData) {
+                long lastUsage = ((ChatData) d).lastLocalChatUsage();
+                if (lastUsage + Main.getIns().getChatManager().getChatTimerLocal() > System.currentTimeMillis()
+                        && !e.getPlayer().hasPermission("chat.nocooldown")) {
+                    MainData.getIns().getMessageManager().getMessage("LOCAL_CHAT_COOLDOWN")
+                            .format("%time%", new TimeUtil("SS segundos")
+                                    .toTime(lastUsage - System.currentTimeMillis()))
+                            .sendTo(e.getPlayer());
+                    return;
+                }
+                ((ChatData) d).setLastLocalChatUsage(System.currentTimeMillis());
+            }
+
             String message = e.getPlayer().hasPermission("chat.color") ? ChatColor.translateAlternateColorCodes('&', e.getMessage()) : e.getMessage();
             String playerName = d.getNameWithPrefix();
             String playerChat = playerName + Main.getIns().getChatManager().getSeparator() + message;
@@ -29,6 +44,10 @@ public class ChatListener implements Listener {
             AtomicBoolean heard = new AtomicBoolean(false);
 
             Bukkit.getServer().getOnlinePlayers().forEach(player -> {
+                        if (player.getUniqueId().equals(e.getPlayer().getUniqueId())) {
+                            player.sendMessage(playerChat);
+                            return;
+                        }
                         if (player.getWorld().getName().equalsIgnoreCase(e.getPlayer().getWorld().getName())) {
                             if (player.getLocation().distanceSquared(e.getPlayer().getLocation()) < Main.getIns().getChatManager().getRange()) {
                                 heard.set(true);

@@ -19,6 +19,7 @@ public class ClassCommandManager extends CommandManager {
         addCommand(new ClassSetDisplayCommand());
         addCommand(new ClassSeeItemsCommand());
         addCommand(new ReloadDisplayCommand());
+        addCommand(new ClassSetDisplayCommand());
     }
 
     @Override

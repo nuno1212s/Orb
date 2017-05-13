@@ -1,0 +1,4 @@
+{
+  "NO_ONE_CLOSE": {"ACTION_BAR": "&cThere was no one close enough to hear your message...", "TEXT": "&cThere was no one close enough to hear your message..."},
+  "GLOBAL_CHAT_COOLDOWN": "&cYou have to wait %time% to talk again."
+}

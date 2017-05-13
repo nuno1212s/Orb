@@ -5,6 +5,7 @@ import com.nuno1212s.displays.chat.ChatManager;
 import com.nuno1212s.displays.chat.GlobalChatCommand;
 import com.nuno1212s.displays.placeholders.PlaceHolderManager;
 import com.nuno1212s.displays.scoreboard.ScoreboardManager;
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.modulemanager.ModuleData;
 import lombok.Getter;
@@ -35,6 +36,8 @@ public class Main extends Module {
         placeHolderManager = new PlaceHolderManager();
         chatManager = new ChatManager();
         scoreboardManager = new ScoreboardManager(getFile("scoreboard.json", true));
+
+        MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));
 
         registerCommand(new String[]{"g", "global"}, new GlobalChatCommand());
 

@@ -54,8 +54,6 @@ public class KitManager {
             this.kits.add(new Kit((Map<String, Object>)dataFile.get(o)));
         }
 
-        System.out.println(this.kits);
-
         displayInventory = new DisplayInventory(displayData, this);
 
     }
@@ -154,32 +152,6 @@ public class KitManager {
      */
     public Inventory buildInventory(Player player) {
         return this.displayInventory.getInventory(player);
-    }
-
-
-    public static String itemTo64(ItemStack stack) throws IllegalStateException {
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);){
-            dataOutput.writeObject(stack);
-
-            // Serialize that array
-
-            return Base64.getEncoder().encodeToString(outputStream.toByteArray());
-        } catch (Exception e) {
-            throw new IllegalStateException("Unable to save item stack.", e);
-        }
-    }
-
-    public static ItemStack itemFrom64(String data) throws IOException {
-        try {
-
-            try (ByteArrayInputStream inputStream = new ByteArrayInputStream(Base64.getDecoder().decode(data));
-                 BukkitObjectInputStream dataInput = new BukkitObjectInputStream(inputStream)){
-                return (ItemStack) dataInput.readObject();
-            }
-        } catch (ClassNotFoundException e) {
-            throw new IOException("Unable to decode class type.", e);
-        }
     }
 
 }

@@ -14,12 +14,13 @@ public class ChatManager {
     private String separator;
 
     @Getter
-    private long chatTimer, range;
+    private long chatTimerGlobal, chatTimerLocal, range;
 
     public ChatManager() {
         this.chatActivated = true;
         this.separator = " » ";
-        this.chatTimer = 5000;
+        this.chatTimerGlobal = 5000;
+        this.chatTimerLocal = 2000;
         this.range = (long) Math.pow(25L, 2);
     }
 

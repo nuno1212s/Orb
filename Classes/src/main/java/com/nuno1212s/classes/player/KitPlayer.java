@@ -5,9 +5,9 @@ package com.nuno1212s.classes.player;
  */
 public interface KitPlayer {
 
-    boolean canUseKit(int kitID);
+    boolean canUseKit(int kitID, long delay);
 
-    long timeUntilUsage(int kitID);
+    long timeUntilUsage(int kitID, long delay);
 
     long lastUsage(int kitID);
 

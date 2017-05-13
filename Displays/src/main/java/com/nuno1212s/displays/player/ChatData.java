@@ -5,8 +5,12 @@ package com.nuno1212s.displays.player;
  */
 public interface ChatData {
 
-    long lastChatUsage();
+    long lastGlobalChatUsage();
 
-    void setLastChatUsage(long time);
+    long lastLocalChatUsage();
+
+    void setLastGlobalChatUsage(long time);
+
+    void setLastLocalChatUsage(long time);
 
 }

@@ -1,6 +1,5 @@
 package com.nuno1212s.classes.classmanager;
 
-import com.nuno1212s.classes.Main;
 import com.nuno1212s.classes.player.KitPlayer;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
@@ -8,17 +7,14 @@ import com.nuno1212s.util.ItemUtils;
 import com.nuno1212s.util.TimeUtil;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,12 +34,17 @@ public class Kit {
     @Setter
     private ItemStack displayItem;
 
-    public Kit(int id, String className, String permissionNode, ItemStack[] items, ItemStack displayItem) {
+    @Getter
+    @Setter
+    private long delay;
+
+    public Kit(int id, String className, String permissionNode, ItemStack[] items, ItemStack displayItem, long delay) {
         this.id = id;
         this.className = className;
         this.permission = permissionNode;
         this.items = items;
         this.displayItem = displayItem;
+        this.delay = delay;
     }
 
     public Kit(Map<String, Object> data) {
@@ -51,8 +52,9 @@ public class Kit {
         this.className = (String) data.get("ClassName");
         this.permission = (String) data.get("Permission");
         this.items = new ItemStack[((Long) data.get("InventorySize")).intValue()];
+        this.delay = ((Long) data.get("Delay"));
         try {
-            this.displayItem = KitManager.itemFrom64((String) data.get("DisplayItem"));
+            this.displayItem = ItemUtils.itemFrom64((String) data.get("DisplayItem"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -61,7 +63,7 @@ public class Kit {
             int slo = Integer.parseInt(slot);
             ItemStack itemStack;
             try {
-                itemStack = KitManager.itemFrom64((String) item);
+                itemStack = ItemUtils.itemFrom64((String) item);
             } catch (IOException e) {
                 e.printStackTrace();
                 return;
@@ -77,14 +79,15 @@ public class Kit {
         saved.put("ClassName", className);
         saved.put("Permission", permission);
         saved.put("InventorySize", this.items.length);
-        saved.put("DisplayItem", KitManager.itemTo64(this.displayItem));
+        saved.put("Delay", this.delay);
+        saved.put("DisplayItem", ItemUtils.itemTo64(this.displayItem));
 
         for (int i = 0; i < this.items.length; i++) {
             if (this.items[i] == null) {
                 continue;
             }
 
-            items.put(String.valueOf(i), KitManager.itemTo64(this.items[i]));
+            items.put(String.valueOf(i), ItemUtils.itemTo64(this.items[i]));
 
         }
 
@@ -128,7 +131,7 @@ public class Kit {
         if (playerData instanceof KitPlayer) {
             kitPlayer = (KitPlayer) playerData;
             placeHolders.put("%time%", new TimeUtil("DD dias: HH horas: MM minutos: SS segundos")
-                    .toTime(kitPlayer.timeUntilUsage(this.getId())));
+                    .toTime(kitPlayer.timeUntilUsage(this.getId(), this.getDelay())));
         }
 
         if (this.getPermission().equalsIgnoreCase("")) {
@@ -167,10 +170,10 @@ public class Kit {
         PlayerData player1 = MainData.getIns().getPlayerManager().getPlayer(player.getUniqueId());
         if (player1 instanceof KitPlayer) {
             KitPlayer player11 = (KitPlayer) player1;
-            if (!player11.canUseKit(getId())) {
+            if (!player11.canUseKit(getId(), this.getDelay())) {
                 MainData.getIns().getMessageManager().getMessage("CANT_USE_KIT")
                         .format("%time%", new TimeUtil("DD days:HH hours:MM minutes:SS seconds")
-                                .toTime(player11.timeUntilUsage(getId())))
+                                .toTime(player11.timeUntilUsage(getId(), this.getDelay())))
                         .sendTo(player);
                 return;
             }

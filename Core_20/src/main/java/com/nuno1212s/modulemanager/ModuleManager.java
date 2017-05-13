@@ -78,10 +78,13 @@ public class ModuleManager {
             for (Module module : moduleSorted) {
                 try {
                     module.onEnable();
-                    module.setEnabled(true);
-                    modules.remove(module);
                 } catch (Exception e) {
                     System.out.println("Could not enable module " + module.getModuleName());
+                    e.printStackTrace();
+                    continue;
+                } finally {
+                    module.setEnabled(true);
+                    modules.remove(module);
                 }
             }
             moduleSorted.clear();

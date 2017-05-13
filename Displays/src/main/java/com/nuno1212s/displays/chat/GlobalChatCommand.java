@@ -27,16 +27,16 @@ public class GlobalChatCommand implements CommandExecutor {
         PlayerData data = MainData.getIns().getPlayerManager().getPlayer(((Player) commandSender).getUniqueId());
 
         if (data instanceof ChatData) {
-            long lastUsage = ((ChatData) data).lastChatUsage();
-            if (lastUsage + Main.getIns().getChatManager().getChatTimer() > System.currentTimeMillis()
+            long lastUsage = ((ChatData) data).lastGlobalChatUsage();
+            if (lastUsage + Main.getIns().getChatManager().getChatTimerGlobal() > System.currentTimeMillis()
                     && !commandSender.hasPermission("chat.nocooldown")) {
                 MainData.getIns().getMessageManager().getMessage("GLOBAL_CHAT_COOLDOWN")
                         .format("%time%", new TimeUtil("SS segundos")
-                                            .toTime(lastUsage))
+                                .toTime(lastUsage - System.currentTimeMillis()))
                         .sendTo(commandSender);
                 return true;
             }
-            ((ChatData) data).setLastChatUsage(System.currentTimeMillis());
+            ((ChatData) data).setLastGlobalChatUsage(System.currentTimeMillis());
         }
 
         StringBuilder message = new StringBuilder();
