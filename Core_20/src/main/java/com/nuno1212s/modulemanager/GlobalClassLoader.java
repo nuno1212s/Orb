@@ -34,7 +34,7 @@ public class GlobalClassLoader {
         this.classes.put(name, c);
     }
 
-    public Class<?> getClass(String name) {
+    public Class<?> getClass(String name/*, ModuleLoader origin*/) {
         if (this.classes.containsKey(name)) {
             return this.classes.get(name);
         }
@@ -42,6 +42,11 @@ public class GlobalClassLoader {
         Class<?> Class = null;
 
         for (ModuleLoader loader : loaders) {
+
+            /*if (loader == origin) {
+                //This module has already been scanned it would be a waste of performance to scan it again
+                continue;
+            }*/
             try {
                 Class = loader.find(name, false);
             } catch (ClassNotFoundException e) {}

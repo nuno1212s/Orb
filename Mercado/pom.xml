@@ -5,9 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.nuno1212s</groupId>
-    <artifactId>Mercado_Negro</artifactId>
+    <artifactId>Mercado</artifactId>
     <version>1.0</version>
-
 
     <dependencies>
         <dependency>
@@ -55,7 +54,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <finalName>Mercado_Negro</finalName>
+                    <finalName>Mercado</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>

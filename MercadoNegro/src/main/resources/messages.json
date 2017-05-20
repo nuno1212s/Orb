@@ -1,0 +1,9 @@
+{
+  "COST_COINS": "&7Coins: &e%price%",
+  "COST_CASH": "&7Cash: &a%price%",
+  "NO_SUPPORT": "&cThere is no support for this item.",
+  "BOUGHT_ITEM_SERVER_CURRENCY": "&cYou bought the item for &e%price% &7coins.",
+  "BOUGHT_ITEM_CASH": "&cYou bought the item for &a%price% &7cash.",
+  "NO_SERVER_CURRENCY": "&cYou don't have enough coins.",
+  "NO_CASH": "&cYou don't have enough cash."
+}

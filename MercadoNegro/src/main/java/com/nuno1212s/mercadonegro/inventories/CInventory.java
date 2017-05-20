@@ -7,6 +7,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Custom inventory class
  */
@@ -27,7 +30,35 @@ public class CInventory {
         this.items = items;
     }
 
-    public Inventory getInventory(boolean hasNextPage, boolean hasPreviousPage) {
+    CInventory(Map<String, Object> data) {
+        this.inventoryName = (String) data.get("InventoryName");
+        this.size = ((Long) data.get("Size")).intValue();
+        Map<String, Object> items = (Map<String, Object>) data.get("Items");
+        this.items = new Item[this.size];
+        items.forEach((slot, item) -> {
+            int iSlot = Integer.parseInt(slot);
+            Item i = new Item((Map<String, Object>) item);
+            this.items[iSlot] = i;
+        });
+
+    }
+
+    Map<String, Object> toJSONData() {
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("InventoryName", this.getInventoryName());
+        data.put("Size", this.getSize());
+        Map<String, Object> items = new HashMap<>();
+        for (int i = 0; i < this.getItems().length; i++) {
+            if (this.items[i] == null) {
+                continue;
+            }
+            items.put(String.valueOf(i), this.items[i].toJSONData());
+        }
+        data.put("Items", items);
+        return data;
+    }
+
+    Inventory getInventory(boolean hasNextPage, boolean hasPreviousPage) {
         Inventory i = Bukkit.getServer().createInventory(null, this.size, this.inventoryName);
 
         for (int slot = 0; slot < this.items.length; slot++) {
@@ -38,15 +69,23 @@ public class CInventory {
 
         if (hasNextPage) {
             Pair<Integer, ItemStack> nextPageItem = Main.getIns().getInventoryManager().getNextPageItem();
-            i.setItem(nextPageItem.getKey(), nextPageItem.getValue());
+            i.setItem((this.size - 1) - nextPageItem.getKey(), nextPageItem.getValue());
         }
 
         if (hasPreviousPage) {
             Pair<Integer, ItemStack> previousPageItem = Main.getIns().getInventoryManager().getPreviousPageItem();
-            i.setItem(previousPageItem.getKey(), previousPageItem.getValue());
+            i.setItem((this.size - 1) - previousPageItem.getKey(), previousPageItem.getValue());
         }
 
         return i;
+    }
+
+    public void setItem(int slot, Item i) {
+        items[slot] = i;
+    }
+
+    public Item getItem(int slot) {
+        return items[slot];
     }
 
 }

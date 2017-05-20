@@ -42,19 +42,18 @@ public class ModuleManager {
         for (File file : files) {
             if (file.getName().endsWith(".jar")) {
                 ModuleLoader moduleLoader = null;
-
                 try {
                     moduleLoader = new ModuleLoader(file, this.loader);
-                } catch (MalformedURLException e) {
+
+                    moduleLoader.load();
+                    Module module = moduleLoader.getMainClass();
+                    modules.add(module);
+
+                    System.out.println("Loaded module: " + module.getModuleName());
+                    System.out.println("Module Version: " + module.getVersion());
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-                moduleLoader.load();
-                Module module = moduleLoader.getMainClass();
-                modules.add(module);
-
-                System.out.println("Loaded module: " + module.getModuleName());
-                System.out.println("Module Version: " + module.getVersion());
             }
         }
 

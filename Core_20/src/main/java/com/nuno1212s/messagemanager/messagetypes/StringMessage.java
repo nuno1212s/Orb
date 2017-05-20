@@ -1,5 +1,6 @@
 package com.nuno1212s.messagemanager.messagetypes;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
@@ -35,8 +36,7 @@ public class StringMessage implements IMessage {
         }
     }
 
-    @Override
-    public String toString() {
-        return messages[0];
+    public String toString(Map<String, String> formatting) {
+        return ChatColor.translateAlternateColorCodes('&', IMessage.formatMessage(messages[0], formatting));
     }
 }

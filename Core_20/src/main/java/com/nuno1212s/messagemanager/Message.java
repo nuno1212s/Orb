@@ -60,9 +60,9 @@ public class Message {
 
     public void sendTo(CommandSender... players) {
         if (!Bukkit.isPrimaryThread()) {
-            MainData.getIns().getScheduler().runTask(() -> {
-                sendTo(players);
-            });
+            MainData.getIns().getScheduler().runTask(() ->
+                sendTo(players)
+            );
             return;
         }
         send(players);
@@ -98,7 +98,7 @@ public class Message {
     public String toString() {
         for (IMessage message : this.messages) {
             if (message instanceof StringMessage) {
-                return message.toString();
+                return ((StringMessage) message).toString(this.formats);
             }
         }
         return "";

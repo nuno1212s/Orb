@@ -1,11 +1,15 @@
 package com.nuno1212s.mercadonegro.inventories;
 
 import com.nuno1212s.main.MainData;
+import com.nuno1212s.mercadonegro.economy.ServerEconomyHandler;
+import com.nuno1212s.mercadonegro.main.Main;
 import com.nuno1212s.messagemanager.Message;
+import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.ItemUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -53,6 +57,36 @@ public class Item {
 
     public ItemStack getItem() {
         return this.item.clone();
+    }
+
+    public void buy(Player p, PlayerData playerData) {
+        if (isServerCurrency()) {
+            ServerEconomyHandler economyHandler = Main.getIns().getEconomyHandler();
+            if (economyHandler == null) {
+                MainData.getIns().getMessageManager().getMessage("NO_SUPPORT").sendTo(p);
+                return;
+            }
+            if (economyHandler.charge(playerData.getPlayerID(), getCost())) {
+                MainData.getIns().getMessageManager().getMessage("BOUGHT_ITEM_SERVER_CURRENCY")
+                        .format("%price%", String.valueOf(getCost()))
+                        .sendTo(p);
+                p.getInventory().addItem(getItem().clone());
+            } else {
+                MainData.getIns().getMessageManager().getMessage("NO_SERVER_CURRENCY")
+                        .sendTo(p);
+            }
+        } else {
+            if (playerData.getCash() > getCost()) {
+                playerData.setCash(playerData.getCash() - getCost());
+                MainData.getIns().getMessageManager().getMessage("BOUGHT_ITEM_CASH")
+                        .format("%price%", String.valueOf(getCost()))
+                        .sendTo(p);
+                p.getInventory().addItem(getItem());
+            } else {
+                MainData.getIns().getMessageManager().getMessage("NO_CASH")
+                        .sendTo(p);
+            }
+        }
     }
 
     public Map<String, Object> toJSONData() {
