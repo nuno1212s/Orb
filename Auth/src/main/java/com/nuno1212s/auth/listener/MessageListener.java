@@ -4,6 +4,7 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import com.nuno1212s.auth.main.Main;
+import com.nuno1212s.main.BukkitMain;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -48,7 +49,7 @@ public class MessageListener implements PluginMessageListener {
                 dataOutput.writeUTF("AUTHENTICATE");
                 dataOutput.writeUTF(player.getName());
 
-                player.sendPluginMessage(com.nuno1212s.main.Main.getIns(), "AUTOLOGIN", dataOutput.toByteArray());
+                player.sendPluginMessage(BukkitMain.getIns(), "AUTOLOGIN", dataOutput.toByteArray());
             });
         }
     }

@@ -18,8 +18,11 @@ public class InventoryItem {
 
     private List<String> itemFlags;
 
+    private int slot;
+
     public InventoryItem(JSONObject data) {
         this.item = new SerializableItem(data);
+        this.slot = ((Long) data.get("Slot")).intValue();
         this.itemFlags = data.containsKey("Flags") ? (List<String>) data.get("Flags") : new ArrayList<>();
     }
 

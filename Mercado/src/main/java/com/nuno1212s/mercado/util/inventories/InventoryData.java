@@ -1,6 +1,10 @@
 package com.nuno1212s.mercado.util.inventories;
 
+import com.nuno1212s.util.Pair;
+import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.inventory.Inventory;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -16,13 +20,15 @@ import java.util.List;
 /**
  * Handles inventory data
  */
+@SuppressWarnings("unchecked")
 public class InventoryData {
 
-    String inventoryName;
+    @Getter
+    private String inventoryName;
 
-    int inventorySize;
+    private int inventorySize;
 
-    List<InventoryItem> items;
+    private List<InventoryItem> items;
 
     public InventoryData(File jsonFile) {
         JSONObject jsOB;
@@ -36,11 +42,54 @@ public class InventoryData {
 
         this.inventoryName = ChatColor.translateAlternateColorCodes('&', (String) jsOB.get("InventoryName"));
         this.inventorySize = ((Long) jsOB.get("InventorySize")).intValue();
+        if (inventorySize % 9 != 0) {
+            this.inventorySize = 27;
+        }
         JSONArray inventoryItems = (JSONArray) jsOB.get("InventoryItems");
         this.items = new ArrayList<>(inventoryItems.size());
-        inventoryItems.forEach((inventoryItem) -> {
-
-        });
+        inventoryItems.forEach((inventoryItem) ->
+                this.items.add(new InventoryItem((JSONObject) inventoryItem))
+        );
     }
 
+    public Inventory buildInventory() {
+        String inventoryName = this.inventoryName;
+
+        Inventory inventory = Bukkit.getServer().createInventory(null, this.inventorySize, inventoryName);
+
+        this.items.forEach(item -> {
+            inventory.setItem(item.getSlot(), item.getItem().clone());
+        });
+
+        return inventory;
+    }
+
+    public InventoryItem getItem(int slot) {
+        for (InventoryItem item : this.items) {
+            if (item.getSlot() == slot) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    public InventoryItem getItemWithFlag(String flag) {
+        for (InventoryItem item : this.items) {
+            if (item.hasItemFlag(flag)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof InventoryData) {
+            return ((InventoryData) obj).getInventoryName().equals(this.getInventoryName());
+        } else if (obj instanceof Inventory) {
+            return ((Inventory) obj).getName().equals(this.getInventoryName());
+        }
+
+        return false;
+    }
 }

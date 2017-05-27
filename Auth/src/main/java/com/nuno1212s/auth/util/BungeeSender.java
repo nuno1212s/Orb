@@ -2,14 +2,14 @@ package com.nuno1212s.auth.util;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import com.nuno1212s.main.Main;
+import com.nuno1212s.main.BukkitMain;
 import org.bukkit.Bukkit;
 
 public class BungeeSender {
 
-    static Main m;
+    static BukkitMain m;
 
-    public BungeeSender(Main ms) {
+    public BungeeSender(BukkitMain ms) {
         m = ms;
     }
 

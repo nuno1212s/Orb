@@ -6,6 +6,7 @@ import com.nuno1212s.fullpvp.events.PlayerUpdateListener;
 import com.nuno1212s.fullpvp.mysql.MySql;
 import com.nuno1212s.fullpvp.playermanager.PVPPlayerData;
 import com.nuno1212s.fullpvp.scoreboard.ScoreboardManager;
+import com.nuno1212s.main.BukkitMain;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.modulemanager.ModuleData;
@@ -49,7 +50,7 @@ public class Main extends Module {
             return false;
         });
 
-        Plugin plugin = com.nuno1212s.main.Main.getIns();
+        Plugin plugin = BukkitMain.getIns();
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerUpdateListener(), plugin);
     }

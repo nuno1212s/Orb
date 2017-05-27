@@ -1,6 +1,6 @@
 package com.nuno1212s.util;
 
-import com.nuno1212s.main.Main;
+import com.nuno1212s.main.BukkitMain;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -56,7 +56,7 @@ public class ActionBarAPI {
                 public void run() {
                     sendActionBar(player, "");
                 }
-            }.runTaskLater(Main.getIns(), duration + 1);
+            }.runTaskLater(BukkitMain.getIns(), duration + 1);
         }
 
         // Re-sends the messages every 3 seconds so it doesn't go away from the player's screen.
@@ -68,7 +68,7 @@ public class ActionBarAPI {
                 public void run() {
                     sendActionBar(player, message);
                 }
-            }.runTaskLater(Main.getIns(), (long) sched);
+            }.runTaskLater(BukkitMain.getIns(), (long) sched);
         }
     }
 

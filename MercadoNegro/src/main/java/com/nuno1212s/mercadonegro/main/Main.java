@@ -1,5 +1,6 @@
 package com.nuno1212s.mercadonegro.main;
 
+import com.nuno1212s.main.BukkitMain;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.mercadonegro.commands.MarketCommandManager;
 import com.nuno1212s.mercadonegro.economy.ServerEconomyHandler;
@@ -36,7 +37,7 @@ public class Main extends Module {
 
         registerCommand(new String[]{"market"}, new MarketCommandManager());
 
-        Plugin p = com.nuno1212s.main.Main.getIns();
+        Plugin p = BukkitMain.getIns();
         p.getServer().getPluginManager().registerEvents(new InventoryClickListener(), p);
     }
 

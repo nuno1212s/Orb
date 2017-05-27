@@ -19,7 +19,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -33,10 +32,10 @@ import java.util.Arrays;
 /**
  * Main plugin class
  */
-public class Main extends JavaPlugin {
+public class BukkitMain extends JavaPlugin {
 
     @Getter
-    static Main ins;
+    static BukkitMain ins;
 
     @Override
     public void onEnable() {

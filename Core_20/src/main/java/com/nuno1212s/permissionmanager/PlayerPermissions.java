@@ -1,6 +1,6 @@
 package com.nuno1212s.permissionmanager;
 
-import com.nuno1212s.main.Main;
+import com.nuno1212s.main.BukkitMain;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
 import org.bukkit.entity.Player;
@@ -22,7 +22,7 @@ public class PlayerPermissions {
     }
 
     public void injectPermission(Player p) {
-        PermissionAttachment pA = p.addAttachment(Main.getIns());
+        PermissionAttachment pA = p.addAttachment(BukkitMain.getIns());
         this.playerAttachments.put(p.getUniqueId(), pA);
 
         PlayerData player = MainData.getIns().getPlayerManager().getPlayer(p.getUniqueId());

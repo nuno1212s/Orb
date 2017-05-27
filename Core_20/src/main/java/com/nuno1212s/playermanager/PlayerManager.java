@@ -1,11 +1,9 @@
 package com.nuno1212s.playermanager;
 
 import com.google.common.cache.CacheBuilder;
-import com.nuno1212s.main.Main;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.util.PlayerGroupData;
 import com.nuno1212s.util.Pair;
-import lombok.Getter;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;

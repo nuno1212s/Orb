@@ -3,6 +3,7 @@ package com.nuno1212s.auth.main;
 import com.nuno1212s.auth.hooks.AuthMeHook;
 import com.nuno1212s.auth.listener.MessageListener;
 import com.nuno1212s.auth.util.BungeeSender;
+import com.nuno1212s.main.BukkitMain;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.modulemanager.ModuleData;
 import org.bukkit.Bukkit;
@@ -18,10 +19,10 @@ public class Main extends Module {
     @Override
     public void onEnable() {
         hook = new AuthMeHook(this);
-        new BungeeSender(com.nuno1212s.main.Main.getIns());
-        Bukkit.getServer().getPluginManager().registerEvents(hook, com.nuno1212s.main.Main.getIns());
-        Bukkit.getServer().getMessenger().registerIncomingPluginChannel(com.nuno1212s.main.Main.getIns(), "AUTOLOGIN", new MessageListener(this));
-        Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(com.nuno1212s.main.Main.getIns(), "AUTOLOGIN");
+        new BungeeSender(BukkitMain.getIns());
+        Bukkit.getServer().getPluginManager().registerEvents(hook, BukkitMain.getIns());
+        Bukkit.getServer().getMessenger().registerIncomingPluginChannel(BukkitMain.getIns(), "AUTOLOGIN", new MessageListener(this));
+        Bukkit.getServer().getMessenger().registerOutgoingPluginChannel(BukkitMain.getIns(), "AUTOLOGIN");
     }
 
     @Override

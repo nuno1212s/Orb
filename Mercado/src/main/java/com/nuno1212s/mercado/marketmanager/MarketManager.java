@@ -1,11 +1,15 @@
 package com.nuno1212s.mercado.marketmanager;
 
 import com.nuno1212s.mercado.main.Main;
+import com.nuno1212s.mercado.util.inventories.InventoryData;
+import com.nuno1212s.modulemanager.Module;
+import com.nuno1212s.util.Pair;
 import lombok.Getter;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.io.File;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -16,8 +20,22 @@ public class MarketManager {
     @Getter
     private List<Item> marketItems;
 
-    public MarketManager() {
+    @Getter
+    private InventoryData landingInventoryData, mainInventoryData, confirmInventoryData;
+
+    private Map<UUID, Integer> pages;
+
+    public MarketManager(Module module) {
         marketItems = new ArrayList<>();
+        pages = new HashMap<>();
+
+        this.landingInventoryData = new InventoryData(
+                module.getFile("inventories" + File.separator + "landinginventory.json", true));
+        this.mainInventoryData = new InventoryData(
+                module.getFile("inventories" + File.separator + "maininventory.json", true));
+        this.confirmInventoryData = new InventoryData(
+                module.getFile("inventories" + File.separator + "confirminventory.json", true));
+
     }
 
     /**
@@ -64,6 +82,77 @@ public class MarketManager {
         return this.marketItems.stream()
                 .filter(item -> item.getOwner().equals(player))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Get the items on the market
+     *
+     * @param page The page of the market
+     * @param itemsPerPage The amount of items that should be shown per page
+     */
+    private List<Item> getItemsForPage(int page, int itemsPerPage) {
+        if (this.marketItems.size() < itemsPerPage && page > 1) {
+            return new ArrayList<>();
+        }
+
+        int startingItem = (page - 1) * itemsPerPage, endItem = startingItem + itemsPerPage;
+        if (endItem > this.marketItems.size()) {
+            return this.marketItems.subList(startingItem, this.marketItems.size());
+        } else {
+            return this.marketItems.subList(startingItem, endItem);
+        }
+    }
+
+    /**
+     * Get the landing inventory for the market (Not the actual market inventory, {@link #openInventory(Player, int)})
+     * @return
+     */
+    public Inventory getLandingInventory() {
+        return this.landingInventoryData.buildInventory();
+    }
+
+    /**
+     * Open the inventory page at a specific page
+     *
+     * @param p The player to open it to
+     * @param page The page to open
+     */
+    public void openInventory(Player p, int page) {
+        p.openInventory(getInventory(page));
+        this.pages.put(p.getUniqueId(), page);
+    }
+
+    /**
+     * Get the inventory with all the items
+     * @param page the page of the inventory
+     */
+    private Inventory getInventory(int page) {
+        Inventory inventory = this.mainInventoryData.buildInventory();
+
+        List<Item> itemsForPage = getItemsForPage(page, 27);
+
+        int currentSlot = 0;
+        for (Item item : itemsForPage) {
+            inventory.setItem(currentSlot++, item.getDisplayItem());
+        }
+
+        return inventory;
+    }
+
+    /**
+     * Get the page a player is currently at
+     * @param player The player
+     */
+    public int getPage(UUID player) {
+        return this.pages.get(player);
+    }
+
+    /**
+     * Remove the page a player is watching (When the inventory is closed)
+     * @param player
+     */
+    public void removePage(UUID player) {
+        this.pages.remove(player);
     }
 
 }
