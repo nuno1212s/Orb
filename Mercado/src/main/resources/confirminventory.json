@@ -1,0 +1,47 @@
+{
+  "InventoryName": "&8Confirm inventory",
+  "InventorySize": 27,
+  "InventoryItems": [
+  {
+    "Slot": 13,
+    "Item": {
+      "Material": "WOOL",
+      "Amount": 1,
+      "Data": 5,
+      "DisplayName": "&aConfirm",
+      "Lore": [
+        "&aConfirm the buy"
+      ],
+      "Enchantments": [
+        "UNBREAKING:1"
+      ],
+      "ItemFlags": [
+        "HIDE_ENCHANTS"
+      ]
+    },
+    "Flags": ["CONFIRM"]
+  },
+  {
+    "Slot": 15,
+    "Item": {
+      "Material": "STONE",
+      "Amount": 1,
+      "Data": 0
+    },
+    "Flags": ["SHOW_ITEM"]
+  },
+  {
+    "Slot": 17,
+    "Item": {
+      "Material": "WOOL",
+      "Amount": 1,
+      "Data": 14,
+      "DisplayName": "&cCancel",
+      "Lore": [
+        "&cCancel the buy"
+      ]
+    },
+    "Flags": ["CANCEL"]
+  }
+]
+}

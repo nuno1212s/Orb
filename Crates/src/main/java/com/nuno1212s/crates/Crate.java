@@ -5,6 +5,7 @@ import com.nuno1212s.crates.Main;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.NBTDataStorage.NBTCompound;
+import com.nuno1212s.util.ServerCurrencyHandler;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.entity.Player;
@@ -140,13 +141,13 @@ public class Crate {
                         .sendTo(p);
             }
         } else {
-            ServerEconomyInterface serverEconomyInterface = Main.getIns().getServerEconomyInterface();
-            if (serverEconomyInterface == null) {
+            if (!MainData.getIns().hasServerCurrency()) {
                 System.out.println("Server does not support coin purchases");
                 return;
             }
+            ServerCurrencyHandler serverEconomyInterface = MainData.getIns().getServerCurrencyHandler();
 
-            if (serverEconomyInterface.charge(playerData.getPlayerID(), this.getKeyCost())) {
+            if (serverEconomyInterface.removeCurrency(playerData, this.getKeyCost())) {
                 p.getInventory().addItem(formatKeyItem());
                 MainData.getIns().getMessageManager().getMessage("BOUGHT_KEY_COINS")
                         .format("%crateName%", getDisplayName())

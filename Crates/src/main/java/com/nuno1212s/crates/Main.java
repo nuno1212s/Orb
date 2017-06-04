@@ -23,9 +23,6 @@ public class Main extends Module {
 
     CrateManager crateManager;
 
-    @Setter
-    ServerEconomyInterface serverEconomyInterface;
-
     @Override
     public void onEnable() {
         ins = this;

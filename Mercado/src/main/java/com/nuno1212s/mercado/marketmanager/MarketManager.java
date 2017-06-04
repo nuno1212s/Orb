@@ -1,6 +1,7 @@
 package com.nuno1212s.mercado.marketmanager;
 
 import com.nuno1212s.mercado.main.Main;
+import com.nuno1212s.mercado.util.chathandlers.ChatHandlerManager;
 import com.nuno1212s.mercado.util.inventories.InventoryData;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.util.Pair;
@@ -21,13 +22,22 @@ public class MarketManager {
     private List<Item> marketItems;
 
     @Getter
-    private InventoryData landingInventoryData, mainInventoryData, confirmInventoryData;
+    private InventoryData landingInventoryData, mainInventoryData, confirmInventoryData, sellInventory;
+
+    @Getter
+    public ChatHandlerManager chatManager;
 
     private Map<UUID, Integer> pages;
 
     public MarketManager(Module module) {
         marketItems = new ArrayList<>();
         pages = new HashMap<>();
+        chatManager = new ChatHandlerManager();
+
+        File file = new File(module.getDataFolder() + File.separator + "inventories");
+        if (!file.exists()) {
+            file.mkdirs();
+        }
 
         this.landingInventoryData = new InventoryData(
                 module.getFile("inventories" + File.separator + "landinginventory.json", true));
@@ -35,7 +45,8 @@ public class MarketManager {
                 module.getFile("inventories" + File.separator + "maininventory.json", true));
         this.confirmInventoryData = new InventoryData(
                 module.getFile("inventories" + File.separator + "confirminventory.json", true));
-
+        this.sellInventory = new InventoryData(
+                module.getFile("inventories" + File.separator + "sellInventory.json", true));
     }
 
     /**
@@ -85,6 +96,17 @@ public class MarketManager {
     }
 
     /**
+     * Get all the current active items for a certain player
+     *
+     *
+     */
+    public List<Item> getActivePlayerItems(UUID player) {
+        return this.marketItems.stream()
+                .filter(item -> item.getOwner().equals(player) && !item.isSold())
+                .collect(Collectors.toList());
+    }
+
+    /**
      * Get the items on the market
      *
      * @param page The page of the market
@@ -129,7 +151,7 @@ public class MarketManager {
     private Inventory getInventory(int page) {
         Inventory inventory = this.mainInventoryData.buildInventory();
 
-        List<Item> itemsForPage = getItemsForPage(page, 27);
+        List<Item> itemsForPage = getItemsForPage(page, this.mainInventoryData.getInventorySize() - 18);
 
         int currentSlot = 0;
         for (Item item : itemsForPage) {

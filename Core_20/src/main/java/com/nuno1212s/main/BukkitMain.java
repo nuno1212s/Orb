@@ -2,6 +2,7 @@ package com.nuno1212s.main;
 
 import com.nuno1212s.command.*;
 import com.nuno1212s.config.BukkitConfig;
+import com.nuno1212s.config.BungeeConfig;
 import com.nuno1212s.events.PlayerInformationUpdateEvent;
 import com.nuno1212s.events.eventcaller.EventCaller;
 import com.nuno1212s.events.listeners.PlayerDisconnectListener;
@@ -12,6 +13,7 @@ import com.nuno1212s.mysql.MySql;
 import com.nuno1212s.permissionmanager.PermissionManager;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.playermanager.PlayerManager;
+import com.nuno1212s.rediscommunication.RedisHandler;
 import com.nuno1212s.scheduler.BukkitScheduler;
 import com.nuno1212s.serverstatus.ServerManager;
 import lombok.Getter;
@@ -51,6 +53,7 @@ public class BukkitMain extends JavaPlugin {
         });
         data.setDataFolder(this.getDataFolder());
         data.setMySql(new MySql(new BukkitConfig(this.getConfig())));
+        data.setRedisHandler(new RedisHandler(new BukkitConfig(this.getConfig())));
         data.setScheduler(new BukkitScheduler(this.getServer().getScheduler(), this));
         data.setServerManager(new ServerManager(this.getDataFolder()));
         data.setPermissionManager(new PermissionManager(true));
@@ -70,6 +73,7 @@ public class BukkitMain extends JavaPlugin {
 
         data.setMessageManager(new Messages(j));
         data.setModuleManager(new ModuleManager(this.getDataFolder(), this.getClassLoader()));
+
 
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerDisconnectListener(), this);

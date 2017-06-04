@@ -113,6 +113,7 @@ public abstract class PlayerData {
 
     public synchronized final void setCash(long cash) {
         this.cash = cash;
+        MainData.getIns().getRedisHandler().sendMessage("");
     }
 
     @Override

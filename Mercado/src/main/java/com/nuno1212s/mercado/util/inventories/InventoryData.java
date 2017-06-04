@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -26,6 +27,7 @@ public class InventoryData {
     @Getter
     private String inventoryName;
 
+    @Getter
     private int inventorySize;
 
     private List<InventoryItem> items;
@@ -58,7 +60,12 @@ public class InventoryData {
         Inventory inventory = Bukkit.getServer().createInventory(null, this.inventorySize, inventoryName);
 
         this.items.forEach(item -> {
-            inventory.setItem(item.getSlot(), item.getItem().clone());
+            ItemStack item1 = item.getItem();
+            if (item1 == null) {
+                inventory.setItem(item.getSlot(), null);
+                return;
+            }
+            inventory.setItem(item.getSlot(), item1.clone());
         });
 
         return inventory;

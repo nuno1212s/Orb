@@ -6,6 +6,7 @@ import com.nuno1212s.modulemanager.ModuleManager;
 import com.nuno1212s.mysql.MySql;
 import com.nuno1212s.permissionmanager.PermissionManager;
 import com.nuno1212s.playermanager.PlayerManager;
+import com.nuno1212s.rediscommunication.RedisHandler;
 import com.nuno1212s.scheduler.BungeeScheduler;
 import com.nuno1212s.serverstatus.ServerManager;
 import lombok.Getter;
@@ -31,11 +32,12 @@ public class BungeeMain extends Plugin {
         }
         main.setEventCaller((o) -> {});
         main.setDataFolder(this.getDataFolder());
+        File config = new File(this.getDataFolder(), "config.yml");
         main.setMySql(
                 new MySql(
                         new BungeeConfig(this,
-                                new File(
-                                        this.getDataFolder(), "config.yml"))));
+                                config)));
+        main.setRedisHandler(new RedisHandler(new BungeeConfig(this, config)));
         main.setServerManager(new ServerManager(this.getDataFolder()));
         main.setPermissionManager(new PermissionManager(false));
         main.setPlayerManager(new PlayerManager());
@@ -49,5 +51,6 @@ public class BungeeMain extends Plugin {
         ins.getServerManager().save();
         ins.getModuleManager().disable();
         ins.getMySql().closeConnection();
+        ins.getRedisHandler().close();
     }
 }

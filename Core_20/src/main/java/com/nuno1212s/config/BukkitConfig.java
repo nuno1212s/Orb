@@ -1,5 +1,6 @@
 package com.nuno1212s.config;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -11,9 +12,9 @@ import java.io.InputStream;
  */
 public class BukkitConfig extends Config {
 
-    private FileConfiguration config;
+    private ConfigurationSection config;
 
-    public BukkitConfig(FileConfiguration config) {
+    public BukkitConfig(ConfigurationSection config) {
         this.config = config;
     }
 
@@ -46,7 +47,17 @@ public class BukkitConfig extends Config {
     }
 
     @Override
+    public boolean getBoolean(String key) {
+        return config.getBoolean(key);
+    }
+
+    @Override
     public void set(String key, Object value) {
         config.set(key, value);
+    }
+
+    @Override
+    public Config getConfigurationSection(String key) {
+        return new BukkitConfig(config.getConfigurationSection(key));
     }
 }

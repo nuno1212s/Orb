@@ -1,0 +1,63 @@
+{
+  "InventoryName": "&cLand Inventory",
+  "InventorySize": 27,
+  "InventoryItems": [
+    {
+      "Slot": 13,
+      "Item": {
+        "Material": "STONE",
+        "Amount": 1,
+        "Data": 0,
+        "DisplayName": "&cTest",
+        "Lore": [
+          "&cTest"
+        ],
+        "Enchantments": [
+          "UNBREAKING:1"
+        ],
+        "ItemFlags": [
+          "HIDE_ENCHANTS"
+        ]
+      },
+      "Flags": ["SEE_OWN"]
+    },
+    {
+      "Slot": 15,
+      "Item": {
+        "Material": "STONE",
+        "Amount": 1,
+        "Data": 0,
+        "DisplayName": "&cTest 2",
+        "Lore": [
+          "&cTest"
+        ],
+        "Enchantments": [
+          "UNBREAKING:1"
+        ],
+        "ItemFlags": [
+          "HIDE_ENCHANTS"
+        ]
+      },
+      "Flags": ["SEE_LISTED"]
+    },
+    {
+      "Slot": 15,
+      "Item": {
+        "Material": "STONE",
+        "Amount": 1,
+        "Data": 0,
+        "DisplayName": "&cTest 3",
+        "Lore": [
+          "&cTest"
+        ],
+        "Enchantments": [
+          "UNBREAKING:1"
+        ],
+        "ItemFlags": [
+          "HIDE_ENCHANTS"
+        ]
+      },
+      "Flags": ["SELL_ITEM"]
+    }
+  ]
+}

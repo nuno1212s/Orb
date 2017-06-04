@@ -20,6 +20,10 @@ public class BungeeConfig extends Config {
 
     }
 
+    public BungeeConfig(Configuration c) {
+        this.c = c;
+    }
+
     public BungeeConfig(Plugin p, File config) {
 
         if (!config.exists()) {
@@ -60,8 +64,18 @@ public class BungeeConfig extends Config {
     }
 
     @Override
+    public boolean getBoolean(String key) {
+        return c.getBoolean(key);
+    }
+
+    @Override
     public void set(String key, Object value) {
         c.set(key, value);
+    }
+
+    @Override
+    public Config getConfigurationSection(String key) {
+        return new BungeeConfig(c.getSection(key));
     }
 
     public void saveResource(Plugin p, File path, String resource) {

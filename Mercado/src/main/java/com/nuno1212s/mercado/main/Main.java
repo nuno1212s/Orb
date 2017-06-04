@@ -2,8 +2,7 @@ package com.nuno1212s.mercado.main;
 
 import com.nuno1212s.main.BukkitMain;
 import com.nuno1212s.mercado.database.MySql;
-import com.nuno1212s.mercado.listeners.BuyingInventoryListener;
-import com.nuno1212s.mercado.listeners.LandingInventoryListener;
+import com.nuno1212s.mercado.listeners.*;
 import com.nuno1212s.mercado.marketmanager.MarketManager;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.modulemanager.ModuleData;
@@ -32,6 +31,10 @@ public class Main extends Module {
         BukkitMain ins = BukkitMain.getIns();
         ins.getServer().getPluginManager().registerEvents(new LandingInventoryListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new BuyingInventoryListener(), ins);
+        ins.getServer().getPluginManager().registerEvents(new ConfirmInventoryListener(), ins);
+        ins.getServer().getPluginManager().registerEvents(new ChatListener(), ins);
+        ins.getServer().getPluginManager().registerEvents(new PlayerQuitListener(), ins);
+        ins.getServer().getPluginManager().registerEvents(new SellInventoryListener(), ins);
     }
 
     @Override

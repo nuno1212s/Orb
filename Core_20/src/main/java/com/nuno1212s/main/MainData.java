@@ -7,8 +7,10 @@ import com.nuno1212s.modulemanager.ModuleManager;
 import com.nuno1212s.mysql.MySql;
 import com.nuno1212s.permissionmanager.PermissionManager;
 import com.nuno1212s.playermanager.PlayerManager;
+import com.nuno1212s.rediscommunication.RedisHandler;
 import com.nuno1212s.scheduler.Scheduler;
 import com.nuno1212s.serverstatus.ServerManager;
+import com.nuno1212s.util.ServerCurrencyHandler;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -45,10 +47,19 @@ public class MainData {
 
     private EventCaller eventCaller;
 
+    private RedisHandler redisHandler;
+
     private boolean isBungee = false;
+
+    @Setter
+    private ServerCurrencyHandler serverCurrencyHandler = null;
 
     public MainData() {
         ins = this;
+    }
+
+    public boolean hasServerCurrency() {
+        return serverCurrencyHandler != null;
     }
 
 

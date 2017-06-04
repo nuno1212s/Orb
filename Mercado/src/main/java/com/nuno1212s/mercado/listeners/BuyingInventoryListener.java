@@ -62,10 +62,11 @@ public class BuyingInventoryListener extends InventoryListener {
 
                     confirmInventory.setItem(show_item.getSlot(), e.getCurrentItem());
 
-                    e.getWhoClicked().closeInventory();
                     addCloseException(e.getWhoClicked().getUniqueId());
+                    e.getWhoClicked().closeInventory();
                     e.getWhoClicked().openInventory(confirmInventory);
                     //TODO: try to buy them item
+
                 }
                 return;
             }

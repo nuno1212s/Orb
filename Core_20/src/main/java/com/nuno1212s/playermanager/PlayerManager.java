@@ -88,6 +88,18 @@ public class PlayerManager {
         return new Pair<>(MainData.getIns().getMySql().getPlayerData(playerName), true);
     }
 
+    public Pair<PlayerData, Boolean> getOrLoadPlayer(UUID playerID) {
+        synchronized (players) {
+            for (PlayerData player : players) {
+                if (player.getPlayerID().equals(playerID)) {
+                    return new Pair<>(player, false);
+                }
+            }
+        }
+
+        return new Pair<>(MainData.getIns().getMySql().getPlayerData(playerID, null), true);
+    }
+
     public List<PlayerData> getPlayers() {
         synchronized (players) {
             return new ArrayList<>(players);
