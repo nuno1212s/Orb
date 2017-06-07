@@ -17,17 +17,23 @@ public class LandingInventoryListener implements Listener {
 
     @EventHandler
     public void onDrag(InventoryDragEvent e) {
-        if (Main.getIns().getMarketManager().getLandingInventory().equals(e.getInventory())) {
+        if (Main.getIns().getMarketManager().getLandingInventoryData().equals(e.getInventory())) {
             e.setResult(Event.Result.DENY);
         }
     }
 
     @EventHandler
     public void onLandingClick(InventoryClickEvent e) {
-        if (Main.getIns().getMarketManager().getLandingInventory().equals(e.getInventory())) {
+        if (Main.getIns().getMarketManager().getLandingInventoryData().equals(e.getInventory())) {
             if (e.getClick().isShiftClick()) {
                 e.setResult(Event.Result.DENY);
             }
+        } else {
+            return;
+        }
+
+        if (e.getClickedInventory() == null) {
+            return;
         }
 
         if (e.getClickedInventory().getName().equals(e.getInventory().getName())) {
@@ -39,6 +45,11 @@ public class LandingInventoryListener implements Listener {
 
             InventoryData data = Main.getIns().getMarketManager().getLandingInventoryData();
             InventoryItem item = data.getItem(e.getSlot());
+
+            if (item == null) {
+                return;
+            }
+
             if (item.hasItemFlag("SEE_LISTED")) {
                 e.getWhoClicked().closeInventory();
                 Main.getIns().getMarketManager().openInventory((Player) e.getWhoClicked(), 1);
@@ -47,7 +58,7 @@ public class LandingInventoryListener implements Listener {
                 //TODO: See your own inventory
             } else if (item.hasItemFlag("SELL_ITEM")) {
                 e.getWhoClicked().closeInventory();
-                //TODO: Open the item selling inventory
+                e.getWhoClicked().openInventory(Main.getIns().getMarketManager().getSellInventory().buildInventory());
             }
 
         }

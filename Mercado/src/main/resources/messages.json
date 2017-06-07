@@ -1,0 +1,5 @@
+{
+  "INSERT_PRICE":"&cInsert the price of the item you wanted to sell",
+  "COST_MUST_BE_NUMBER": "&cThe cost must be a number",
+  "ANNOUNCED_ITEM": "&cYou announced the item for &a%price% &ccash"
+}

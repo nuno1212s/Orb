@@ -1,0 +1,335 @@
+{
+  "InventoryName": "&cSell Inventory",
+  "InventorySize": 27,
+  "InventoryItems": [
+    {
+      "Slot": 0,
+      "Item": {
+        "Material": "STAINED_GLASS_PANE",
+        "Amount": 1,
+        "Data": 15,
+        "DisplayName": "&7 ",
+        "ItemFlags": [
+          "HIDE_ATTRIBUTES"
+        ]
+      },
+      "Flags": []
+    },
+    {
+      "Slot": 1,
+      "Item": {
+        "Material": "STAINED_GLASS_PANE",
+        "Amount": 1,
+        "Data": 15,
+        "DisplayName": "&7 ",
+        "ItemFlags": [
+          "HIDE_ATTRIBUTES"
+        ]
+      },
+      "Flags": []
+    },
+    {
+      "Slot": 2,
+      "Item": {
+        "Material": "STAINED_GLASS_PANE",
+        "Amount": 1,
+        "Data": 15,
+        "DisplayName": "&7 ",
+        "ItemFlags": [
+          "HIDE_ATTRIBUTES"
+        ]
+      },
+      "Flags": []
+    },
+    {
+      "Slot": 3,
+      "Item": {
+        "Material": "STAINED_GLASS_PANE",
+        "Amount": 1,
+        "Data": 15,
+        "DisplayName": "&7 ",
+        "ItemFlags": [
+          "HIDE_ATTRIBUTES"
+        ]
+      },
+      "Flags": []
+    },
+    {
+      "Slot": 5,
+      "Item": {
+        "Material": "STAINED_GLASS_PANE",
+        "Amount": 1,
+        "Data": 15,
+        "DisplayName": "&7 ",
+        "ItemFlags": [
+          "HIDE_ATTRIBUTES"
+        ]
+      },
+      "Flags": []
+    },
+    {
+      "Slot": 6,
+      "Item": {
+        "Material": "STAINED_GLASS_PANE",
+        "Amount": 1,
+        "Data": 15,
+        "DisplayName": "&7 ",
+        "ItemFlags": [
+          "HIDE_ATTRIBUTES"
+        ]
+      },
+      "Flags": []
+    },
+    {
+      "Slot": 7,
+      "Item": {
+        "Material": "STAINED_GLASS_PANE",
+        "Amount": 1,
+        "Data": 15,
+        "DisplayName": "&7 ",
+        "ItemFlags": [
+          "HIDE_ATTRIBUTES"
+        ]
+      },
+      "Flags": []
+    },
+    {
+      "Slot": 8,
+      "Item": {
+        "Material": "STAINED_GLASS_PANE",
+        "Amount": 1,
+        "Data": 15,
+        "DisplayName": "&7 ",
+        "ItemFlags": [
+          "HIDE_ATTRIBUTES"
+        ]
+      },
+      "Flags": []
+    },
+    {
+      "Slot": 9,
+      "Item": {
+        "Material": "STAINED_GLASS_PANE",
+        "Amount": 1,
+        "Data": 15,
+        "DisplayName": "&7 ",
+        "ItemFlags": [
+          "HIDE_ATTRIBUTES"
+        ]
+      },
+      "Flags": []
+    },
+    {
+      "Slot": 10,
+      "Item": {
+        "Material": "WOOL",
+        "Amount": 1,
+        "Data": 5,
+        "DisplayName": "&aConfirma",
+        "ItemFlags": [
+          "HIDE_ATTRIBUTES"
+        ]
+      },
+      "Flags": ["CONFIRM"]
+    },
+    {
+      "Slot": 11,
+      "Item": {
+        "Material": "STAINED_GLASS_PANE",
+        "Amount": 1,
+        "Data": 15,
+        "DisplayName": "&7 ",
+        "ItemFlags": [
+          "HIDE_ATTRIBUTES"
+        ]
+      },
+      "Flags": []
+    },
+    {
+      "Slot": 12,
+      "Item": {
+        "Material": "STAINED_GLASS_PANE",
+        "Amount": 1,
+        "Data": 15,
+        "DisplayName": "&7 ",
+        "ItemFlags": [
+          "HIDE_ATTRIBUTES"
+        ]
+      },
+      "Flags": []
+    },
+    {
+      "Slot": 13,
+      "Flags": ["SELL_ITEM"]
+    },
+    {
+      "Slot": 14,
+      "Item": {
+        "Material": "STAINED_GLASS_PANE",
+        "Amount": 1,
+        "Data": 15,
+        "DisplayName": "&7 ",
+        "ItemFlags": [
+          "HIDE_ATTRIBUTES"
+        ]
+      },
+      "Flags": []
+    },
+    {
+      "Slot": 15,
+      "Item": {
+        "Material": "STAINED_GLASS_PANE",
+        "Amount": 1,
+        "Data": 15,
+        "DisplayName": "&7 ",
+        "ItemFlags": [
+          "HIDE_ATTRIBUTES"
+        ]
+      },
+      "Flags": []
+    },
+    {
+      "Slot": 16,
+      "Item": {
+        "Material": "WOOL",
+        "Amount": 1,
+        "Data": 14,
+        "DisplayName": "&cCancel",
+        "ItemFlags": [
+          "HIDE_ATTRIBUTES"
+        ]
+      },
+      "Flags": ["CANCEL"]
+    },
+    {
+      "Slot": 17,
+      "Item": {
+        "Material": "STAINED_GLASS_PANE",
+        "Amount": 1,
+        "Data": 15,
+        "DisplayName": "&7 ",
+        "ItemFlags": [
+          "HIDE_ATTRIBUTES"
+        ]
+      },
+      "Flags": []
+    },
+    {
+      "Slot": 18,
+      "Item": {
+        "Material": "STAINED_GLASS_PANE",
+        "Amount": 1,
+        "Data": 15,
+        "DisplayName": "&7 ",
+        "ItemFlags": [
+          "HIDE_ATTRIBUTES"
+        ]
+      },
+      "Flags": []
+    },
+    {
+      "Slot": 19,
+      "Item": {
+        "Material": "STAINED_GLASS_PANE",
+        "Amount": 1,
+        "Data": 15,
+        "DisplayName": "&7 ",
+        "ItemFlags": [
+          "HIDE_ATTRIBUTES"
+        ]
+      },
+      "Flags": []
+    },
+    {
+      "Slot": 20,
+      "Item": {
+        "Material": "STAINED_GLASS_PANE",
+        "Amount": 1,
+        "Data": 15,
+        "DisplayName": "&7 ",
+        "ItemFlags": [
+          "HIDE_ATTRIBUTES"
+        ]
+      },
+      "Flags": []
+    },
+    {
+      "Slot": 21,
+      "Item": {
+        "Material": "STAINED_GLASS_PANE",
+        "Amount": 1,
+        "Data": 15,
+        "DisplayName": "&7 ",
+        "ItemFlags": [
+          "HIDE_ATTRIBUTES"
+        ]
+      },
+      "Flags": []
+    },
+    {
+      "Slot": 22,
+      "Item": {
+        "Material": "STAINED_GLASS_PANE",
+        "Amount": 1,
+        "Data": 15,
+        "DisplayName": "&7 ",
+        "ItemFlags": [
+          "HIDE_ATTRIBUTES"
+        ]
+      },
+      "Flags": []
+    },
+    {
+      "Slot": 23,
+      "Item": {
+        "Material": "STAINED_GLASS_PANE",
+        "Amount": 1,
+        "Data": 15,
+        "DisplayName": "&7 ",
+        "ItemFlags": [
+          "HIDE_ATTRIBUTES"
+        ]
+      },
+      "Flags": []
+    },
+    {
+      "Slot": 24,
+      "Item": {
+        "Material": "STAINED_GLASS_PANE",
+        "Amount": 1,
+        "Data": 15,
+        "DisplayName": "&7 ",
+        "ItemFlags": [
+          "HIDE_ATTRIBUTES"
+        ]
+      },
+      "Flags": []
+    },
+    {
+      "Slot": 25,
+      "Item": {
+        "Material": "STAINED_GLASS_PANE",
+        "Amount": 1,
+        "Data": 15,
+        "DisplayName": "&7 ",
+        "ItemFlags": [
+          "HIDE_ATTRIBUTES"
+        ]
+      },
+      "Flags": []
+    },
+    {
+      "Slot": 26,
+      "Item": {
+        "Material": "STAINED_GLASS_PANE",
+        "Amount": 1,
+        "Data": 15,
+        "DisplayName": "&7 ",
+        "ItemFlags": [
+          "HIDE_ATTRIBUTES"
+        ]
+      },
+      "Flags": []
+    }
+  ]
+}

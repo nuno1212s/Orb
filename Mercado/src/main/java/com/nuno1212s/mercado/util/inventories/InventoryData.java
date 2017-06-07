@@ -91,6 +91,7 @@ public class InventoryData {
 
     @Override
     public boolean equals(Object obj) {
+
         if (obj instanceof InventoryData) {
             return ((InventoryData) obj).getInventoryName().equals(this.getInventoryName());
         } else if (obj instanceof Inventory) {

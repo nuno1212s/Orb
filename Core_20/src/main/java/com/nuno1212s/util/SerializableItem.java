@@ -22,8 +22,18 @@ public class SerializableItem extends ItemStack {
         super();
 
         setType(Material.valueOf((String) jsonObject.get("Material")));
-        setAmount(((Long) jsonObject.get("Amount")).intValue());
-        setDurability(((Long) jsonObject.get("Data")).shortValue());
+
+        if (jsonObject.containsKey("Amount")) {
+            setAmount(((Long) jsonObject.get("Amount")).intValue());
+        } else {
+            setAmount(1);
+        }
+
+        if (jsonObject.containsKey("Data")) {
+            setDurability(((Long) jsonObject.get("Data")).shortValue());
+        } else {
+            setDurability((short) 0);
+        }
 
         ItemMeta m = getItemMeta();
 

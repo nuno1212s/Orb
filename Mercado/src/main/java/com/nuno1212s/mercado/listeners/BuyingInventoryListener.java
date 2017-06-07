@@ -7,6 +7,7 @@ import com.nuno1212s.mercado.util.InventoryListener;
 import com.nuno1212s.mercado.util.inventories.InventoryData;
 import com.nuno1212s.mercado.util.inventories.InventoryItem;
 import com.nuno1212s.util.NBTDataStorage.NBTCompound;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -37,12 +38,20 @@ public class BuyingInventoryListener extends InventoryListener {
             if (e.getClick().isShiftClick()) {
                 e.setResult(Event.Result.DENY);
             }
+        } else {
+            return;
+        }
+
+        if (e.getClickedInventory() == null) {
+            return;
         }
 
         if (e.getClickedInventory().getName().equals(e.getInventory().getName())) {
-            if (e.getCurrentItem() == null) {
+
+            if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR) {
                 return;
             }
+
             e.setResult(Event.Result.DENY);
 
             InventoryItem item = marketManager.getMainInventoryData().getItem(e.getSlot());

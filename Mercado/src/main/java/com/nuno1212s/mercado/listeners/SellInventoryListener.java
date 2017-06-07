@@ -7,12 +7,15 @@ import com.nuno1212s.mercado.util.InventoryListener;
 import com.nuno1212s.mercado.util.ItemIDUtils;
 import com.nuno1212s.mercado.util.inventories.InventoryItem;
 import com.nuno1212s.util.Callback;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+
+import java.text.NumberFormat;
+import java.util.UUID;
 
 /**
  * Sell inventory handler
@@ -29,6 +32,12 @@ public class SellInventoryListener extends InventoryListener {
             if (e.getClick().isShiftClick()) {
                 e.setResult(Event.Result.DENY);
             }
+        } else {
+            return;
+        }
+
+        if (e.getClickedInventory() == null) {
+            return;
         }
 
         if (e.getClickedInventory().getName().equalsIgnoreCase(e.getInventory().getName())) {
@@ -36,11 +45,16 @@ public class SellInventoryListener extends InventoryListener {
                 return;
             }
 
-            e.setResult(Event.Result.DENY);
 
             InventoryItem item = getInventory().getItem(e.getSlot());
+
             if (item == null) {
+                e.setResult(Event.Result.DENY);
                 return;
+            }
+
+            if (!item.hasItemFlag("SELL_ITEM")) {
+                e.setResult(Event.Result.DENY);
             }
 
             if (item.hasItemFlag("CURRENCY_TYPE")) {
@@ -62,7 +76,10 @@ public class SellInventoryListener extends InventoryListener {
                             0,
                             false,
                             false);
-                    addCallback((Player) e.getWhoClicked(), sellItem);
+                    addCallback(e.getWhoClicked().getUniqueId(), sellItem);
+
+                    e.getWhoClicked().closeInventory();
+                    MainData.getIns().getMessageManager().getMessage("INSERT_PRICE").sendTo(e.getWhoClicked());
                 }
 
             } else if (item.hasItemFlag("CANCEL")) {
@@ -79,8 +96,8 @@ public class SellInventoryListener extends InventoryListener {
 
     }
 
-    private void addCallback(Player player, Item item) {
-        Main.getIns().getMarketManager().getChatManager().addCallback(player.getUniqueId(), new Callback() {
+    private void addCallback(UUID player, Item item) {
+        Main.getIns().getMarketManager().getChatManager().addCallback(player, new Callback() {
             @Override
             public void callback(Object... args) {
                 if (args.length > 0) {
@@ -89,11 +106,14 @@ public class SellInventoryListener extends InventoryListener {
                         try {
                             cost = Long.parseLong((String) args[0]);
                             item.setCost(cost);
+                            Main.getIns().getMarketManager().addItem(item);
+                            MainData.getIns().getMessageManager().getMessage("ANNOUNCED_ITEM")
+                                    .format("%price%", NumberFormat.getInstance().format(cost)).sendTo(Bukkit.getPlayer(player));
                             return;
                         } catch (NumberFormatException e) {}
                     }
                 }
-                MainData.getIns().getMessageManager().getMessage("COST_MUST_BE_NUMBER").sendTo(player);
+                MainData.getIns().getMessageManager().getMessage("COST_MUST_BE_NUMBER").sendTo(Bukkit.getPlayer(player));
                 addCallback(player, item);
             }
         });

@@ -1,3 +1,18 @@
 {
-
+  "GROUP_CHANGED": "&cYour group has been changed to %newGroup% for %time%",
+  "GROUP_CHANGED_OTHER": "&cYou have changed %playerName%'s group to %newGroup% for %time%",
+  "GROUP_EXTENDED_CURRENT": "&cYour current group has been extended by &6%time%",
+  "GROUP_EXTENDED_NEW": "&cYou activated and extended the group %newGroup% by &6%time%",
+  "GROUP_EXPIRED": "&cThe group %group% has expired.",
+  "GROUP_CHANGED_EXPIRED": "&cYour previous group has expired and you have been assigned to %newGroup%",
+  "GROUP_CHANGED_EXPIRED_TIME": "&cYour previous group has expired and you have been assigned to %newGroup% for %time%",
+  "NO_CASH": "&cYou don't have enough cash.",
+  "CASH": "&7You have &a%cashAmount% &7cash.",
+  "CASH_OTHERS": "&7The player &c%playerName% &7has &a%cashAmount% &7cash.",
+  "CASH_SET_OTHER": "&7You have set the player's &c%playerName% &7cash to &a%cashAmount%",
+  "CASH_SET_SELF": "&7Your cash has been set to &a%cashAmount% &7cash.",
+  "CASH_ADD_OTHER": "&7You have added &a%cashAmount% &7cash to the player &c%playerName%",
+  "CASH_ADD_SELF": "&a%cashAmount% &7cash has been added to your account.",
+  "CASH_REMOVE_OTHER": "&7You have removed &a%cashAmount% &7cash from the player &c%playerName%",
+  "CASH_REMOVE_SELF": "&a%cashAmount% &7cash has been removed from your account."
 }

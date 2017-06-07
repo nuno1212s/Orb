@@ -3,9 +3,11 @@ package com.nuno1212s.mercado.marketmanager;
 import com.nuno1212s.mercado.main.Main;
 import com.nuno1212s.mercado.util.chathandlers.ChatHandlerManager;
 import com.nuno1212s.mercado.util.inventories.InventoryData;
+import com.nuno1212s.mercado.util.inventories.InventoryItem;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.util.Pair;
 import lombok.Getter;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
@@ -152,6 +154,20 @@ public class MarketManager {
         Inventory inventory = this.mainInventoryData.buildInventory();
 
         List<Item> itemsForPage = getItemsForPage(page, this.mainInventoryData.getInventorySize() - 18);
+
+        if (getItemsForPage(page + 1, this.mainInventoryData.getInventorySize() - 18).isEmpty()) {
+            InventoryItem next_page = this.mainInventoryData.getItemWithFlag("NEXT_PAGE");
+            if (next_page != null) {
+                inventory.setItem(next_page.getSlot(), null);
+            }
+        }
+
+        if (page == 1) {
+            InventoryItem prev_page = this.mainInventoryData.getItemWithFlag("PREVIOUS_PAGE");
+            if (prev_page != null) {
+                inventory.setItem(prev_page.getSlot(), null);
+            }
+        }
 
         int currentSlot = 0;
         for (Item item : itemsForPage) {

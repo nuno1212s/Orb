@@ -31,8 +31,13 @@ public class ConfirmInventoryListener extends InventoryListener {
             if (e.getClick().isShiftClick()) {
                 e.setResult(Event.Result.DENY);
             }
+        } else {
+            return;
         }
 
+        if (e.getClickedInventory() == null) {
+            return;
+        }
         if (e.getInventory().getName().equals(e.getClickedInventory().getName())) {
             if (e.getCurrentItem() == null) {
                 return;

@@ -31,7 +31,7 @@ public class RedisHandler {
 
         redisReceivers = new ArrayList<>();
         Config redis = config.getConfigurationSection("Redis");
-        enabled = redis != null && redis.getBoolean("Enabled");
+        enabled = !(redis == null);
 
         if (enabled) {
             host = redis.getString("Host");

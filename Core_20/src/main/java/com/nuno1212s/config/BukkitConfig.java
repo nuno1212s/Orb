@@ -58,6 +58,10 @@ public class BukkitConfig extends Config {
 
     @Override
     public Config getConfigurationSection(String key) {
-        return new BukkitConfig(config.getConfigurationSection(key));
+        ConfigurationSection configurationSection = config.getConfigurationSection(key);
+        if (configurationSection == null) {
+            return null;
+        }
+        return new BukkitConfig(configurationSection);
     }
 }

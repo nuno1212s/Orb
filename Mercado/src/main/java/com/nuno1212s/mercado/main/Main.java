@@ -1,6 +1,8 @@
 package com.nuno1212s.mercado.main;
 
 import com.nuno1212s.main.BukkitMain;
+import com.nuno1212s.main.MainData;
+import com.nuno1212s.mercado.commands.MarketCommand;
 import com.nuno1212s.mercado.database.MySql;
 import com.nuno1212s.mercado.listeners.*;
 import com.nuno1212s.mercado.marketmanager.MarketManager;
@@ -28,6 +30,11 @@ public class Main extends Module {
         ins = this;
         mySql = new MySql();
         marketManager = new MarketManager(this);
+
+        registerCommand(new String[]{"market"}, new MarketCommand());
+
+        MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));
+
         BukkitMain ins = BukkitMain.getIns();
         ins.getServer().getPluginManager().registerEvents(new LandingInventoryListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new BuyingInventoryListener(), ins);
