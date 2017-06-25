@@ -212,8 +212,9 @@ public class NBTCompound {
             return nbtTagListObject;
         } else if (value instanceof Map) {
             return toTag((Map<String, Object>) value, null);
+        } else {
+            throw new IllegalArgumentException("Argument not supported");
         }
-        return null;
     }
 
     Object getDataFrom(Object nbtBase) {

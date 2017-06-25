@@ -75,13 +75,24 @@ public class ConfirmInventoryListener extends InventoryListener {
                     ServerCurrencyHandler currencyHandler = MainData.getIns().getServerCurrencyHandler();
                     if (currencyHandler.removeCurrency(playerData, buyItem.getCost())) {
                         buyItem.deliverItem((Player) e.getWhoClicked());
+                        addCloseException(e.getWhoClicked().getUniqueId());
+                        e.getWhoClicked().closeInventory();
+                        Main.getIns().getMarketManager().openInventory((Player) e.getWhoClicked(), getPageForPlayer(e.getWhoClicked().getUniqueId()));
+                    } else {
+                        MainData.getIns().getMessageManager().getMessage("NO_SERVER_CURRENCY").sendTo(e.getWhoClicked());
                     }
 
                 } else {
                     PlayerData playerData = MainData.getIns().getPlayerManager().getPlayer(e.getWhoClicked().getUniqueId());
+
                     if (playerData.getCash() > buyItem.getCost()) {
                         playerData.setCash(playerData.getCash() - buyItem.getCost());
                         buyItem.deliverItem((Player) e.getWhoClicked());
+                        addCloseException(e.getWhoClicked().getUniqueId());
+                        e.getWhoClicked().closeInventory();
+                        Main.getIns().getMarketManager().openInventory((Player) e.getWhoClicked(), getPageForPlayer(e.getWhoClicked().getUniqueId()));
+                    } else {
+                        MainData.getIns().getMessageManager().getMessage("NO_CASH").sendTo(e.getWhoClicked());
                     }
                 }
 

@@ -1,0 +1,16 @@
+{
+  "CashItem": {
+    "Material": "EMERALD",
+    "DisplayName": "&aCash Item",
+    "Lore": [
+      "&8You are going to sell this item for cash"
+    ]
+  },
+  "CoinsItem": {
+    "Material": "GOLD_INGOT",
+    "DisplayName": "&aCoin Item",
+    "Lore": [
+      "&8You are going to sell this item for coins"
+    ]
+  }
+}

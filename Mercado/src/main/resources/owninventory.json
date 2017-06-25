@@ -1,0 +1,44 @@
+{
+  "InventoryName": "&cAnnounced items",
+  "InventorySize": 45,
+  "InventoryItems": [
+    {
+      "Slot": 36,
+      "Item": {
+        "Material": "FEATHER",
+        "Amount": 1,
+        "Data": 0,
+        "DisplayName": "&cPrevious Page",
+        "Lore": [
+          "&cTest"
+        ],
+        "Enchantments": [
+          "UNBREAKING:1"
+        ],
+        "ItemFlags": [
+          "HIDE_ENCHANTS"
+        ]
+      },
+      "Flags": ["PREVIOUS_PAGE"]
+    },
+    {
+      "Slot": 44,
+      "Item": {
+        "Material": "FEATHER",
+        "Amount": 1,
+        "Data": 0,
+        "DisplayName": "&cNext Page",
+        "Lore": [
+          "&cTest"
+        ],
+        "Enchantments": [
+          "UNBREAKING:1"
+        ],
+        "ItemFlags": [
+          "HIDE_ENCHANTS"
+        ]
+      },
+      "Flags": ["NEXT_PAGE"]
+    }
+  ]
+}

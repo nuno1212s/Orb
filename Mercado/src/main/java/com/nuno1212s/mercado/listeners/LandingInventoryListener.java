@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.inventory.Inventory;
 
 /**
  * Landing inventory listener
@@ -55,10 +56,14 @@ public class LandingInventoryListener implements Listener {
                 Main.getIns().getMarketManager().openInventory((Player) e.getWhoClicked(), 1);
             } else if (item.hasItemFlag("SEE_OWN")) {
                 e.getWhoClicked().closeInventory();
-                //TODO: See your own inventory
+                e.getWhoClicked().openInventory(Main.getIns().getMarketManager().getOwnItemInventory(e.getWhoClicked().getUniqueId(), 1));
             } else if (item.hasItemFlag("SELL_ITEM")) {
                 e.getWhoClicked().closeInventory();
-                e.getWhoClicked().openInventory(Main.getIns().getMarketManager().getSellInventory().buildInventory());
+                InventoryData sellInventory = Main.getIns().getMarketManager().getSellInventory();
+                Inventory inventory = sellInventory.buildInventory();
+                InventoryItem currency_type = sellInventory.getItemWithFlag("CURRENCY_TYPE");
+                inventory.setItem(currency_type.getSlot(), Main.getIns().getMarketManager().getCoinsItems().clone());
+                e.getWhoClicked().openInventory(inventory);
             }
 
         }

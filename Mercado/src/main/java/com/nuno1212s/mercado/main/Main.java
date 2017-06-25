@@ -42,6 +42,7 @@ public class Main extends Module {
         ins.getServer().getPluginManager().registerEvents(new ChatListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new PlayerQuitListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new SellInventoryListener(), ins);
+        ins.getServer().getPluginManager().registerEvents(new OwnInventoryListener(), ins);
     }
 
     @Override

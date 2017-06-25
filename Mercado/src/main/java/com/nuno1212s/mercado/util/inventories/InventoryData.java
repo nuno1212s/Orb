@@ -2,6 +2,7 @@ package com.nuno1212s.mercado.util.inventories;
 
 import com.nuno1212s.util.Pair;
 import lombok.Getter;
+import lombok.ToString;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
@@ -22,6 +23,7 @@ import java.util.List;
  * Handles inventory data
  */
 @SuppressWarnings("unchecked")
+@ToString
 public class InventoryData {
 
     @Getter
@@ -30,6 +32,7 @@ public class InventoryData {
     @Getter
     private int inventorySize;
 
+    @Getter
     private List<InventoryItem> items;
 
     public InventoryData(File jsonFile) {

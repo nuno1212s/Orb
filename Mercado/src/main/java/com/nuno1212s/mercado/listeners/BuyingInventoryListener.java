@@ -1,5 +1,6 @@
 package com.nuno1212s.mercado.listeners;
 
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.mercado.main.Main;
 import com.nuno1212s.mercado.marketmanager.Item;
 import com.nuno1212s.mercado.marketmanager.MarketManager;
@@ -28,7 +29,7 @@ import java.util.UUID;
 public class BuyingInventoryListener extends InventoryListener {
 
     public BuyingInventoryListener() {
-        super(Main.getIns().getMarketManager().getLandingInventoryData());
+        super(Main.getIns().getMarketManager().getMainInventoryData());
     }
 
     @EventHandler
@@ -56,6 +57,7 @@ public class BuyingInventoryListener extends InventoryListener {
 
             InventoryItem item = marketManager.getMainInventoryData().getItem(e.getSlot());
             if (item == null) {
+
                 //The item is a buying item, not a default inventory item
                 NBTCompound itemData = new NBTCompound(e.getCurrentItem());
                 Map<String, Object> values = itemData.getValues();
@@ -64,6 +66,13 @@ public class BuyingInventoryListener extends InventoryListener {
                     if (i == null) {
                         return;
                     }
+
+
+                    /*if (i.getOwner().equals(e.getWhoClicked().getUniqueId())) {
+                        MainData.getIns().getMessageManager().getMessage("CANTBUYOWNITEM").sendTo(e.getWhoClicked());
+                        return;
+                    }*/
+
 
                     InventoryData confirmInventoryData = marketManager.getConfirmInventoryData();
                     Inventory confirmInventory = confirmInventoryData.buildInventory();
@@ -74,19 +83,24 @@ public class BuyingInventoryListener extends InventoryListener {
                     addCloseException(e.getWhoClicked().getUniqueId());
                     e.getWhoClicked().closeInventory();
                     e.getWhoClicked().openInventory(confirmInventory);
-                    //TODO: try to buy them item
 
                 }
                 return;
             }
 
             if (item.hasItemFlag("PREVIOUS_PAGE")) {
-                e.getWhoClicked().closeInventory();
                 int page = marketManager.getPage(e.getWhoClicked().getUniqueId());
                 if (page > 1) {
-                    marketManager.openInventory((Player) e.getWhoClicked(), page);
+                    addCloseException(e.getWhoClicked().getUniqueId());
+                    e.getWhoClicked().closeInventory();
+                    marketManager.openInventory((Player) e.getWhoClicked(), page - 1);
+                } else {
+                    e.getWhoClicked().closeInventory();
+                    e.getWhoClicked().openInventory(marketManager.getLandingInventory());
+
                 }
             } else if (item.hasItemFlag("NEXT_PAGE")) {
+                addCloseException(e.getWhoClicked().getUniqueId());
                 e.getWhoClicked().closeInventory();
                 marketManager.openInventory((Player) e.getWhoClicked(), marketManager.getPage(e.getWhoClicked().getUniqueId()) + 1);
             } else if (item.hasItemFlag("SEARCH")) {

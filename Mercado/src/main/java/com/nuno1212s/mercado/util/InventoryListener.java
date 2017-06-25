@@ -34,6 +34,10 @@ public abstract class InventoryListener implements Listener {
         this.closeExceptions.add(player);
     }
 
+    protected int getPageForPlayer(UUID player) {
+        return Main.getIns().getMarketManager().getPage(player);
+    }
+
     @EventHandler
     public void onClose(InventoryCloseEvent e) {
         if (!closeExceptions.contains(e.getPlayer().getUniqueId())) {

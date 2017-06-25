@@ -8,6 +8,7 @@ import com.nuno1212s.mercado.util.ItemIDUtils;
 import com.nuno1212s.mercado.util.inventories.InventoryItem;
 import com.nuno1212s.util.Callback;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -45,7 +46,6 @@ public class SellInventoryListener extends InventoryListener {
                 return;
             }
 
-
             InventoryItem item = getInventory().getItem(e.getSlot());
 
             if (item == null) {
@@ -57,8 +57,21 @@ public class SellInventoryListener extends InventoryListener {
                 e.setResult(Event.Result.DENY);
             }
 
+            System.out.println(item);
+
             if (item.hasItemFlag("CURRENCY_TYPE")) {
-                //TODO: Change the currency type
+                System.out.println("wat");
+
+                ItemStack item1 = e.getCurrentItem();
+
+                System.out.println(item1);
+
+                if (item1.getType() == Main.getIns().getMarketManager().getCashItem().getType()) {
+                    e.getClickedInventory().setItem(item.getSlot(), Main.getIns().getMarketManager().getCoinsItems().clone());
+                } else if (item1.getType() == Main.getIns().getMarketManager().getCoinsItems().getType()) {
+                    e.getClickedInventory().setItem(item.getSlot(), Main.getIns().getMarketManager().getCashItem().clone());
+                }
+
             } else if (item.hasItemFlag("CONFIRM")) {
 
                 InventoryItem sell_item = getInventory().getItemWithFlag("SELL_ITEM");
@@ -67,14 +80,15 @@ public class SellInventoryListener extends InventoryListener {
                     if (Main.getIns().getMarketManager().getActivePlayerItems(e.getWhoClicked().getUniqueId()).size() > 10) {
                         return;
                     }
+
                     Item sellItem = new Item(ItemIDUtils.getNewRandomID(),
                             e.getWhoClicked().getUniqueId(),
                             null,
                             item1,
                             0,
+                            System.currentTimeMillis(),
                             0,
-                            0,
-                            false,
+                            isServerCurrency(e.getClickedInventory().getItem(inventory.getItemWithFlag("CURRENCY_TYPE").getSlot())),
                             false);
                     addCallback(e.getWhoClicked().getUniqueId(), sellItem);
 
@@ -85,15 +99,24 @@ public class SellInventoryListener extends InventoryListener {
             } else if (item.hasItemFlag("CANCEL")) {
                 InventoryItem sell_item = getInventory().getItemWithFlag("SELL_ITEM");
                 ItemStack item1 = e.getClickedInventory().getItem(sell_item.getSlot());
+
                 if (item1 != null && item1.getType() != Material.AIR) {
                     e.getWhoClicked().getWorld().dropItemNaturally(e.getWhoClicked().getLocation(), item1);
                 }
+
                 e.getWhoClicked().closeInventory();
                 e.getWhoClicked().openInventory(Main.getIns().getMarketManager().getLandingInventory());
             }
-
         }
+    }
 
+    private boolean isServerCurrency(ItemStack i) {
+        if (i.getType() == Main.getIns().getMarketManager().getCoinsItems().getType()) {
+            return true;
+        } else if (i.getType() == Main.getIns().getMarketManager().getCashItem().getType()) {
+            return false;
+        }
+        return true;
     }
 
     private void addCallback(UUID player, Item item) {
@@ -108,7 +131,9 @@ public class SellInventoryListener extends InventoryListener {
                             item.setCost(cost);
                             Main.getIns().getMarketManager().addItem(item);
                             MainData.getIns().getMessageManager().getMessage("ANNOUNCED_ITEM")
-                                    .format("%price%", NumberFormat.getInstance().format(cost)).sendTo(Bukkit.getPlayer(player));
+                                    .format("%price%", NumberFormat.getInstance().format(cost))
+                                    .format("%currency%", item.isServerCurrency() ? ChatColor.YELLOW + "coins" : ChatColor.GREEN + "cash").sendTo(Bukkit.getPlayer(player));
+                            System.out.println(item);
                             return;
                         } catch (NumberFormatException e) {}
                     }

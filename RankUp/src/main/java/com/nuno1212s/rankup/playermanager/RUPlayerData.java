@@ -2,6 +2,7 @@ package com.nuno1212s.rankup.playermanager;
 
 import com.nuno1212s.classes.player.KitPlayer;
 import com.nuno1212s.displays.player.ChatData;
+import com.nuno1212s.events.PlayerInformationUpdateEvent;
 import com.nuno1212s.rankup.main.Main;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.Group;
@@ -10,6 +11,7 @@ import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.Callback;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Bukkit;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,6 +41,7 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer {
 
     public synchronized final void setCoins(long coins) {
         this.coins = coins;
+        Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(this));
     }
 
     public synchronized final long getCoins() {
@@ -61,7 +64,9 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer {
 
     @Override
     public PlayerGroupData.EXTENSION_RESULT setServerGroup(short groupID, long duration) {
-        return this.groupData.setCurrentGroup(groupID, duration);
+        PlayerGroupData.EXTENSION_RESULT extension_result = this.groupData.setCurrentGroup(groupID, duration);
+        Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(this));
+        return extension_result;
     }
 
     @Override

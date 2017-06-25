@@ -55,7 +55,11 @@ public abstract class PlayerData {
      * @param duration The duration of the group (-1 = Permanent)
      */
     public PlayerGroupData.EXTENSION_RESULT setMainGroup(short groupID, long duration) {
-        return this.groups.setCurrentGroup(groupID, duration);
+        PlayerGroupData.EXTENSION_RESULT extension_result = this.groups.setCurrentGroup(groupID, duration);
+        if (MainData.getIns().getEventCaller() != null) {
+            MainData.getIns().getEventCaller().callUpdateInformationEvent(this);
+        }
+        return extension_result;
     }
 
     public short getGroupID() {
@@ -114,6 +118,9 @@ public abstract class PlayerData {
     public synchronized final void setCash(long cash) {
         this.cash = cash;
         MainData.getIns().getRedisHandler().sendMessage("");
+        if (MainData.getIns().getEventCaller() != null) {
+            MainData.getIns().getEventCaller().callUpdateInformationEvent(this);
+        }
     }
 
     @Override
