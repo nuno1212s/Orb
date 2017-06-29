@@ -1,6 +1,5 @@
 package com.nuno1212s.mercado.listeners;
 
-import com.nuno1212s.main.MainData;
 import com.nuno1212s.mercado.main.Main;
 import com.nuno1212s.mercado.marketmanager.Item;
 import com.nuno1212s.mercado.marketmanager.MarketManager;
@@ -12,16 +11,10 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Buying inventory listener.

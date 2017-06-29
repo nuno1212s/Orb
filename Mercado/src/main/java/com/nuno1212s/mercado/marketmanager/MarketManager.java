@@ -2,16 +2,14 @@ package com.nuno1212s.mercado.marketmanager;
 
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.mercado.main.Main;
+import com.nuno1212s.mercado.searchmanager.SearchParameter;
+import com.nuno1212s.mercado.searchmanager.SearchParameterManager;
 import com.nuno1212s.mercado.util.chathandlers.ChatHandlerManager;
 import com.nuno1212s.mercado.util.inventories.InventoryData;
+import com.nuno1212s.mercado.util.inventories.InventoryItem;
 import com.nuno1212s.modulemanager.Module;
-import com.nuno1212s.playermanager.PlayerData;
-import com.nuno1212s.util.ItemUtils;
-import com.nuno1212s.util.NBTDataStorage.NBTCompound;
 import com.nuno1212s.util.SerializableItem;
 import lombok.Getter;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -39,6 +37,9 @@ public class MarketManager {
 
     @Getter
     public ChatHandlerManager chatManager;
+
+    @Getter
+    public SearchParameterManager searchManager;
 
     @Getter
     private ItemStack cashItem, coinsItems;
@@ -157,9 +158,14 @@ public class MarketManager {
      * @param page         The page of the market
      * @param itemsPerPage The amount of items that should be shown per page
      */
-    private List<Item> getItemsForPage(int page, int itemsPerPage) {
+    private List<Item> getItemsForPage(UUID player, int page, int itemsPerPage) {
         List<Item> marketItems = new ArrayList<>(this.marketItems);
-        marketItems.removeIf(Item::isSold);
+        SearchParameter[] parameter = this.searchManager.getSearchParameters(player);
+
+        marketItems.removeIf(item ->
+            item.isSold() && searchManager.fitsSearch(item, parameter)
+        );
+
         if (marketItems.size() < itemsPerPage && page > 1) {
             return new ArrayList<>();
         }
@@ -183,8 +189,6 @@ public class MarketManager {
         }
 
         int startingItem = (page - 1) * itemsPerPage, endItem = startingItem + itemsPerPage;
-        System.out.println(startingItem);
-        System.out.println(endItem);
         if (endItem > marketItems.size()) {
             return marketItems.subList(startingItem, marketItems.size());
         } else {
@@ -208,7 +212,7 @@ public class MarketManager {
      * @param page The page to open
      */
     public void openInventory(Player p, int page) {
-        Inventory inventory = getInventory(page);
+        Inventory inventory = getInventory(p.getUniqueId(), page);
         this.pages.put(p.getUniqueId(), page);
         p.openInventory(inventory);
     }
@@ -218,15 +222,18 @@ public class MarketManager {
      *
      * @param page the page of the inventory
      */
-    private Inventory getInventory(int page) {
+    private Inventory getInventory(UUID player, int page) {
         Inventory inventory = this.mainInventoryData.buildInventory();
 
-        List<Item> itemsForPage = getItemsForPage(page, this.mainInventoryData.getInventorySize() - 18);
+        List<Item> itemsForPage = getItemsForPage(player, page, this.mainInventoryData.getInventorySize() - 18);
 
         int currentSlot = 0;
         for (Item item : itemsForPage) {
             inventory.setItem(currentSlot++, item.getDisplayItem().clone());
         }
+
+        InventoryItem search_item = this.mainInventoryData.getItemWithFlag("SEARCH_ITEM");
+        inventory.setItem(search_item.getSlot(), this.searchManager.buildItem(search_item.getItem(), player));
 
         return inventory;
     }
@@ -286,6 +293,9 @@ public class MarketManager {
      */
     public void removePage(UUID player) {
         this.pages.remove(player);
+        if (this.searchManager.hasSearchParameters(player)) {
+            this.searchManager.removeSearchParameters(player);
+        }
     }
 
 }

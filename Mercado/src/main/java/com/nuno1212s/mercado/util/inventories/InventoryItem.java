@@ -1,6 +1,7 @@
 package com.nuno1212s.mercado.util.inventories;
 
 import com.nuno1212s.util.SerializableItem;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 import org.bukkit.inventory.ItemStack;
@@ -14,6 +15,7 @@ import java.util.List;
  */
 @Getter
 @ToString
+@AllArgsConstructor
 public class InventoryItem {
 
     private ItemStack item;

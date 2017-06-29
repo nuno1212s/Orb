@@ -1,6 +1,5 @@
 package com.nuno1212s.mercado.util.inventories;
 
-import com.nuno1212s.util.Pair;
 import lombok.Getter;
 import lombok.ToString;
 import org.bukkit.Bukkit;
@@ -27,13 +26,13 @@ import java.util.List;
 public class InventoryData {
 
     @Getter
-    private String inventoryName;
+    protected String inventoryName;
 
     @Getter
-    private int inventorySize;
+    protected int inventorySize;
 
     @Getter
-    private List<InventoryItem> items;
+    protected List<InventoryItem> items;
 
     public InventoryData(File jsonFile) {
         JSONObject jsOB;
@@ -45,16 +44,29 @@ public class InventoryData {
             return;
         }
 
+        load(jsOB, true);
+
+    }
+
+    public InventoryData(JSONObject obj) {
+        load(obj, false);
+    }
+
+    void load(JSONObject jsOB, boolean loadItems) {
         this.inventoryName = ChatColor.translateAlternateColorCodes('&', (String) jsOB.get("InventoryName"));
         this.inventorySize = ((Long) jsOB.get("InventorySize")).intValue();
         if (inventorySize % 9 != 0) {
             this.inventorySize = 27;
         }
-        JSONArray inventoryItems = (JSONArray) jsOB.get("InventoryItems");
-        this.items = new ArrayList<>(inventoryItems.size());
-        inventoryItems.forEach((inventoryItem) ->
-                this.items.add(new InventoryItem((JSONObject) inventoryItem))
-        );
+
+        if (loadItems) {
+            JSONArray inventoryItems = (JSONArray) jsOB.get("InventoryItems");
+
+            this.items = new ArrayList<>(inventoryItems.size());
+            inventoryItems.forEach((inventoryItem) ->
+                    this.items.add(new InventoryItem((JSONObject) inventoryItem))
+            );
+        }
     }
 
     public Inventory buildInventory() {
