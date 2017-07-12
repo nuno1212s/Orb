@@ -60,7 +60,15 @@ public class Item {
     }
 
     public ItemStack getDisplayItem() {
-        ItemStack clone = item.clone();
+
+
+        ItemStack clone1 = item.clone();
+        NBTCompound itemData = new NBTCompound(clone1);
+
+        itemData.add("ItemID", this.getItemID());
+
+        ItemStack clone = itemData.write(clone1);
+
         ItemMeta itemMeta = clone.getItemMeta();
 
         List<String> lore;
@@ -81,11 +89,7 @@ public class Item {
         itemMeta.setLore(lore);
         clone.setItemMeta(itemMeta);
 
-        NBTCompound itemData = new NBTCompound(clone);
-
-        itemData.add("ItemID", this.getItemID());
-
-        return itemData.write(clone);
+        return clone;
     }
 
     public ItemStack getDisplayItemOwn() {

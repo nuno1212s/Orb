@@ -1,0 +1,76 @@
+{
+  "InventoryName": "&cLooting Inventory",
+  "InventorySize": 27,
+  "InventoryID": "looting",
+  "InventoryItems": [
+    {
+      "Slot": "11-15",
+      "Item": {
+        "Material": "BOOK",
+        "DisplayName": "&7Looting %level%"
+      },
+      "SearchParameter": [
+        {
+          "Type": "ENCHANT",
+          "Name": "Looting I",
+          "Parameter": "LOOTING:1"
+        },
+        {
+          "Type": "ENCHANT",
+          "Name": "Looting II",
+          "Parameter": "LOOTING:2"
+        },
+        {
+          "Type": "ENCHANT",
+          "Name": "Looting III",
+          "Parameter": "LOOTING:3"
+        },
+        {
+          "Type": "ENCHANT",
+          "Name": "Looting IV",
+          "Parameter": "LOOTING:4"
+        },
+        {
+          "Type": "ENCHANT",
+          "Name": "Looting V",
+          "Parameter": "LOOTING:5"
+        }
+      ]
+    },
+    {
+      "Slot": 17,
+      "Item": {
+        "Material": "BOOK",
+        "DisplayName": "&7Looting",
+        "Lore": [
+          "&cAny level of Looting"
+        ]
+      },
+      "SearchParameter": {
+        "Type": "ENCHANT",
+        "Name": "Looting",
+        "Parameter": "LOOTING"
+      }
+    },
+    {
+      "Slot": 18,
+      "Item": {
+        "Material": "FEATHER",
+        "DisplayName": "&7Previous page"
+      },
+      "Flags": [
+        "CONNECTING_INV:enchantments"
+      ]
+    },
+    {
+      "Slot": 22,
+      "Item": {
+        "Material": "FEATHER",
+        "DisplayName": "&cSearch"
+      },
+      "Flags": [
+        "SEARCH"
+      ]
+    }
+  ]
+}

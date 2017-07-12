@@ -1,0 +1,75 @@
+{
+  "InventoryName": "&cPickaxe Inventory",
+  "InventorySize": 27,
+  "InventoryID": "pickaxeinv",
+  "InventoryItems": [
+    {
+      "Slot": "11-15",
+      "Item": {
+        "Material": "%material%"
+      },
+      "SearchParameter": [
+        {
+          "Type": "ITEM",
+          "Name": "Diamond Pickaxe",
+          "Parameter": "DIAMOND_PICKAXE"
+        },
+        {
+          "Type": "ITEM",
+          "Name": "Iron Pickaxe",
+          "Parameter": "IRON_PICKAXE"
+        },
+        {
+          "Type": "ITEM",
+          "Name": "Gold Pickaxe",
+          "Parameter": "GOLD_PICKAXE"
+        },
+        {
+          "Type": "ITEM",
+          "Name": "Stone Pickaxe",
+          "Parameter": "STONE_PICKAXE"
+        },
+        {
+          "Type": "ITEM",
+          "Name": "Wood Pickaxe",
+          "Parameter": "WOOD_PICKAXE"
+        }
+      ]
+    },
+    {
+      "Slot": 17,
+      "Item": {
+        "Material": "WOOD_PICKAXE",
+        "DisplayName": "&7Any pickaxe",
+        "Lore": [
+          "&cSelect any pickaxe"
+        ]
+      },
+      "SearchParameter": {
+        "Type": "ITEM",
+        "Name": "Any pickaxe",
+        "Parameter": "MATCH:PICKAXE"
+      }
+    },
+    {
+      "Slot": 18,
+      "Item": {
+        "Material": "FEATHER",
+        "DisplayName": "&7Previous page"
+      },
+      "Flags": [
+        "CONNECTING_INV:startinginventory"
+      ]
+    },
+    {
+      "Slot": 22,
+      "Item": {
+        "Material": "FEATHER",
+        "DisplayName": "&cSearch"
+      },
+      "Flags": [
+        "SEARCH"
+      ]
+    }
+  ]
+}

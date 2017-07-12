@@ -19,7 +19,7 @@ import java.text.NumberFormat;
 import java.util.UUID;
 
 /**
- * Sell inventory handler
+ * Sell inventorylisteners handler
  */
 public class SellInventoryListener extends InventoryListener {
 

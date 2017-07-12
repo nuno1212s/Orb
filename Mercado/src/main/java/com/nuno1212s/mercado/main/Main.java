@@ -6,6 +6,8 @@ import com.nuno1212s.mercado.commands.MarketCommand;
 import com.nuno1212s.mercado.database.MySql;
 import com.nuno1212s.mercado.listeners.*;
 import com.nuno1212s.mercado.marketmanager.MarketManager;
+import com.nuno1212s.mercado.searchmanager.inventorylisteners.SearchInventoryListener;
+import com.nuno1212s.mercado.util.RomanNumber;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.modulemanager.ModuleData;
 import lombok.Getter;
@@ -27,6 +29,7 @@ public class Main extends Module {
 
     @Override
     public void onEnable() {
+        new RomanNumber();
         ins = this;
         mySql = new MySql();
         marketManager = new MarketManager(this);
@@ -43,6 +46,7 @@ public class Main extends Module {
         ins.getServer().getPluginManager().registerEvents(new PlayerQuitListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new SellInventoryListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new OwnInventoryListener(), ins);
+        ins.getServer().getPluginManager().registerEvents(new SearchInventoryListener(), ins);
     }
 
     @Override

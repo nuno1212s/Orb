@@ -17,7 +17,7 @@ import org.bukkit.inventory.Inventory;
 import java.util.Map;
 
 /**
- * Buying inventory listener.
+ * Buying inventorylisteners listener.
  */
 public class BuyingInventoryListener extends InventoryListener {
 
@@ -51,7 +51,7 @@ public class BuyingInventoryListener extends InventoryListener {
             InventoryItem item = marketManager.getMainInventoryData().getItem(e.getSlot());
             if (item == null) {
 
-                //The item is a buying item, not a default inventory item
+                //The item is a buying item, not a default inventorylisteners item
                 NBTCompound itemData = new NBTCompound(e.getCurrentItem());
                 Map<String, Object> values = itemData.getValues();
                 if (values.containsKey("ItemID")) {
@@ -84,21 +84,20 @@ public class BuyingInventoryListener extends InventoryListener {
             if (item.hasItemFlag("PREVIOUS_PAGE")) {
                 int page = marketManager.getPage(e.getWhoClicked().getUniqueId());
                 if (page > 1) {
-                    addCloseException(e.getWhoClicked().getUniqueId());
-                    e.getWhoClicked().closeInventory();
-                    marketManager.openInventory((Player) e.getWhoClicked(), page - 1);
+                    e.getClickedInventory().setContents(marketManager.getInventory((Player) e.getWhoClicked(), getPageForPlayer(e.getWhoClicked().getUniqueId()) - 1).getContents());
                 } else {
                     e.getWhoClicked().closeInventory();
                     e.getWhoClicked().openInventory(marketManager.getLandingInventory());
 
                 }
             } else if (item.hasItemFlag("NEXT_PAGE")) {
+
+                e.getClickedInventory().setContents(marketManager.getInventory((Player) e.getWhoClicked(), getPageForPlayer(e.getWhoClicked().getUniqueId()) + 1).getContents());
+
+            } else if (item.hasItemFlag("SEARCH_ITEM")) {
                 addCloseException(e.getWhoClicked().getUniqueId());
                 e.getWhoClicked().closeInventory();
-                marketManager.openInventory((Player) e.getWhoClicked(), marketManager.getPage(e.getWhoClicked().getUniqueId()) + 1);
-            } else if (item.hasItemFlag("SEARCH")) {
-                e.getWhoClicked().closeInventory();
-                //TODO: Add search inventories and stuff
+                e.getWhoClicked().openInventory(Main.getIns().getMarketManager().getSearchManager().getSearchParameterInventory(e.getWhoClicked().getUniqueId()));
             }
 
         }

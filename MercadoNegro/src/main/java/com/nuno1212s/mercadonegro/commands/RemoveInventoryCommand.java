@@ -8,7 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 /**
- * Remove inventory command
+ * Remove inventorylisteners command
  */
 public class RemoveInventoryCommand implements Command {
 
@@ -46,7 +46,7 @@ public class RemoveInventoryCommand implements Command {
         CInventory inventory = Main.getIns().getInventoryManager().getInventory(page);
 
         if (inventory == null) {
-            player.sendMessage(ChatColor.RED + "There is no inventory with that page");
+            player.sendMessage(ChatColor.RED + "There is no inventorylisteners with that page");
             return;
         }
 

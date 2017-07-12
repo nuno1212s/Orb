@@ -1,0 +1,76 @@
+{
+  "InventoryName": "&cFortune Inventory",
+  "InventorySize": 27,
+  "InventoryID": "fortune",
+  "InventoryItems": [
+    {
+      "Slot": "11-15",
+      "Item": {
+        "Material": "BOOK",
+        "DisplayName": "&7Fortune %level%"
+      },
+      "SearchParameter": [
+        {
+          "Type": "ENCHANT",
+          "Name": "Fortune I",
+          "Parameter": "FORTUNE:1"
+        },
+        {
+          "Type": "ENCHANT",
+          "Name": "Fortune II",
+          "Parameter": "FORTUNE:2"
+        },
+        {
+          "Type": "ENCHANT",
+          "Name": "Fortune III",
+          "Parameter": "FORTUNE:3"
+        },
+        {
+          "Type": "ENCHANT",
+          "Name": "Fortune IV",
+          "Parameter": "FORTUNE:4"
+        },
+        {
+          "Type": "ENCHANT",
+          "Name": "Fortune V",
+          "Parameter": "FORTUNE:5"
+        }
+      ]
+    },
+    {
+      "Slot": 17,
+      "Item": {
+        "Material": "BOOK",
+        "DisplayName": "&7Fortune",
+        "Lore": [
+          "&cAny level of Fortune"
+        ]
+      },
+      "SearchParameter": {
+        "Type": "ENCHANT",
+        "Name": "Fortune",
+        "Parameter": "FORTUNE"
+      }
+    },
+    {
+      "Slot": 18,
+      "Item": {
+        "Material": "FEATHER",
+        "DisplayName": "&7Previous page"
+      },
+      "Flags": [
+        "CONNECTING_INV:enchantments"
+      ]
+    },
+    {
+      "Slot": 22,
+      "Item": {
+        "Material": "FEATHER",
+        "DisplayName": "&cSearch"
+      },
+      "Flags": [
+        "SEARCH"
+      ]
+    }
+  ]
+}

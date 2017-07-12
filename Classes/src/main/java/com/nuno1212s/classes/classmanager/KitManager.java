@@ -104,9 +104,9 @@ public class KitManager {
     }
 
     /**
-     * Get the class for the editing inventory
+     * Get the class for the editing inventorylisteners
      *
-     * @param name The inventory name
+     * @param name The inventorylisteners name
      * @return the kit that matches it
      */
     public Kit getKitEdit(String name) {
@@ -119,9 +119,9 @@ public class KitManager {
     }
 
     /**
-     * Is the inventory a display of a kit
+     * Is the inventorylisteners a display of a kit
      *
-     * @param inventoryName The name of the inventory to check
+     * @param inventoryName The name of the inventorylisteners to check
      * @return
      */
     public boolean isKitDisplay(String inventoryName) {
@@ -147,7 +147,7 @@ public class KitManager {
     }
 
     /**
-     * Builds the inventory
+     * Builds the inventorylisteners
      * @return
      */
     public Inventory buildInventory(Player player) {

@@ -1,0 +1,7 @@
+{
+  "Inventories": ["pickaxeinv",
+    "enchants/efficiency", "enchants/enchantments", "enchants/unbreaking",
+    "enchants/sharpness", "enchants/looting", "enchants/flame", "axes",
+    "enchants/fortune", "bow", "enchants/bunbreaking", "swords", "enchants/bowenchants"],
+  "LandingInventory": "startinginventory"
+}

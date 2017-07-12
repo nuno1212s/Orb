@@ -1,0 +1,76 @@
+{
+  "InventoryName": "&cFlame Inventory",
+  "InventorySize": 27,
+  "InventoryID": "flame",
+  "InventoryItems": [
+    {
+      "Slot": "11-15",
+      "Item": {
+        "Material": "BOOK",
+        "DisplayName": "&7Flame %level%"
+      },
+      "SearchParameter": [
+        {
+          "Type": "ENCHANT",
+          "Name": "Flame I",
+          "Parameter": "FLAME:1"
+        },
+        {
+          "Type": "ENCHANT",
+          "Name": "Flame II",
+          "Parameter": "FLAME:2"
+        },
+        {
+          "Type": "ENCHANT",
+          "Name": "Flame III",
+          "Parameter": "FLAME:3"
+        },
+        {
+          "Type": "ENCHANT",
+          "Name": "Flame IV",
+          "Parameter": "FLAME:4"
+        },
+        {
+          "Type": "ENCHANT",
+          "Name": "Flame V",
+          "Parameter": "FLAME:5"
+        }
+      ]
+    },
+    {
+      "Slot": 17,
+      "Item": {
+        "Material": "BOOK",
+        "DisplayName": "&7Flame",
+        "Lore": [
+          "&cAny level of Flame"
+        ]
+      },
+      "SearchParameter": {
+        "Type": "ENCHANT",
+        "Name": "Flame",
+        "Parameter": "FLAME"
+      }
+    },
+    {
+      "Slot": 18,
+      "Item": {
+        "Material": "FEATHER",
+        "DisplayName": "&7Previous page"
+      },
+      "Flags": [
+        "CONNECTING_INV:bowenchants"
+      ]
+    },
+    {
+      "Slot": 22,
+      "Item": {
+        "Material": "FEATHER",
+        "DisplayName": "&cSearch"
+      },
+      "Flags": [
+        "SEARCH"
+      ]
+    }
+  ]
+}

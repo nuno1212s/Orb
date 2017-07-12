@@ -16,7 +16,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * Handles confirm inventory clicks
+ * Handles confirm inventorylisteners clicks
  */
 public class ConfirmInventoryListener extends InventoryListener {
 

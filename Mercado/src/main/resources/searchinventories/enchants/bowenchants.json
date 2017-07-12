@@ -1,0 +1,59 @@
+{
+  "InventoryName": "&cBow enchantments",
+  "InventorySize": 54,
+  "InventoryID": "bowenchants",
+  "InventoryItems": [
+    {
+      "Slot": 11,
+      "Item": {
+        "Material": "BOOK",
+        "DisplayName": "&cPower"
+      },
+      "Flags": ["CONNECTING_INV:power"]
+    },
+    {
+      "Slot": 13,
+      "Item": {
+        "Material": "BOOK",
+        "DisplayName": "&cPunch"
+      },
+      "Flags": ["CONNECTING_INV:punch"]
+    },
+    {
+      "Slot": 15,
+      "Item": {
+        "Material": "BOOK",
+        "DisplayName": "&cFlame"
+      },
+      "Flags": ["CONNECTING_INV:flame"]
+    },
+    {
+      "Slot": 17,
+      "Item": {
+        "Material": "BOOK",
+        "DisplayName": "&cUnbreaking"
+      },
+      "Flags": ["CONNECTING_INV:bunbreaking"]
+    },
+    {
+      "Slot": 45,
+      "Item": {
+        "Material": "FEATHER",
+        "DisplayName": "&7Previous page"
+      },
+      "Flags": [
+        "CONNECTING_INV:bow"
+      ]
+    },
+    {
+      "Slot": 49,
+      "Item": {
+        "Material": "FEATHER",
+        "DisplayName": "&cSearch"
+      },
+      "Flags": [
+        "SEARCH"
+      ]
+    }
+  ]
+}

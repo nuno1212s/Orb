@@ -1,0 +1,76 @@
+{
+  "InventoryName": "&cUnbreaking Inventory ",
+  "InventorySize": 27,
+  "InventoryID": "bunbreaking",
+  "InventoryItems": [
+    {
+      "Slot": "11-15",
+      "Item": {
+        "Material": "BOOK",
+        "DisplayName": "&7Unbreaking %level%"
+      },
+      "SearchParameter": [
+        {
+          "Type": "ENCHANT",
+          "Name": "Unbreaking I",
+          "Parameter": "UNBREAKING:1"
+        },
+        {
+          "Type": "ENCHANT",
+          "Name": "Unbreaking II",
+          "Parameter": "UNBREAKING:2"
+        },
+        {
+          "Type": "ENCHANT",
+          "Name": "Unbreaking III",
+          "Parameter": "UNBREAKING:3"
+        },
+        {
+          "Type": "ENCHANT",
+          "Name": "Unbreaking IV",
+          "Parameter": "UNBREAKING:4"
+        },
+        {
+          "Type": "ENCHANT",
+          "Name": "Unbreaking V",
+          "Parameter": "UNBREAKING:5"
+        }
+      ]
+    },
+    {
+      "Slot": 17,
+      "Item": {
+        "Material": "BOOK",
+        "DisplayName": "&7Unbreaking",
+        "Lore": [
+          "&cAny level of Unbreaking"
+        ]
+      },
+      "SearchParameter": {
+        "Type": "ENCHANT",
+        "Name": "Unbreaking",
+        "Parameter": "UNBREAKING"
+      }
+    },
+    {
+      "Slot": 18,
+      "Item": {
+        "Material": "FEATHER",
+        "DisplayName": "&7Previous page"
+      },
+      "Flags": [
+        "CONNECTING_INV:bowenchants"
+      ]
+    },
+    {
+      "Slot": 22,
+      "Item": {
+        "Material": "FEATHER",
+        "DisplayName": "&cSearch"
+      },
+      "Flags": [
+        "SEARCH"
+      ]
+    }
+  ]
+}

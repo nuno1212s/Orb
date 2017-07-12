@@ -9,7 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 /**
- * Set the item in the specified inventory
+ * Set the item in the specified inventorylisteners
  */
 public class SetItemInInventoryCommand implements Command {
 

@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Handles inventory data
+ * Handles inventorylisteners data
  */
 @SuppressWarnings("unchecked")
 @ToString

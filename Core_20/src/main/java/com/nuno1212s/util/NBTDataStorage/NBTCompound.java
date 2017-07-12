@@ -23,6 +23,9 @@ public class NBTCompound {
     @Getter
     Map<String, Object> values = new HashMap<>();
 
+    //TODO: FIX ME TO WORK THE NEW WAYYYYYYYY
+    //FIXME
+
     /**
      * NBTTagCompound Reflection pointer
      */
@@ -53,6 +56,12 @@ public class NBTCompound {
 
         //NBT Tag data
         this.nbtTagCompound = reflectionManager.invokeMethod(getTag, nmsItem);
+
+        if (nbtTagCompound == null) {
+            Class nbtDataCompound = reflectionManager.getClass(reflectionManager.NMS + "NBTTagCompound");
+
+            this.nbtTagCompound = reflectionManager.invokeConstructor(reflectionManager.getConstructor(nbtDataCompound));
+        }
 
         this.values = loadFromNBTData(this.nbtTagCompound);
 
@@ -115,6 +124,7 @@ public class NBTCompound {
             if (key.equalsIgnoreCase("display")) {
                 continue;
             }
+
             Object nbtBase = reflectionManager.invokeMethod(getDataTag, nbtData, key);
 
             values.put(key, this.getDataFrom(nbtBase));
@@ -127,6 +137,16 @@ public class NBTCompound {
     }
 
     public void add(String key, Object value) {
+        Object nbtBase = getNBTBase(value);
+
+        Class nbtDataCompound = reflectionManager.getClass(reflectionManager.NMS + "NBTTagCompound");
+
+        Class nbtBaseClass = reflectionManager.getClass(reflectionManager.NMS + "NBTBase");
+
+        Method set = reflectionManager.getMethod(nbtDataCompound, "set", String.class, nbtBaseClass);
+
+        reflectionManager.invokeMethod(set, this.nbtTagCompound, key, nbtBase);
+
         this.values.put(key, value);
     }
 
@@ -146,8 +166,8 @@ public class NBTCompound {
             tag = reflectionManager.invokeConstructor(reflectionManager.getConstructor(nbtDataCompound));
         }
 
-        return toTag(values, tag);
-
+        //return toTag(values, tag);
+        return this.nbtTagCompound;
     }
 
     /**

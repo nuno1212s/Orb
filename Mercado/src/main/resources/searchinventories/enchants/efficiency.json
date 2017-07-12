@@ -1,0 +1,76 @@
+{
+  "InventoryName": "&cEfficiency Inventory",
+  "InventorySize": 27,
+  "InventoryID": "efficiency",
+  "InventoryItems": [
+    {
+      "Slot": "11-15",
+      "Item": {
+        "Material": "BOOK",
+        "DisplayName": "&7Efficiency %level%"
+      },
+      "SearchParameter": [
+        {
+          "Type": "ENCHANT",
+          "Name": "Efficiency I",
+          "Parameter": "EFFICIENCY:1"
+        },
+        {
+          "Type": "ENCHANT",
+          "Name": "Efficiency II",
+          "Parameter": "EFFICIENCY:2"
+        },
+        {
+          "Type": "ENCHANT",
+          "Name": "Efficiency III",
+          "Parameter": "EFFICIENCY:3"
+        },
+        {
+          "Type": "ENCHANT",
+          "Name": "Efficiency IV",
+          "Parameter": "EFFICIENCY:4"
+        },
+        {
+          "Type": "ENCHANT",
+          "Name": "Efficiency V",
+          "Parameter": "EFFICIENCY:5"
+        }
+      ]
+    },
+    {
+      "Slot": 17,
+      "Item": {
+        "Material": "BOOK",
+        "DisplayName": "&7Efficiency",
+        "Lore": [
+          "&cAny level of efficiency"
+        ]
+      },
+      "SearchParameter": {
+        "Type": "ENCHANT",
+        "Name": "Efficiency",
+        "Parameter": "EFFICIENCY"
+      }
+    },
+    {
+      "Slot": 18,
+      "Item": {
+        "Material": "FEATHER",
+        "DisplayName": "&7Previous page"
+      },
+      "Flags": [
+        "CONNECTING_INV:enchantments"
+      ]
+    },
+    {
+      "Slot": 22,
+      "Item": {
+        "Material": "FEATHER",
+        "DisplayName": "&cSearch"
+      },
+      "Flags": [
+        "SEARCH"
+      ]
+    }
+  ]
+}

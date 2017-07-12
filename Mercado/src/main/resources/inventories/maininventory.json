@@ -57,7 +57,7 @@
           "HIDE_ENCHANTS"
         ]
       },
-      "Flags": ["SEARCH"]
+      "Flags": ["SEARCH_ITEM"]
     }
   ]
 }

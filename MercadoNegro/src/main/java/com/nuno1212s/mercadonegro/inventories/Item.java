@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * An inventory item
+ * An inventorylisteners item
  */
 @AllArgsConstructor
 @Getter

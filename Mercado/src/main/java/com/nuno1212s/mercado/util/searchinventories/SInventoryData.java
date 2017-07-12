@@ -5,8 +5,10 @@ import com.nuno1212s.mercado.searchmanager.SearchParameterBuilder;
 import com.nuno1212s.mercado.searchmanager.searchparameters.SearchParameters;
 import com.nuno1212s.mercado.util.inventories.InventoryData;
 import com.nuno1212s.mercado.util.inventories.InventoryItem;
+import com.nuno1212s.util.SerializableItem;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
@@ -19,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Search inventory data
+ * Search inventorylisteners data
  */
 public class SInventoryData extends InventoryData {
 
@@ -39,6 +41,7 @@ public class SInventoryData extends InventoryData {
             this.items.addAll(loadItemData(item));
         }
 
+
     }
 
     public Inventory buildInventory(SearchParameterBuilder parameters) {
@@ -49,17 +52,32 @@ public class SInventoryData extends InventoryData {
                 if (((SInventoryItem) item).getSearchParameter() != null) {
 
                     if (parameters.containsParameter(((SInventoryItem) item).getSearchParameter())) {
-                        ItemStack item1 = item.getItem();
+                        ItemStack item1 = item.getItem().clone();
                         item1.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
                         ItemMeta itemMeta = item1.getItemMeta();
+                        List<String> lore = itemMeta.getLore() == null ? new ArrayList<>() : itemMeta.getLore();
+                        lore.add("");
+                        lore.add(ChatColor.RED + "Selected");
+                        itemMeta.setLore(lore);
                         itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                         item1.setItemMeta(itemMeta);
                         inv.setItem(item.getSlot(), item1);
-                        break;
+                        continue;
+                    } else {
+                        ItemStack item1 = item.getItem().clone();
+                        ItemMeta itemMeta = item1.getItemMeta();
+                        List<String> lore = itemMeta.getLore() == null ? new ArrayList<>() : itemMeta.getLore();
+                        lore.add("");
+                        lore.add(ChatColor.GREEN + "Click to select");
+                        itemMeta.setLore(lore);
+                        item1.setItemMeta(itemMeta);
+                        inv.setItem(item.getSlot(), item1);
+                        continue;
                     }
 
                 }
             }
+
             inv.setItem(item.getSlot(), item.getItem());
         }
 
@@ -89,13 +107,18 @@ public class SInventoryData extends InventoryData {
 
         JSONObject itemJSON = (JSONObject) itemData.get("Item");
 
-        List<String> itemFlags = (List<String>) itemData.get("ItemFlags");
+        List<String> itemFlags = (List<String>) itemData.get("Flags");
+        if (itemFlags == null) {
+            itemFlags = new ArrayList<>();
+        }
 
         if (searchParameter instanceof JSONArray) {
             int currentSlot = startingSlot;
-            if (((JSONArray) searchParameter).size() != itemAmounts) {
+
+            /*if (((JSONArray) searchParameter).size() != itemAmounts) {
                 throw new IllegalArgumentException("The slot count does not match the item count");
-            }
+            }*/
+
             for (Object obj : (JSONArray) searchParameter) {
                 JSONObject search = (JSONObject) obj;
                 String type = (String) search.get("Type");
@@ -105,6 +128,7 @@ public class SInventoryData extends InventoryData {
                 SearchParameter instantiate = SearchParameters.valueOf(type.toUpperCase()).instantiate(name, param);
 
                 SInventoryItem item = new SInventoryItem(instantiate.formatItem(itemJSON), currentSlot++, itemFlags, instantiate);
+
                 items.add(item);
             }
 
@@ -115,12 +139,21 @@ public class SInventoryData extends InventoryData {
             String name = (String) search.get("Name");
             String param = (String) search.get("Parameter");
 
-            SearchParameter instantiate = SearchParameters.valueOf(type.toUpperCase()).instantiate(name, param);
+            SearchParameter instantiate;
+            try {
+                 instantiate = SearchParameters.valueOf(type.toUpperCase()).instantiate(name, param);
+            } catch (Exception e) {
+                System.out.println(itemData);
+                System.out.println(type);
+
+                return new ArrayList<>();
+            }
+
             SInventoryItem item = new SInventoryItem(instantiate.formatItem(itemJSON), startingSlot, itemFlags, instantiate);
 
             items.add(item);
         } else if (searchParameter == null) {
-            items.add(new InventoryItem(itemData));
+            items.add(new SInventoryItem(new SerializableItem(itemJSON), startingSlot, itemFlags, null));
         }
 
         return items;

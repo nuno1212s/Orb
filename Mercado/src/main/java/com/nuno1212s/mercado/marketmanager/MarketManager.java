@@ -51,6 +51,7 @@ public class MarketManager {
         marketItems = Main.getIns().getMySql().getAllItems();
         pages = new HashMap<>();
         chatManager = new ChatHandlerManager();
+        searchManager = new SearchParameterManager(module);
 
         File file = new File(module.getDataFolder() + File.separator + "inventories");
         if (!file.exists()) {
@@ -163,7 +164,7 @@ public class MarketManager {
         SearchParameter[] parameter = this.searchManager.getSearchParameters(player);
 
         marketItems.removeIf(item ->
-            item.isSold() && searchManager.fitsSearch(item, parameter)
+            item.isSold() || !searchManager.fitsSearch(item, parameter)
         );
 
         if (marketItems.size() < itemsPerPage && page > 1) {
@@ -197,16 +198,16 @@ public class MarketManager {
     }
 
     /**
-     * Get the landing inventory for the market (Not the actual market inventory, {@link #openInventory(Player, int)})
+     * Get the landing inventorylisteners for the market (Not the actual market inventorylisteners, {@link #openInventory(Player, int)})
      *
-     * @return The landing inventory
+     * @return The landing inventorylisteners
      */
     public Inventory getLandingInventory() {
         return this.landingInventoryData.buildInventory();
     }
 
     /**
-     * Open the inventory page at a specific page
+     * Open the inventorylisteners page at a specific page
      *
      * @param p    The player to open it to
      * @param page The page to open
@@ -215,6 +216,12 @@ public class MarketManager {
         Inventory inventory = getInventory(p.getUniqueId(), page);
         this.pages.put(p.getUniqueId(), page);
         p.openInventory(inventory);
+    }
+
+    public Inventory getInventory(Player p, int page) {
+        Inventory inventory = getInventory(p.getUniqueId(), page);
+        this.pages.put(p.getUniqueId(), page);
+        return inventory;
     }
 
     /**
@@ -233,7 +240,7 @@ public class MarketManager {
         }
 
         InventoryItem search_item = this.mainInventoryData.getItemWithFlag("SEARCH_ITEM");
-        inventory.setItem(search_item.getSlot(), this.searchManager.buildItem(search_item.getItem(), player));
+        inventory.setItem(search_item.getSlot(), this.searchManager.buildItem(search_item.getItem().clone(), player));
 
         return inventory;
     }

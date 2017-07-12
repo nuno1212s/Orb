@@ -1,0 +1,112 @@
+{
+  "InventoryName": "&cSearch Inventory",
+  "InventorySize": 54,
+  "InventoryID": "StartingInventory",
+  "InventoryItems": [
+    {
+      "Slot": 11,
+      "Item": {
+        "Material": "WOOD_PICKAXE",
+        "DisplayName": "&7Pickaxes",
+        "Lore": [
+          "&cClick to see the pickaxe inventory"
+        ]
+      },
+      "Flags": [
+        "CONNECTING_INV:pickaxeinv"
+      ]
+    },
+    {
+      "Slot": 13,
+      "Item": {
+        "Material": "WOOD_AXE",
+        "DisplayName": "&7Axes",
+        "Lore": [
+          "&cClick to see the axe inventory"
+        ]
+      },
+      "Flags": [
+        "CONNECTING_INV:axes"
+      ]
+    },
+    {
+      "Slot": 21,
+      "Item": {
+        "Material": "BOOK",
+        "DisplayName": "&7Enchantments",
+        "Lore": [
+          "&cClick to see the enchantments inventory"
+        ]
+      },
+      "Flags": [
+        "CONNECTING_INV:enchantments"
+      ]
+    },
+    {
+      "Slot": 15,
+      "Item": {
+        "Material": "BOW",
+        "DisplayName": "&7Bow",
+        "Lore": [
+          "&cClick to see the bow inventory"
+        ]
+      },
+      "Flags": [
+        "CONNECTING_INV:bow"
+      ]
+    },
+    {
+      "Slot": 19,
+      "Item": {
+        "Material": "WOOD_SWORD",
+        "DisplayName": "&7Sword",
+        "Lore": [
+          "&cClick to see the sword inventory"
+        ]
+      },
+      "Flags": [
+        "CONNECTING_INV:swords"
+      ]
+    },
+    {
+      "Slot": 39,
+      "Item": {
+        "Material": "EMERALD",
+        "DisplayName": "&aCash",
+        "Lore": [
+          "&cCash only items"
+        ]
+      },
+      "SearchParameter": {
+        "Type": "CURRENCY",
+        "Parameter": "true",
+        "Name": "Cash item"
+      }
+    },
+    {
+      "Slot": 41,
+      "Item": {
+        "Material": "GOLD_INGOT",
+        "DisplayName": "&aCoins",
+        "Lore": [
+          "&cCoins only items"
+        ]
+      },
+      "SearchParameter": {
+        "Type": "CURRENCY",
+        "Parameter": "false",
+        "Name": "Coin item"
+      }
+    },
+    {
+      "Slot": 49,
+      "Item": {
+        "Material": "FEATHER",
+        "DisplayName": "&cSearch"
+      },
+      "Flags": [
+        "SEARCH"
+      ]
+    }
+  ]
+}

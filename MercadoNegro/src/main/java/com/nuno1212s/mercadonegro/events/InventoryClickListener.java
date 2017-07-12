@@ -14,7 +14,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 
 /**
- * Handles inventory click listener
+ * Handles inventorylisteners click listener
  */
 public class InventoryClickListener implements Listener {
 

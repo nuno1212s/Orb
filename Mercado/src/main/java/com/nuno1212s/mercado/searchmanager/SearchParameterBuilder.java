@@ -3,6 +3,7 @@ package com.nuno1212s.mercado.searchmanager;
 import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -18,6 +19,10 @@ public class SearchParameterBuilder {
     }
 
     public SearchParameterBuilder addSearchParameter(SearchParameter parameter) {
+        /*
+         * Can not select multiple search parameters of the same category
+          * (Can't select a diamond pick and a diamond axe for example, because that is impossible)
+         */
         searchParameters.add(parameter);
         return this;
     }

@@ -1,0 +1,75 @@
+{
+  "InventoryName": "&cAxe Inventory",
+  "InventorySize": 27,
+  "InventoryID": "axes",
+  "InventoryItems": [
+    {
+      "Slot": "11-15",
+      "Item": {
+        "Material": "%material%"
+      },
+      "SearchParameter": [
+        {
+          "Type": "ITEM",
+          "Name": "Diamond Axe",
+          "Parameter": "DIAMOND_AXE"
+        },
+        {
+          "Type": "ITEM",
+          "Name": "Iron Axe",
+          "Parameter": "IRON_AXE"
+        },
+        {
+          "Type": "ITEM",
+          "Name": "Gold Axe",
+          "Parameter": "GOLD_AXE"
+        },
+        {
+          "Type": "ITEM",
+          "Name": "Stone Axe",
+          "Parameter": "STONE_AXE"
+        },
+        {
+          "Type": "ITEM",
+          "Name": "Wood Axe",
+          "Parameter": "WOOD_AXE"
+        }
+      ]
+    },
+    {
+      "Slot": 17,
+      "Item": {
+        "Material": "WOOD_AXE",
+        "DisplayName": "&7Any axe",
+        "Lore": [
+          "&cSelect any axe"
+        ]
+      },
+      "SearchParameter": {
+        "Type": "ITEM",
+        "Name": "Any axe",
+        "Parameter": "MATCH:AXE"
+      }
+    },
+    {
+      "Slot": 18,
+      "Item": {
+        "Material": "FEATHER",
+        "DisplayName": "&7Previous page"
+      },
+      "Flags": [
+        "CONNECTING_INV:startinginventory"
+      ]
+    },
+    {
+      "Slot": 22,
+      "Item": {
+        "Material": "FEATHER",
+        "DisplayName": "&cSearch"
+      },
+      "Flags": [
+        "SEARCH"
+      ]
+    }
+  ]
+}

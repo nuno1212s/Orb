@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Custom inventory class
+ * Custom inventorylisteners class
  */
 public class CInventory {
 

@@ -17,13 +17,37 @@ public class ItemSearchParameter extends SearchParameter {
 
     private Material material;
 
+    private String match;
+
     public ItemSearchParameter(String name, String param) {
         super(name);
-        material = Material.getMaterial(param);
+
+        if (param.startsWith("MATCH")) {
+            match = param.split(":")[1];
+
+            for (Material material1 : Material.values()) {
+                if (material1.name().contains(match)) {
+                    material = material1;
+                    break;
+                }
+            }
+
+            if (material == null) {
+                material = Material.AIR;
+            }
+        } else {
+            material = Material.getMaterial(param);
+        }
+
     }
 
     @Override
     public boolean fitsSearch(Item item) {
+        if (match != null) {
+            System.out.println(match);
+            return item.getItem().getType().name().contains(match);
+        }
+        System.out.println("eksde");
         return item.getItem().getType() == this.material;
     }
 
@@ -31,7 +55,12 @@ public class ItemSearchParameter extends SearchParameter {
     public ItemStack formatItem(JSONObject item) {
         Map<String, Object> itemData = new HashMap<>(item);
         String material = ((String) item.get("Material")).replace("%material%", this.material.name());
-        item.put("Material", material);
+        itemData.put("Material", material);
         return new SerializableItem(new JSONObject(itemData));
+    }
+
+    @Override
+    public SearchParameters getParameterType() {
+        return SearchParameters.ITEM;
     }
 }

@@ -1,0 +1,75 @@
+{
+  "InventoryName": "&cSwords Inventory",
+  "InventorySize": 27,
+  "InventoryID": "swords",
+  "InventoryItems": [
+    {
+      "Slot": "11-15",
+      "Item": {
+        "Material": "%material%"
+      },
+      "SearchParameter": [
+        {
+          "Type": "ITEM",
+          "Name": "Diamond Sword",
+          "Parameter": "DIAMOND_SWORD"
+        },
+        {
+          "Type": "ITEM",
+          "Name": "Iron Sword",
+          "Parameter": "IRON_SWORD"
+        },
+        {
+          "Type": "ITEM",
+          "Name": "Gold Sword",
+          "Parameter": "GOLD_SWORD"
+        },
+        {
+          "Type": "ITEM",
+          "Name": "Stone Sword",
+          "Parameter": "STONE_SWORD"
+        },
+        {
+          "Type": "ITEM",
+          "Name": "Wood Sword",
+          "Parameter": "WOOD_SWORD"
+        }
+      ]
+    },
+    {
+      "Slot": 17,
+      "Item": {
+        "Material": "WOOD_SWORD",
+        "DisplayName": "&7Any Sword",
+        "Lore": [
+          "&cSelect any sword"
+        ]
+      },
+      "SearchParameter": {
+        "Type": "ITEM",
+        "Name": "Any sword",
+        "Parameter": "MATCH:SWORD"
+      }
+    },
+    {
+      "Slot": 18,
+      "Item": {
+        "Material": "FEATHER",
+        "DisplayName": "&7Previous page"
+      },
+      "Flags": [
+        "CONNECTING_INV:startinginventory"
+      ]
+    },
+    {
+      "Slot": 22,
+      "Item": {
+        "Material": "FEATHER",
+        "DisplayName": "&cSearch"
+      },
+      "Flags": [
+        "SEARCH"
+      ]
+    }
+  ]
+}

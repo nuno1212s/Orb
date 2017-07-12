@@ -90,12 +90,12 @@ public abstract class Module {
 
         if (!file.exists()) {
             if (isResource) {
-                if (fileName.contains(File.separator)) {
+                /*if (fileName.contains(File.separator)) {
                     String[] split = fileName.split(File.separator);
                     saveResource(file, split[split.length - 1]);
-                } else {
+                } else {*/
                     saveResource(file, fileName);
-                }
+                //}
             } else {
                 try {
                     file.createNewFile();

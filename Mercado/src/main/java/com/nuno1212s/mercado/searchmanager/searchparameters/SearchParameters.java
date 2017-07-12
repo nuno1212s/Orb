@@ -5,11 +5,13 @@ import com.nuno1212s.mercado.searchmanager.SearchParameter;
 import java.lang.reflect.InvocationTargetException;
 
 /**
- * Search paramaters
+ * Search parameters
  */
 public enum SearchParameters {
 
-    ITEM(ItemSearchParameter.class);
+    ITEM(ItemSearchParameter.class),
+    ENCHANT(EnchantmentSearchParameter.class),
+    CURRENCY(CurrencySearchParameter.class);
 
     Class<? extends SearchParameter> pClass;
 

@@ -1,0 +1,87 @@
+{
+  "InventoryName": "&cEnchantments",
+  "InventorySize": 54,
+  "InventoryID": "enchantments",
+  "InventoryItems": [
+    {
+      "Slot": 49,
+      "Item": {
+        "Material": "FEATHER",
+        "DisplayName": "&cSearch"
+      },
+      "Flags": [
+        "SEARCH"
+      ]
+    },
+    {
+      "Slot": 45,
+      "Item": {
+        "Material": "FEATHER",
+        "DisplayName": "&7Previous page"
+      },
+      "Flags": [
+        "CONNECTING_INV:startinginventory"
+      ]
+    },
+    {
+      "Slot": 11,
+      "Item": {
+        "Material": "BOOK",
+        "DisplayName": "&8Efficiency"
+      },
+      "Flags": [
+        "CONNECTING_INV:efficiency"
+      ]
+    },
+    {
+      "Slot": 13,
+      "Item": {
+        "Material": "BOOK",
+        "DisplayName": "&8Unbreaking"
+      },
+      "Flags": [
+        "CONNECTING_INV:unbreaking"
+      ]
+    },
+    {
+      "Slot": 15,
+      "Item": {
+        "Material": "BOOK",
+        "DisplayName": "&8Sharpness"
+      },
+      "Flags": [
+        "CONNECTING_INV:sharpness"
+      ]
+    },
+    {
+      "Slot": 19,
+      "Item": {
+        "Material": "BOOK",
+        "DisplayName": "&8Flame"
+      },
+      "Flags": [
+        "CONNECTING_INV:flame"
+      ]
+    },
+    {
+      "Slot": 23,
+      "Item": {
+        "Material": "BOOK",
+        "DisplayName": "&8Looting"
+      },
+      "Flags": [
+        "CONNECTING_INV:looting"
+      ]
+    },
+    {
+      "Slot": 21,
+      "Item": {
+        "Material": "BOOK",
+        "DisplayName": "&8Fortune"
+      },
+      "Flags": [
+        "CONNECTING_INV:fortune"
+      ]
+    }
+  ]
+}

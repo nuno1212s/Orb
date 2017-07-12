@@ -8,7 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 
 /**
- * Handles player close inventory events
+ * Handles player close inventorylisteners events
  */
 public class PlayerCloseInventoryListener implements Listener {
 

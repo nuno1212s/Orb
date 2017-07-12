@@ -1,0 +1,76 @@
+{
+  "InventoryName": "&cFire Aspect Inventory",
+  "InventorySize": 27,
+  "InventoryID": "fireaspect",
+  "InventoryItems": [
+    {
+      "Slot": "11-15",
+      "Item": {
+        "Material": "BOOK",
+        "DisplayName": "&7Fire Aspect %level%"
+      },
+      "SearchParameter": [
+        {
+          "Type": "ENCHANT",
+          "Name": "Fire Aspect I",
+          "Parameter": "FIRE_ASPECT:1"
+        },
+        {
+          "Type": "ENCHANT",
+          "Name": "Fire Aspect II",
+          "Parameter": "FIRE_ASPECT:2"
+        },
+        {
+          "Type": "ENCHANT",
+          "Name": "Fire Aspect III",
+          "Parameter": "FIRE_ASPECT:3"
+        },
+        {
+          "Type": "ENCHANT",
+          "Name": "Fire Aspect IV",
+          "Parameter": "FIRE_ASPECT:4"
+        },
+        {
+          "Type": "ENCHANT",
+          "Name": "Fire Aspect V",
+          "Parameter": "FIRE_ASPECT:5"
+        }
+      ]
+    },
+    {
+      "Slot": 17,
+      "Item": {
+        "Material": "BOOK",
+        "DisplayName": "&7Fire Aspect",
+        "Lore": [
+          "&cAny level of Fire Aspect"
+        ]
+      },
+      "SearchParameter": {
+        "Type": "ENCHANT",
+        "Name": "Fire Aspect",
+        "Parameter": "FIRE_ASPECT"
+      }
+    },
+    {
+      "Slot": 18,
+      "Item": {
+        "Material": "FEATHER",
+        "DisplayName": "&7Previous page"
+      },
+      "Flags": [
+        "CONNECTING_INV:enchantments"
+      ]
+    },
+    {
+      "Slot": 22,
+      "Item": {
+        "Material": "FEATHER",
+        "DisplayName": "&cSearch"
+      },
+      "Flags": [
+        "SEARCH"
+      ]
+    }
+  ]
+}

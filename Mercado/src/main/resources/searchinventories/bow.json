@@ -1,0 +1,27 @@
+{
+  "InventoryName": "&cBow inventory",
+  "InventorySize": 27,
+  "InventoryID": "bow",
+  "InventoryItems": [
+    {
+      "Slot": 11,
+      "Item": {
+        "Material": "BOW",
+        "DisplayName": "&cBow"
+      },
+      "SearchParameter": {
+        "Type": "ITEM",
+        "Name": "Bow",
+        "Parameter": "BOW"
+      }
+    },
+    {
+      "Slot": 15,
+      "Item": {
+        "Material": "BOOK",
+        "DisplayName": "&cBow enchantments"
+      },
+      "Flags": ["CONNECTING_INV:bowenchants"]
+    }
+  ]
+}

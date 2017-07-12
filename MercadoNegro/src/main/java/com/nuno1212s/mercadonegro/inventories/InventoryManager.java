@@ -26,7 +26,7 @@ public class InventoryManager {
     private Map<Integer, CInventory> inventories;
 
     /**
-     * Integer - The distance to the last slot of the inventory (slot = Inventory.size() - Pair.getKey())
+     * Integer - The distance to the last slot of the inventorylisteners (slot = Inventory.size() - Pair.getKey())
      */
     @Getter
     private Pair<Integer, ItemStack> previousPageItem, nextPageItem;

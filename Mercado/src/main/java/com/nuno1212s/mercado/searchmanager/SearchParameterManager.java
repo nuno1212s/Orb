@@ -1,6 +1,7 @@
 package com.nuno1212s.mercado.searchmanager;
 
 import com.nuno1212s.mercado.marketmanager.Item;
+import com.nuno1212s.mercado.searchmanager.searchparameters.SearchParameters;
 import com.nuno1212s.mercado.util.searchinventories.SInventoryData;
 import com.nuno1212s.modulemanager.Module;
 import org.bukkit.inventory.Inventory;
@@ -33,7 +34,14 @@ public class SearchParameterManager {
         this.m = m;
         searchParametersPlayer = new HashMap<>();
         inventories = new ArrayList<>();
+
+        File file = new File(m.getDataFolder() + File.separator + "searchinventories" + File.separator);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+
         loadParameters(m.getFile("searchparameters.json", true));
+
     }
 
     public void loadParameters(File f) {
@@ -56,7 +64,17 @@ public class SearchParameterManager {
     }
 
     SInventoryData loadInventory(String inventoryName) {
-        File f = m.getFile("searchinventories" + File.separator + inventoryName + ".json", true);
+        String replace = inventoryName.replace("/", File.separator);
+        String[] split = replace.split(File.separator);
+
+        if (split.length > 1) {
+            File f2 = new File(m.getDataFolder() + File.separator + "searchinventories" + File.separator + split[0]);
+            if (!f2.exists()) {
+                f2.mkdirs();
+            }
+        }
+
+        File f = m.getFile("searchinventories" + File.separator + replace + ".json", true);
 
         JSONObject json;
 
@@ -77,6 +95,25 @@ public class SearchParameterManager {
                 return datum;
             }
         }
+
+        if (landingInventory.getInventoryID().equalsIgnoreCase(inventoryID)) {
+            return landingInventory;
+        }
+
+        return null;
+    }
+
+    public SInventoryData getInventoryByName(String inventoryName) {
+        for (SInventoryData datum : this.inventories) {
+            if (datum.getInventoryName().equalsIgnoreCase(inventoryName)) {
+                return datum;
+            }
+        }
+
+        if (landingInventory.getInventoryName().equalsIgnoreCase(inventoryName)) {
+            return landingInventory;
+        }
+
         return null;
     }
 
@@ -90,6 +127,21 @@ public class SearchParameterManager {
             SearchParameterBuilder newBuilder = SearchParameterBuilder.builder();
             this.searchParametersPlayer.put(player, newBuilder);
             inventory = this.landingInventory.buildInventory(newBuilder);
+        }
+
+        return inventory;
+    }
+
+    public Inventory getSearchParameterInventory(UUID player, SInventoryData inventoryData) {
+
+        Inventory inventory;
+
+        if (this.searchParametersPlayer.containsKey(player)) {
+            inventory = inventoryData.buildInventory(this.searchParametersPlayer.get(player));
+        } else {
+            SearchParameterBuilder newBuilder = SearchParameterBuilder.builder();
+            this.searchParametersPlayer.put(player, newBuilder);
+            inventory = inventoryData.buildInventory(newBuilder);
         }
 
         return inventory;
@@ -113,13 +165,50 @@ public class SearchParameterManager {
         return builder.build();
     }
 
+    public SearchParameterBuilder getSearchParameterBuilder(UUID player) {
+        if (searchParametersPlayer.containsKey(player)) {
+            return searchParametersPlayer.get(player);
+        }
+
+        SearchParameterBuilder builder = SearchParameterBuilder.builder();
+        this.searchParametersPlayer.put(player, builder);
+        return builder;
+    }
+
     public boolean fitsSearch(Item item, SearchParameter[] parameters) {
-        for (SearchParameter searchParameter : parameters) {
-            if (!searchParameter.fitsSearch(item)) {
-                return false;
+
+        //Fits all mode of search
+        /*if (player.isFitsAll()) {
+            for (SearchParameter parameter : parameters) {
+                if (!parameter.fitsSearch(item)) {
+                    return false;
+                }
+            }
+        }*/
+
+        //Fits any mode of search
+        if (parameters.length != 0) {
+            for (SearchParameters parameter : SearchParameters.values()) {
+                if (!fitsSearchType(parameter, parameters, item)) {
+                    return false;
+                }
             }
         }
+
         return true;
+    }
+
+    private boolean fitsSearchType(SearchParameters type, SearchParameter[] parameters, Item item) {
+        int amountOfParameters = 0;
+        for (SearchParameter parameter : parameters) {
+            if (type == parameter.getParameterType()) {
+                amountOfParameters++;
+                if (parameter.fitsSearch(item)) {
+                    return true;
+                }
+            }
+        }
+        return amountOfParameters == 0;
     }
 
     public ItemStack buildItem(ItemStack item, UUID player) {
@@ -135,6 +224,7 @@ public class SearchParameterManager {
     public ItemStack buildItem(ItemStack item, SearchParameter[] parameters) {
         ItemMeta itemMeta = item.getItemMeta();
         List<String> lore = itemMeta.getLore();
+        lore.add("");
         for (SearchParameter parameter : parameters) {
             lore.add(parameter.getName());
         }

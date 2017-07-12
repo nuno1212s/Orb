@@ -12,7 +12,7 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 
 /**
- * Landing inventory listener
+ * Landing inventorylisteners listener
  */
 public class LandingInventoryListener implements Listener {
 

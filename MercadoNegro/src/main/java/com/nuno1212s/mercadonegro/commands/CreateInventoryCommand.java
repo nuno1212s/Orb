@@ -9,7 +9,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 /**
- * Create inventory command
+ * Create inventorylisteners command
  */
 public class CreateInventoryCommand implements Command {
 
@@ -57,6 +57,6 @@ public class CreateInventoryCommand implements Command {
 
         CInventory inventory = new CInventory(iN, inventorySize, new Item[inventorySize]);
         int page = Main.getIns().getInventoryManager().addInventory(inventory);
-        player.sendMessage(ChatColor.GREEN + "You have successfully created the inventory. Page " + page);
+        player.sendMessage(ChatColor.GREEN + "You have successfully created the inventorylisteners. Page " + page);
     }
 }

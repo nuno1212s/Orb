@@ -1,0 +1,76 @@
+{
+  "InventoryName": "&cPower Inventory",
+  "InventorySize": 27,
+  "InventoryID": "power",
+  "InventoryItems": [
+    {
+      "Slot": "11-15",
+      "Item": {
+        "Material": "BOOK",
+        "DisplayName": "&7Power %level%"
+      },
+      "SearchParameter": [
+        {
+          "Type": "ENCHANT",
+          "Name": "Power I",
+          "Parameter": "POWER:1"
+        },
+        {
+          "Type": "ENCHANT",
+          "Name": "Power II",
+          "Parameter": "POWER:2"
+        },
+        {
+          "Type": "ENCHANT",
+          "Name": "Power III",
+          "Parameter": "POWER:3"
+        },
+        {
+          "Type": "ENCHANT",
+          "Name": "Power IV",
+          "Parameter": "POWER:4"
+        },
+        {
+          "Type": "ENCHANT",
+          "Name": "Power V",
+          "Parameter": "POWER:5"
+        }
+      ]
+    },
+    {
+      "Slot": 17,
+      "Item": {
+        "Material": "BOOK",
+        "DisplayName": "&7Power",
+        "Lore": [
+          "&cAny level of Power"
+        ]
+      },
+      "SearchParameter": {
+        "Type": "ENCHANT",
+        "Name": "Fortune",
+        "Parameter": "POWER"
+      }
+    },
+    {
+      "Slot": 18,
+      "Item": {
+        "Material": "FEATHER",
+        "DisplayName": "&7Previous page"
+      },
+      "Flags": [
+        "CONNECTING_INV:bowenchants"
+      ]
+    },
+    {
+      "Slot": 22,
+      "Item": {
+        "Material": "FEATHER",
+        "DisplayName": "&cSearch"
+      },
+      "Flags": [
+        "SEARCH"
+      ]
+    }
+  ]
+}

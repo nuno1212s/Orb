@@ -15,7 +15,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import java.util.UUID;
 
 /**
- * Listens to inventory events
+ * Listens to inventorylisteners events
  */
 public class OwnInventoryListener extends InventoryListener {
 
