@@ -8,10 +8,13 @@ import lombok.Setter;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONObject;
 
 import java.io.IOException;
+import java.io.StringReader;
 
 /**
  * Sell sign
@@ -34,15 +37,12 @@ public class StoreSign {
     private boolean canSell, canBuy;
 
     public StoreSign(JSONObject object) {
-        this.id = (Integer) object.get("ID");
-        try {
-            this.item = ItemUtils.itemFrom64("Item");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.id = ((Long) object.get("ID")).intValue();
+        YamlConfiguration item = YamlConfiguration.loadConfiguration(new StringReader((String) object.get("Item")));
+        this.item = item.getItemStack("Item");
         this.l = new SerializableLocation((JSONObject) object.get("Location"));
-        this.price = (Integer) object.get("Price");
-        this.sellPrice = (Integer) object.get("SellPrice");
+        this.price = ((Long) object.get("Price")).intValue();
+        this.sellPrice = ((Long) object.get("SellPrice")).intValue();
         this.canSell = (Boolean) object.get("CanSell");
         this.canBuy = (Boolean) object.get("CanBuy");
     }
@@ -58,9 +58,7 @@ public class StoreSign {
 
     public boolean equalsLocation(Location location) {
         return l.getWorld().getName().equalsIgnoreCase(location.getWorld().getName())
-                && l.getBlockX() == location.getBlockX()
-                && l.getBlockY() == location.getBlockY()
-                && l.getBlockZ() == location.getBlockZ();
+                && l.distanceSquared(location) < 1;
     }
 
     @Override
@@ -85,7 +83,7 @@ public class StoreSign {
                 state.setLine(3, MainData.getIns().getMessageManager().getMessage("SIGNS_BUY_SELL_PRICE")
                         .format("%buyPrice%", String.valueOf(getPrice()))
                         .format("%sellPrice%", String.valueOf(getSellPrice())).toString());
-            } else if (this.isCanBuy() && ! this.isCanSell()) {
+            } else if (this.isCanBuy() && !this.isCanSell()) {
                 state.setLine(3, MainData.getIns().getMessageManager().getMessage("SIGNS_BUY_PRICE")
                         .format("%buyPrice%", String.valueOf(getPrice())).toString());
             } else {
@@ -100,7 +98,9 @@ public class StoreSign {
     public JSONObject save(JSONObject object) {
 
         object.put("ID", id);
-        object.put("Item", ItemUtils.itemTo64(item));
+        FileConfiguration fc = new YamlConfiguration();
+        fc.set("Item", item);
+        object.put("Item", fc.saveToString());
         JSONObject location = new JSONObject();
         new SerializableLocation(l).save(location);
         object.put("Location", location);

@@ -4,6 +4,6 @@
   "SIGNS_BUY_SELL_PRICE": "B%buyPrice% | S%sellPrice%",
   "SIGNS_BUY_PRICE": "B %buyPrice%",
   "SIGNS_SELL_PRICE": "S %sellPrice%",
-  "SOLD_ITEM": {"ACTION_BAR": "&7You sold &c%amount% &7items for &e%price% coins", "TEXT": "&7You sold &c%amount% &7items for &e%price% coins"},
-  "BOUGHT_ITEM": {"ACTION_BAR": "&7You bought the item for &e%price% coins", "TEXT": "&7You bought the item for &e%price% coins"}
+  "SOLD_ITEM_S": {"ACTION_BAR": "&7You sold &c%amount% &7items for &e%price% coins", "TEXT": "&7You sold &c%amount% &7items for &e%price% coins"},
+  "BOUGHT_ITEM_S": {"ACTION_BAR": "&7You bought the item for &e%price% coins", "TEXT": "&7You bought the item for &e%price% coins"}
 }

@@ -42,7 +42,11 @@ public class RankMultipliers {
     }
 
     public double getRankMultiplier(short groupID) {
-        return rankMultipliers.get(groupID);
+        if (rankMultipliers.containsKey(groupID)) {
+            return rankMultipliers.get(groupID);
+        } else {
+            return 0;
+        }
     }
 
 }

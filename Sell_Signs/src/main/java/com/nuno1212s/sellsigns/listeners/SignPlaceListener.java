@@ -36,7 +36,7 @@ public class SignPlaceListener implements Listener {
                 }
 
                 int nextID = Main.getIns().getSignManager().getNextID();
-                StoreSign sign = new StoreSign(nextID, e.getBlock().getLocation().clone(), sellPrice, buyPrice, canSell, canBuy);
+                StoreSign sign = new StoreSign(nextID, e.getBlock().getLocation().clone(), buyPrice, sellPrice, canSell, canBuy);
                 Main.getIns().getSignManager().addSign(sign);
                 e.getPlayer().sendMessage(ChatColor.RED + "You created a store sign");
             }

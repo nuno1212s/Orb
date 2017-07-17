@@ -55,7 +55,8 @@ public class ItemUtils {
 
     public static String itemTo64(ItemStack stack) throws IllegalStateException {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-             BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream);){
+             BukkitObjectOutputStream dataOutput = new BukkitObjectOutputStream(outputStream)){
+
             dataOutput.writeObject(stack);
 
             // Serialize that array

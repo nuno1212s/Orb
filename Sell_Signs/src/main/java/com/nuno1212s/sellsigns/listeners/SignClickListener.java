@@ -32,13 +32,13 @@ public class SignClickListener implements Listener {
 
                 e.setCancelled(true);
                 if (e.getAction() == Action.LEFT_CLICK_BLOCK && sign.isCanSell()) {
-                    //TODO: Handle selling
 
                     int price = sign.getSellPrice();
 
                     PlayerData d = MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
 
-                    int finalPrice = (int) Math.floor((double) price * Main.getIns().getRankMultipliers().getRankMultiplier(d)),
+                    double rankMultiplier = Main.getIns().getRankMultipliers().getRankMultiplier(d);
+                    int finalPrice = (int) Math.floor((double) price * rankMultiplier),
                             perItemPrice = (int) Math.floor((double) finalPrice / (double) sign.getItem().getAmount());
 
                     int amount;
@@ -49,19 +49,23 @@ public class SignClickListener implements Listener {
                         amount = 0;
                         if (p.containsAtLeast(sign.getItem(), 1)) {
                             for (ItemStack itemStack : p.getContents()) {
+                                if (itemStack == null || itemStack.getType() == Material.AIR) {
+                                    continue;
+                                }
                                 if (itemStack.isSimilar(sign.getItem())) {
                                    amount += itemStack.getAmount();
+                                   p.removeItem(itemStack);
                                 }
                             }
                         }
 
-                        p.remove(sign.getItem());
 
                         int coins = perItemPrice * amount;
 
                         MainData.getIns().getServerCurrencyHandler().addCurrency(d, coins);
-                        MainData.getIns().getMessageManager().getMessage("SOLD_ITEM").format("%price%", String.valueOf(coins))
-                                .format("%amount%", String.valueOf(amount)).sendTo(e.getPlayer());
+                        MainData.getIns().getEventCaller().callUpdateInformationEvent(d);
+                        MainData.getIns().getMessageManager().getMessage("SOLD_ITEM_S").format("%price%", String.valueOf(coins))
+                                .format("%amount%", String.valueOf(amount)).format("%multiplier%", String.format("%.2f", rankMultiplier)).sendTo(e.getPlayer());
 
                     } else {
                         ItemStack item = sign.getItem();
@@ -70,15 +74,16 @@ public class SignClickListener implements Listener {
                             int coinsToAdd = perItemPrice * item.getAmount();
                             p.removeItem(item);
                             MainData.getIns().getServerCurrencyHandler().addCurrency(d, coinsToAdd);
-                            MainData.getIns().getMessageManager().getMessage("SOLD_ITEM").format("%price%", String.valueOf(coinsToAdd))
-                                    .format("%amount%", String.valueOf(item.getAmount())).sendTo(e.getPlayer());
+                            MainData.getIns().getEventCaller().callUpdateInformationEvent(d);
+                            MainData.getIns().getMessageManager().getMessage("SOLD_ITEM_S").format("%price%", String.valueOf(coinsToAdd))
+                                    .format("%amount%", String.valueOf(item.getAmount()))
+                                    .format("%multiplier%", String.format("%.2f", rankMultiplier)).sendTo(e.getPlayer());
                             return;
                         }
 
                     }
 
-                } else if (e.getAction() == Action.RIGHT_CLICK_BLOCK && sign.isCanBuy()) {
-                    //TODO: Handle buying
+                } else if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
 
                     if (e.getPlayer().isSneaking()) {
                         if (Main.getIns().getSignManager().isEditing(e.getPlayer().getUniqueId())) {
@@ -86,22 +91,26 @@ public class SignClickListener implements Listener {
                                 ItemStack itemInHand = e.getPlayer().getItemInHand();
 
                                 sign.setItem(itemInHand.clone());
+                                sign.updateName();
                                 e.getPlayer().sendMessage(ChatColor.RED + "Store item set to the item in your hand");
                                 return;
                             }
                         }
                     }
 
-                    int price = sign.getPrice();
+                    if (sign.isCanBuy()) {
+                        int price = sign.getPrice();
 
-                    PlayerData d = MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
+                        PlayerData d = MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
 
-                    if (MainData.getIns().getServerCurrencyHandler().removeCurrency(d, price)) {
-                        e.getPlayer().getInventory().addItem(sign.getItem().clone());
-                        MainData.getIns().getMessageManager().getMessage("BOUGHT_ITEM").format("%price%", String.valueOf(price))
-                                .send(e.getPlayer());
-                    } else {
-                        MainData.getIns().getMessageManager().getMessage("NO_COINS").sendTo(e.getPlayer());
+                        if (MainData.getIns().getServerCurrencyHandler().removeCurrency(d, price)) {
+                            MainData.getIns().getEventCaller().callUpdateInformationEvent(d);
+                            e.getPlayer().getInventory().addItem(sign.getItem().clone());
+                            MainData.getIns().getMessageManager().getMessage("BOUGHT_ITEM_S").format("%price%", String.valueOf(price))
+                                    .send(e.getPlayer());
+                        } else {
+                            MainData.getIns().getMessageManager().getMessage("NO_COINS").sendTo(e.getPlayer());
+                        }
                     }
 
                 }

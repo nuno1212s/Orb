@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.nuno1212s</groupId>
-    <artifactId>Sell Signs</artifactId>
+    <artifactId>Sell_Signs</artifactId>
     <version>0.1-ALPHA</version>
 
     <dependencies>
@@ -54,7 +54,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <finalName>Mercado</finalName>
+                    <finalName>Sell_Signs</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
