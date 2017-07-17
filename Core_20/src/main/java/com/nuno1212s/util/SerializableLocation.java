@@ -3,6 +3,7 @@ package com.nuno1212s.util;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
+import org.json.simple.JSONObject;
 
 /**
  * Serializable location
@@ -26,12 +27,27 @@ public class SerializableLocation extends Location {
     public SerializableLocation(ConfigurationSection cs) {
         super(Bukkit.getWorld(cs.getString("World", "world")), cs.getDouble("X"), cs.getDouble("Y"), cs.getDouble("Z"));
     }
+
+    public SerializableLocation(JSONObject object) {
+        super(null, 0, 0, 0);
+        this.setWorld(Bukkit.getWorld((String) object.get("World")));
+        this.setX((Double) object.get("X"));
+        this.setY((Double) object.get("Y"));
+        this.setZ((Double) object.get("Z"));
+    }
     
     public String toString() {
         int blockX = this.getBlockX();
         int blockY = this.getBlockY();
         int blockZ = this.getBlockZ();
         return this.getWorld().getName() + "," + String.valueOf(blockX) + "," + String.valueOf(blockY) + "," + String.valueOf(blockZ);
+    }
+
+    public void save(JSONObject object) {
+        object.put("World", this.getWorld().getName());
+        object.put("X", this.getX());
+        object.put("Y", this.getY());
+        object.put("Z", this.getZ());
     }
 
     public void save(ConfigurationSection cs) {
