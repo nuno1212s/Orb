@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.nuno1212s</groupId>
-    <artifactId>Sell_Signs</artifactId>
-    <version>1.0-BETA</version>
+    <artifactId>Ferreiro</artifactId>
+    <version>0.1-ALPHA</version>
 
     <dependencies>
         <dependency>
@@ -29,7 +29,6 @@
             <version>LATEST</version>
             <scope>provided</scope>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -54,7 +53,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <finalName>Sell_Signs</finalName>
+                    <finalName>Ferreiro</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
