@@ -11,7 +11,7 @@ public class RepairCost {
         if (repairTimes < 7) {
             return new Pair<>((int) (500 * Math.pow(2, repairTimes)), false);
         } else {
-            return new Pair<>((int) 25 + 10 * (repairTimes), false);
+            return new Pair<>((int) 25 + 10 * (repairTimes), true);
         }
     }
 

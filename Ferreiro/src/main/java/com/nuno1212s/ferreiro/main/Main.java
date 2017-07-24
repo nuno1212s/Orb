@@ -4,6 +4,7 @@ import com.nuno1212s.ferreiro.commands.RepairCommand;
 import com.nuno1212s.ferreiro.inventories.ConfirmInventory;
 import com.nuno1212s.ferreiro.listeners.ConfirmInventoryListener;
 import com.nuno1212s.main.BukkitMain;
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.modulemanager.ModuleData;
 import lombok.Getter;
@@ -28,7 +29,9 @@ public class Main extends Module {
         ins = this;
         inventories = new HashMap<>();
 
-        registerCommand(new String[]{"repair"}, new RepairCommand());
+        registerCommand(new String[]{"repairitem", "repair"}, new RepairCommand());
+
+        MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));
 
         BukkitMain ins = BukkitMain.getIns();
 

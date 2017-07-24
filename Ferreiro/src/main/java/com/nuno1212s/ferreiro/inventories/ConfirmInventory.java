@@ -30,7 +30,7 @@ public class ConfirmInventory {
         ItemStack confirmItem = new ItemStack(Material.WOOL, 1, (short) 5);
         ItemMeta itemMeta = confirmItem.getItemMeta();
         itemMeta.setDisplayName(ChatColor.GREEN + "Confirma");
-        itemMeta.setLore(Collections.singletonList(ChatColor.GRAY + "Custo: " + ChatColor.YELLOW + cost + " " + ChatColor.GRAY + (cost.getValue() ? "cash" : "coins")));
+        itemMeta.setLore(Collections.singletonList(ChatColor.GRAY + "Custo: " + ChatColor.YELLOW + cost.getKey() + " " + ChatColor.GRAY + (cost.getValue() ? "cash" : "coins")));
         confirmItem.setItemMeta(itemMeta);
         inv.setItem(11, confirmItem);
         ItemStack denyItem = new ItemStack(Material.WOOL, 1, (short) 14);

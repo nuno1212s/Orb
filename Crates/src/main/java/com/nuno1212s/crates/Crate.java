@@ -8,7 +8,10 @@ import com.nuno1212s.util.NBTDataStorage.NBTCompound;
 import com.nuno1212s.util.ServerCurrencyHandler;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -39,8 +42,6 @@ public class Crate {
 
 
         recalculateProbabilities();
-
-        System.out.println(rewards);
     }
 
     public void recalculateProbabilities() {
@@ -85,14 +86,14 @@ public class Crate {
 
     public void openCase(Player p) {
 
-        Animation animation = Main.getIns().getCrateManager().getAnimationManager().getRandomAnimation(this);
+        Animation animation = Main.getIns().getCrateManager().getAnimationManager().getRandomAnimation(this, p);
 
         Main.getIns().getCrateManager().getAnimationManager().registerAnimation(animation);
 
         p.openInventory(animation.getToEdit());
     }
 
-    public ItemStack getRandomReward() throws Exception {
+    public ItemStack getRandomReward() {
         Random r = new Random();
 
         double v = r.nextDouble() * 100, currently = 0;

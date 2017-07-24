@@ -41,14 +41,14 @@ public class AnimationManager {
         animations = new ArrayList<>();
 
         try {
-            animations.add(DefaultAnimation.class.getConstructor(Crate.class));
+            animations.add(DefaultAnimation.class.getConstructor(Crate.class, Player.class));
 
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
 
         timer = new AnimationTimer();
-        MainData.getIns().getScheduler().runTaskTimer(timer, 0, 10);
+        MainData.getIns().getScheduler().runTaskTimer(timer, 0, 1);
         this.animationStuff = animationStuff;
         showItems = new ArrayList<>();
 
@@ -97,9 +97,9 @@ public class AnimationManager {
         }
     }
 
-    public Animation getRandomAnimation(Crate c) {
+    public Animation getRandomAnimation(Crate c, Player p) {
         try {
-            return this.animations.get(random.nextInt(this.animations.size())).newInstance(c);
+            return this.animations.get(random.nextInt(this.animations.size())).newInstance(c, p);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
@@ -124,7 +124,13 @@ public class AnimationManager {
 
     public void cancelAnimation(Player p, Inventory i) {
         Animation animation = this.timer.getAnimation(i);
+
         this.timer.cancelAnimation(animation);
+
+        if (animation.isFinished()) {
+            return;
+        }
+
         Crate crate = animation.getCrate();
 
         ItemStack randomReward;

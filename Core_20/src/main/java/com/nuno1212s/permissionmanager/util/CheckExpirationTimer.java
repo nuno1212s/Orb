@@ -3,6 +3,7 @@ package com.nuno1212s.permissionmanager.util;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 
@@ -15,7 +16,11 @@ public class CheckExpirationTimer implements Runnable {
     public void run() {
         List<PlayerData> players = MainData.getIns().getPlayerManager().getPlayers();
         players.forEach(playerData -> {
-            playerData.checkExpiration(Bukkit.getPlayer(playerData.getPlayerID()));
+            Player player = Bukkit.getPlayer(playerData.getPlayerID());
+            if (player == null) {
+                return;
+            }
+            playerData.checkExpiration(player);
         });
     }
 }

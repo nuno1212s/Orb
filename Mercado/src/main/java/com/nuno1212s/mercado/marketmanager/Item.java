@@ -11,6 +11,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -137,7 +141,7 @@ public class Item {
         player.getInventory().addItem(this.getItem());
 
         Pair<PlayerData, Boolean> playerData = MainData.getIns().getPlayerManager().getOrLoadPlayer(player.getUniqueId());
-        if (playerData.getValue()) {
+        if (!playerData.getValue()) {
             PlayerData playerD = playerData.getKey();
             if (isServerCurrency()) {
                 if (MainData.getIns().hasServerCurrency()) {
@@ -146,13 +150,20 @@ public class Item {
             } else {
                 playerD.setCash(playerD.getCash() + getCost());
             }
-            MainData.getIns().getMessageManager().getMessage("SOLD_ITEM").sendTo(playerD);
+            MainData.getIns().getMessageManager().getMessage("SOLD_ITEM").format("%item%", getItemID()).sendTo(playerD);
+
         } else {
             //Player is offline or in another server
             //if the player is in another server, we must update that server as well
             PlayerData playerD = playerData.getKey();
 
-            playerD.setCash(playerD.getCash() + getCost());
+            if (isServerCurrency()) {
+                if (MainData.getIns().hasServerCurrency()) {
+                    MainData.getIns().getServerCurrencyHandler().addCurrency(playerD, getCost());
+                }
+            } else {
+                playerD.setCash(playerD.getCash() + getCost());
+            }
         }
 
     }

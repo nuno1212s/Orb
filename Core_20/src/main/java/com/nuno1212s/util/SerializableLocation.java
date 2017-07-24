@@ -26,6 +26,7 @@ public class SerializableLocation extends Location {
 
     public SerializableLocation(ConfigurationSection cs) {
         super(Bukkit.getWorld(cs.getString("World", "world")), cs.getDouble("X"), cs.getDouble("Y"), cs.getDouble("Z"));
+
     }
 
     public SerializableLocation(JSONObject object) {
@@ -34,6 +35,12 @@ public class SerializableLocation extends Location {
         this.setX((Double) object.get("X"));
         this.setY((Double) object.get("Y"));
         this.setZ((Double) object.get("Z"));
+        if (object.containsKey("Yaw")) {
+            this.setYaw(((Double) object.get("Yaw")).floatValue());
+        }
+        if (object.containsKey("Pitch")) {
+            this.setPitch(((Double) object.get("Pitch")).floatValue());
+        }
     }
     
     public String toString() {
@@ -48,6 +55,8 @@ public class SerializableLocation extends Location {
         object.put("X", this.getX());
         object.put("Y", this.getY());
         object.put("Z", this.getZ());
+        object.put("Yaw", this.getYaw());
+        object.put("Pitch", this.getPitch());
     }
 
     public void save(ConfigurationSection cs) {

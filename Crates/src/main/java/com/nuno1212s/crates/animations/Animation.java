@@ -3,6 +3,7 @@ package com.nuno1212s.crates.animations;
 import com.nuno1212s.crates.Crate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 /**
@@ -16,6 +17,12 @@ public abstract class Animation {
 
     @Getter
     protected Crate crate;
+
+    @Getter
+    protected boolean finished;
+
+    @Getter
+    protected Player player;
 
     /**
      * Run an animation cycle

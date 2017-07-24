@@ -41,23 +41,30 @@ public class RepairCommand implements CommandExecutor {
             }
 
             NBTCompound nbt = new NBTCompound(itemInHand);
+            int repairTimes;
 
-            int repairTimes = (int) nbt.getValues().get("RepairTimes");
+            if (nbt.getValues().containsKey("RepairTimes")) {
+                repairTimes = (int) nbt.getValues().get("RepairTimes");
+            } else {
+                repairTimes = 0;
+            }
 
             Pair<Integer, Boolean> repairCost = RepairCost.getRepairCost(repairTimes);
 
             PlayerData d = MainData.getIns().getPlayerManager().getPlayer(p.getUniqueId());
 
-            Main.getIns().addInventory(p.getUniqueId(), new ConfirmInventory(repairCost, itemInHand, (o) -> {
+            ConfirmInventory c = new ConfirmInventory(repairCost, itemInHand, (o) -> {
                 if (p.getItemInHand() == null || p.getItemInHand().getType() == Material.AIR || !p.getItemInHand().isSimilar(itemInHand)) {
                     MainData.getIns().getMessageManager().getMessage("REPAIR_ERROR").sendTo(p);
                     return;
                 }
+
                 if (repairCost.getValue()) {
                     d.setCash(d.getCash() - repairCost.getKey());
                 } else {
                     MainData.getIns().getServerCurrencyHandler().removeCurrency(d, repairCost.getKey());
                 }
+
                 itemInHand.setDurability((short) 0);
                 int repairtimes = repairTimes;
                 repairtimes++;
@@ -65,11 +72,15 @@ public class RepairCommand implements CommandExecutor {
                 nbtCompound.add("RepairTimes", repairtimes);
                 ItemStack write = nbtCompound.write(itemInHand);
                 p.setItemInHand(write);
-                MainData.getIns().getMessageManager().getMessage("REPAIRED_ITEM" + (repairCost.getValue() ? "_CASH" : "_COINS")).sendTo(p);
-            }));
+                MainData.getIns().getMessageManager()
+                        .getMessage("REPAIRED_ITEM" + (repairCost.getValue() ? "_CASH" : "_COINS"))
+                        .format("%price%", String.valueOf(repairCost.getKey())).sendTo(p);
+            });
+            Main.getIns().addInventory(p.getUniqueId(), c);
+            p.openInventory(c.getInv());
 
         }
-        return false;
+        return true;
     }
 
     boolean isTool(Material m) {

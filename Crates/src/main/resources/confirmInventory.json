@@ -1,0 +1,34 @@
+{
+  "InventoryName": "&cConfirm case opening",
+  "InventorySize": 27,
+  "InventoryItems": [
+    {
+      "Slot": 11,
+      "Item": {
+        "Material": "WOOL",
+        "Data": 5,
+        "DisplayName": "&aConfirm",
+        "Lore": [
+          "&7Cost: %cost%"
+        ]
+      },
+      "Flags": ["CONFIRM"]
+    },
+    {
+      "Slot": 13,
+      "Flags": ["SHOW_ITEM"]
+    },
+    {
+      "Slot": 15,
+      "Item": {
+        "Material": "WOOL",
+        "Data": 14,
+        "DisplayName": "&cCancel",
+        "Lore": [
+          "&cCancel"
+        ]
+      },
+      "Flags": ["CANCEL"]
+    }
+  ]
+}

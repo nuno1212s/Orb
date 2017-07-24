@@ -57,14 +57,9 @@ public class SellInventoryListener extends InventoryListener {
                 e.setResult(Event.Result.DENY);
             }
 
-            System.out.println(item);
-
             if (item.hasItemFlag("CURRENCY_TYPE")) {
-                System.out.println("wat");
 
                 ItemStack item1 = e.getCurrentItem();
-
-                System.out.println(item1);
 
                 if (item1.getType() == Main.getIns().getMarketManager().getCashItem().getType()) {
                     e.getClickedInventory().setItem(item.getSlot(), Main.getIns().getMarketManager().getCoinsItems().clone());
@@ -128,12 +123,17 @@ public class SellInventoryListener extends InventoryListener {
                         long cost;
                         try {
                             cost = Long.parseLong((String) args[0]);
+                            if (cost <= 0) {
+                                MainData.getIns().getMessageManager().getMessage("COST_MUST_BE_POSITIVE").sendTo(Bukkit.getPlayer(player));
+                                addCallback(player, item);
+                                return;
+                            }
                             item.setCost(cost);
                             Main.getIns().getMarketManager().addItem(item);
                             MainData.getIns().getMessageManager().getMessage("ANNOUNCED_ITEM")
                                     .format("%price%", NumberFormat.getInstance().format(cost))
                                     .format("%currency%", item.isServerCurrency() ? ChatColor.YELLOW + "coins" : ChatColor.GREEN + "cash").sendTo(Bukkit.getPlayer(player));
-                            System.out.println(item);
+
                             return;
                         } catch (NumberFormatException e) {}
                     }

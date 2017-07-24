@@ -3,13 +3,18 @@ package com.nuno1212s.crates;
 import com.nuno1212s.crates.animations.AnimationManager;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.util.SerializableLocation;
+import com.nuno1212s.util.inventories.InventoryData;
+import com.nuno1212s.util.inventories.InventoryItem;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.json.simple.JSONArray;
@@ -38,6 +43,9 @@ public class CrateManager {
     @Setter
     private ItemStack defaultKeyItem;
 
+    @Getter
+    private InventoryData confirmInventory;
+
     @SuppressWarnings("unchecked")
     public CrateManager(Module mainModule) {
 
@@ -46,6 +54,7 @@ public class CrateManager {
         this.crates = new ArrayList<>();
         this.crateFile = mainModule.getFile("crates.json", false);
         this.animationManager = new AnimationManager(mainModule.getFile("animationFile.json", false));
+        this.confirmInventory = new InventoryData(mainModule.getFile("confirmInventory.json", true));
 
         JSONObject obj;
 
@@ -164,6 +173,28 @@ public class CrateManager {
 
     }
 
+    public Inventory getConfirmInventory(Crate c) {
+        Inventory inventory = confirmInventory.buildInventory();
+
+        InventoryItem show_items = confirmInventory.getItemWithFlag("SHOW_ITEM");
+        inventory.setItem(show_items.getSlot(), c.formatKeyItem());
+
+        InventoryItem confirm = confirmInventory.getItemWithFlag("CONFIRM");
+        ItemStack item = confirm.getItem();
+        ItemMeta itemMeta = item.getItemMeta();
+        List<String> lore = new ArrayList<>();
+        for (String s : itemMeta.getLore()) {
+            lore.add(s.replace("%cost%", (c.isCash()
+                    ? ChatColor.GREEN + String.valueOf(c.getKeyCost()) + " cash"
+                    : ChatColor.YELLOW + String.valueOf(c.getKeyCost()) + " coins")));
+        }
+        itemMeta.setLore(lore);
+        item.setItemMeta(itemMeta);
+        inventory.setItem(confirm.getSlot(), item);
+
+        return inventory;
+    }
+
     public Crate getCrateAtLocation(Location l) {
         for (Map.Entry<Location, Crate> crateLocation : this.crateBlocks.entrySet()) {
             Location locations = crateLocation.getKey();
@@ -225,6 +256,15 @@ public class CrateManager {
     public Crate getCrate(String crateName) {
         for (Crate crate : this.crates) {
             if (crate.getCrateName().equalsIgnoreCase(crateName)) {
+                return crate;
+            }
+        }
+        return null;
+    }
+
+    public Crate getCrateForKey(ItemStack item) {
+        for (Crate crate : this.crates) {
+            if (crate.checkIsKey(item)) {
                 return crate;
             }
         }

@@ -70,8 +70,10 @@ public class Messages {
                     messages.add(new StringMessage((String) j.get(s)));
                 } else if (messageType == MessageType.JSON_TEXT) {
                     Object jsonObj = j.get(s);
-                    if (jsonObj instanceof JSONObject) {
-                        messages.add(new JSONMessage(JSONObject.toJSONString((Map) jsonObj)));
+                    if (jsonObj instanceof String) {
+                        messages.add(new JSONMessage((String) jsonObj));
+                    } else if (jsonObj instanceof JSONArray) {
+
                     }
                 } else if (messageType == MessageType.ACTION_BAR) {
                     Object message = j.get(s);
