@@ -5,6 +5,7 @@ import com.nuno1212s.rankup.main.Main;
 import com.nuno1212s.rankup.playermanager.RUPlayerData;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -24,6 +25,7 @@ public class PlayerJoinListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
+        //FIXME : Why so slow ?
         com.nuno1212s.displays.Main.getIns().getScoreboardManager().handlePlayerJoin(MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId()), e.getPlayer());
 
         //MainData.getIns().getMessageManager().getMessage("ON_JOIN").sendTo(e.getPlayer());

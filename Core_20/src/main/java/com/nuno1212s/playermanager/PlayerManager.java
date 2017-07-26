@@ -38,10 +38,11 @@ public class PlayerManager {
         return (PlayerData) this.cache.get(player);
     }
 
-    public void validatePlayerJoin(UUID player) {
+    public PlayerData validatePlayerJoin(UUID player) {
         PlayerData playerInfo = (PlayerData) this.cache.get(player);
         this.cache.remove(player);
         this.players.add(playerInfo);
+        return playerInfo;
     }
 
     public void removePlayer(PlayerData d) {

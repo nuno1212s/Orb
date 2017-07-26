@@ -21,14 +21,12 @@ public class PlayerPermissions {
         playerAttachments = new HashMap<>();
     }
 
-    public void injectPermission(Player p) {
+    public void injectPermission(Player p, PlayerData d) {
         PermissionAttachment pA = p.addAttachment(BukkitMain.getIns());
         this.playerAttachments.put(p.getUniqueId(), pA);
 
-        PlayerData player = MainData.getIns().getPlayerManager().getPlayer(p.getUniqueId());
-
-        Group globalGroup = MainData.getIns().getPermissionManager().getGroup(player.getGroupID()),
-                localGroup = MainData.getIns().getPermissionManager().getGroup(player.getServerGroup());
+        Group globalGroup = MainData.getIns().getPermissionManager().getGroup(d.getGroupID()),
+                localGroup = MainData.getIns().getPermissionManager().getGroup(d.getServerGroup());
 
         globalGroup.getPermissions().forEach(perm -> pA.setPermission(perm, true));
         if (localGroup != null) {

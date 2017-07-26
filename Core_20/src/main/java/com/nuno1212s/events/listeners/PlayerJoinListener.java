@@ -24,10 +24,13 @@ public class PlayerJoinListener implements Listener {
      */
     @EventHandler
     public void onPlayerLogin(AsyncPlayerPreLoginEvent e) {
+
         PlayerData coreData = MainData.getIns().getMySql().getPlayerData(e.getUniqueId(), e.getName());
+
         if (coreData == null) {
             coreData = new CorePlayerData(e.getUniqueId(), new PlayerGroupData(), e.getName(), 0, System.currentTimeMillis(), true);
         }
+
         CoreLoginEvent event = new CoreLoginEvent(e, coreData);
         Bukkit.getServer().getPluginManager().callEvent(event);
         //After the event being called, all the modules had the opportunity to modify the player data class
@@ -37,8 +40,8 @@ public class PlayerJoinListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoin(PlayerJoinEvent e) {
-        MainData.getIns().getPlayerManager().validatePlayerJoin(e.getPlayer().getUniqueId());
-        MainData.getIns().getPermissionManager().getPlayerPermissions().injectPermission(e.getPlayer());
+        PlayerData d = MainData.getIns().getPlayerManager().validatePlayerJoin(e.getPlayer().getUniqueId());
+        MainData.getIns().getPermissionManager().getPlayerPermissions().injectPermission(e.getPlayer(), d);
     }
 
 }

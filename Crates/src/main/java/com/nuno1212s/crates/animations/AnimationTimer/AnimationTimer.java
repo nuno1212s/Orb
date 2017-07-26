@@ -54,6 +54,10 @@ public class AnimationTimer implements Runnable {
 
     @Override
     public void run() {
+        if (animations.isEmpty()) {
+            return;
+        }
+
         synchronized (animations) {
             animations.removeIf(Animation::run);
         }

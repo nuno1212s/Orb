@@ -1,9 +1,11 @@
 package com.nuno1212s.rankup.main;
 
+import com.nuno1212s.displays.placeholders.PlaceHolderManager;
 import com.nuno1212s.main.BukkitMain;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.modulemanager.ModuleData;
+import com.nuno1212s.permissionmanager.Group;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.rankup.economy.CoinCommand;
 import com.nuno1212s.rankup.events.PlayerDisconnectListener;
@@ -11,6 +13,8 @@ import com.nuno1212s.rankup.events.PlayerJoinListener;
 import com.nuno1212s.rankup.events.PlayerUpdateListener;
 import com.nuno1212s.rankup.mysql.MySql;
 import com.nuno1212s.rankup.playermanager.RUPlayerData;
+import com.nuno1212s.rankup.rankup.RankUpCommand;
+import com.nuno1212s.rankup.rankup.RankUpManager;
 import com.nuno1212s.util.ServerCurrencyHandler;
 import lombok.Getter;
 
@@ -29,21 +33,46 @@ public class Main extends Module {
     @Getter
     MySql mysql;
 
+    @Getter
+    RankUpManager rankUpManager;
+
     @Override
     public void onEnable() {
         ins = this;
         mysql = new MySql();
         mysql.createTables();
+        rankUpManager = new RankUpManager(this);
 
         MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));
 
         registerServerEconomy();
 
-        com.nuno1212s.displays.Main.getIns().getPlaceHolderManager().registerPlaceHolder("%coins%", (d) ->
+        PlaceHolderManager placeHolderManager = com.nuno1212s.displays.Main.getIns().getPlaceHolderManager();
+
+        placeHolderManager.registerPlaceHolder("%coins%", (d) ->
                 NumberFormat.getInstance().format(((RUPlayerData) d).getCoins())
         );
 
+        placeHolderManager.registerPlaceHolder("%nextRank%", (d) -> {
+            short nextGroup = this.rankUpManager.getNextGroup(d.getServerGroup());
+
+            if (nextGroup == -1) {
+                return "N/A";
+            }
+
+            return MainData.getIns().getPermissionManager().getGroup(nextGroup).getGroupPrefix();
+        });
+
+        placeHolderManager.registerPlaceHolder("%progress%", (d) -> {
+            if (d instanceof RUPlayerData) {
+                return rankUpManager.getProgression((RUPlayerData) d);
+            } else {
+                return "N/A";
+            }
+        });
+
         registerCommand(new String[]{"coins", "coin"}, new CoinCommand());
+        registerCommand(new String[]{"rankup"}, new RankUpCommand());
 
         BukkitMain plugin = BukkitMain.getIns();
 
@@ -52,7 +81,12 @@ public class Main extends Module {
         plugin.getServer().getPluginManager().registerEvents(new PlayerDisconnectListener(), plugin);
     }
 
-    void registerServerEconomy() {
+    @Override
+    public void onDisable() {
+
+    }
+
+    private void registerServerEconomy() {
         MainData.getIns().setServerCurrencyHandler(new ServerCurrencyHandler() {
             @Override
             public long getCurrencyAmount(PlayerData playerData) {
@@ -82,8 +116,5 @@ public class Main extends Module {
         });
     }
 
-    @Override
-    public void onDisable() {
 
-    }
 }

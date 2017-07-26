@@ -21,7 +21,7 @@ public class MOTDCommand extends Command {
     @Override
     public void execute(CommandSender commandSender, String[] args) {
         if (args.length == 0) {
-            //TODO: Send usage
+            commandSender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "/motd <add/list/remove/addtimer>"));
             return;
         }
 

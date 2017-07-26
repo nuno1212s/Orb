@@ -1,10 +1,12 @@
 package com.nuno1212s.rankup.events;
 
 import com.nuno1212s.events.PlayerInformationUpdateEvent;
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.rankup.main.Main;
 import com.nuno1212s.rankup.playermanager.RUPlayerData;
 import com.nuno1212s.playermanager.PlayerData;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -16,7 +18,10 @@ public class PlayerUpdateListener implements Listener {
     @EventHandler
     public void onUpdate(PlayerInformationUpdateEvent e) {
         PlayerData player = e.getPlayer();
-        com.nuno1212s.displays.Main.getIns().getScoreboardManager().createScoreboard(player, Bukkit.getPlayer(player.getPlayerID()));
+        Player player1 = Bukkit.getPlayer(player.getPlayerID());
+        if (player1 != null) {
+            com.nuno1212s.displays.Main.getIns().getScoreboardManager().createScoreboard(player, player1);
+        }
     }
 
 }
