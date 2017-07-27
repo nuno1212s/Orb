@@ -27,6 +27,13 @@ public class GlobalClassLoader {
     }
 
     public void removeLoader(ModuleLoader loader) {
+
+        /**
+         * Remove all the classes from that module from the classes saved in the class loader
+         */
+
+        loader.getLocalClasses().keySet().forEach(classes::remove);
+
         this.loaders.remove(loader);
     }
 

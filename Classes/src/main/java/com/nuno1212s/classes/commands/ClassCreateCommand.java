@@ -21,7 +21,7 @@ public class ClassCreateCommand implements Command {
 
     @Override
     public String usage() {
-        return ChatColor.RED + "/class create <id> <className> <permission> <size> <delay>";
+        return ChatColor.RED + "/class create <id> <className> <permission> <size> <delay> <kitType>";
     }
 
     @Override
@@ -43,6 +43,12 @@ public class ClassCreateCommand implements Command {
 
         try {
             id = Integer.parseInt(args[1]);
+
+            if (id < 0) {
+                player.sendMessage(ChatColor.RED + "The kit ID must be positive");
+                return;
+            }
+
             size = Integer.parseInt(args[4]);
             if (size % 9 != 0) {
                 player.sendMessage(ChatColor.RED + "The kit size must be a multiple of 9");
@@ -67,7 +73,7 @@ public class ClassCreateCommand implements Command {
             return;
         }
 
-        Kit k = new Kit(id, className, permission, new ItemStack[size], new ItemStack(Material.AIR), delay * 1000);
+        Kit k = new Kit(id, className, permission, new ItemStack[size], delay * 1000);
         Main.getIns().getKitManager().addKit(k);
         player.sendMessage(ChatColor.GREEN + "Class created. ID: " + id);
     }

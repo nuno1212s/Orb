@@ -1,14 +1,10 @@
 package com.nuno1212s.classes.classmanager;
 
+import com.nuno1212s.classes.inventories.KInventoryData;
 import com.nuno1212s.modulemanager.Module;
 import lombok.Getter;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.io.BukkitObjectInputStream;
-import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -24,37 +20,50 @@ public class KitManager {
     private List<Kit> kits;
 
     @Getter
-    private File dataFile, inventoryFile;
+    private File dataFile;
 
-    @Getter
-    private DisplayInventory displayInventory;
+    private List<KInventoryData> inventories;
 
     public KitManager(Module m) {
         kits = new ArrayList<>();
         dataFile = m.getFile("classes.json", false);
-        inventoryFile = m.getFile("displayinventory.json", true);
+        inventories = new ArrayList<>();
+
+        File dataFolder = new File(m.getDataFolder() + File.separator + "inventories" + File.separator);
+
+        if (!dataFolder.exists()) {
+            dataFolder.mkdirs();
+        }
+
+        JSONParser jsonParser = new JSONParser();
+
+        for (File file : dataFolder.listFiles()) {
+
+            try (Reader r = new FileReader(file)) {
+                inventories.add(new KInventoryData((JSONObject) jsonParser.parse(r)));
+            } catch (IOException | ParseException e) {
+                e.printStackTrace();
+            }
+
+        }
 
         load();
     }
 
     public void load() {
-        JSONObject dataFile, displayData;
+        JSONObject dataFile;
 
-        try (Reader reader = new FileReader(this.dataFile);
-             Reader reader2 = new FileReader(this.inventoryFile)) {
+        try (Reader reader = new FileReader(this.dataFile)) {
             JSONParser jsonParser = new JSONParser();
             dataFile = (JSONObject) jsonParser.parse(reader);
-            displayData = (JSONObject) jsonParser.parse(reader2);
         } catch (IOException | ParseException e) {
             System.out.println("Could not read JSON file, maybe it's undefined?");
             return;
         }
 
         for (String o : (Set<String>) dataFile.keySet()) {
-            this.kits.add(new Kit((Map<String, Object>)dataFile.get(o)));
+            this.kits.add(new Kit((Map<String, Object>) dataFile.get(o)));
         }
-
-        displayInventory = new DisplayInventory(displayData, this);
 
     }
 
@@ -62,7 +71,7 @@ public class KitManager {
         JSONObject jsonObject = new JSONObject();
 
         this.kits.forEach(kit ->
-            jsonObject.put(kit.getClassName(), kit.save())
+                jsonObject.put(kit.getClassName(), kit.save())
         );
 
         try (Writer w = new FileWriter(this.dataFile)) {
@@ -147,11 +156,43 @@ public class KitManager {
     }
 
     /**
+     * Get a kit inventory by the id of the said inventory
+     *
+     * @param inventoryID The ID of the kit
+     * @return
+     */
+    public KInventoryData getInventoryByID(String inventoryID) {
+
+        for (KInventoryData inventory : this.inventories) {
+            if (inventory.getInventoryID().equalsIgnoreCase(inventoryID)) {
+                return inventory;
+            }
+        }
+
+        return null;
+    }
+
+    public KInventoryData getByInventory(Inventory i) {
+        for (KInventoryData inventory : this.inventories) {
+            if (inventory.equals(i)) {
+                return inventory;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Builds the inventorylisteners
+     *
      * @return
      */
     public Inventory buildInventory(Player player) {
-        return this.displayInventory.getInventory(player);
+        KInventoryData mainInventory = getInventoryByID("mainInventory");
+        if (mainInventory == null) {
+            throw new IllegalArgumentException("There is no mainInventory for the /kits command");
+        }
+        return mainInventory.buildInventory(player);
     }
 
 }

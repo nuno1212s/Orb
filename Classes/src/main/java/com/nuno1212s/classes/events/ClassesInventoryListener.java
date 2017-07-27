@@ -2,7 +2,8 @@ package com.nuno1212s.classes.events;
 
 import com.nuno1212s.classes.Main;
 import com.nuno1212s.classes.classmanager.Kit;
-import org.bukkit.Material;
+import com.nuno1212s.classes.inventories.KInventoryData;
+import com.nuno1212s.classes.inventories.KInventoryItem;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -17,48 +18,67 @@ public class ClassesInventoryListener implements Listener {
 
     @EventHandler
     public void onDrag(InventoryDragEvent e) {
-        if (e.getInventory().getName().equalsIgnoreCase(Main.getIns().getKitManager().getDisplayInventory().getInventoryName())) {
+        if (Main.getIns().getKitManager().getByInventory(e.getInventory()) != null) {
             e.setResult(Event.Result.DENY);
         }
     }
 
     @EventHandler
     public void onClick(InventoryClickEvent e) {
-        String inventoryName = Main.getIns().getKitManager().getDisplayInventory().getInventoryName();
-        if (e.getInventory().getName().equalsIgnoreCase(inventoryName)) {
+        KInventoryData byInventory = Main.getIns().getKitManager().getByInventory(e.getInventory());
+        if (byInventory != null) {
             if (e.getClick().isShiftClick()) {
                 e.setResult(Event.Result.DENY);
             }
 
-            if (e.getClickedInventory() == null) {
-                return;
-            }
-
-            if (e.getClickedInventory().getName().equalsIgnoreCase(inventoryName)) {
+            if (byInventory.equals(e.getClickedInventory())) {
                 e.setResult(Event.Result.DENY);
-                if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR) {
+
+                KInventoryItem item = (KInventoryItem) byInventory.getItem(e.getSlot());
+                if (item == null) {
                     return;
                 }
-                if (e.getClick().isLeftClick()) {
-                    Kit kitAtSlot = Main.getIns().getKitManager().getDisplayInventory().getKitAtSlot(e.getSlot());
 
-                    if (kitAtSlot == null)  {
-                        return;
+                if (item.isKit()) {
+
+
+                    Kit kit = item.getKit();
+
+                    if (e.getClick().isLeftClick()) {
+
+                        kit.giveKitTo((Player) e.getWhoClicked());
+                        e.getClickedInventory().setContents(byInventory.buildInventory((Player) e.getWhoClicked()).getContents());
+
+                    } else if (e.getClick().isRightClick()) {
+
+                        e.getWhoClicked().closeInventory();
+                        e.getWhoClicked().openInventory(kit.getClassItems());
+
                     }
 
-                    kitAtSlot.giveKitTo((Player) e.getWhoClicked());
-                } else if (e.getClick().isRightClick()) {
-                    Kit kitAtSlot = Main.getIns().getKitManager().getDisplayInventory().getKitAtSlot(e.getSlot());
-
-                    if (kitAtSlot == null) {
-                        return;
-                    }
-
-                    e.getWhoClicked().closeInventory();
-                    e.getWhoClicked().openInventory(kitAtSlot.getClassItems());
+                    return;
                 }
+
+                String connectingInventory = item.getConnectingInventory();
+
+                if (connectingInventory == null) {
+                    return;
+                }
+
+                e.getWhoClicked().closeInventory();
+
+                KInventoryData inventoryByID = Main.getIns().getKitManager().getInventoryByID(connectingInventory);
+
+                if (inventoryByID == null) {
+                    return;
+                }
+
+                e.getWhoClicked().openInventory(inventoryByID.buildInventory((Player) e.getWhoClicked()));
+
             }
+
         }
     }
+
 
 }

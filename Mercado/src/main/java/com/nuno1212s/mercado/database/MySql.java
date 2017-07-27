@@ -16,8 +16,6 @@ import java.util.UUID;
  */
 public class MySql {
 
-    //TODO
-
     public MySql() {
         try (Connection connection = MainData.getIns().getMySql().getConnection();
              Statement s = connection.createStatement()) {

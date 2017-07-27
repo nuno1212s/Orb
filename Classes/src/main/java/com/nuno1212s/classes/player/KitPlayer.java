@@ -7,6 +7,8 @@ public interface KitPlayer {
 
     boolean canUseKit(int kitID, long delay);
 
+    boolean ownsKit(int kitID);
+
     long timeUntilUsage(int kitID, long delay);
 
     long lastUsage(int kitID);

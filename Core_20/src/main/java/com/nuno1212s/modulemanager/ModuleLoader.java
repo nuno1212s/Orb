@@ -30,6 +30,7 @@ public class ModuleLoader extends URLClassLoader {
 
     private GlobalClassLoader globalLoader;
 
+    @Getter
     private Map<String, Class<?>> localClasses = new HashMap<>();
 
     public ModuleLoader(File moduleFile, GlobalClassLoader mainLoader) throws MalformedURLException {

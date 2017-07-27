@@ -31,19 +31,15 @@ public class Kit {
     @Getter
     private ItemStack[] items;
 
-    @Setter
-    private ItemStack displayItem;
-
     @Getter
     @Setter
     private long delay;
 
-    public Kit(int id, String className, String permissionNode, ItemStack[] items, ItemStack displayItem, long delay) {
+    public Kit(int id, String className, String permissionNode, ItemStack[] items, long delay) {
         this.id = id;
         this.className = className;
         this.permission = permissionNode;
         this.items = items;
-        this.displayItem = displayItem;
         this.delay = delay;
     }
 
@@ -53,11 +49,6 @@ public class Kit {
         this.permission = (String) data.get("Permission");
         this.items = new ItemStack[((Long) data.get("InventorySize")).intValue()];
         this.delay = ((Long) data.get("Delay"));
-        try {
-            this.displayItem = ItemUtils.itemFrom64((String) data.get("DisplayItem"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         Map<String, Object> items = (Map<String, Object>) data.get("Items");
         items.forEach((slot, item) -> {
             int slo = Integer.parseInt(slot);
@@ -80,7 +71,6 @@ public class Kit {
         saved.put("Permission", permission);
         saved.put("InventorySize", this.items.length);
         saved.put("Delay", this.delay);
-        saved.put("DisplayItem", ItemUtils.itemTo64(this.displayItem));
 
         for (int i = 0; i < this.items.length; i++) {
             if (this.items[i] == null) {
@@ -120,31 +110,13 @@ public class Kit {
         this.items = updatedItems.getContents();
     }
 
-    public ItemStack getDisplayItem(Player player) {
-        ItemStack displayItem = this.displayItem.clone();
+    public boolean canUseKit(Player p, PlayerData d) {
 
-        PlayerData playerData = MainData.getIns().getPlayerManager().getPlayer(player.getUniqueId());
-        KitPlayer kitPlayer;
-
-        Map<String, String> placeHolders = new HashMap<>();
-
-        if (playerData instanceof KitPlayer) {
-            kitPlayer = (KitPlayer) playerData;
-            placeHolders.put("%time%", new TimeUtil("DD dias: HH horas: MM minutos: SS segundos")
-                    .toTime(kitPlayer.timeUntilUsage(this.getId(), this.getDelay())));
+        if (!this.getPermission().equalsIgnoreCase("") && p.hasPermission(this.getPermission())) {
+            return true;
         }
 
-        if (this.getPermission().equalsIgnoreCase("")) {
-            if (!player.hasPermission(this.getPermission())) {
-                placeHolders.put("%canUse%", MainData.getIns().getMessageManager().getMessage("KIT_NO_PERMISSION").toString());
-            } else {
-                placeHolders.put("%canUse%", MainData.getIns().getMessageManager().getMessage("KIT_CAN_USE").toString());
-            }
-        }
-
-        displayItem = ItemUtils.formatItem(displayItem, placeHolders);
-
-        return displayItem;
+        return d instanceof KitPlayer && ((KitPlayer) d).ownsKit(getId());
     }
 
     private void addItems(Player p) {
@@ -189,4 +161,5 @@ public class Kit {
     public boolean equals(Object obj) {
         return obj instanceof Kit && ((Kit) obj).getId() == this.getId();
     }
+
 }

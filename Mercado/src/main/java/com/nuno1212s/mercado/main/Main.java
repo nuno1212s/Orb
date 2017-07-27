@@ -15,7 +15,7 @@ import lombok.Getter;
 /**
  * Main module class
  */
-@ModuleData(name = "Market", version = "0.1 SNAPSHOT", dependencies = {})
+@ModuleData(name = "Market", version = "0.1 SNAPSHOT", dependencies = {"Ferreiro"})
 public class Main extends Module {
 
     @Getter

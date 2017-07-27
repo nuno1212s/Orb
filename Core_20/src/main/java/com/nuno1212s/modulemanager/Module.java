@@ -125,6 +125,7 @@ public abstract class Module {
     }
 
     public void disable() {
+        MainData.getIns().getModuleManager().getLoader().removeLoader(this.getInitLoader());
         this.initLoader.shutdown();
     }
 

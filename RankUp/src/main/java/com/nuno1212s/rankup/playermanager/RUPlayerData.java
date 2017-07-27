@@ -136,4 +136,10 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer {
     public void unregisterKitUsage(int kitID) {
         this.kitUsages.remove(kitID);
     }
+
+    @Override
+    public boolean ownsKit(int kitID) {
+        //TODO
+        return false;
+    }
 }

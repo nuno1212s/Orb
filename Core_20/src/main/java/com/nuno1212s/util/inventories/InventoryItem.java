@@ -42,4 +42,13 @@ public class InventoryItem {
         return false;
     }
 
+    public String getConnectingInventory() {
+        for (String s : this.getItemFlags()) {
+            if (s.startsWith("CONNECTING_INVENTORY")) {
+                return s.split("_")[1];
+            }
+        }
+        return null;
+    }
+
 }

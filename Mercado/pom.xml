@@ -30,6 +30,13 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.nuno1212s</groupId>
+            <artifactId>Ferreiro</artifactId>
+            <version>0.1-ALPHA</version>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

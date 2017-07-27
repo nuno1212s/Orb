@@ -1,5 +1,6 @@
 package com.nuno1212s.mercado.marketmanager;
 
+import com.nuno1212s.ferreiro.util.RepairCost;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.mercado.main.Main;
 import com.nuno1212s.messagemanager.Messages;
@@ -23,10 +24,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Item data class
@@ -65,7 +63,6 @@ public class Item {
 
     public ItemStack getDisplayItem() {
 
-
         ItemStack clone1 = item.clone();
         NBTCompound itemData = new NBTCompound(clone1);
 
@@ -83,8 +80,21 @@ public class Item {
             lore = new ArrayList<>();
         }
         //TODO: Formatting
-        lore.add("");
+
         Messages msgManager = MainData.getIns().getMessageManager();
+        Map<String, Object> nbtData = itemData.getValues();
+        if (nbtData.containsKey("RepairTimes")) {
+            lore.add("");
+            int repairTimes = (int) nbtData.get("RepairTimes");
+            lore.add(msgManager.getMessage("REPAIRED_TIMES")
+                    .format("%times%",String.valueOf(repairTimes)).toString());
+            Pair<Integer, Boolean> repairCost = RepairCost.getRepairCost(repairTimes);
+            lore.add(msgManager
+                    .getMessage("NEXT_REPAIR_" + (repairCost.getValue() ? "CASH" : "COINS"))
+                    .format("%cost%", String.valueOf(repairCost.getKey())).toString());
+        }
+
+        lore.add("");
         lore.add(isServerCurrency() ? msgManager.getMessage("COST_COINS")
                 .format("%price%", String.valueOf(this.cost)).toString()
                 : msgManager.getMessage("COST_CASH")

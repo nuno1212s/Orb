@@ -20,6 +20,7 @@ public class ModuleManager {
     @Getter
     private File moduleFolder;
 
+    @Getter
     private GlobalClassLoader loader;
 
     public ModuleManager(File dataFolder, ClassLoader classLoader) {

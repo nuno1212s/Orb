@@ -16,10 +16,8 @@ public class ClassCommandManager extends CommandManager {
         addCommand(new ClassEditItemsCommand());
         addCommand(new ClassGetCommand());
         addCommand(new ClassDeleteCommand());
-        addCommand(new ClassSetDisplayCommand());
         addCommand(new ClassSeeItemsCommand());
         addCommand(new ReloadDisplayCommand());
-        addCommand(new ClassSetDisplayCommand());
     }
 
     @Override

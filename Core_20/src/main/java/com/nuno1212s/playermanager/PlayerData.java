@@ -59,6 +59,7 @@ public abstract class PlayerData {
         if (MainData.getIns().getEventCaller() != null) {
             MainData.getIns().getEventCaller().callUpdateInformationEvent(this);
         }
+        MainData.getIns().getRedisHandler().sendMessage("");
         return extension_result;
     }
 
