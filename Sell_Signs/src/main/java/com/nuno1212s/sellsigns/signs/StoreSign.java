@@ -1,6 +1,9 @@
 package com.nuno1212s.sellsigns.signs;
 
 import com.nuno1212s.main.MainData;
+import com.nuno1212s.multipliers.main.RankMultiplierMain;
+import com.nuno1212s.multipliers.multipliers.RankMultiplier;
+import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.ItemUtils;
 import com.nuno1212s.util.SerializableLocation;
 import lombok.Getter;
@@ -36,6 +39,10 @@ public class StoreSign {
     @Getter
     private boolean canSell, canBuy;
 
+    @Getter
+    @Setter
+    private String individualMultiplier;
+
     public StoreSign(JSONObject object) {
         this.id = ((Long) object.get("ID")).intValue();
         YamlConfiguration item = YamlConfiguration.loadConfiguration(new StringReader((String) object.get("Item")));
@@ -45,6 +52,10 @@ public class StoreSign {
         this.sellPrice = ((Long) object.get("SellPrice")).intValue();
         this.canSell = (Boolean) object.get("CanSell");
         this.canBuy = (Boolean) object.get("CanBuy");
+
+        if (object.containsKey("IndividualMult")) {
+            this.individualMultiplier = (String) object.get("IndividualMult");
+        }
     }
 
     public StoreSign(int id, Location l, int price, int sellPrice, boolean canSell, boolean canBuy) {
@@ -54,6 +65,7 @@ public class StoreSign {
         this.sellPrice = sellPrice;
         this.canSell = canSell;
         this.canBuy = canBuy;
+        this.individualMultiplier = null;
     }
 
     public boolean equalsLocation(Location location) {
@@ -95,6 +107,23 @@ public class StoreSign {
 
     }
 
+    public double getRankMultiplier(PlayerData d) {
+        double rankMultiplier;
+
+        if (getIndividualMultiplier() == null) {
+            rankMultiplier = RankMultiplierMain.getIns().getRankManager().getGlobalMultiplier().getRankMultiplierForPlayer(d);
+        } else {
+            RankMultiplier rankMultiplier1 = RankMultiplierMain.getIns().getRankManager().getRankMultiplier(getIndividualMultiplier());
+            if (rankMultiplier1 != null) {
+                rankMultiplier = rankMultiplier1.getRankMultiplierForPlayer(d);
+            } else {
+                rankMultiplier = RankMultiplierMain.getIns().getRankManager().getGlobalMultiplier().getRankMultiplierForPlayer(d);
+            }
+        }
+
+        return rankMultiplier;
+    }
+
     public JSONObject save(JSONObject object) {
 
         object.put("ID", id);
@@ -108,6 +137,7 @@ public class StoreSign {
         object.put("SellPrice", this.sellPrice);
         object.put("CanSell", this.canSell);
         object.put("CanBuy", this.canBuy);
+        object.put("IndividualMult", this.individualMultiplier);
 
         return object;
     }

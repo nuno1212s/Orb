@@ -45,6 +45,7 @@ public class InventoryClickListener implements Listener {
                     }
 
                     Player p = (Player) e.getWhoClicked();
+                    e.getWhoClicked().closeInventory();
 
                     if (!p.hasPermission(w.getPermission())) {
                         MainData.getIns().getMessageManager().getMessage("WARPS_NO_PERMISSION").sendTo(e.getWhoClicked());

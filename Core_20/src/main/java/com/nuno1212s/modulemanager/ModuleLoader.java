@@ -49,11 +49,13 @@ public class ModuleLoader extends URLClassLoader {
             }
             @Cleanup
             InputStream stream = file.getInputStream(entry);
+
             if (MainData.getIns().isBungee()) {
                 getMainClass(new BungeeConfig(stream));
             } else {
                 getMainClass(new BukkitConfig(stream));
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -85,6 +87,7 @@ public class ModuleLoader extends URLClassLoader {
                 System.out.println("The module's " + toLoad.getName() + " main class does not extend Module");
                 return;
             }
+
             Module mainClass = subClass.newInstance();
 
             setMainClass(mainClass);
@@ -99,6 +102,8 @@ public class ModuleLoader extends URLClassLoader {
     }
 
     public Class<?> find(String className, boolean global) throws ClassNotFoundException {
+
+        //If the class is a bukkit or nms class, we don't need to search for it in the local plugin loaders
         if (className.startsWith("org.bukkit.") || className.startsWith("net.minecraft.")) {
             throw new ClassNotFoundException(className);
         }

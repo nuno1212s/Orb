@@ -1,6 +1,8 @@
 package com.nuno1212s.sellsigns.listeners;
 
 import com.nuno1212s.main.MainData;
+import com.nuno1212s.multipliers.main.RankMultiplierMain;
+import com.nuno1212s.multipliers.multipliers.RankMultiplier;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.sellsigns.main.Main;
 import com.nuno1212s.sellsigns.signs.StoreSign;
@@ -37,7 +39,8 @@ public class SignClickListener implements Listener {
 
                     PlayerData d = MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
 
-                    double rankMultiplier = Main.getIns().getRankMultipliers().getRankMultiplier(d);
+                    double rankMultiplier = sign.getRankMultiplier(d);
+
                     int finalPrice = (int) Math.floor((double) price * rankMultiplier),
                             perItemPrice = (int) Math.floor((double) finalPrice / (double) sign.getItem().getAmount());
 

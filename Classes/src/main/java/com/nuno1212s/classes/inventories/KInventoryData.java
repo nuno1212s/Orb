@@ -24,6 +24,7 @@ public class KInventoryData extends InventoryData {
         JSONArray inventoryItems = (JSONArray) j.get("InventoryItems");
 
         this.items = new ArrayList<>(inventoryItems.size());
+
         inventoryItems.forEach((inventoryItem) ->
                 this.items.add(new KInventoryItem((JSONObject) inventoryItem))
         );

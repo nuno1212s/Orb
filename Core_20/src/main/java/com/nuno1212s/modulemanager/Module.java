@@ -42,14 +42,19 @@ public abstract class Module {
     }
 
     public List<Module> getDependencies(ModuleManager ins) {
+
         ArrayList<Module> modules = new ArrayList<>();
+
         for (String dependency : this.dependencies) {
             Module module = ins.getModule(dependency);
+
             if (module == null) {
                 continue;
             }
+
             modules.add(module);
         }
+
         return modules;
     }
 
@@ -58,6 +63,7 @@ public abstract class Module {
     }
 
     protected void saveResource(File target, String path) {
+
         if (!target.exists()) {
             try {
                 target.createNewFile();
@@ -65,6 +71,7 @@ public abstract class Module {
                 e.printStackTrace();
             }
         }
+
         try (InputStream resourceAsStream = getResourceAsStream(path);
         OutputStream outputStream = new FileOutputStream(target)) {
 
@@ -72,6 +79,7 @@ public abstract class Module {
                 System.out.println("Resource " + path + " cannot be found.");
                 return;
             }
+
             byte[] bytes = new byte[1024];
 
             int length;

@@ -5,6 +5,8 @@ import lombok.Getter;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.util.ArrayList;
+
 /**
  * Inventory ID
  */
@@ -19,6 +21,7 @@ public class WInventoryData extends InventoryData {
 
         JSONArray items = (JSONArray) object.get("InventoryItems");
 
+        this.items = new ArrayList<>();
 
         items.forEach((inventoryItem) ->
                 this.items.add(new WInventoryItem((JSONObject) inventoryItem))

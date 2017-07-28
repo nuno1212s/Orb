@@ -94,6 +94,13 @@ public class WarpCommand implements CommandExecutor {
                 commandSender.sendMessage(ChatColor.RED + "Warp apagado.");
             }
 
+        } else if (command.getName().equalsIgnoreCase("warps")) {
+            if (!(commandSender instanceof Player)) {
+                return true;
+            }
+
+            ((Player) commandSender).openInventory(Main.getIns().getInventoryManager().getDefaultInventory());
+
         } else {
             Warp w = Main.getIns().getWarpManager().getWarp(command.getName());
 

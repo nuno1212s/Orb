@@ -20,19 +20,32 @@ public class InventoryManager {
 
     private List<WInventoryData> inventories;
 
+    private File inventoryFile;
+
     public InventoryManager(Module m) {
+        inventoryFile = new File(m.getDataFolder() + File.separator + "inventories" + File.separator);
+
+        reloadInventories();
+    }
+
+    public void reloadInventories() {
         inventories = new ArrayList<>();
 
-        File inventory = new File(m.getDataFolder() + File.separator + "inventories" + File.separator);
+        if (!this.inventoryFile.exists()) {
+            inventoryFile.mkdirs();
+        }
 
-        for (File inventoryFile : inventory.listFiles()) {
-            try (FileReader r = new FileReader(inventoryFile)) {
+        for (File file : this.inventoryFile.listFiles()) {
+            try (FileReader r = new FileReader(file)) {
                 inventories.add(new WInventoryData((JSONObject) new JSONParser().parse(r)));
             } catch (IOException | ParseException e) {
                 e.printStackTrace();
             }
         }
+    }
 
+    public Inventory getDefaultInventory() {
+        return getInventory("mainInventory");
     }
 
     public Inventory getInventory(String inventoryID) {
