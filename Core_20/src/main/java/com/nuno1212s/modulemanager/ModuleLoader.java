@@ -42,6 +42,9 @@ public class ModuleLoader extends URLClassLoader {
 
     public void load() {
         try (JarFile file = new JarFile(moduleFile)){
+
+            System.out.println("LOADING MODULE: " + moduleFile.getName());
+
             ZipEntry entry = file.getEntry("moduleInfo.yml");
             if (entry == null) {
                 System.out.println("Module Info is missing from module " + moduleFile.getName().replace(".jar", ""));
@@ -92,6 +95,7 @@ public class ModuleLoader extends URLClassLoader {
 
             setMainClass(mainClass);
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            System.out.println(mainClassPath);
             e.printStackTrace();
         }
     }

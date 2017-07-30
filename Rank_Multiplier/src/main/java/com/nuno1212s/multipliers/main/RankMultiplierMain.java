@@ -9,7 +9,7 @@ import lombok.Getter;
 /**
  * Main class
  */
-@ModuleData(name = "Rank Multipliers", version = "1.0", dependencies = {})
+@ModuleData(name = "RankMultipliers", version = "1.0", dependencies = {})
 public class RankMultiplierMain extends Module {
 
     @Getter

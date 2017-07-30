@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.nuno1212s</groupId>
-    <artifactId>Rank_Multipliers</artifactId>
-    <version>0.1_ALPHA</version>
+    <artifactId>Spawners</artifactId>
+    <version>1.0</version>
 
     <dependencies>
         <dependency>
@@ -27,6 +27,13 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>LATEST</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.nuno1212s</groupId>
+            <artifactId>Rank_Multipliers</artifactId>
+            <version>0.1_ALPHA</version>
             <scope>provided</scope>
         </dependency>
 
@@ -54,7 +61,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <finalName>Rank_Multipliers</finalName>
+                    <finalName>Spawners</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
@@ -78,6 +85,5 @@
             </resource>
         </resources>
     </build>
-
 
 </project>

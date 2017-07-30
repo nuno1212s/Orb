@@ -1,0 +1,11 @@
+{
+  "COW": 100,
+  "PIG": 100,
+  "SHEEP": 100,
+  "ZOMBIE": 200,
+  "PIG_ZOMBIE": 200,
+  "SPIDER": 200,
+  "SKELETON": 200,
+  "WITHER_SKELETON": 250,
+  "BLAZE": 250
+}

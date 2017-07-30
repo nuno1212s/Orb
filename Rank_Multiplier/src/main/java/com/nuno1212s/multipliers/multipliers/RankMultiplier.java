@@ -38,6 +38,7 @@ public class RankMultiplier {
         rankMultipliers = new HashMap<>();
 
         JSONObject jsonObject1 = (JSONObject) jsonObject.get("Multipliers");
+
         for (String s : (Set<String>) jsonObject1.keySet()) {
             rankMultipliers.put(Short.parseShort(s), (Double) jsonObject1.get(s));
         }
