@@ -1,10 +1,10 @@
 package com.nuno1212s.boosters.boosters;
 
+import com.nuno1212s.boosters.main.Main;
 import com.nuno1212s.boosters.playerdata.BoosterData;
 import com.nuno1212s.main.MainData;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.apache.commons.lang.RandomStringUtils;
 
 /**
  * Booster
@@ -24,6 +24,14 @@ public class Booster {
     boolean activated;
 
     String applicableServer;
+
+    public void activate() {
+        this.activated = true;
+        this.activationTime = System.currentTimeMillis();
+
+        Main.getIns().getRedisHandler().handleBoosterActivation(this);
+
+    }
 
     public boolean isApplicable(BoosterData data) {
 
