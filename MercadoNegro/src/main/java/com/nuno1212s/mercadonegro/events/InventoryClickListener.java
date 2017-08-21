@@ -18,6 +18,7 @@ import org.bukkit.event.inventory.InventoryDragEvent;
  */
 public class InventoryClickListener implements Listener {
 
+
     @EventHandler
     public void onDrag(InventoryDragEvent e) {
         if (Main.getIns().getInventoryManager().isInventory(e.getInventory().getName())) {

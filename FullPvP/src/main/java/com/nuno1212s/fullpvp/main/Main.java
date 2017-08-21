@@ -41,14 +41,14 @@ public class Main extends Module {
 
         registerCommand(new String[]{"coins", "coin"}, new CoinCommand());
 
-        com.nuno1212s.crates.Main.getIns().setServerEconomyInterface((player, cost) -> {
+        /*com.nuno1212s.crates.Main.getIns().setServerEconomyInterface((player, cost) -> {
             PVPPlayerData playerData = (PVPPlayerData) MainData.getIns().getPlayerManager().getPlayer(player);
             if (playerData.getCoins() >= cost) {
                 playerData.setCoins(playerData.getCoins() - cost);
                 return true;
             }
             return false;
-        });
+        });*/
 
         Plugin plugin = BukkitMain.getIns();
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), plugin);

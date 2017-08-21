@@ -1,22 +1,43 @@
 package com.nuno1212s.boosters.boosters;
 
-import com.nuno1212s.boosters.playerdata.BoosterData;
+import com.nuno1212s.boosters.main.Main;
 import com.nuno1212s.multipliers.main.RankMultiplierMain;
 import com.nuno1212s.playermanager.PlayerData;
+import lombok.Getter;
 import org.apache.commons.lang.RandomStringUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Manages all boosters
  */
 public class BoosterManager {
 
-    private List<Booster> boosters;
+    //TODO: The boosters must store the ID of their owner, because they need to be globally accessible
+
+    @Getter
+    private final List<Booster> boosters;
 
     public BoosterManager() {
-        boosters = new ArrayList<>();
+        boosters = Collections.synchronizedList(new ArrayList<>());
+        addBoosters(Main.getIns().getMysqlHandler().loadBoosters());
+    }
+
+    private void addBoosters(List<Booster> boosters) {
+        for (Booster booster : boosters) {
+            if (booster.isApplicable(null)) {
+                this.boosters.add(booster);
+            }
+        }
+    }
+
+    public void loadBoostersForPlayer(UUID player) {
+
+        this.boosters.addAll(Main.getIns().getMysqlHandler().loadBoosters(player));
     }
 
     private String getRandomID() {
@@ -27,31 +48,55 @@ public class BoosterManager {
         return random;
     }
 
-    public Booster createBooster(double multiplier, long durationInMillis, BoosterType type, String applicableServer) {
-        return new Booster(getRandomID(), type, multiplier, durationInMillis, 0, false, applicableServer);
+    public Booster createBooster(UUID owner, float multiplier, long durationInMillis, BoosterType type, String applicableServer, String customName) {
+        return new Booster(getRandomID(), owner, type, multiplier, durationInMillis, 0, false, applicableServer, customName);
+    }
+
+    public void handleBoosterExpiration(Booster b) {
+        //TODO: Announce booster expiration
+        Main.getIns().getRedisHandler().handleBoosterDeletion(b);
+    }
+
+    public void handleBoosterAdition(Booster b) {
+        this.boosters.add(b);
+    }
+
+    public void activateBooster(Booster b) {
+        b.activate();
+        Main.getIns().getRedisHandler().handleBoosterActivation(b);
+    }
+
+    public void addBooster(Booster b) {
+        this.boosters.add(b);
+        Main.getIns().getRedisHandler().addBooster(b);
+    }
+
+    public void removeBooster(Booster b) {
+        this.boosters.remove(b);
+    }
+
+    public List<Booster> getBoosterForPlayer(UUID player) {
+        return this.boosters.stream().filter(b -> b.getOwner() != null && b.getOwner().equals(player)).collect(Collectors.toList());
     }
 
     public Booster getBooster(String boosterID) {
-        for (Booster booster : boosters) {
-            if (booster.getBoosterID().equalsIgnoreCase(boosterID)) {
-                return booster;
+        synchronized (boosters) {
+            for (Booster booster : boosters) {
+                if (booster.getBoosterID().equalsIgnoreCase(boosterID)) {
+                    return booster;
+                }
             }
+            return null;
         }
-        return null;
     }
+
 
     public double getMCMMOMultiplierForPlayer(PlayerData data) {
         double currentBooster = RankMultiplierMain.getIns().getRankManager().getGlobalMultiplier().getRankMultiplierForPlayer(data);
 
-        if (data instanceof BoosterData) {
+        synchronized (boosters) {
             for (Booster booster : boosters) {
-                if (booster.isActivated() && booster.isApplicable((BoosterData) data)) {
-                    currentBooster += booster.getMultiplier();
-                }
-            }
-        } else {
-            for (Booster booster : boosters) {
-                if (booster.isActivated() && booster.isApplicable(null)) {
+                if (booster.isActivated() && booster.isApplicable(data.getPlayerID())) {
                     currentBooster += booster.getMultiplier();
                 }
             }
@@ -61,19 +106,15 @@ public class BoosterManager {
     }
 
     public boolean isBoosterActive(PlayerData data) {
-        if (data instanceof BoosterData) {
+
+        synchronized (boosters) {
             for (Booster booster : boosters) {
-                if (booster.isActivated() && booster.isApplicable((BoosterData) data)) {
-                    return true;
-                }
-            }
-        } else {
-            for (Booster booster : boosters) {
-                if (booster.isApplicable(null) && booster.isActivated()) {
+                if (booster.isApplicable(data.getPlayerID()) && booster.isActivated()) {
                     return true;
                 }
             }
         }
+
         return false;
     }
 

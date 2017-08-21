@@ -1,10 +1,12 @@
 package com.nuno1212s.boosters.boosters;
 
 import com.nuno1212s.boosters.main.Main;
-import com.nuno1212s.boosters.playerdata.BoosterData;
 import com.nuno1212s.main.MainData;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import javax.annotation.Nullable;
+import java.util.UUID;
 
 /**
  * Booster
@@ -15,15 +17,20 @@ public class Booster {
 
     String boosterID;
 
+    @Nullable
+    UUID owner;
+
     BoosterType type;
 
-    double multiplier;
+    float multiplier;
 
     long durationInMillis, activationTime;
 
     boolean activated;
 
     String applicableServer;
+
+    String customName;
 
     public void activate() {
         this.activated = true;
@@ -33,10 +40,14 @@ public class Booster {
 
     }
 
-    public boolean isApplicable(BoosterData data) {
+    public boolean isExpired() {
+        return (activated && this.activationTime + this.durationInMillis <= System.currentTimeMillis());
+    }
+
+    public boolean isApplicable(UUID data) {
 
         if (data != null && type != BoosterType.GLOBAL_GLOBAL && type != BoosterType.GLOBAL_SERVER) {
-            if (!data.getBoosters().contains(boosterID)) {
+            if (owner != null && !owner.equals(data)) {
                 return false;
             }
         }

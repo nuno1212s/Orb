@@ -3,6 +3,8 @@ package com.nuno1212s.util.CommandUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,4 +36,21 @@ public abstract class CommandManager implements CommandExecutor {
         return null;
     }
 
+    @Override
+    public boolean onCommand(CommandSender commandSender, org.bukkit.command.Command command, String s, String[] args) {
+        if (args.length < 1) {
+            commands.forEach(c -> commandSender.sendMessage(c.usage()));
+            return true;
+        }
+
+        Command subCommand = getCommand(args[0]);
+
+        if (subCommand != null) {
+            subCommand.execute((Player) commandSender, args);
+        } else {
+            commands.forEach(c -> commandSender.sendMessage(c.usage()));
+        }
+
+        return true;
+    }
 }

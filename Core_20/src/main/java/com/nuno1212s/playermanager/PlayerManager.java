@@ -1,9 +1,11 @@
 package com.nuno1212s.playermanager;
 
 import com.google.common.cache.CacheBuilder;
+import com.nuno1212s.events.PlayerInformationLoadEvent;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.util.PlayerGroupData;
 import com.nuno1212s.util.Pair;
+import org.bukkit.Bukkit;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -74,6 +76,8 @@ public class PlayerManager {
     /**
      * Get or load the player data
      *
+     * IMPORTANT: PLAYER CLASS LOADED HERE ONLY CONTAINS STANDARD DATA, NO PER SERVER INFO ({@link #fullyLoadPlayer(String playerName)})
+     *
      * @param playerName The name of the player to load
      * @return The player data and if the data was loaded from the database (false if it is not loaded from the db, true if it is)
      */
@@ -89,6 +93,14 @@ public class PlayerManager {
         return new Pair<>(MainData.getIns().getMySql().getPlayerData(playerName), true);
     }
 
+    /**
+     * Get or load the player data
+     *
+     * IMPORTANT: PLAYER CLASS LOADED HERE ONLY CONTAINS STANDARD DATA, NO PER SERVER INFO ({@link #fullyLoadPlayer(String playerName)})
+     *
+     * @param playerID The UUID of the player to load
+     * @return The player data and if the data was loaded from the database (false if it is not loaded from the db, true if it is)
+     */
     public Pair<PlayerData, Boolean> getOrLoadPlayer(UUID playerID) {
         synchronized (players) {
             for (PlayerData player : players) {
@@ -99,6 +111,18 @@ public class PlayerManager {
         }
 
         return new Pair<>(MainData.getIns().getMySql().getPlayerData(playerID, null), true);
+    }
+
+    public PlayerData fullyLoadPlayer(String playerName) {
+        PlayerData d = MainData.getIns().getMySql().getPlayerData(playerName);
+        if (d == null) {
+            return null;
+        }
+
+        PlayerInformationLoadEvent e = new PlayerInformationLoadEvent(d);
+        Bukkit.getServer().getPluginManager().callEvent(e);
+
+        return e.getPlayerInfo();
     }
 
     public List<PlayerData> getPlayers() {

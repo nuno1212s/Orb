@@ -13,6 +13,14 @@ public class RedisListener implements RedisReceiver {
 
     }
 
+    public void addBooster(Booster b) {
+
+    }
+
+    public void handleBoosterDeletion(Booster b) {
+
+    }
+
     @Override
     public void onReceived(Message message) {
 
