@@ -1,0 +1,26 @@
+{
+  "InventoryName": "&cBooster Inventory",
+  "InventorySize": 45,
+  "InventoryItems": [
+    {
+      "Item": {
+        "Material": "FEATHER",
+        "DisplayName": "&8Previous Page"
+      },
+      "Slot": 36,
+      "Flags": [
+        "PREVIOUS_PAGE"
+      ]
+    },
+    {
+      "Item": {
+        "Material": "FEATHER",
+        "DisplayName": "&8Next Page"
+      },
+      "Slot": 44,
+      "Flags": [
+        "NEXT_PAGE"
+      ]
+    }
+  ]
+}

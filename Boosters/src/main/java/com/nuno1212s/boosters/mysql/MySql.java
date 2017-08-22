@@ -57,6 +57,18 @@ public class MySql {
         }
     }
 
+    public void updateBooster(Booster b) {
+        try (Connection c = MainData.getIns().getMySql().getConnection();
+             PreparedStatement s = c.prepareStatement("UPDATE boosters SET ACTIVATED=?, ACTIVATIONTIME=? WHERE ID=?")) {
+            s.setBoolean(1, b.isActivated());
+            s.setLong(2, b.getActivationTime());
+            s.setString(3, b.getBoosterID());
+            s.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public List<Booster> loadBoosters() {
         ArrayList<Booster> loadBoosters = new ArrayList<>();
 
@@ -91,13 +103,13 @@ public class MySql {
         ArrayList<Booster> booster = new ArrayList<>();
 
         try (Connection c = MainData.getIns().getMySql().getConnection();
-            PreparedStatement s = c.prepareStatement("SELECT * FROM boosters WHERE OWNER=?")) {
+             PreparedStatement s = c.prepareStatement("SELECT * FROM boosters WHERE OWNER=?")) {
 
             s.setString(1, ownerID.toString());
 
             ResultSet resultSet = s.executeQuery();
 
-            while(resultSet.next()) {
+            while (resultSet.next()) {
                 String boosterID = resultSet.getString("ID");
                 BoosterType type = BoosterType.valueOf(resultSet.getString("BOOSTERTYPE"));
                 float multiplier = resultSet.getFloat("MULTIPLIER");

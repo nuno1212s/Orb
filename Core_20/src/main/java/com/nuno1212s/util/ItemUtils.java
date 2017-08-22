@@ -40,9 +40,12 @@ public class ItemUtils {
             List<String> lore = itemMeta.getLore(), newLore = new ArrayList<>();
 
             lore.forEach(l -> {
-                placeHolders.forEach((key, value) ->
-                    newLore.add(l.replace(key, value))
-                );
+
+                for (Map.Entry<String, String> entries : placeHolders.entrySet()) {
+                    l = l.replace(entries.getKey(), entries.getValue());
+                }
+
+                newLore.add(l);
             });
 
             itemMeta.setLore(newLore);

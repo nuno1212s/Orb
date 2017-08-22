@@ -1,4 +1,4 @@
-package com.nuno1212s.boosters.inventories;
+package com.nuno1212s.boosters.listeners;
 
 import com.nuno1212s.boosters.boosters.Booster;
 import com.nuno1212s.boosters.main.Main;
@@ -52,7 +52,7 @@ public class ConfirmInventoryListener implements Listener {
                 return;
             }
 
-            InventoryItem boosterItem = confirmInventory.getItemWithFlag("BoosterItem");
+            InventoryItem boosterItem = confirmInventory.getItemWithFlag("BOOSTER");
 
             if (boosterItem == null) {
                 return;
@@ -65,13 +65,13 @@ public class ConfirmInventoryListener implements Listener {
             }
 
             if (item.hasItemFlag("CONFIRM")) {
-                boosterConnectedToItem.activate();
+                Main.getIns().getBoosterManager().activateBooster(boosterConnectedToItem);
 
                 MainData.getIns().getMessageManager().getMessage("ACTIVATED_BOOSTER")
                         .format("%boosterName%", boosterConnectedToItem.getCustomName()).sendTo(e.getWhoClicked());
 
-                e.getWhoClicked().closeInventory();
                 int page = Main.getIns().getInventoryManager().getPage(e.getWhoClicked().getUniqueId());
+                e.getWhoClicked().closeInventory();
                 Inventory inventory = Main.getIns().getInventoryManager().buildInventoryForPlayer(e.getWhoClicked().getUniqueId(), page);
                 e.getWhoClicked().openInventory(inventory);
             } else if (item.hasItemFlag("CANCEL")) {

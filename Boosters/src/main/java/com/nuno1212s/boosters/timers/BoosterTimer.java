@@ -19,12 +19,14 @@ public class BoosterTimer implements Runnable {
     public void run() {
         synchronized (Main.getIns().getBoosterManager().getBoosters()) {
             Iterator<Booster> iterator = Main.getIns().getBoosterManager().getBoosters().iterator();
-            iterator.forEachRemaining((b) -> {
+
+            while (iterator.hasNext()) {
+                Booster b = iterator.next();
                 if (b.isExpired()) {
                     iterator.remove();
                     Main.getIns().getBoosterManager().handleBoosterExpiration(b);
                 }
-            });
+            }
         }
 
     }

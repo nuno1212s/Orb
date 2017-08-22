@@ -1,4 +1,4 @@
-package com.nuno1212s.boosters.inventories;
+package com.nuno1212s.boosters.listeners;
 
 import com.nuno1212s.boosters.boosters.Booster;
 import com.nuno1212s.boosters.main.Main;
@@ -36,7 +36,6 @@ public class InventoryListener implements Listener {
 
             if (e.getClick().isShiftClick()) {
                 e.setResult(Event.Result.DENY);
-                return;
             }
 
         } else {
@@ -48,7 +47,7 @@ public class InventoryListener implements Listener {
         }
 
         if (Main.getIns().getInventoryManager().getMainInventory().equals(e.getClickedInventory())) {
-            if (e.getCurrentItem() != null) {
+            if (e.getCurrentItem() == null) {
                 return;
             }
 

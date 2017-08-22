@@ -10,6 +10,7 @@ public class BoosterCommandManager extends CommandManager {
     public BoosterCommandManager() {
         super();
         addCommand(new AddBoosterToPlayerCommand());
+        addCommand(new OpenBoosterInventoryCommand());
     }
 
 }

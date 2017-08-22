@@ -38,6 +38,9 @@ public class Booster {
 
         Main.getIns().getRedisHandler().handleBoosterActivation(this);
 
+        MainData.getIns().getScheduler().runTaskAsync(() -> {
+            Main.getIns().getMysqlHandler().updateBooster(this);
+        });
     }
 
     public boolean isExpired() {
@@ -46,15 +49,19 @@ public class Booster {
 
     public boolean isApplicable(UUID data) {
 
-        if (data != null && type != BoosterType.GLOBAL_GLOBAL && type != BoosterType.GLOBAL_SERVER) {
-            if (owner != null && !owner.equals(data)) {
+        if ((type == BoosterType.PLAYER_GLOBAL || type == BoosterType.PLAYER_SERVER)) {
+            if (data == null || owner == null || !owner.equals(data)) {
                 return false;
             }
         }
 
         String serverType = MainData.getIns().getServerManager().getServerType();
         return (type == BoosterType.GLOBAL_GLOBAL || type == BoosterType.PLAYER_GLOBAL)
-                || (serverType.equalsIgnoreCase(applicableServer) && (type == BoosterType.GLOBAL_SERVER || type == BoosterType.PLAYER_SERVER));
+                || (serverType.equalsIgnoreCase(applicableServer) && (type == BoosterType.GLOBAL_SERVER || (type == BoosterType.PLAYER_SERVER)));
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Booster && ((Booster) obj).getBoosterID().equalsIgnoreCase(boosterID);
+    }
 }

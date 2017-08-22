@@ -1,10 +1,13 @@
 package com.nuno1212s.boosters.boosters;
 
 import com.nuno1212s.boosters.main.Main;
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.multipliers.main.RankMultiplierMain;
 import com.nuno1212s.playermanager.PlayerData;
 import lombok.Getter;
 import org.apache.commons.lang.RandomStringUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,7 +57,22 @@ public class BoosterManager {
 
     public void handleBoosterExpiration(Booster b) {
         //TODO: Announce booster expiration
+
+        notifyPlayer(b, b.getOwner());
         Main.getIns().getRedisHandler().handleBoosterDeletion(b);
+    }
+
+    public void notifyPlayer(Booster b, UUID player) {
+        Player p = Bukkit.getPlayer(player);
+        if (p == null) {
+            return;
+        }
+
+        MainData.getIns().getMessageManager().getMessage("BOOSTER_FINISHED")
+                .format("%boosterName%", b.getCustomName()).sendTo(p);
+
+        removeBooster(b);
+
     }
 
     public void handleBoosterAdition(Booster b) {
@@ -73,6 +91,7 @@ public class BoosterManager {
 
     public void removeBooster(Booster b) {
         this.boosters.remove(b);
+        Main.getIns().getMysqlHandler().removeBooster(b.getBoosterID());
     }
 
     public List<Booster> getBoosterForPlayer(UUID player) {

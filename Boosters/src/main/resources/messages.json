@@ -1,0 +1,6 @@
+{
+  "BOOSTER_ACTIVATED": "&cActivated",
+  "BOOSTER_DEACTIVATED": "&aClick to activate",
+  "BOOSTER_FINISHED": "&cThe booster %boosterName% has finished.",
+  "ACTIVATED_BOOSTER": "&cYou have activated a %boosterName%"
+}

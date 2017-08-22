@@ -2,6 +2,7 @@ package com.nuno1212s.boosters.inventories;
 
 import com.nuno1212s.boosters.boosters.Booster;
 import com.nuno1212s.boosters.main.Main;
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.util.ItemUtils;
 import com.nuno1212s.util.NBTDataStorage.NBTCompound;
@@ -9,6 +10,7 @@ import com.nuno1212s.util.SerializableItem;
 import com.nuno1212s.util.inventories.InventoryData;
 import com.nuno1212s.util.inventories.InventoryItem;
 import lombok.Getter;
+import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONObject;
@@ -50,9 +52,10 @@ public class InventoryManager {
     }
 
     /**
+     * Builds the default booster inventory for a player
      *
      * @param player
-     * @param page The page number (Starts at 1)
+     * @param page   The page number (Starts at 1)
      * @return
      */
     public Inventory buildInventoryForPlayer(UUID player, int page) {
@@ -89,7 +92,13 @@ public class InventoryManager {
             }
         });
 
-        return boosterForPlayer.subList(perPage * (page - 1), perPage * page);
+        if (boosterForPlayer.size() < perPage * (page - 1)) {
+            return new ArrayList<>();
+        } else if (boosterForPlayer.size() > perPage * page) {
+            return boosterForPlayer.subList(perPage * (page - 1), perPage * page);
+        } else {
+            return boosterForPlayer;
+        }
     }
 
     public Inventory buildConfirmInventory(Booster b) {
@@ -106,8 +115,11 @@ public class InventoryManager {
         ItemStack boosterItem = this.boosterItem.clone();
         Map<String, String> placeHolders = new HashMap<>();
         placeHolders.put("%booster%", b.getCustomName());
-        placeHolders.put("%multipliers%", String.format("%.2f", b.getMultiplier()));
+        placeHolders.put("%multiplier%", String.format("%.2f", b.getMultiplier()));
         placeHolders.put("%duration%", String.valueOf(TimeUnit.MILLISECONDS.toHours(b.getDurationInMillis())));
+        placeHolders.put("%activated%", b.isActivated() ?
+                MainData.getIns().getMessageManager().getMessage("BOOSTER_ACTIVATED").toString()
+                : MainData.getIns().getMessageManager().getMessage("BOOSTER_DEACTIVATED").toString());
         boosterItem = ItemUtils.formatItem(boosterItem, placeHolders);
         NBTCompound nbt = new NBTCompound(boosterItem);
         nbt.add("BoosterID", b.getBoosterID());

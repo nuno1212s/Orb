@@ -1,0 +1,34 @@
+{
+  "InventoryName": "&cConfirm booster activation",
+  "InventorySize": 27,
+  "InventoryItems": [
+    {
+      "Item": {
+        "Material": "WOOL",
+        "Data": 5,
+        "DisplayName": "&aConfirm"
+      },
+      "Slot": 11,
+      "Flags": [
+        "CONFIRM"
+      ]
+    },
+    {
+      "Item": {
+        "Material": "WOOL",
+        "Data": 14,
+        "DisplayName": "&cCancel"
+      },
+      "Slot": 15,
+      "Flags": [
+        "CANCEL"
+      ]
+    },
+    {
+      "Slot": 13,
+      "Flags": [
+        "BOOSTER"
+      ]
+    }
+  ]
+}

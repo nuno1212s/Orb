@@ -1,22 +1,19 @@
 package com.nuno1212s.boosters.main;
 
 import com.nuno1212s.boosters.boosters.BoosterManager;
-import com.nuno1212s.boosters.inventories.ConfirmInventoryListener;
-import com.nuno1212s.boosters.inventories.InventoryListener;
+import com.nuno1212s.boosters.commands.BoosterCommandManager;
+import com.nuno1212s.boosters.listeners.ConfirmInventoryListener;
+import com.nuno1212s.boosters.listeners.InventoryListener;
 import com.nuno1212s.boosters.inventories.InventoryManager;
 import com.nuno1212s.boosters.listeners.PlayerLoginListener;
 import com.nuno1212s.boosters.mysql.MySql;
 import com.nuno1212s.boosters.redis.RedisListener;
 import com.nuno1212s.boosters.timers.BoosterTimer;
 import com.nuno1212s.main.BukkitMain;
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.modulemanager.ModuleData;
-import com.nuno1212s.rediscommunication.RedisReceiver;
 import lombok.Getter;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Handles main classes
@@ -45,7 +42,12 @@ public class Main extends Module {
         mysqlHandler = new MySql();
         boosterManager = new BoosterManager();
         inventoryManager = new InventoryManager(this);
+        redisHandler = new RedisListener();
         new BoosterTimer();
+
+        MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));
+
+        registerCommand(new String[]{"booster", "boosters"}, new BoosterCommandManager());
 
         BukkitMain ins = BukkitMain.getIns();
         ins.getServer().getPluginManager().registerEvents(new PlayerLoginListener(), ins);
