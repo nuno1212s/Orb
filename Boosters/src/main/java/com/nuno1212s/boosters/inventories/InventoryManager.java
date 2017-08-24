@@ -10,7 +10,6 @@ import com.nuno1212s.util.SerializableItem;
 import com.nuno1212s.util.inventories.InventoryData;
 import com.nuno1212s.util.inventories.InventoryItem;
 import lombok.Getter;
-import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONObject;
@@ -70,20 +69,44 @@ public class InventoryManager {
         return inventory;
     }
 
+    /**
+     * Get the current page of a player
+     *
+     * @param player The player to get
+     * @return
+     */
     public int getPage(UUID player) {
-        return this.pages.get(player);
+        return this.pages.getOrDefault(player, 1);
     }
 
+    /**
+     * Set the current page of a player
+     *
+     * @param player The player
+     * @param page The current page
+     */
     public void setPage(UUID player, int page) {
         this.pages.put(player, page);
     }
 
+    /**
+     * Remove the current player page from storage
+     * @param player
+     */
     public void removePage(UUID player) {
         this.pages.remove(player);
     }
 
+    /**
+     * Get the boosters for a specific page
+     *
+     * @param player The player to get the boosters from
+     * @param page The page number (1 -> n)
+     * @param perPage The amount of boosters per page
+     * @return
+     */
     public List<Booster> getBoosterForPage(UUID player, int page, int perPage) {
-        List<Booster> boosterForPlayer = Main.getIns().getBoosterManager().getBoosterForPlayer(player);
+        List<Booster> boosterForPlayer = Main.getIns().getBoosterManager().getBoostersForPlayer(player);
 
         boosterForPlayer.sort(new Comparator<Booster>() {
             @Override
@@ -101,6 +124,12 @@ public class InventoryManager {
         }
     }
 
+    /**
+     * Build the activation confirm inventory for a given booster
+     *
+     * @param b The booster
+     * @return
+     */
     public Inventory buildConfirmInventory(Booster b) {
         Inventory i = this.confirmInventory.buildInventory();
 
@@ -111,6 +140,12 @@ public class InventoryManager {
         return i;
     }
 
+    /**
+     * Format an item with the booster information given
+     *
+     * @param b Booster data
+     * @return
+     */
     public ItemStack formatItem(Booster b) {
         ItemStack boosterItem = this.boosterItem.clone();
         Map<String, String> placeHolders = new HashMap<>();
@@ -126,6 +161,12 @@ public class InventoryManager {
         return nbt.write(boosterItem);
     }
 
+    /**
+     * Get the booster that an item represents
+     *
+     * @param i The item to check
+     * @return The booster the item represents
+     */
     public Booster getBoosterConnectedToItem(ItemStack i) {
         Booster b = null;
 

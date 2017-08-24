@@ -4,6 +4,7 @@ import com.nuno1212s.boosters.boosters.Booster;
 import com.nuno1212s.boosters.main.Main;
 import com.nuno1212s.util.inventories.InventoryData;
 import com.nuno1212s.util.inventories.InventoryItem;
+import org.bukkit.Material;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -47,7 +48,7 @@ public class InventoryListener implements Listener {
         }
 
         if (Main.getIns().getInventoryManager().getMainInventory().equals(e.getClickedInventory())) {
-            if (e.getCurrentItem() == null) {
+            if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR) {
                 return;
             }
 
@@ -85,7 +86,8 @@ public class InventoryListener implements Listener {
                     UUID playerID = e.getWhoClicked().getUniqueId();
                     int page = Main.getIns().getInventoryManager().getPage(playerID);
 
-                    if (page >= 1) {
+                    //Check if the current page is > 1 (The first page is 1)
+                    if (page > 1) {
                         Inventory inv = Main.getIns().getInventoryManager().buildInventoryForPlayer(playerID, page - 1);
                         e.getClickedInventory().setContents(inv.getContents());
                         Main.getIns().getInventoryManager().setPage(playerID, page - 1);

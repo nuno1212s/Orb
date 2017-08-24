@@ -23,7 +23,6 @@ public class BoosterTimer implements Runnable {
             while (iterator.hasNext()) {
                 Booster b = iterator.next();
                 if (b.isExpired()) {
-                    iterator.remove();
                     Main.getIns().getBoosterManager().handleBoosterExpiration(b);
                 }
             }

@@ -5,10 +5,12 @@ import com.nuno1212s.boosters.main.Main;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.util.inventories.InventoryData;
 import com.nuno1212s.util.inventories.InventoryItem;
+import org.bukkit.Material;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.Inventory;
 
@@ -40,7 +42,7 @@ public class ConfirmInventoryListener implements Listener {
         }
 
         if (confirmInventory.equals(e.getClickedInventory())) {
-            if (e.getCurrentItem() == null) {
+            if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR) {
                 return;
             }
 
@@ -85,5 +87,11 @@ public class ConfirmInventoryListener implements Listener {
 
     }
 
+    @EventHandler
+    public void onClose(InventoryCloseEvent e) {
+        if (Main.getIns().getInventoryManager().getConfirmInventory().equals(e.getInventory())) {
+            Main.getIns().getInventoryManager().removePage(e.getPlayer().getUniqueId());
+        }
+    }
 
 }

@@ -29,6 +29,11 @@ public class MySql {
 
     }
 
+    /**
+     * Remove a booster from the database
+     *
+     * @param boosterID The ID of the booster that should be removed
+     */
     public void removeBooster(String boosterID) {
         try (Connection c = MainData.getIns().getMySql().getConnection();
              PreparedStatement s = c.prepareStatement("DELETE FROM boosters WHERE ID=?")) {
@@ -39,6 +44,10 @@ public class MySql {
         }
     }
 
+    /**
+     * Save a given booster to the databse
+     * @param b
+     */
     public void saveBooster(Booster b) {
         try (Connection c = MainData.getIns().getMySql().getConnection();
              PreparedStatement s = c.prepareStatement("INSERT INTO boosters values(?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
@@ -57,6 +66,11 @@ public class MySql {
         }
     }
 
+    /**
+     * Update a booster information (If the booster is activated / the activation time)
+     *
+     * @param b
+     */
     public void updateBooster(Booster b) {
         try (Connection c = MainData.getIns().getMySql().getConnection();
              PreparedStatement s = c.prepareStatement("UPDATE boosters SET ACTIVATED=?, ACTIVATIONTIME=? WHERE ID=?")) {
@@ -69,6 +83,11 @@ public class MySql {
         }
     }
 
+    /**
+     * Get all the boosters that are stored in the database
+     *
+     * @return
+     */
     public List<Booster> loadBoosters() {
         ArrayList<Booster> loadBoosters = new ArrayList<>();
 
@@ -99,6 +118,12 @@ public class MySql {
         return loadBoosters;
     }
 
+    /**
+     * Load the boosters that belong to a specific player
+     *
+     * @param ownerID The UUID of the player
+     * @return
+     */
     public List<Booster> loadBoosters(UUID ownerID) {
         ArrayList<Booster> booster = new ArrayList<>();
 
