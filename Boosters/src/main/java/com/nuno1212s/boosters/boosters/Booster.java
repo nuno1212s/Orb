@@ -2,6 +2,7 @@ package com.nuno1212s.boosters.boosters;
 
 import com.nuno1212s.boosters.main.Main;
 import com.nuno1212s.main.MainData;
+import com.nuno1212s.serverstatus.ServerManager;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -28,6 +29,10 @@ public class Booster {
 
     boolean activated;
 
+    /**
+     * Applicable server refers to the server type, not server name
+     * {@link ServerManager#getServerType()}
+     */
     String applicableServer;
 
     String customName;

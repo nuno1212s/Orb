@@ -86,6 +86,11 @@ public class Main extends Module {
 
     }
 
+    /**
+     * Set the servers economy handler
+     *
+     * TODO: check if the playerdata is instance of RUPlayerData safely
+     */
     private void registerServerEconomy() {
         MainData.getIns().setServerCurrencyHandler(new ServerCurrencyHandler() {
             @Override

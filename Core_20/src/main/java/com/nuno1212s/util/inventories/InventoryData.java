@@ -1,5 +1,6 @@
 package com.nuno1212s.util.inventories;
 
+import com.nuno1212s.util.NBTDataStorage.ReflectionManager;
 import lombok.Getter;
 import lombok.ToString;
 import org.bukkit.Bukkit;
@@ -15,11 +16,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
- * Handles inventorylisteners data
+ * Handles inventory listeners data
  */
 @SuppressWarnings("unchecked")
 @ToString
@@ -34,7 +37,28 @@ public class InventoryData {
     @Getter
     protected List<InventoryItem> items;
 
+    /**
+     * Use the {@link #InventoryData(File, Class)} instead, this constructor is just being kept for compatibility reasons
+     *
+     * @param jsonFile
+     */
+    @Deprecated
     public InventoryData(File jsonFile) {
+        this(jsonFile, InventoryItem.class);
+    }
+
+    public InventoryData(JSONObject obj) {
+        load(obj, false, InventoryItem.class);
+    }
+
+    /**
+     * Main constructor for the inventory data
+     *
+     * @param jsonFile  The file of the inventory
+     * @param itemClass An optional class for the items stored in the inventory (If you want to change the
+     *                  items that the inventory stores, there is no longer a need to create a subclass of InventoryData)
+     */
+    public InventoryData(File jsonFile, Class<? extends InventoryItem> itemClass) {
         JSONObject jsOB;
 
         try (Reader r = new FileReader(jsonFile)) {
@@ -44,31 +68,46 @@ public class InventoryData {
             return;
         }
 
-        load(jsOB, true);
-
+        load(jsOB, true, itemClass == null ? InventoryItem.class : itemClass);
     }
 
-    public InventoryData(JSONObject obj) {
-        load(obj, false);
-    }
+    /**
+     * Loads the actual inventory data from the JSONObject
+     *
+     * @param jsOB         The object to load from
+     * @param loadItems    Should the items be loaded
+     * @param customLoader The loader that should be used for the items
+     */
+    private void load(JSONObject jsOB, boolean loadItems, Class<? extends InventoryItem> customLoader) {
+        this.inventoryName = ChatColor.translateAlternateColorCodes('&',
+                (String) jsOB.getOrDefault("InventoryName", "&cFailed to load name"));
 
-    void load(JSONObject jsOB, boolean loadItems) {
-        this.inventoryName = ChatColor.translateAlternateColorCodes('&', (String) jsOB.get("InventoryName"));
-        this.inventorySize = ((Long) jsOB.get("InventorySize")).intValue();
+        this.inventorySize = ((Long) jsOB.getOrDefault("InventorySize", 27)).intValue();
+
         if (inventorySize % 9 != 0) {
             this.inventorySize = 27;
         }
 
         if (loadItems) {
-            JSONArray inventoryItems = (JSONArray) jsOB.get("InventoryItems");
+            JSONArray inventoryItems = (JSONArray) jsOB.getOrDefault("InventoryItems", new ArrayList<>());
 
             this.items = new ArrayList<>(inventoryItems.size());
-            inventoryItems.forEach((inventoryItem) ->
-                    this.items.add(new InventoryItem((JSONObject) inventoryItem))
+            Constructor constructor = ReflectionManager.getIns().getConstructor(customLoader, JSONObject.class);
+
+            inventoryItems.forEach((inventoryItem) -> {
+                        InventoryItem e = (InventoryItem) ReflectionManager.getIns()
+                                .invokeConstructor(constructor, (JSONObject) inventoryItem);
+                        this.items.add(e);
+                    }
             );
         }
     }
 
+    /**
+     * Build the inventory with the specified features
+     *
+     * @return
+     */
     public Inventory buildInventory() {
         String inventoryName = this.inventoryName;
 

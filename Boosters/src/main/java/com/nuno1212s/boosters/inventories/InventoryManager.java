@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 public class InventoryManager {
 
     @Getter
-    private InventoryData mainInventory, confirmInventory;
+    private InventoryData myBoostersInventory, confirmInventory, sellInventory, landingInventory;
 
     private ItemStack boosterItem;
 
@@ -37,16 +37,23 @@ public class InventoryManager {
 
     public InventoryManager(Module m) {
         this.pages = new HashMap<>();
-        this.mainInventory = new InventoryData(m.getFile("mainInventory.json", true));
-        this.confirmInventory = new InventoryData(m.getFile("confirmInventory.json", true));
+
+        this.myBoostersInventory = new InventoryData(m.getFile("myBoostersInventory.json", true), null);
+        this.confirmInventory = new InventoryData(m.getFile("confirmInventory.json", true), null);
+        this.landingInventory = new InventoryData(m.getFile("landingInventory.json", true), null);
+        this.sellInventory = new InventoryData(m.getFile("sellInventory.json", true), BInventoryItem.class);
+
         File file = m.getFile("boosterItems.json", true);
+
         JSONObject boosterItem;
+
         try (Reader r = new FileReader(file)) {
             boosterItem = (JSONObject) new JSONParser().parse(r);
         } catch (IOException | ParseException e) {
             e.printStackTrace();
             return;
         }
+
         this.boosterItem = new SerializableItem(boosterItem);
     }
 
@@ -58,7 +65,7 @@ public class InventoryManager {
      * @return
      */
     public Inventory buildInventoryForPlayer(UUID player, int page) {
-        Inventory inventory = mainInventory.buildInventory();
+        Inventory inventory = myBoostersInventory.buildInventory();
         int initialSlot = 0, finalSlot = inventory.getSize() - 18;
         List<Booster> boostersForPage = getBoosterForPage(player, page, finalSlot);
 
@@ -67,6 +74,13 @@ public class InventoryManager {
         }
 
         return inventory;
+    }
+
+    /**
+     * Build the booster store inventory
+     */
+    public Inventory buildStoreInventory() {
+        return this.sellInventory.buildInventory();
     }
 
     /**

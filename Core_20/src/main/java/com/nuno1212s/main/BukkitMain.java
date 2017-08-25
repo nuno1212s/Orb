@@ -47,8 +47,8 @@ public class BukkitMain extends JavaPlugin {
         this.saveDefaultConfig();
         data.setEventCaller(new EventCaller() {
             @Override
-            public void callUpdateInformationEvent(Object... args) {
-                Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent((PlayerData) args[0]));
+            public void callUpdateInformationEvent(PlayerData data) {
+                Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(data));
             }
         });
         data.setDataFolder(this.getDataFolder());

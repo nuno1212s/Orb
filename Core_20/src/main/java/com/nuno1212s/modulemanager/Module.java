@@ -3,6 +3,7 @@ package com.nuno1212s.modulemanager;
 import com.nuno1212s.main.MainData;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.command.CommandExecutor;
 
 import java.io.*;
 import java.net.URL;
@@ -41,6 +42,12 @@ public abstract class Module {
         return dataFolder;
     }
 
+    /**
+     * Get the dependencies of this module
+     *
+     * @param ins
+     * @return
+     */
     public List<Module> getDependencies(ModuleManager ins) {
 
         ArrayList<Module> modules = new ArrayList<>();
@@ -58,10 +65,22 @@ public abstract class Module {
         return modules;
     }
 
+    /**
+     * Register a command to the server
+     *
+     * @param names The aliases of the command
+     * @param commandExecutor The executor of the command (CommandExecutor in bukkit, Command in bungee)
+     */
     protected void registerCommand(String[] names, Object commandExecutor) {
         MainData.getIns().getCommandRegister().registerCommand(names, commandExecutor);
     }
 
+    /**
+     * Save the resource to the modules data folder
+     *
+     * @param target
+     * @param path
+     */
     protected void saveResource(File target, String path) {
 
         if (!target.exists()) {
@@ -93,8 +112,16 @@ public abstract class Module {
         }
     }
 
-    public File getFile(String fileName, boolean isResource) {
-        File file = new File(getDataFolder(), fileName);
+    /**
+     * Get the file from the modules data folder
+     * If the file does not exist, it shall be created (If it is a resource, the file will be copied from the modules jar)
+     *
+     * @param filePath The path of the file
+     * @param isResource Is the file a resource of the module
+     * @return
+     */
+    public File getFile(String filePath, boolean isResource) {
+        File file = new File(getDataFolder(), filePath);
 
         if (!file.exists()) {
             if (isResource) {
@@ -102,7 +129,7 @@ public abstract class Module {
                     String[] split = fileName.split(File.separator);
                     saveResource(file, split[split.length - 1]);
                 } else {*/
-                    saveResource(file, fileName);
+                    saveResource(file, filePath);
                 //}
             } else {
                 try {
@@ -116,6 +143,12 @@ public abstract class Module {
         return file;
     }
 
+    /**
+     * Get a resource from the jar file of the module
+     *
+     * @param path The path to the resource
+     * @return
+     */
     private InputStream getResourceAsStream(String path) {
         URL resource = this.getInitLoader().getResource(path);
         if (resource == null) {

@@ -26,14 +26,14 @@ public class InventoryListener implements Listener {
 
     @EventHandler
     public void onDrag(InventoryDragEvent e) {
-        if (Main.getIns().getInventoryManager().getMainInventory().equals(e.getInventory())) {
+        if (Main.getIns().getInventoryManager().getMyBoostersInventory().equals(e.getInventory())) {
             e.setResult(Event.Result.DENY);
         }
     }
 
     @EventHandler
     public void onInventory(InventoryClickEvent e) {
-        if (Main.getIns().getInventoryManager().getMainInventory().equals(e.getInventory())) {
+        if (Main.getIns().getInventoryManager().getMyBoostersInventory().equals(e.getInventory())) {
 
             if (e.getClick().isShiftClick()) {
                 e.setResult(Event.Result.DENY);
@@ -47,14 +47,14 @@ public class InventoryListener implements Listener {
             return;
         }
 
-        if (Main.getIns().getInventoryManager().getMainInventory().equals(e.getClickedInventory())) {
+        if (Main.getIns().getInventoryManager().getMyBoostersInventory().equals(e.getClickedInventory())) {
             if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR) {
                 return;
             }
 
             e.setResult(Event.Result.DENY);
 
-            InventoryData mainInventory = Main.getIns().getInventoryManager().getMainInventory();
+            InventoryData mainInventory = Main.getIns().getInventoryManager().getMyBoostersInventory();
 
             InventoryItem item = mainInventory.getItem(e.getSlot());
 
@@ -99,7 +99,7 @@ public class InventoryListener implements Listener {
 
     @EventHandler
     public void onClose(InventoryCloseEvent e) {
-        if (Main.getIns().getInventoryManager().getMainInventory().equals(e.getInventory()) && !onClose.contains(e.getPlayer().getUniqueId())) {
+        if (Main.getIns().getInventoryManager().getMyBoostersInventory().equals(e.getInventory()) && !onClose.contains(e.getPlayer().getUniqueId())) {
             Main.getIns().getInventoryManager().removePage(e.getPlayer().getUniqueId());
         } else {
             onClose.remove(e.getPlayer().getUniqueId());
