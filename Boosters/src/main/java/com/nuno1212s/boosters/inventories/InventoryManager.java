@@ -1,15 +1,18 @@
 package com.nuno1212s.boosters.inventories;
 
 import com.nuno1212s.boosters.boosters.Booster;
+import com.nuno1212s.boosters.boosters.BoosterData;
 import com.nuno1212s.boosters.main.Main;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
+import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.ItemUtils;
 import com.nuno1212s.util.NBTDataStorage.NBTCompound;
 import com.nuno1212s.util.SerializableItem;
 import com.nuno1212s.util.inventories.InventoryData;
 import com.nuno1212s.util.inventories.InventoryItem;
 import lombok.Getter;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONObject;
@@ -29,9 +32,9 @@ import java.util.concurrent.TimeUnit;
 public class InventoryManager {
 
     @Getter
-    private InventoryData myBoostersInventory, confirmInventory, sellInventory, landingInventory;
+    private InventoryData myBoostersInventory, confirmInventory, sellInventory, confirmSellInventory, landingInventory;
 
-    private ItemStack boosterItem;
+    private ItemStack boosterItem, buyBoosterItem;
 
     private Map<UUID, Integer> pages;
 
@@ -40,6 +43,7 @@ public class InventoryManager {
 
         this.myBoostersInventory = new InventoryData(m.getFile("myBoostersInventory.json", true), null);
         this.confirmInventory = new InventoryData(m.getFile("confirmInventory.json", true), null);
+        this.confirmSellInventory = new InventoryData(m.getFile("confirmSellInventory.json", true), null);
         this.landingInventory = new InventoryData(m.getFile("landingInventory.json", true), null);
         this.sellInventory = new InventoryData(m.getFile("sellInventory.json", true), BInventoryItem.class);
 
@@ -54,7 +58,8 @@ public class InventoryManager {
             return;
         }
 
-        this.boosterItem = new SerializableItem(boosterItem);
+        this.boosterItem = new SerializableItem((JSONObject) boosterItem.get("NormalItem"));
+        this.buyBoosterItem = new SerializableItem((JSONObject) boosterItem.get("BuyItem"));
     }
 
     /**
@@ -81,6 +86,13 @@ public class InventoryManager {
      */
     public Inventory buildStoreInventory() {
         return this.sellInventory.buildInventory();
+    }
+
+    /**
+     * Build the landing inventory
+     */
+    public Inventory buildLandingInventory() {
+        return this.landingInventory.buildInventory();
     }
 
     /**
@@ -149,9 +161,99 @@ public class InventoryManager {
 
         InventoryItem booster = this.confirmInventory.getItemWithFlag("BOOSTER");
 
+        if (booster == null) {
+            return i;
+        }
+
         i.setItem(booster.getSlot(), formatItem(b));
 
         return i;
+    }
+
+    public Inventory buildBuyConfirmInventory(BInventoryItem booster) {
+        Inventory inventory = this.confirmSellInventory.buildInventory();
+
+        InventoryItem boosterItem = this.confirmSellInventory.getItemWithFlag("BOOSTER");
+
+        if (boosterItem == null) {
+            return inventory;
+        }
+
+        inventory.setItem(boosterItem.getSlot(), formatDisplayBooster(booster));
+
+        return inventory;
+    }
+
+    /**
+     * Handles the buying of the boosters (after the confirm buy inventory)
+     *
+     * @param owner The owner of the booster
+     * @param item The item with the booster information
+     */
+    public void buyBooster(Player owner, ItemStack item) {
+        BoosterData boosterData = BoosterData.readFromItem(item);
+
+        PlayerData d = MainData.getIns().getPlayerManager().getPlayer(owner.getUniqueId());
+
+        if (boosterData.isCash()) {
+            if (d.getCash() >= boosterData.getPrice()) {
+                d.setCash(d.getCash() - boosterData.getPrice());
+                Booster booster = Main.getIns().getBoosterManager().createBooster(owner.getUniqueId(), boosterData);
+
+                MainData.getIns().getMessageManager().getMessage("BOUGHT_BOOSTER_CASH")
+                        .format("%name%", boosterData.getCustomName())
+                        .format("%price%", String.valueOf(boosterData.getPrice())).sendTo(owner);
+
+                MainData.getIns().getScheduler().runTaskAsync(() -> {
+                    Main.getIns().getMysqlHandler().saveBooster(booster);
+                    Main.getIns().getBoosterManager().addBooster(booster);
+                });
+
+            } else {
+                MainData.getIns().getMessageManager().getMessage("NO_CASH").sendTo(owner);
+            }
+        } else {
+            if (MainData.getIns().getServerCurrencyHandler().removeCurrency(d, boosterData.getPrice())) {
+                Booster booster = Main.getIns().getBoosterManager().createBooster(owner.getUniqueId(), boosterData);
+
+                MainData.getIns().getMessageManager().getMessage("BOUGHT_BOOSTER_COINS")
+                        .format("%name%", boosterData.getCustomName())
+                        .format("%price%", String.valueOf(boosterData.getPrice())).sendTo(owner);
+
+                MainData.getIns().getScheduler().runTaskAsync(() -> {
+                    Main.getIns().getMysqlHandler().saveBooster(booster);
+                    Main.getIns().getBoosterManager().addBooster(booster);
+                });
+            } else {
+                MainData.getIns().getMessageManager().getMessage("NO_COINS").sendTo(owner);
+            }
+        }
+
+    }
+
+    /**
+     * Formats the booster item with the data from the item
+     *
+     * @param b The item
+     * @return
+     */
+    private ItemStack formatDisplayBooster(BInventoryItem b) {
+        ItemStack boosterItem = this.buyBoosterItem.clone();
+        Map<String, String> placeHolders = new HashMap<>();
+
+        BoosterData data = b.getData();
+        placeHolders.put("%booster%", data.getCustomName());
+
+        placeHolders.put("%multiplier%", String.format("%.2f", data.getMultiplier()));
+
+        placeHolders.put("%duration%", String.valueOf(TimeUnit.MILLISECONDS.toHours(data.getDurationInMillis())));
+
+        placeHolders.put("%price%", String.valueOf(data.getPrice()));
+
+        boosterItem.setAmount(data.getQuantity());
+
+        boosterItem = ItemUtils.formatItem(boosterItem, placeHolders);
+        return data.writeToItem(boosterItem);
     }
 
     /**
@@ -160,15 +262,20 @@ public class InventoryManager {
      * @param b Booster data
      * @return
      */
-    public ItemStack formatItem(Booster b) {
+    private ItemStack formatItem(Booster b) {
         ItemStack boosterItem = this.boosterItem.clone();
         Map<String, String> placeHolders = new HashMap<>();
+
         placeHolders.put("%booster%", b.getCustomName());
+
         placeHolders.put("%multiplier%", String.format("%.2f", b.getMultiplier()));
+
         placeHolders.put("%duration%", String.valueOf(TimeUnit.MILLISECONDS.toHours(b.getDurationInMillis())));
+
         placeHolders.put("%activated%", b.isActivated() ?
                 MainData.getIns().getMessageManager().getMessage("BOOSTER_ACTIVATED").toString()
                 : MainData.getIns().getMessageManager().getMessage("BOOSTER_DEACTIVATED").toString());
+
         boosterItem = ItemUtils.formatItem(boosterItem, placeHolders);
         NBTCompound nbt = new NBTCompound(boosterItem);
         nbt.add("BoosterID", b.getBoosterID());

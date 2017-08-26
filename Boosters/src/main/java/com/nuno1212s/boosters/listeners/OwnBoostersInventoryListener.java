@@ -20,7 +20,7 @@ import java.util.UUID;
 /**
  * Inventory listener
  */
-public class InventoryListener implements Listener {
+public class OwnBoostersInventoryListener implements Listener {
 
     private List<UUID> onClose = new ArrayList<>();
 

@@ -52,6 +52,12 @@ public class Booster {
         return (activated && this.activationTime + this.durationInMillis <= System.currentTimeMillis());
     }
 
+    /**
+     * Is this boosters applicable to the given player, on the current server
+     *
+     * @param data The player (can be null)
+     * @return
+     */
     public boolean isApplicable(UUID data) {
 
         if ((type == BoosterType.PLAYER_GLOBAL || type == BoosterType.PLAYER_SERVER)) {

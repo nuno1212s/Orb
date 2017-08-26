@@ -105,6 +105,17 @@ public class BoosterManager {
     }
 
     /**
+     *
+     * @param owner
+     * @param data
+     * @return
+     */
+    public Booster createBooster(UUID owner, BoosterData data) {
+        return new Booster(getRandomID(), owner, data.getType(), data.getMultiplier(), data.getDurationInMillis(),
+                0, false, data.getApplicableServer(), data.getCustomName());
+    }
+
+    /**
      * Handles the expiration of a booster
      * @param b
      */
@@ -153,7 +164,6 @@ public class BoosterManager {
      */
     public void activateBooster(Booster b) {
         b.activate();
-        Main.getIns().getRedisHandler().handleBoosterActivation(b);
     }
 
     /**

@@ -3,11 +3,8 @@ package com.nuno1212s.boosters.main;
 import com.nuno1212s.boosters.boosters.BoosterManager;
 import com.nuno1212s.boosters.commands.BoosterCommandManager;
 import com.nuno1212s.boosters.commands.GiveBoosterToPlayerCommand;
-import com.nuno1212s.boosters.listeners.ConfirmInventoryListener;
-import com.nuno1212s.boosters.listeners.InventoryListener;
+import com.nuno1212s.boosters.listeners.*;
 import com.nuno1212s.boosters.inventories.InventoryManager;
-import com.nuno1212s.boosters.listeners.PlayerDisconnectListener;
-import com.nuno1212s.boosters.listeners.PlayerLoginListener;
 import com.nuno1212s.boosters.mysql.MySql;
 import com.nuno1212s.boosters.redis.RedisListener;
 import com.nuno1212s.boosters.timers.BoosterTimer;
@@ -54,9 +51,12 @@ public class Main extends Module {
 
         BukkitMain ins = BukkitMain.getIns();
         ins.getServer().getPluginManager().registerEvents(new PlayerLoginListener(), ins);
-        ins.getServer().getPluginManager().registerEvents(new InventoryListener(), ins);
+        ins.getServer().getPluginManager().registerEvents(new OwnBoostersInventoryListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new ConfirmInventoryListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new PlayerDisconnectListener(), ins);
+        ins.getServer().getPluginManager().registerEvents(new LandingInventoryListener(), ins);
+        ins.getServer().getPluginManager().registerEvents(new BuyBoostersInventoryListener(), ins);
+        ins.getServer().getPluginManager().registerEvents(new SellInventoryListener(), ins);
 
     }
 

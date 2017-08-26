@@ -1,6 +1,6 @@
 package com.nuno1212s.boosters.inventories;
 
-import com.nuno1212s.boosters.boosters.Booster;
+import com.nuno1212s.boosters.boosters.BoosterData;
 import com.nuno1212s.boosters.boosters.BoosterType;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.util.inventories.InventoryItem;
@@ -17,31 +17,31 @@ import java.util.concurrent.TimeUnit;
 @Getter
 public class BInventoryItem extends InventoryItem {
 
-    private float multiplier;
-
-    private long durationInMillis;
-
-    private String customName;
-
-    private BoosterType type;
-
-    private String applicableServer;
+    BoosterData data;
 
     public BInventoryItem(JSONObject ob) {
         super(ob);
-        this.multiplier = (Float) ob.getOrDefault("Multiplier", 1f);
+        float multiplier = (Float) ob.getOrDefault("Multiplier", 1f);
 
-        this.durationInMillis = TimeUnit.MINUTES.toMillis(
+        int quantity = ((Long) ob.getOrDefault("Quantity", 1)).intValue();
+
+        long price = (Long) ob.getOrDefault("Price", 1000);
+
+        long durationInMillis = TimeUnit.MINUTES.toMillis(
                 (Long) ob.getOrDefault("Duration", 60));
 
-        this.customName = ChatColor.translateAlternateColorCodes('&',
+        String customName = ChatColor.translateAlternateColorCodes('&',
                 (String) ob.getOrDefault("CustomName", "Default booster"));
 
-        this.type = BoosterType.valueOf(
-                ( (String) ob.getOrDefault("Type", "PLAYER_SERVER") ).toUpperCase());
+        BoosterType type = BoosterType.valueOf(
+                ((String) ob.getOrDefault("Type", "PLAYER_SERVER")).toUpperCase());
 
-        this.applicableServer = (String) ob.getOrDefault("ApplicableServer",
+        String applicableServer = (String) ob.getOrDefault("ApplicableServer",
                 MainData.getIns().getServerManager().getServerType());
+
+        boolean cash = (Boolean) ob.getOrDefault("IsCash", true);
+
+        data = new BoosterData(multiplier, quantity, price, durationInMillis, customName, type, applicableServer, cash);
     }
 
 

@@ -125,7 +125,7 @@ public class ModuleManager {
      * Depth first sorting algorithm
      *
      * @param a          The module to solve
-     * @param resolved   The list where all should be stored
+     * @param resolved   The list where all the sorted modules should be stored
      * @param unresolved Temp list.
      */
     private void dep_resolve(Module a, List<Module> resolved, List<Module> unresolved) {
@@ -134,12 +134,15 @@ public class ModuleManager {
             if (resolved.contains(m)) {
                 continue;
             }
+
             if (unresolved.contains(m)) {
                 throw new IllegalArgumentException("Circular module dependency " + m.getModuleName());
             }
+
             if (m.isEnabled()) {
                 continue;
             }
+
             dep_resolve(m, resolved, unresolved);
         }
         resolved.add(a);

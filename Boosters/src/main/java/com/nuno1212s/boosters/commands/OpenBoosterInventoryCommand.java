@@ -2,6 +2,7 @@ package com.nuno1212s.boosters.commands;
 
 import com.nuno1212s.boosters.main.Main;
 import com.nuno1212s.util.CommandUtil.Command;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 /**
@@ -16,12 +17,11 @@ public class OpenBoosterInventoryCommand implements Command {
 
     @Override
     public String usage() {
-        return "";
+        return ChatColor.RED + "/boosters open - Open the boosters inventory";
     }
 
     @Override
     public void execute(Player player, String[] args) {
-        Main.getIns().getInventoryManager().setPage(player.getUniqueId(), 1);
-        player.openInventory(Main.getIns().getInventoryManager().buildInventoryForPlayer(player.getUniqueId(), 1));
+        player.openInventory(Main.getIns().getInventoryManager().buildLandingInventory());
     }
 }
