@@ -1,0 +1,62 @@
+{
+  "InventoryName": "&cBuy boosters",
+  "InventorySize": 27,
+  "InventoryItems": [
+    {
+      "Slot": 1,
+      "Item": {
+        "Material": "POTION",
+        "DisplayName": "&61.5x Booster",
+        "Lore": [
+          "&7Duration: &e1 hour",
+          "&7Price: &a1000 cash"
+        ]
+      },
+      "Flags": [],
+      "Multiplier": 1.5,
+      "Price": 1000,
+      "Duration": 60,
+      "CustomName": "&61.5x Booster",
+      "Type": "PLAYER_SERVER"
+    },
+    {
+      "Slot": 10,
+      "Item": {
+        "Material": "POTION",
+        "DisplayName": "&61.5x Booster",
+        "Amount": 5,
+        "Lore": [
+          "&7Duration: &e1 hour",
+          "&7Price: &a5000 cash"
+        ]
+      },
+      "Flags": [],
+      "Quantity": 5,
+      "Multiplier": 1.5,
+      "Price": 5000,
+      "Duration": 60,
+      "CustomName": "&61.5x Booster",
+      "Type": "PLAYER_SERVER"
+    },
+    {
+      "Slot": 19,
+      "Item": {
+        "Material": "POTION",
+        "DisplayName": "&61.5x Booster",
+        "Amount": 10,
+        "Lore": [
+          "&7Duration: &e1 hour",
+          "&7Price: &a10000 cash"
+        ]
+      },
+      "Flags": [],
+      "Quantity": 10,
+      "Multiplier": 1.5,
+      "Price": 10000,
+      "Duration": 60,
+      "CustomName": "&61.5x Booster",
+      "Type": "PLAYER_SERVER"
+    }
+
+  ]
+}

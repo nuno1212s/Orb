@@ -1,7 +1,32 @@
 {
-  "Material": "EXP_BOTTLE",
-  "DisplayName": "%booster%",
-  "Lore": ["&cDuration: &7%duration%", "&cMultiplier: &7%multiplier%", "%activated%"],
-  "Enchantments": ["UNBREAKING:1"],
-  "ItemFlags": ["HIDE_ENCHANTS"]
+  "NormalItem": {
+    "Material": "POTION",
+    "DisplayName": "%booster%",
+    "Lore": [
+      "&cDuration: &7%duration%",
+      "&cMultiplier: &7%multiplier%",
+      "%activated%"
+    ],
+    "Enchantments": [
+      "UNBREAKING:1"
+    ],
+    "ItemFlags": [
+      "HIDE_ENCHANTS"
+    ]
+  },
+  "BuyItem": {
+    "Material": "POTION",
+    "DisplayName": "%booster%",
+    "Lore": [
+      "&cDuration: &7%duration%",
+      "&cMultiplier: &7%multiplier%",
+      "%activated%"
+    ],
+    "Enchantments": [
+      "UNBREAKING:1"
+    ],
+    "ItemFlags": [
+      "HIDE_ENCHANTS"
+    ]
+  }
 }

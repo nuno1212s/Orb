@@ -198,31 +198,46 @@ public class InventoryManager {
         if (boosterData.isCash()) {
             if (d.getCash() >= boosterData.getPrice()) {
                 d.setCash(d.getCash() - boosterData.getPrice());
-                Booster booster = Main.getIns().getBoosterManager().createBooster(owner.getUniqueId(), boosterData);
+                List<Booster> boosters = Main.getIns().getBoosterManager().createBooster(owner.getUniqueId(), boosterData);
 
                 MainData.getIns().getMessageManager().getMessage("BOUGHT_BOOSTER_CASH")
                         .format("%name%", boosterData.getCustomName())
-                        .format("%price%", String.valueOf(boosterData.getPrice())).sendTo(owner);
+                        .format("%price%", String.valueOf(boosterData.getPrice()))
+                        .format("%quantity%", String.valueOf(boosterData.getQuantity())).sendTo(owner);
+
+                for (Booster booster : boosters) {
+                    Main.getIns().getBoosterManager().addBooster(booster);
+                }
 
                 MainData.getIns().getScheduler().runTaskAsync(() -> {
-                    Main.getIns().getMysqlHandler().saveBooster(booster);
-                    Main.getIns().getBoosterManager().addBooster(booster);
+                    for (Booster booster : boosters) {
+                        Main.getIns().getMysqlHandler().saveBooster(booster);
+                    }
                 });
 
             } else {
                 MainData.getIns().getMessageManager().getMessage("NO_CASH").sendTo(owner);
             }
         } else {
+
             if (MainData.getIns().getServerCurrencyHandler().removeCurrency(d, boosterData.getPrice())) {
-                Booster booster = Main.getIns().getBoosterManager().createBooster(owner.getUniqueId(), boosterData);
+                //Need to call information update because the server currency handler does not do this automatically
+                MainData.getIns().getEventCaller().callUpdateInformationEvent(d);
+                List<Booster> boosters = Main.getIns().getBoosterManager().createBooster(owner.getUniqueId(), boosterData);
 
                 MainData.getIns().getMessageManager().getMessage("BOUGHT_BOOSTER_COINS")
                         .format("%name%", boosterData.getCustomName())
-                        .format("%price%", String.valueOf(boosterData.getPrice())).sendTo(owner);
+                        .format("%price%", String.valueOf(boosterData.getPrice()))
+                        .format("%quantity%", String.valueOf(boosterData.getQuantity())).sendTo(owner);
+
+                for (Booster booster : boosters) {
+                    Main.getIns().getBoosterManager().addBooster(booster);
+                }
 
                 MainData.getIns().getScheduler().runTaskAsync(() -> {
-                    Main.getIns().getMysqlHandler().saveBooster(booster);
-                    Main.getIns().getBoosterManager().addBooster(booster);
+                    for (Booster booster : boosters) {
+                        Main.getIns().getMysqlHandler().saveBooster(booster);
+                    }
                 });
             } else {
                 MainData.getIns().getMessageManager().getMessage("NO_COINS").sendTo(owner);

@@ -21,7 +21,12 @@ public class SerializableItem extends ItemStack {
     public SerializableItem(JSONObject jsonObject) {
         super();
 
-        setType(Material.valueOf((String) jsonObject.get("Material")));
+        try {
+            setType(Material.valueOf((String) jsonObject.get("Material")));
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            setType(Material.STONE);
+        }
 
         if (jsonObject.containsKey("Amount")) {
             setAmount(((Long) jsonObject.get("Amount")).intValue());

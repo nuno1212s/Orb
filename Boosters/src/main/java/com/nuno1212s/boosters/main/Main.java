@@ -56,7 +56,7 @@ public class Main extends Module {
         ins.getServer().getPluginManager().registerEvents(new PlayerDisconnectListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new LandingInventoryListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new BuyBoostersInventoryListener(), ins);
-        ins.getServer().getPluginManager().registerEvents(new SellInventoryListener(), ins);
+        ins.getServer().getPluginManager().registerEvents(new ConfirmSellInventoryListener(), ins);
 
     }
 

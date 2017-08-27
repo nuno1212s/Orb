@@ -116,6 +116,13 @@ public abstract class PlayerData {
         return this.cash;
     }
 
+    /**
+     * Set the players cash
+     *
+     * AUTO CALLS PLAYER INFORMATION EVENT
+     *
+     * @param cash
+     */
     public synchronized final void setCash(long cash) {
         this.cash = cash;
         MainData.getIns().getRedisHandler().sendMessage("");

@@ -21,14 +21,14 @@ public class BInventoryItem extends InventoryItem {
 
     public BInventoryItem(JSONObject ob) {
         super(ob);
-        float multiplier = (Float) ob.getOrDefault("Multiplier", 1f);
+        float multiplier = ((Double) ob.getOrDefault("Multiplier", 1D)).floatValue();
 
-        int quantity = ((Long) ob.getOrDefault("Quantity", 1)).intValue();
+        int quantity = ((Long) ob.getOrDefault("Quantity", 1L)).intValue();
 
-        long price = (Long) ob.getOrDefault("Price", 1000);
+        long price = (Long) ob.getOrDefault("Price", 1000L);
 
         long durationInMillis = TimeUnit.MINUTES.toMillis(
-                (Long) ob.getOrDefault("Duration", 60));
+                (Long) ob.getOrDefault("Duration", 60L));
 
         String customName = ChatColor.translateAlternateColorCodes('&',
                 (String) ob.getOrDefault("CustomName", "Default booster"));

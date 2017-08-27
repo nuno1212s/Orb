@@ -110,9 +110,15 @@ public class BoosterManager {
      * @param data
      * @return
      */
-    public Booster createBooster(UUID owner, BoosterData data) {
-        return new Booster(getRandomID(), owner, data.getType(), data.getMultiplier(), data.getDurationInMillis(),
-                0, false, data.getApplicableServer(), data.getCustomName());
+    public List<Booster> createBooster(UUID owner, BoosterData data) {
+        ArrayList<Booster> boosters = new ArrayList<>(data.getQuantity());
+
+        for (int i = 0; i < data.getQuantity(); i++) {
+            boosters.add(new Booster(getRandomID(), owner, data.getType(), data.getMultiplier(), data.getDurationInMillis(),
+                    0, false, data.getApplicableServer(), data.getCustomName()));
+        }
+
+        return boosters;
     }
 
     /**

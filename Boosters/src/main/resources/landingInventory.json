@@ -1,0 +1,22 @@
+{
+  "InventoryName": "&cBuy boosters",
+  "InventorySize": 27,
+  "InventoryItems": [
+    {
+      "Slot": 11,
+      "Item": {
+        "Material": "POTION",
+        "DisplayName": "&eMy boosters"
+      },
+      "Flags": ["OWN_BOOSTERS"]
+    },
+    {
+      "Slot": 15,
+      "Item": {
+        "Material": "POTION",
+        "DisplayName": "&eBuy boosters"
+      },
+      "Flags": ["BUY_BOOSTERS"]
+    }
+  ]
+}

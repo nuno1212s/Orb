@@ -14,7 +14,7 @@ import org.bukkit.event.inventory.InventoryDragEvent;
 /**
  * Handles the confirm sell inventory
  */
-public class SellInventoryListener implements Listener {
+public class ConfirmSellInventoryListener implements Listener {
 
     @EventHandler
     public void onDrag(InventoryDragEvent e) {
@@ -46,7 +46,6 @@ public class SellInventoryListener implements Listener {
             InventoryItem boosterItem = cSI.getItemWithFlag("BOOSTER");
 
             if (boosterItem == null) {
-                return;
             }
 
             if (item.hasItemFlag("CONFIRM")) {
