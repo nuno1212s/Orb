@@ -25,11 +25,11 @@ public class PlayerManager {
     }
 
     public PlayerData buildNewPlayerData(UUID playerID, String playerName) {
-        return new CorePlayerData(playerID, new PlayerGroupData(), playerName, 0, System.currentTimeMillis(), true);
+        return new CorePlayerData(playerID, new PlayerGroupData(), playerName, 0, System.currentTimeMillis(), true, MainData.getIns().getRewardManager().getDefaultRewards());
     }
 
     public PlayerData buildNewPiratePlayerData(UUID playerID, String playerName) {
-        return new CorePlayerData(playerID, new PlayerGroupData(), playerName, 0, System.currentTimeMillis(), false);
+        return new CorePlayerData(playerID, new PlayerGroupData(), playerName, 0, System.currentTimeMillis(), false, MainData.getIns().getRewardManager().getDefaultRewards());
     }
 
     public void addToCache(UUID player, PlayerData coreData) {

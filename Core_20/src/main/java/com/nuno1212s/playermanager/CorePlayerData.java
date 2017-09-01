@@ -5,6 +5,7 @@ import com.nuno1212s.permissionmanager.Group;
 import com.nuno1212s.permissionmanager.util.PlayerGroupData;
 import com.nuno1212s.util.Callback;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -12,8 +13,8 @@ import java.util.UUID;
  */
 public class CorePlayerData extends PlayerData {
 
-    public CorePlayerData(UUID playerID, PlayerGroupData groupID, String playerName, long cash, long lastLogin, boolean premium) {
-        super(playerID, groupID, playerName, cash, lastLogin, premium);
+    public CorePlayerData(UUID playerID, PlayerGroupData groupID, String playerName, long cash, long lastLogin, boolean premium, List<Integer> claimed) {
+        super(playerID, groupID, playerName, cash, lastLogin, premium, claimed);
     }
 
     @Override

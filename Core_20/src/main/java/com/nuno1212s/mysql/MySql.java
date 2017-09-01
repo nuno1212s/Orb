@@ -1,12 +1,14 @@
 package com.nuno1212s.mysql;
 
 import com.nuno1212s.config.Config;
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.Group;
 import com.nuno1212s.permissionmanager.GroupType;
 import com.nuno1212s.permissionmanager.PermissionManager;
 import com.nuno1212s.permissionmanager.util.PlayerGroupData;
 import com.nuno1212s.playermanager.CorePlayerData;
 import com.nuno1212s.playermanager.PlayerData;
+import com.nuno1212s.rewards.Reward;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -77,7 +79,8 @@ public class MySql {
                     "PREMIUM BOOL," +
                     "LASTLOGIN TIMESTAMP," +
                     "TELL BOOL," +
-                    "CASH BIGINT)";
+                    "CASH BIGINT," +
+                    "REWARDSTOCLAIM varchar(255))";
 
             st.execute(stm);
 
@@ -92,6 +95,13 @@ public class MySql {
 
             st.execute(stm2);
 
+            String rewardTable = "CREATE TABLE IF NOT EXISTS npcInbox(ID INTEGER PRIMARY KEY AUTO_INCREMENT" +
+                    ", SERVERTYPE varchar(25)" +
+                    ", REWARDTYPE varchar(10)" +
+                    ", POSTDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
+                    ", REWARD TEXT)";
+            st.execute(rewardTable);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -102,8 +112,8 @@ public class MySql {
         try (Connection c = getConnection();
              PreparedStatement select =
                      (playerName == null ?
-                             c.prepareStatement("SELECT GROUPDATA, PLAYERNAME, CASH, PREMIUM, LASTLOGIN, TELL FROM playerData WHERE UUID=? LIMIT 1") :
-                             c.prepareStatement("SELECT GROUPDATA, CASH, PREMIUM, LASTLOGIN, TELL FROM playerData WHERE UUID=? LIMIT 1"))
+                             c.prepareStatement("SELECT GROUPDATA, PLAYERNAME, CASH, PREMIUM, LASTLOGIN, REWARDSTOCLAIM, TELL FROM playerData WHERE UUID=? LIMIT 1") :
+                             c.prepareStatement("SELECT GROUPDATA, CASH, PREMIUM, LASTLOGIN, REWARDSTOCLAIM, TELL FROM playerData WHERE UUID=? LIMIT 1"))
         ) {
             if (playerName == null) {
                 select.setString(1, playerID.toString());
@@ -115,7 +125,12 @@ public class MySql {
                         boolean premium = resultSet.getBoolean("PREMIUM");
                         long lastLogin = resultSet.getDate("LASTLOGIN").getTime();
                         boolean tell = resultSet.getBoolean("TELL");
-                        PlayerData playerData = new CorePlayerData(playerID, new PlayerGroupData(groupid), playerName, cash, lastLogin, premium);
+                        List<Integer> toClaim = new ArrayList<>();
+                        String[] rewards = resultSet.getString("REWARDSTOCLAIM").split(",");
+                        for (String reward : rewards) {
+                            toClaim.add(Integer.parseInt(reward));
+                        }
+                        PlayerData playerData = new CorePlayerData(playerID, new PlayerGroupData(groupid), playerName, cash, lastLogin, premium, toClaim);
                         playerData.setTell(tell);
                         return playerData;
                     }
@@ -129,7 +144,12 @@ public class MySql {
                         boolean premium = resultSet.getBoolean("PREMIUM");
                         long lastLogin = resultSet.getDate("LASTLOGIN").getTime();
                         boolean tell = resultSet.getBoolean("TELL");
-                        PlayerData playerData = new CorePlayerData(playerID, new PlayerGroupData(groupid), playerName, cash, lastLogin, premium);
+                        List<Integer> toClaim = new ArrayList<>();
+                        String[] rewards = resultSet.getString("REWARDSTOCLAIM").split(",");
+                        for (String reward : rewards) {
+                            toClaim.add(Integer.parseInt(reward));
+                        }
+                        PlayerData playerData = new CorePlayerData(playerID, new PlayerGroupData(groupid), playerName, cash, lastLogin, premium, toClaim);
                         playerData.setTell(tell);
                         return playerData;
                     }
@@ -159,7 +179,12 @@ public class MySql {
                     boolean premium = resultSet.getBoolean("PREMIUM");
                     long lastLogin = resultSet.getDate("LASTLOGIN").getTime();
                     boolean tell = resultSet.getBoolean("TELL");
-                    PlayerData playerData = new CorePlayerData(playerID, new PlayerGroupData(groupid), playerName, cash, lastLogin, premium);
+                    List<Integer> toClaim = new ArrayList<>();
+                    String[] rewards = resultSet.getString("REWARDSTOCLAIM").split(",");
+                    for (String reward : rewards) {
+                        toClaim.add(Integer.parseInt(reward));
+                    }
+                    PlayerData playerData = new CorePlayerData(playerID, new PlayerGroupData(groupid), playerName, cash, lastLogin, premium, toClaim);
                     playerData.setTell(tell);
                     return playerData;
                 }
@@ -175,8 +200,8 @@ public class MySql {
     public void savePlayer(PlayerData d) {
 
         try (Connection c = getConnection();
-             PreparedStatement st = c.prepareStatement("INSERT INTO playerData (UUID, GROUPDATA, PLAYERNAME, CASH, PREMIUM, LASTLOGIN, TELL) values(?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?) " +
-                     "ON DUPLICATE KEY UPDATE GROUPDATA=?, CASH=?, PLAYERNAME=?, LASTLOGIN=CURRENT_TIMESTAMP, PREMIUM=?, TELL=?")) {
+             PreparedStatement st = c.prepareStatement("INSERT INTO playerData (UUID, GROUPDATA, PLAYERNAME, CASH, PREMIUM, LASTLOGIN, REWARDSTOCLAIM, TELL) values(?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?) " +
+                     "ON DUPLICATE KEY UPDATE GROUPDATA=?, CASH=?, PLAYERNAME=?, LASTLOGIN=CURRENT_TIMESTAMP, PREMIUM=?, TELL=?, REWARDSTOCLAIM=?")) {
 
             st.setString(1, d.getPlayerID().toString());
             st.setString(2, d.getGroups().toDatabase());
@@ -184,11 +209,13 @@ public class MySql {
             st.setLong(4, d.getCash());
             st.setBoolean(5, d.isPremium());
             st.setBoolean(6, d.isTell());
-            st.setString(7, d.getGroups().toDatabase());
-            st.setLong(8, d.getCash());
-            st.setString(9, d.getPlayerName());
-            st.setBoolean(10, d.isPremium());
-            st.setBoolean(11, d.isTell());
+            st.setString(7, d.getToClaimToString());
+            st.setString(8, d.getGroups().toDatabase());
+            st.setLong(9, d.getCash());
+            st.setString(10, d.getPlayerName());
+            st.setBoolean(11, d.isPremium());
+            st.setBoolean(12, d.isTell());
+            st.setString(13, d.getToClaimToString());
 
             st.executeUpdate();
 
@@ -238,8 +265,8 @@ public class MySql {
     public boolean modifyGroup(short groupID, String parameter, String value) {
 
         try (Connection c = getConnection();
-            PreparedStatement s = c.prepareStatement("SELECT * FROM groupData");
-            PreparedStatement pS = c.prepareStatement("UPDATE groupData SET " + parameter.toUpperCase() + "=? WHERE GROUPID=?")) {
+             PreparedStatement s = c.prepareStatement("SELECT * FROM groupData");
+             PreparedStatement pS = c.prepareStatement("UPDATE groupData SET " + parameter.toUpperCase() + "=? WHERE GROUPID=?")) {
             ResultSet resultSet = s.executeQuery();
             ResultSetMetaData metaData = resultSet.getMetaData();
 
@@ -247,6 +274,7 @@ public class MySql {
                 String columnName = metaData.getColumnName(i);
                 if (columnName.equalsIgnoreCase(parameter)) {
                     String columnType = metaData.getColumnClassName(i);
+                    //Modifies the group data straight into the database (Only requires one method to change any parameter)
                     pS.setShort(2, groupID);
                     try {
                         Class<?> cT = Class.forName(columnType);
@@ -293,8 +321,8 @@ public class MySql {
 
     public void addGroup(Group g) {
         try (Connection c = getConnection();
-            PreparedStatement s = c.prepareStatement("INSERT INTO groupData(GROUPID, GROUPNAME, APPLICABLESERVER, GROUPTYPE, ISDEFAULT, OVERRIDES, PREFIX, SUFFIX, SCOREBOARD, PERMISSIONS)" +
-                    " values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+             PreparedStatement s = c.prepareStatement("INSERT INTO groupData(GROUPID, GROUPNAME, APPLICABLESERVER, GROUPTYPE, ISDEFAULT, OVERRIDES, PREFIX, SUFFIX, SCOREBOARD, PERMISSIONS)" +
+                     " values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
             s.setShort(1, g.getGroupID());
             s.setString(2, g.getGroupName());
             s.setString(3, g.getApplicableServer());
@@ -309,6 +337,71 @@ public class MySql {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    public List<Reward> getRewards() {
+        List<Reward> rewards = new ArrayList<>();
+
+        try (Connection c = getConnection();
+             PreparedStatement s = c.prepareStatement("SELECT * FROM npcInbox");
+             ResultSet resultSet = s.executeQuery()) {
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("ID");
+                Reward.RewardType type = Reward.RewardType.valueOf(resultSet.getString("REWARDYTYPE"));
+                String serverType = resultSet.getString("SERVERTYPE");
+                String reward = resultSet.getString("REWARD");
+                boolean isDefault = resultSet.getBoolean("DEFAULT");
+                rewards.add(new Reward(id, type, isDefault, serverType, reward));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return rewards;
+    }
+
+    public int saveReward(Reward r) {
+        try (Connection c = getConnection();
+             PreparedStatement s = c.prepareStatement("INSERT INTO npcInbox(SERVERTYPE, REWARDTYPE, REWARD, DEFAULT) values(?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
+            s.setString(1, r.getServerType());
+            s.setString(2, r.getType().name());
+            s.setString(3, r.rewardToString());
+            s.setBoolean(4, r.isDefault());
+            s.executeUpdate();
+
+            try (ResultSet generatedKeys = s.getGeneratedKeys()) {
+                generatedKeys.next();
+                return generatedKeys.getInt(1);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public void removeReward(int id) {
+        try (Connection c = MainData.getIns().getMySql().getConnection();
+             PreparedStatement s = c.prepareStatement("DELETE FROM npcInbox WHERE ID=?")) {
+
+            s.setInt(1, id);
+
+            s.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addRewardToClaim(int rewardID) {
+        try (Connection c = MainData.getIns().getMySql().getConnection();
+             PreparedStatement s = c.prepareStatement("UPDATE playerData SET REWARDSTOCLAIM=CONCAT(REWARDSTOCLAIM" +
+                     ", IF(REWARDSTOCLAIM = '', '', \", \"), \"" + String.valueOf(rewardID) + "\"")) {
+            s.executeUpdate();
+        } catch (SQLException e) {
+
         }
     }
 

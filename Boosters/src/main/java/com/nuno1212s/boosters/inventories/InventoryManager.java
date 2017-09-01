@@ -109,7 +109,7 @@ public class InventoryManager {
      * Set the current page of a player
      *
      * @param player The player
-     * @param page The current page
+     * @param page   The current page
      */
     public void setPage(UUID player, int page) {
         this.pages.put(player, page);
@@ -117,6 +117,7 @@ public class InventoryManager {
 
     /**
      * Remove the current player page from storage
+     *
      * @param player
      */
     public void removePage(UUID player) {
@@ -126,8 +127,8 @@ public class InventoryManager {
     /**
      * Get the boosters for a specific page
      *
-     * @param player The player to get the boosters from
-     * @param page The page number (1 -> n)
+     * @param player  The player to get the boosters from
+     * @param page    The page number (1 -> n)
      * @param perPage The amount of boosters per page
      * @return
      */
@@ -137,7 +138,7 @@ public class InventoryManager {
         boosterForPlayer.sort(new Comparator<Booster>() {
             @Override
             public int compare(Booster o1, Booster o2) {
-                return ((Boolean) o1.isActivated()).compareTo(o2.isActivated());
+                return Boolean.compare(o1.isActivated(), o2.isActivated());
             }
         });
 
@@ -170,6 +171,12 @@ public class InventoryManager {
         return i;
     }
 
+    /**
+     * Build the confirm purchase inventory
+     *
+     * @param booster The booster item that is going to be purchased
+     * @return
+     */
     public Inventory buildBuyConfirmInventory(BInventoryItem booster) {
         Inventory inventory = this.confirmSellInventory.buildInventory();
 
@@ -188,7 +195,7 @@ public class InventoryManager {
      * Handles the buying of the boosters (after the confirm buy inventory)
      *
      * @param owner The owner of the booster
-     * @param item The item with the booster information
+     * @param item  The item with the booster information
      */
     public void buyBooster(Player owner, ItemStack item) {
         BoosterData boosterData = BoosterData.readFromItem(item);

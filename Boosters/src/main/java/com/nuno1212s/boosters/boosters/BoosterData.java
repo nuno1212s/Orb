@@ -52,7 +52,7 @@ public class BoosterData {
         BoosterType t = BoosterType.valueOf((String) values.get("Type"));
         String applicableServer = (String) values.get("ApplicableServer");
         boolean cash = (Integer) values.get("CashItem") == 1;
-        return new BoosterData(multiplier, quantity, duration, price, applicableServer, t, boosterName, cash);
+        return new BoosterData(multiplier, quantity, duration, price, boosterName, t, applicableServer, cash);
     }
 
 }

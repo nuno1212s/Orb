@@ -4,6 +4,7 @@ import com.nuno1212s.boosters.boosters.Booster;
 import com.nuno1212s.boosters.boosters.BoosterType;
 import com.nuno1212s.main.MainData;
 
+import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -92,9 +93,8 @@ public class MySql {
         ArrayList<Booster> loadBoosters = new ArrayList<>();
 
         try (Connection c = MainData.getIns().getMySql().getConnection();
-             PreparedStatement s = c.prepareStatement("SELECT * FROM boosters")) {
-
-            ResultSet resultSet = s.executeQuery();
+             PreparedStatement s = c.prepareStatement("SELECT * FROM boosters");
+             ResultSet resultSet = s.executeQuery()) {
 
             while (resultSet.next()) {
 
@@ -132,18 +132,20 @@ public class MySql {
 
             s.setString(1, ownerID.toString());
 
-            ResultSet resultSet = s.executeQuery();
+            try (ResultSet resultSet = s.executeQuery()) {
 
-            while (resultSet.next()) {
-                String boosterID = resultSet.getString("ID");
-                BoosterType type = BoosterType.valueOf(resultSet.getString("BOOSTERTYPE"));
-                float multiplier = resultSet.getFloat("MULTIPLIER");
-                long duration = resultSet.getLong("DURATIONINMILLIS"), activation = resultSet.getLong("ACTIVATIONTIME");
-                boolean activated = resultSet.getBoolean("ACTIVATED");
-                String applicableServer = resultSet.getString("APPLICABLESERVER");
-                String customName = resultSet.getString("CUSTOMNAME");
+                while (resultSet.next()) {
+                    String boosterID = resultSet.getString("ID");
+                    BoosterType type = BoosterType.valueOf(resultSet.getString("BOOSTERTYPE"));
+                    float multiplier = resultSet.getFloat("MULTIPLIER");
+                    long duration = resultSet.getLong("DURATIONINMILLIS"), activation = resultSet.getLong("ACTIVATIONTIME");
+                    boolean activated = resultSet.getBoolean("ACTIVATED");
+                    String applicableServer = resultSet.getString("APPLICABLESERVER");
+                    String customName = resultSet.getString("CUSTOMNAME");
 
-                booster.add(new Booster(boosterID, ownerID, type, multiplier, duration, activation, activated, applicableServer, customName));
+                    booster.add(new Booster(boosterID, ownerID, type, multiplier, duration, activation, activated, applicableServer, customName));
+                }
+
             }
 
         } catch (SQLException e) {

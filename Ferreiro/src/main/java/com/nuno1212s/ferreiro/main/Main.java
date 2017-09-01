@@ -26,6 +26,8 @@ public class Main extends Module {
 
     @Override
     public void onEnable() {
+        // TODO: 01/09/2017 VERY UGLYYYYYY, remake ASAP
+
         ins = this;
         inventories = new HashMap<>();
 

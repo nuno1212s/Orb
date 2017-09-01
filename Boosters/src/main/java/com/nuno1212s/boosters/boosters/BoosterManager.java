@@ -282,4 +282,22 @@ public class BoosterManager {
         return false;
     }
 
+    /**
+     * Check if the player can activate a booster
+     *
+     * If the player has a booster currently active (A booster that is applicable on the server and that is owned by him),
+     * he cannot activate a second one
+     */
+    public boolean canActivateBooster(UUID owner) {
+        synchronized (boosters) {
+            for (Booster booster : boosters) {
+                if (booster.isActivated() && booster.isApplicable(owner)
+                        && booster.getOwner() != null && booster.getOwner().equals(owner)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
 }

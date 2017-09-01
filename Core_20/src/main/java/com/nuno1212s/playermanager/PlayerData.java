@@ -7,6 +7,7 @@ import com.nuno1212s.util.Callback;
 import lombok.*;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -38,6 +39,9 @@ public abstract class PlayerData {
 
     protected boolean tell;
 
+    @NonNull
+    protected List<Integer> toClaim;
+
     public PlayerData(PlayerData coreData) {
         this.playerID = coreData.getPlayerID();
         this.groups = coreData.getGroups();
@@ -46,6 +50,7 @@ public abstract class PlayerData {
         this.lastLogin = coreData.getLastLogin();
         this.premium = coreData.isPremium();
         this.tell = coreData.isTell();
+        this.toClaim = coreData.getToClaim();
     }
 
     /**
@@ -134,5 +139,42 @@ public abstract class PlayerData {
     @Override
     public boolean equals(Object obj) {
         return obj instanceof PlayerData && ((PlayerData) obj).getPlayerID().equals(this.getPlayerID());
+    }
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    public final boolean hasClaimed(int id) {
+        return !this.toClaim.contains(id);
+    }
+
+    /**
+     *
+     * @param id
+     */
+    public final void claim(int id) {
+        if (this.toClaim.contains(id)) {
+            toClaim.remove(id);
+        }
+    }
+
+    /**
+     *
+     * @param id
+     */
+    public final void addToClaim(int id) {
+        toClaim.add(id);
+    }
+
+    /**
+     *
+     * @return
+     */
+    public final String getToClaimToString() {
+        StringBuilder builder = new StringBuilder();
+        this.toClaim.forEach(builder::append);
+        return builder.toString();
     }
 }

@@ -28,7 +28,7 @@ public class PlayerJoinListener implements Listener {
         PlayerData coreData = MainData.getIns().getMySql().getPlayerData(e.getUniqueId(), e.getName());
 
         if (coreData == null) {
-            coreData = new CorePlayerData(e.getUniqueId(), new PlayerGroupData(), e.getName(), 0, System.currentTimeMillis(), true);
+            coreData = new CorePlayerData(e.getUniqueId(), new PlayerGroupData(), e.getName(), 0, System.currentTimeMillis(), true, MainData.getIns().getRewardManager().getDefaultRewards());
         }
 
         CoreLoginEvent event = new CoreLoginEvent(e, coreData);

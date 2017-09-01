@@ -31,7 +31,7 @@ public class BInventoryItem extends InventoryItem {
                 (Long) ob.getOrDefault("Duration", 60L));
 
         String customName = ChatColor.translateAlternateColorCodes('&',
-                (String) ob.getOrDefault("CustomName", "Default booster"));
+                (String) ob.getOrDefault("CustomName", "&aDefault booster"));
 
         BoosterType type = BoosterType.valueOf(
                 ((String) ob.getOrDefault("Type", "PLAYER_SERVER")).toUpperCase());
@@ -41,7 +41,7 @@ public class BInventoryItem extends InventoryItem {
 
         boolean cash = (Boolean) ob.getOrDefault("IsCash", true);
 
-        data = new BoosterData(multiplier, quantity, price, durationInMillis, customName, type, applicableServer, cash);
+        data = new BoosterData(multiplier, quantity, durationInMillis, price, customName, type, applicableServer, cash);
     }
 
 

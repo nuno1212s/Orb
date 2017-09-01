@@ -47,6 +47,10 @@ public class ServerManager {
 
     }
 
+    public boolean isApplicable(String serverType) {
+        return serverType.equalsIgnoreCase("GLOBAL") || serverType.equalsIgnoreCase(this.getServerType());
+    }
+
     public void save() {
         JSONObject obj = new JSONObject();
 

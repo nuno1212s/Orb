@@ -2,6 +2,7 @@ package com.nuno1212s.boosters.listeners;
 
 import com.nuno1212s.boosters.boosters.Booster;
 import com.nuno1212s.boosters.main.Main;
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.util.inventories.InventoryData;
 import com.nuno1212s.util.inventories.InventoryItem;
 import org.bukkit.Material;
@@ -68,6 +69,11 @@ public class OwnBoostersInventoryListener implements Listener {
                     return;
                 }
 
+                if (!Main.getIns().getBoosterManager().canActivateBooster(e.getWhoClicked().getUniqueId())) {
+                    MainData.getIns().getMessageManager().getMessage("BOOSTER_ACTIVE").sendTo(e.getWhoClicked());
+                    return;
+                }
+
                 onClose.add(e.getWhoClicked().getUniqueId());
                 e.getWhoClicked().closeInventory();
                 e.getWhoClicked().openInventory(Main.getIns().getInventoryManager().buildConfirmInventory(b));
@@ -91,6 +97,9 @@ public class OwnBoostersInventoryListener implements Listener {
                         Inventory inv = Main.getIns().getInventoryManager().buildInventoryForPlayer(playerID, page - 1);
                         e.getClickedInventory().setContents(inv.getContents());
                         Main.getIns().getInventoryManager().setPage(playerID, page - 1);
+                    } else {
+                        e.getWhoClicked().closeInventory();
+                        e.getWhoClicked().openInventory(Main.getIns().getInventoryManager().buildLandingInventory());
                     }
                 }
             }
