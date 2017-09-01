@@ -16,6 +16,8 @@ import java.util.UUID;
  */
 public class MySql {
 
+    //TODO: Make items have servers (Factions items can't be sold on the rankup server)
+
     public MySql() {
         try (Connection connection = MainData.getIns().getMySql().getConnection();
              Statement s = connection.createStatement()) {
@@ -72,8 +74,8 @@ public class MySql {
     public List<Item> getAllItems() {
         List<Item> items = new ArrayList<>();
         try (Connection connection = MainData.getIns().getMySql().getConnection();
-             PreparedStatement statement = connection.prepareStatement("SELECT * FROM marketItems")) {
-            ResultSet resultSet = statement.executeQuery();
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM marketItems");
+             ResultSet resultSet = statement.executeQuery();) {
             while (resultSet.next()) {
                 String itemID = resultSet.getString("ITEMID");
                 UUID owner = UUID.fromString(resultSet.getString("OWNER"));

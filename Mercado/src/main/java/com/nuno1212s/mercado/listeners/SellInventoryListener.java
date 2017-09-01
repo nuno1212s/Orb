@@ -10,9 +10,11 @@ import com.nuno1212s.util.Callback;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.text.NumberFormat;
@@ -114,6 +116,14 @@ public class SellInventoryListener extends InventoryListener {
         return true;
     }
 
+    /**
+     * Adds the callback to the chat handler
+     *
+     * Handles the player disconnecting mid price typing {@link PlayerQuitListener#onQuit(PlayerQuitEvent)}
+     *
+     * @param player The owner of the item
+     * @param item The item that is being placed
+     */
     private void addCallback(UUID player, Item item) {
         Main.getIns().getMarketManager().getChatManager().addCallback(player, new Callback() {
             @Override
@@ -136,6 +146,11 @@ public class SellInventoryListener extends InventoryListener {
 
                             return;
                         } catch (NumberFormatException e) {}
+                    } else if (args[0] instanceof Boolean && !(boolean) args[0]) {
+                        //THIS MEANS THE PLAYER DISCONNECTED BEFORE WRITING THE PRICE
+                        Player arg = (Player) args[1];
+                        arg.getInventory().addItem(item.getItem());
+                        return;
                     }
                 }
                 MainData.getIns().getMessageManager().getMessage("COST_MUST_BE_NUMBER").sendTo(Bukkit.getPlayer(player));
