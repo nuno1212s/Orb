@@ -12,6 +12,7 @@ import com.nuno1212s.util.Callback;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -67,6 +68,17 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer {
         PlayerGroupData.EXTENSION_RESULT extension_result = this.groupData.setCurrentGroup(groupID, duration);
         Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(this));
         return extension_result;
+    }
+
+    /**
+     * Use the global check expiration method to also check the expiration for the local groups
+     * 
+     * @param p
+     */
+    @Override
+    public void checkExpiration(Player p) {
+        super.checkExpiration(p);
+        this.groupData.checkExpiration(p);
     }
 
     @Override

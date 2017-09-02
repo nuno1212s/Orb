@@ -68,12 +68,22 @@ public abstract class PlayerData {
         return extension_result;
     }
 
+    /**
+     * Get the ID of the main player group
+     *
+     * {@link #getMainGroup()} Has a similar outcome, except it auto fetches the group from the group lists,
+     * If you only need the group ID, this method is less expensive
+     *
+     * @return
+     */
     public short getGroupID() {
         return this.groups.getActiveGroup();
     }
 
     /**
      * Get the main player group
+     *
+     * If you only need the ID of the group {@link #getGroupID()} should be used
      *
      * @return The main player group
      */
@@ -90,6 +100,8 @@ public abstract class PlayerData {
     /**
      * All classes that extend Player Data should override this method and do their own
      * form of saving player data
+     *
+     * The {@link Callback#callback(Object...)} should be called when the player data is finished saving
      *
      * @param c The callback for when it is done saving
      */
@@ -109,10 +121,23 @@ public abstract class PlayerData {
      */
     public abstract Group getRepresentingGroup();
 
+    /**
+     * Check if the player's global group has expired.
+     *
+     * THIS DOES NOT AUTO CHECK SERVER GROUPS!
+     * You can however Override this method to also check the server groups at the same time
+     * and avoid creating another timer
+     *
+     * @param p The player instance
+     */
     public void checkExpiration(Player p) {
         this.groups.checkExpiration(p);
     }
 
+    /**
+     *
+     * @return
+     */
     public String getNameWithPrefix() {
         return this.getRepresentingGroup().getGroupPrefix() + this.getPlayerName();
     }

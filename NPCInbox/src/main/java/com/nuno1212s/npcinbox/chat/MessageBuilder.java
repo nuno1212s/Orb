@@ -38,6 +38,10 @@ public class MessageBuilder {
         return this;
     }
 
+    /**
+     * Returns the reward with the finished messages as the reward
+     * @return
+     */
     public Reward buildReward() {
         this.unfinishedReward.setReward(this.messages);
 

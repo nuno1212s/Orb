@@ -147,9 +147,13 @@ public class InventoryData {
     public boolean equals(Object obj) {
 
         if (obj instanceof InventoryData) {
-            return ((InventoryData) obj).getInventoryName().equals(this.getInventoryName());
+            //Compare the size before the name because the size is much faster to compare than the name
+            // and the size, like the name can't be changed
+            return ((InventoryData) obj).getInventorySize() == this.getInventorySize()
+                    && ((InventoryData) obj).getInventoryName().equals(this.getInventoryName());
         } else if (obj instanceof Inventory) {
-            return ((Inventory) obj).getName().equals(this.getInventoryName());
+            return ((Inventory) obj).getSize() == this.getInventorySize()
+                    && ((Inventory) obj).getName().equals(this.getInventoryName());
         }
 
         return false;

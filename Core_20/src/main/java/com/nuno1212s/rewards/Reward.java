@@ -23,6 +23,7 @@ import java.util.List;
 public class Reward {
 
     @Getter
+    @Setter
     private int id;
 
     @Getter

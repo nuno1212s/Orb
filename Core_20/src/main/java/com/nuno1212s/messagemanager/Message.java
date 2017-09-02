@@ -86,7 +86,7 @@ public class Message {
         }
     }
 
-    public void send(CommandSender... sender) {
+    private void send(CommandSender... sender) {
         this.messages.forEach(message -> message.sendTo(this.formats, sender));
     }
 

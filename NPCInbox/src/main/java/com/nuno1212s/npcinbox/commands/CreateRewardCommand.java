@@ -1,9 +1,11 @@
 package com.nuno1212s.npcinbox.commands;
 
 import com.nuno1212s.main.MainData;
+import com.nuno1212s.npcinbox.main.Main;
 import com.nuno1212s.rewards.Reward;
 import com.nuno1212s.util.CommandUtil.Command;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;
@@ -20,23 +22,29 @@ public class CreateRewardCommand implements Command {
 
     @Override
     public String usage() {
-        return ChatColor.RED + "/reward create <serverType> <type> <args>";
+        return ChatColor.RED + "/reward create <serverType> <type> <isDefault> <args>";
     }
 
     @Override
     public void execute(Player player, String[] args) {
-        if (!player.hasPermission("createreward")) {
+        if (!player.hasPermission("rewards.createreward")) {
             MainData.getIns().getMessageManager().getMessage("NO_PERMISSION").sendTo(player);
             return;
         }
 
-        if (args.length < 4) {
+        if (args.length < 5) {
             player.sendMessage(usage());
+            return;
+        }
+
+        if (player.getItemInHand() == null || player.getItemInHand().getType() == Material.AIR) {
+            player.sendMessage(ChatColor.RED + "You must have the reward item in your hand");
             return;
         }
 
         String serverType = args[1];
         Reward.RewardType type;
+        boolean isDefault = Boolean.parseBoolean(args[3]);
         try {
             type = Reward.RewardType.valueOf(args[2]);
         } catch (IllegalArgumentException e) {
@@ -44,8 +52,16 @@ public class CreateRewardCommand implements Command {
             return;
         }
 
+        Reward r = new Reward(0, type, isDefault, serverType, player.getItemInHand().clone(), null);
+
         switch (type) {
             case MESSAGE: {
+                Main.getIns().getChatManager().registerPlayer(player.getUniqueId(), r);
+                player.sendMessage(ChatColor.GREEN + "Type the messages in the chat:");
+                player.sendMessage(ChatColor.RED + "Use /reward cancel to cancel the reward creation");
+                player.sendMessage(ChatColor.RED + "Use /reward clean to reset the messages");
+                player.sendMessage(ChatColor.RED + "Use /reward rlast to remove the last message");
+                player.sendMessage(ChatColor.GREEN + "Use /reward finish to create the reward");
                 break;
             }
             case ITEM: {

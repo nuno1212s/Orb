@@ -24,22 +24,56 @@ public class PlayerManager {
         cache = CacheBuilder.newBuilder().expireAfterWrite(5, TimeUnit.SECONDS).build().asMap();
     }
 
+    /**
+     * Creates a new player data class for the given UUID and player name
+     *
+     * @param playerID The ID of the player
+     * @param playerName The name of the player
+     * @return
+     */
     public PlayerData buildNewPlayerData(UUID playerID, String playerName) {
         return new CorePlayerData(playerID, new PlayerGroupData(), playerName, 0, System.currentTimeMillis(), true, MainData.getIns().getRewardManager().getDefaultRewards());
     }
 
+    /**
+     * Creates a new player data class for the given UUID and player name.
+     *
+     * Note, this player class is marked as a hacked account (Not premium)
+     *
+     * @param playerID
+     * @param playerName
+     * @return
+     */
     public PlayerData buildNewPiratePlayerData(UUID playerID, String playerName) {
         return new CorePlayerData(playerID, new PlayerGroupData(), playerName, 0, System.currentTimeMillis(), false, MainData.getIns().getRewardManager().getDefaultRewards());
     }
 
+    /**
+     * Adds a player data to the player cache
+     *
+     * @param player The ID of the player
+     * @param coreData The player data of the player
+     */
     public void addToCache(UUID player, PlayerData coreData) {
         this.cache.put(player, coreData);
     }
 
+    /**
+     * Get the player data that is stored in the cache
+     *
+     * @param player
+     * @return
+     */
     public PlayerData getCachedPlayer(UUID player) {
         return (PlayerData) this.cache.get(player);
     }
 
+    /**
+     * Validates the player join
+     *
+     * @param player
+     * @return
+     */
     public PlayerData validatePlayerJoin(UUID player) {
         PlayerData playerInfo = (PlayerData) this.cache.get(player);
         this.cache.remove(player);
@@ -47,10 +81,20 @@ public class PlayerManager {
         return playerInfo;
     }
 
+    /**
+     * Removes the player data from local storage
+     * @param d
+     */
     public void removePlayer(PlayerData d) {
         this.players.remove(d);
     }
 
+    /**
+     * Get the player data given the player UUID
+     *
+     * @param playerID
+     * @return
+     */
     public PlayerData getPlayer(UUID playerID) {
         synchronized (players) {
             for (PlayerData player : players) {
@@ -62,6 +106,12 @@ public class PlayerManager {
         return null;
     }
 
+    /**
+     * Get the player data given the player's name
+     *
+     * @param playerName
+     * @return
+     */
     public PlayerData getPlayer(String playerName) {
         synchronized (players) {
             for (PlayerData player : players) {
@@ -125,6 +175,13 @@ public class PlayerManager {
         return e.getPlayerInfo();
     }
 
+    /**
+     * Returns a safe to iterate player list
+     *
+     * NOTE: Any changes to this list (Removing / adding players will not cause a change in this classes player list)
+     *
+     * @return
+     */
     public List<PlayerData> getPlayers() {
         synchronized (players) {
             return new ArrayList<>(players);

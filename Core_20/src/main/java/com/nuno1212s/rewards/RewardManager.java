@@ -19,6 +19,12 @@ public class RewardManager {
         rewards.addAll(MainData.getIns().getMySql().getRewards());
     }
 
+    /**
+     * Get a reward with a certain id
+     *
+     * @param id
+     * @return
+     */
     public Reward getReward(int id) {
 
         synchronized (rewards) {
@@ -32,6 +38,10 @@ public class RewardManager {
         return null;
     }
 
+    /**
+     * Get the default rewards for a new player
+     * @return
+     */
     public List<Integer> getDefaultRewards() {
         List<Integer> claimers = new ArrayList<>();
 
@@ -44,8 +54,25 @@ public class RewardManager {
         return claimers;
     }
 
+    /**
+     *
+     * @param r
+     */
     public void addReward(Reward r) {
         this.rewards.add(r);
+    }
+
+    /**
+     *
+     * @param unfinishedReward
+     */
+    public void createReward(Reward unfinishedReward) {
+        MainData.getIns().getScheduler().runTaskAsync(() -> {
+            int i = MainData.getIns().getMySql().saveReward(unfinishedReward);
+            unfinishedReward.setId(i);
+            addReward(unfinishedReward);
+            MainData.getIns().getMySql().addRewardToClaim(i);
+        });
     }
 
 }

@@ -63,6 +63,13 @@ public class PlayerGroupData {
         return null;
     }
 
+    /**
+     * Sets the current player group
+     *
+     * @param groupID The ID of the group
+     * @param duration The duration of the group
+     * @return The result of the change
+     */
     public EXTENSION_RESULT setCurrentGroup(short groupID, long duration) {
         PlayerGroup g = new PlayerGroup(groupID, -1, duration);
 
@@ -103,10 +110,15 @@ public class PlayerGroupData {
         while (groupIterator.hasNext()) {
             PlayerGroup group = groupIterator.next();
 
+            /*If the group is already in the players group list
+            * it should be extended
+            * If the group is not currently active, it should also be activated
+            */
             if (group.getGroupID() == groupID) {
                 toActivate = group;
                 toActivate.extendDuration(duration);
                 if (group.isActive()) {
+                    //If the group is active, no need to remove it and re-add it as the first group
                     return EXTENSION_RESULT.EXTENDED_CURRENT;
                 }
                 groupIterator.remove();
