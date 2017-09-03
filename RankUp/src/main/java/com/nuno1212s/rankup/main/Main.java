@@ -8,9 +8,7 @@ import com.nuno1212s.modulemanager.ModuleData;
 import com.nuno1212s.permissionmanager.Group;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.rankup.economy.CoinCommand;
-import com.nuno1212s.rankup.events.PlayerDisconnectListener;
-import com.nuno1212s.rankup.events.PlayerJoinListener;
-import com.nuno1212s.rankup.events.PlayerUpdateListener;
+import com.nuno1212s.rankup.events.*;
 import com.nuno1212s.rankup.mysql.MySql;
 import com.nuno1212s.rankup.playermanager.RUPlayerData;
 import com.nuno1212s.rankup.rankup.RankUpCommand;
@@ -24,7 +22,7 @@ import java.text.NumberFormat;
 /**
  * Main Class
  */
-@ModuleData(name = "RankUp", version = "1.1-SNAPSHOT", dependencies = {"Crates", "Displays", "Classes"})
+@ModuleData(name = "RankUp", version = "1.1-SNAPSHOT", dependencies = {"Crates", "Displays", "Classes", "Boosters", "Minas"})
 public class Main extends Module {
 
     @Getter
@@ -79,6 +77,8 @@ public class Main extends Module {
         plugin.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), plugin);
         plugin.getServer().getPluginManager().registerEvents(new PlayerUpdateListener(), plugin);
         plugin.getServer().getPluginManager().registerEvents(new PlayerDisconnectListener(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new MCMMOExperienceListener(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new ForceMCMMOBreakEvent(), plugin);
     }
 
     @Override

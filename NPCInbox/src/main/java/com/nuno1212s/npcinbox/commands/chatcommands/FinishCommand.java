@@ -8,7 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 /**
- * Created by COMP on 02/09/2017.
+ * Handles the /reward finish command
  */
 public class FinishCommand implements Command {
 
@@ -36,6 +36,8 @@ public class FinishCommand implements Command {
         }
 
         MainData.getIns().getRewardManager().createReward(playerMessageBuilder.buildReward());
+        Main.getIns().getChatManager().unregisterPlayer(player.getUniqueId());
+        player.sendMessage(ChatColor.GREEN + "Created reward successfully!");
 
     }
 }

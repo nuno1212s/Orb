@@ -5,6 +5,8 @@ package com.nuno1212s.rediscommunication;
  */
 public interface RedisReceiver {
 
+    String channel();
+
     void onReceived(Message message);
 
 }

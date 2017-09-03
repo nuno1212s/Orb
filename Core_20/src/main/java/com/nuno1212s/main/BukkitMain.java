@@ -53,9 +53,10 @@ public class BukkitMain extends JavaPlugin {
             }
         });
         data.setDataFolder(this.getDataFolder());
-        data.setMySql(new MySql(new BukkitConfig(this.getConfig())));
-        data.setRedisHandler(new RedisHandler(new BukkitConfig(this.getConfig())));
+        BukkitConfig config = new BukkitConfig(this.getConfig());
         data.setScheduler(new BukkitScheduler(this.getServer().getScheduler(), this));
+        data.setMySql(new MySql(config));
+        data.setRedisHandler(new RedisHandler(config));
         data.setServerManager(new ServerManager(this.getDataFolder()));
         data.setPermissionManager(new PermissionManager(true));
         data.setPlayerManager(new PlayerManager());

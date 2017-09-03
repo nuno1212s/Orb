@@ -266,7 +266,7 @@ public class InventoryManager {
         BoosterData data = b.getData();
         placeHolders.put("%booster%", data.getCustomName());
 
-        placeHolders.put("%multiplier%", String.format("%.2f", data.getMultiplier()));
+        placeHolders.put("%multiplier%", String.format("%.2f", data.getMultiplier() + 1));
 
         placeHolders.put("%duration%", String.valueOf(TimeUnit.MILLISECONDS.toHours(data.getDurationInMillis())));
 
@@ -290,7 +290,7 @@ public class InventoryManager {
 
         placeHolders.put("%booster%", b.getCustomName());
 
-        placeHolders.put("%multiplier%", String.format("%.2f", b.getMultiplier()));
+        placeHolders.put("%multiplier%", String.format("%.2f", b.getMultiplier() + 1));
 
         placeHolders.put("%duration%", String.valueOf(TimeUnit.MILLISECONDS.toHours(b.getDurationInMillis())));
 

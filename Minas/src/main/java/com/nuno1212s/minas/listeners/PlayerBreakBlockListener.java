@@ -1,12 +1,15 @@
 package com.nuno1212s.minas.listeners;
 
 import com.nuno1212s.main.MainData;
+import com.nuno1212s.minas.events.PlayerBreakBlockMineEvent;
 import com.nuno1212s.minas.main.Main;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -21,18 +24,17 @@ public class PlayerBreakBlockListener implements Listener {
 
     Random r = new Random();
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onBreak(BlockBreakEvent e) {
         Location l = e.getBlock().getLocation();
         if (Main.getIns().getMineManager().isInAMine(l)) {
             e.setCancelled(true);
 
-            //Collection<ItemStack> drops = e.getBlock().getDrops(e.getPlayer().getItemInHand().clone());
-
             ItemStack[] drops = getDrops(e.getPlayer().getItemInHand(), e.getBlock());
-            //System.out.println(Arrays.asList(drops));
 
+            //28
             e.getPlayer().getInventory().addItem(drops);
+            Bukkit.getServer().getPluginManager().callEvent(new PlayerBreakBlockMineEvent(e));
             e.getBlock().setType(Material.AIR);
         }
     }

@@ -33,6 +33,7 @@ public class BungeeMain extends Plugin {
         main.setEventCaller((o) -> {});
         main.setDataFolder(this.getDataFolder());
         File config = new File(this.getDataFolder(), "config.yml");
+        main.setScheduler(new BungeeScheduler(this.getProxy().getScheduler(), this));
         main.setMySql(
                 new MySql(
                         new BungeeConfig(this,
@@ -41,7 +42,6 @@ public class BungeeMain extends Plugin {
         main.setServerManager(new ServerManager(this.getDataFolder()));
         main.setPermissionManager(new PermissionManager(false));
         main.setPlayerManager(new PlayerManager());
-        main.setScheduler(new BungeeScheduler(this.getProxy().getScheduler(), this));
         main.setModuleManager(new ModuleManager(this.getDataFolder(), getClass().getClassLoader()));
     }
 

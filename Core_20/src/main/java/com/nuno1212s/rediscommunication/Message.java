@@ -1,10 +1,15 @@
 package com.nuno1212s.rediscommunication;
 
+import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import lombok.Getter;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
-import java.util.ArrayList;
+import java.io.IOException;
+import java.io.StringReader;
 
 /**
  * Message
@@ -12,31 +17,39 @@ import java.util.ArrayList;
 public class Message {
 
     @Getter
-    ArrayList<String> messages;
+    private String channel, reason;
 
     @Getter
-    String reason;
+    private JSONObject data;
 
-    @Getter
-    byte[] bytes;
+    public Message(byte[] data) {
+        ByteArrayDataInput dataInput = ByteStreams.newDataInput(data);
+        this.channel = dataInput.readUTF();
+        this.reason = dataInput.readUTF();
 
-    public Message(String fromString) {
-        String[] messages = fromString.split("  ");
-        ByteArrayDataOutput data = ByteStreams.newDataOutput();
-
-        for (String message : messages) {
-            data.writeUTF(message);
+        try (StringReader r = new StringReader(dataInput.readUTF())) {
+            this.data = (JSONObject) new JSONParser().parse(r);
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
         }
 
-        this.bytes = data.toByteArray();
-
     }
 
-    public String toString() {
-        ByteArrayDataOutput array = ByteStreams.newDataOutput();
-        array.writeUTF(reason);
-        messages.forEach(array::writeUTF);
-        return new String(array.toByteArray());
+    public Message(String channel, String reason, JSONObject data) {
+        this.channel = channel;
+        this.reason = reason;
+        this.data = data;
     }
+
+    public byte[] toByteArray() {
+        ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();
+
+        dataOutput.writeUTF(channel);
+        dataOutput.writeUTF(reason);
+        dataOutput.writeUTF(data.toJSONString());
+
+        return dataOutput.toByteArray();
+    }
+
 
 }

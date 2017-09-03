@@ -18,6 +18,7 @@ public class RewardsCommand extends CommandManager {
         addCommand(new CleanCommand());
         addCommand(new FinishCommand());
         addCommand(new RLastCommand());
+        addCommand(new OpenRewardInventoryCommand());
     }
 
 }

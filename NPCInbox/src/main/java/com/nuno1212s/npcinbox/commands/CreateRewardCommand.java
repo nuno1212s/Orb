@@ -1,6 +1,7 @@
 package com.nuno1212s.npcinbox.commands;
 
 import com.nuno1212s.main.MainData;
+import com.nuno1212s.npcinbox.inventories.InventoryBuilder;
 import com.nuno1212s.npcinbox.main.Main;
 import com.nuno1212s.rewards.Reward;
 import com.nuno1212s.util.CommandUtil.Command;
@@ -17,7 +18,7 @@ public class CreateRewardCommand implements Command {
 
     @Override
     public String[] names() {
-        return new String[]{""};
+        return new String[]{"create"};
     }
 
     @Override
@@ -42,7 +43,7 @@ public class CreateRewardCommand implements Command {
             return;
         }
 
-        String serverType = args[1];
+        String serverType = args[1].equalsIgnoreCase("CURRENT") ? MainData.getIns().getServerManager().getServerType() : args[1];
         Reward.RewardType type;
         boolean isDefault = Boolean.parseBoolean(args[3]);
         try {
@@ -65,11 +66,15 @@ public class CreateRewardCommand implements Command {
                 break;
             }
             case ITEM: {
+                InventoryBuilder inventoryBuilder = Main.getIns().getInventoryManager().registerPlayer(player.getUniqueId(), r);
+                player.openInventory(inventoryBuilder.getInventory());
                 break;
             }
             case CASH: {
                 try {
                     long cash = Long.parseLong(args[3]);
+                    r.setReward(cash);
+                    MainData.getIns().getRewardManager().createReward(r);
                 } catch (NumberFormatException e) {
                     player.sendMessage(ChatColor.RED + "Wrong args, when reward type is cash, arg must the the cash amount");
                     return;
@@ -79,6 +84,8 @@ public class CreateRewardCommand implements Command {
             case SV_CRRCY: {
                 try {
                     long coins = Long.parseLong(args[3]);
+                    r.setReward(coins);
+                    MainData.getIns().getRewardManager().createReward(r);
                 } catch (NumberFormatException e) {
                     player.sendMessage(ChatColor.RED + "Wrong args, when reward type is sv_crrcy, arg must the the currency amount");
                     return;

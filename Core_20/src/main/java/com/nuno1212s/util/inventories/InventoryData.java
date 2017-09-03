@@ -89,7 +89,7 @@ public class InventoryData {
         }
 
         if (loadItems) {
-            JSONArray inventoryItems = (JSONArray) jsOB.getOrDefault("InventoryItems", new ArrayList<>());
+            JSONArray inventoryItems = (JSONArray) jsOB.getOrDefault("InventoryItems", new JSONArray());
 
             this.items = new ArrayList<>(inventoryItems.size());
             Constructor constructor = ReflectionManager.getIns().getConstructor(customLoader, JSONObject.class);

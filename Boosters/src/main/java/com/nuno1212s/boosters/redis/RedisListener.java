@@ -9,6 +9,11 @@ import com.nuno1212s.rediscommunication.RedisReceiver;
  */
 public class RedisListener implements RedisReceiver {
 
+    @Override
+    public String channel() {
+        return "BOOSTERS";
+    }
+
     public void handleBoosterActivation(Booster b) {
 
     }

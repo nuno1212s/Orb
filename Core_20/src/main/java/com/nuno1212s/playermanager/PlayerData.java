@@ -3,6 +3,7 @@ package com.nuno1212s.playermanager;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.Group;
 import com.nuno1212s.permissionmanager.util.PlayerGroupData;
+import com.nuno1212s.rediscommunication.Message;
 import com.nuno1212s.util.Callback;
 import lombok.*;
 import org.bukkit.entity.Player;
@@ -64,7 +65,7 @@ public abstract class PlayerData {
         if (MainData.getIns().getEventCaller() != null) {
             MainData.getIns().getEventCaller().callUpdateInformationEvent(this);
         }
-        MainData.getIns().getRedisHandler().sendMessage("");
+        MainData.getIns().getRedisHandler().sendMessage(new byte[0]);
         return extension_result;
     }
 
@@ -155,7 +156,7 @@ public abstract class PlayerData {
      */
     public synchronized final void setCash(long cash) {
         this.cash = cash;
-        MainData.getIns().getRedisHandler().sendMessage("");
+        MainData.getIns().getRedisHandler().sendMessage(new byte[0]);
         if (MainData.getIns().getEventCaller() != null) {
             MainData.getIns().getEventCaller().callUpdateInformationEvent(this);
         }
@@ -181,7 +182,7 @@ public abstract class PlayerData {
      */
     public final void claim(int id) {
         if (this.toClaim.contains(id)) {
-            toClaim.remove(id);
+            toClaim.remove((Integer) id);
         }
     }
 
@@ -199,7 +200,16 @@ public abstract class PlayerData {
      */
     public final String getToClaimToString() {
         StringBuilder builder = new StringBuilder();
-        this.toClaim.forEach(builder::append);
+        boolean isFirst = true;
+        for (Integer integer : this.toClaim) {
+            if (isFirst) {
+                builder.append(integer);
+                isFirst = false;
+                continue;
+            }
+            builder.append(",");
+            builder.append(integer);
+        }
         return builder.toString();
     }
 }

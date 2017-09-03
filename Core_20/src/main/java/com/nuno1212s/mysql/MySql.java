@@ -95,11 +95,12 @@ public class MySql {
 
             st.execute(stm2);
 
-            String rewardTable = "CREATE TABLE IF NOT EXISTS npcInbox(ID INTEGER PRIMARY KEY AUTO_INCREMENT" +
+            String rewardTable = "CREATE TABLE IF NOT EXISTS rewards(ID INTEGER PRIMARY KEY AUTO_INCREMENT" +
                     ", SERVERTYPE varchar(25)" +
                     ", REWARDTYPE varchar(10)" +
                     ", POSTDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
-                    ", REWARD TEXT)";
+                    ", REWARD TEXT" +
+                    ", ISDEFAULT BOOL)";
             st.execute(rewardTable);
 
         } catch (SQLException e) {
@@ -200,7 +201,7 @@ public class MySql {
     public void savePlayer(PlayerData d) {
 
         try (Connection c = getConnection();
-             PreparedStatement st = c.prepareStatement("INSERT INTO playerData (UUID, GROUPDATA, PLAYERNAME, CASH, PREMIUM, LASTLOGIN, REWARDSTOCLAIM, TELL) values(?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?) " +
+             PreparedStatement st = c.prepareStatement("INSERT INTO playerData (UUID, GROUPDATA, PLAYERNAME, CASH, PREMIUM, LASTLOGIN, TELL, REWARDSTOCLAIM) values(?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?) " +
                      "ON DUPLICATE KEY UPDATE GROUPDATA=?, CASH=?, PLAYERNAME=?, LASTLOGIN=CURRENT_TIMESTAMP, PREMIUM=?, TELL=?, REWARDSTOCLAIM=?")) {
 
             st.setString(1, d.getPlayerID().toString());
@@ -344,15 +345,15 @@ public class MySql {
         List<Reward> rewards = new ArrayList<>();
 
         try (Connection c = getConnection();
-             PreparedStatement s = c.prepareStatement("SELECT * FROM npcInbox");
+             PreparedStatement s = c.prepareStatement("SELECT * FROM rewards");
              ResultSet resultSet = s.executeQuery()) {
 
             while (resultSet.next()) {
                 int id = resultSet.getInt("ID");
-                Reward.RewardType type = Reward.RewardType.valueOf(resultSet.getString("REWARDYTYPE"));
+                Reward.RewardType type = Reward.RewardType.valueOf(resultSet.getString("REWARDTYPE"));
                 String serverType = resultSet.getString("SERVERTYPE");
                 String reward = resultSet.getString("REWARD");
-                boolean isDefault = resultSet.getBoolean("DEFAULT");
+                boolean isDefault = resultSet.getBoolean("ISDEFAULT");
                 rewards.add(new Reward(id, type, isDefault, serverType, reward));
             }
 
@@ -365,7 +366,7 @@ public class MySql {
 
     public int saveReward(Reward r) {
         try (Connection c = getConnection();
-             PreparedStatement s = c.prepareStatement("INSERT INTO npcInbox(SERVERTYPE, REWARDTYPE, REWARD, DEFAULT) values(?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement s = c.prepareStatement("INSERT INTO rewards(SERVERTYPE, REWARDTYPE, REWARD, ISDEFAULT) values(?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
             s.setString(1, r.getServerType());
             s.setString(2, r.getType().name());
             s.setString(3, r.rewardToString());
@@ -385,7 +386,7 @@ public class MySql {
 
     public void removeReward(int id) {
         try (Connection c = MainData.getIns().getMySql().getConnection();
-             PreparedStatement s = c.prepareStatement("DELETE FROM npcInbox WHERE ID=?")) {
+             PreparedStatement s = c.prepareStatement("DELETE FROM rewards WHERE ID=?")) {
 
             s.setInt(1, id);
 

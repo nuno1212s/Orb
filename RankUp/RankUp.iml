@@ -20,9 +20,12 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: redis.clients:jedis:2.9.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.apache.commons:commons-pool2:2.4.2" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.spigotmc:spigot:1.8.8-R0.1-SNAPSHOT" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.projectlombok:lombok:1.16.16" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.projectlombok:lombok:1.16.18" level="project" />
     <orderEntry type="module" module-name="Crates" scope="PROVIDED" />
     <orderEntry type="module" module-name="Displays" scope="PROVIDED" />
+    <orderEntry type="module" module-name="Boosters" scope="PROVIDED" />
     <orderEntry type="module" module-name="Classes" scope="PROVIDED" />
+    <orderEntry type="module" module-name="Minas" scope="PROVIDED" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.gmail.nossr50:mcMMO:1.1" level="project" />
   </component>
 </module>
