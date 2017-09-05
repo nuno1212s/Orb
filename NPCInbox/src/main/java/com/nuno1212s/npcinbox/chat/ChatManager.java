@@ -1,6 +1,6 @@
 package com.nuno1212s.npcinbox.chat;
 
-import com.nuno1212s.rewards.Reward;
+import com.nuno1212s.rewards.bukkit.BukkitReward;
 import lombok.Getter;
 
 import java.util.Map;
@@ -20,7 +20,7 @@ public class ChatManager {
         messageBuilder = new WeakHashMap<>();
     }
 
-    public void registerPlayer(UUID player, Reward unfinishedReward) {
+    public void registerPlayer(UUID player, BukkitReward unfinishedReward) {
         messageBuilder.put(player, new MessageBuilder(unfinishedReward));
     }
 

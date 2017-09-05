@@ -1,6 +1,6 @@
 package com.nuno1212s.npcinbox.chat;
 
-import com.nuno1212s.rewards.Reward;
+import com.nuno1212s.rewards.bukkit.BukkitReward;
 import lombok.Getter;
 import org.bukkit.ChatColor;
 
@@ -12,12 +12,12 @@ import java.util.List;
  */
 public class MessageBuilder {
 
-    private Reward unfinishedReward;
+    private BukkitReward unfinishedReward;
 
     @Getter
     private List<String> messages;
 
-    public MessageBuilder(Reward unfinishedReward) {
+    public MessageBuilder(BukkitReward unfinishedReward) {
         this.messages = new ArrayList<>();
         this.unfinishedReward = unfinishedReward;
     }
@@ -42,7 +42,7 @@ public class MessageBuilder {
      * Returns the reward with the finished messages as the reward
      * @return
      */
-    public Reward buildReward() {
+    public BukkitReward buildReward() {
         this.unfinishedReward.setReward(this.messages);
 
         return unfinishedReward;

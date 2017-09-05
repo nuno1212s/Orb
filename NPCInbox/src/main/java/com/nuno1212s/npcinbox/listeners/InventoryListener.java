@@ -4,9 +4,10 @@ import com.nuno1212s.main.MainData;
 import com.nuno1212s.npcinbox.inventories.InventoryBuilder;
 import com.nuno1212s.npcinbox.main.Main;
 import com.nuno1212s.playermanager.PlayerData;
-import com.nuno1212s.rewards.Reward;
+import com.nuno1212s.rewards.bukkit.BukkitReward;
 import com.nuno1212s.util.inventories.InventoryData;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -59,7 +60,7 @@ public class InventoryListener implements Listener {
             }
 
             if (mainInventory.equals(e.getClickedInventory())) {
-                if (e.getCurrentItem() == null) {
+                if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR) {
                     return;
                 }
 
@@ -70,7 +71,7 @@ public class InventoryListener implements Listener {
                 }
 
                 int rewardID = Main.getIns().getInventoryManager().getEmbeddedReward(e.getCurrentItem());
-                Reward r = MainData.getIns().getRewardManager().getReward(rewardID);
+                BukkitReward r = (BukkitReward) MainData.getIns().getRewardManager().getReward(rewardID);
 
                 PlayerData player = MainData.getIns().getPlayerManager().getPlayer(e.getWhoClicked().getUniqueId());
                 r.deliver((Player) e.getWhoClicked(), player);

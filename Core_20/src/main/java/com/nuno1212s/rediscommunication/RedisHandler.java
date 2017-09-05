@@ -1,15 +1,10 @@
 package com.nuno1212s.rediscommunication;
 
 import com.nuno1212s.config.Config;
-import com.nuno1212s.main.BukkitMain;
 import com.nuno1212s.main.MainData;
 import lombok.Getter;
 import redis.clients.jedis.Jedis;
 
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;

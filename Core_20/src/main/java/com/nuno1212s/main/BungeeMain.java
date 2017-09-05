@@ -7,6 +7,7 @@ import com.nuno1212s.mysql.MySql;
 import com.nuno1212s.permissionmanager.PermissionManager;
 import com.nuno1212s.playermanager.PlayerManager;
 import com.nuno1212s.rediscommunication.RedisHandler;
+import com.nuno1212s.rewards.bungee.BungeeRewardManager;
 import com.nuno1212s.scheduler.BungeeScheduler;
 import com.nuno1212s.serverstatus.ServerManager;
 import lombok.Getter;
@@ -42,6 +43,7 @@ public class BungeeMain extends Plugin {
         main.setServerManager(new ServerManager(this.getDataFolder()));
         main.setPermissionManager(new PermissionManager(false));
         main.setPlayerManager(new PlayerManager());
+        main.setRewardManager(new BungeeRewardManager());
         main.setModuleManager(new ModuleManager(this.getDataFolder(), getClass().getClassLoader()));
     }
 

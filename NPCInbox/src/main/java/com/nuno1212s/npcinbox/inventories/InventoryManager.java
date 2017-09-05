@@ -3,7 +3,7 @@ package com.nuno1212s.npcinbox.inventories;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.playermanager.PlayerData;
-import com.nuno1212s.rewards.Reward;
+import com.nuno1212s.rewards.bukkit.BukkitReward;
 import com.nuno1212s.util.NBTDataStorage.NBTCompound;
 import com.nuno1212s.util.inventories.InventoryData;
 import lombok.Getter;
@@ -37,7 +37,7 @@ public class InventoryManager {
 
         int currentSlot = 0;
         for (Integer rewardID : toClaim) {
-            Reward reward = MainData.getIns().getRewardManager().getReward(rewardID);
+            BukkitReward reward = (BukkitReward) MainData.getIns().getRewardManager().getReward(rewardID);
             if (reward == null) {
                 continue;
             }
@@ -78,7 +78,7 @@ public class InventoryManager {
         return 0;
     }
 
-    public InventoryBuilder registerPlayer(UUID player, Reward unfinished) {
+    public InventoryBuilder registerPlayer(UUID player, BukkitReward unfinished) {
         InventoryBuilder value = new InventoryBuilder(unfinished);
         inventories.put(player, value);
         return value;

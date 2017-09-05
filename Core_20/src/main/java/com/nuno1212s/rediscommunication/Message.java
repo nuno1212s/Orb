@@ -22,6 +22,10 @@ public class Message {
     @Getter
     private JSONObject data;
 
+    /**
+     * Reads the message from the data
+     * @param data
+     */
     public Message(byte[] data) {
         ByteArrayDataInput dataInput = ByteStreams.newDataInput(data);
         this.channel = dataInput.readUTF();

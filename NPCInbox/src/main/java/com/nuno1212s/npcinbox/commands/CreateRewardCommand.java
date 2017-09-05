@@ -3,7 +3,7 @@ package com.nuno1212s.npcinbox.commands;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.npcinbox.inventories.InventoryBuilder;
 import com.nuno1212s.npcinbox.main.Main;
-import com.nuno1212s.rewards.Reward;
+import com.nuno1212s.rewards.bukkit.BukkitReward;
 import com.nuno1212s.util.CommandUtil.Command;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -44,16 +44,16 @@ public class CreateRewardCommand implements Command {
         }
 
         String serverType = args[1].equalsIgnoreCase("CURRENT") ? MainData.getIns().getServerManager().getServerType() : args[1];
-        Reward.RewardType type;
+        BukkitReward.RewardType type;
         boolean isDefault = Boolean.parseBoolean(args[3]);
         try {
-            type = Reward.RewardType.valueOf(args[2]);
+            type = BukkitReward.RewardType.valueOf(args[2]);
         } catch (IllegalArgumentException e) {
-            player.sendMessage(ChatColor.RED + "Type not found: " + Arrays.asList(Reward.RewardType.values()));
+            player.sendMessage(ChatColor.RED + "Type not found: " + Arrays.asList(BukkitReward.RewardType.values()));
             return;
         }
 
-        Reward r = new Reward(0, type, isDefault, serverType, player.getItemInHand().clone(), null);
+        BukkitReward r = new BukkitReward(0, type, isDefault, serverType, player.getItemInHand().clone(), null);
 
         switch (type) {
             case MESSAGE: {

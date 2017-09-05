@@ -9,6 +9,7 @@ import com.nuno1212s.permissionmanager.PermissionManager;
 import com.nuno1212s.playermanager.PlayerManager;
 import com.nuno1212s.rediscommunication.RedisHandler;
 import com.nuno1212s.rewards.RewardManager;
+import com.nuno1212s.rewards.bukkit.BukkitRewardManager;
 import com.nuno1212s.scheduler.Scheduler;
 import com.nuno1212s.serverstatus.ServerManager;
 import com.nuno1212s.util.ServerCurrencyHandler;

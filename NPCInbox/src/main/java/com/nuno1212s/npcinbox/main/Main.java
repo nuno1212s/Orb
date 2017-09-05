@@ -9,7 +9,9 @@ import com.nuno1212s.npcinbox.commands.RewardsCommand;
 import com.nuno1212s.npcinbox.inventories.InventoryManager;
 import com.nuno1212s.npcinbox.listeners.ChatListener;
 import com.nuno1212s.npcinbox.listeners.InventoryListener;
+import com.nuno1212s.npcinbox.listeners.PlayerInteractEntityListener;
 import com.nuno1212s.npcinbox.listeners.PlayerQuitListener;
+import com.nuno1212s.npcinbox.npchandler.NPCManager;
 import lombok.Getter;
 
 /**
@@ -17,7 +19,7 @@ import lombok.Getter;
  *
  * (Handles NPCS and inventories)
  */
-@ModuleData(name = "NPCInbox", version = "0.1 ALPHA", dependencies = {})
+@ModuleData(name = "NPCInbox", version = "1.0 BETA", dependencies = {})
 public class Main extends Module {
 
     @Getter
@@ -29,11 +31,15 @@ public class Main extends Module {
     @Getter
     private InventoryManager inventoryManager;
 
+    @Getter
+    private NPCManager npcManager;
+
     @Override
     public void onEnable() {
         ins = this;
         this.chatManager = new ChatManager();
         this.inventoryManager = new InventoryManager(this);
+        this.npcManager = new NPCManager(this);
 
         registerCommand(new String[]{"reward"}, new RewardsCommand());
 
@@ -42,10 +48,11 @@ public class Main extends Module {
         ins.getServer().getPluginManager().registerEvents(new PlayerQuitListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new ChatListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new InventoryListener(), ins);
+        ins.getServer().getPluginManager().registerEvents(new PlayerInteractEntityListener(), ins);
     }
 
     @Override
     public void onDisable() {
-
+        this.npcManager.save();
     }
 }

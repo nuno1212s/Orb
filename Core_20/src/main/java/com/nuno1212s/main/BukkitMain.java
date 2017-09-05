@@ -2,7 +2,6 @@ package com.nuno1212s.main;
 
 import com.nuno1212s.command.*;
 import com.nuno1212s.config.BukkitConfig;
-import com.nuno1212s.config.BungeeConfig;
 import com.nuno1212s.events.PlayerInformationUpdateEvent;
 import com.nuno1212s.events.eventcaller.EventCaller;
 import com.nuno1212s.events.listeners.PlayerDisconnectListener;
@@ -14,7 +13,7 @@ import com.nuno1212s.permissionmanager.PermissionManager;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.playermanager.PlayerManager;
 import com.nuno1212s.rediscommunication.RedisHandler;
-import com.nuno1212s.rewards.RewardManager;
+import com.nuno1212s.rewards.bukkit.BukkitRewardManager;
 import com.nuno1212s.scheduler.BukkitScheduler;
 import com.nuno1212s.serverstatus.ServerManager;
 import lombok.Getter;
@@ -74,7 +73,7 @@ public class BukkitMain extends JavaPlugin {
         }
 
         data.setMessageManager(new Messages(j));
-        data.setRewardManager(new RewardManager());
+        data.setRewardManager(new BukkitRewardManager());
         //Module manager has to be the last thing that is initialized
         data.setModuleManager(new ModuleManager(this.getDataFolder(), this.getClassLoader()));
 

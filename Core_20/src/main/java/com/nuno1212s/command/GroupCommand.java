@@ -43,6 +43,7 @@ public class GroupCommand implements CommandExecutor {
             commandSender.sendMessage(ChatColor.DARK_AQUA + "/group addPermission <groupID> <permission>");
             commandSender.sendMessage(ChatColor.DARK_AQUA + "/group removePermission <groupID> <permission>");
             commandSender.sendMessage(ChatColor.DARK_AQUA + "/group createGroup <groupID> <groupName> <applicableServer> <groupType> <default> <overrides>");
+            commandSender.sendMessage(ChatColor.DARK_AQUA + "/group playerInfo <playerName>");
             return true;
         }
 
@@ -184,6 +185,7 @@ public class GroupCommand implements CommandExecutor {
 
 
             player.getKey().save((o) -> {
+
             });
 
             if (player.getValue()) {
@@ -351,6 +353,29 @@ public class GroupCommand implements CommandExecutor {
                 MainData.getIns().getMySql().addGroup(nGroup);
                 commandSender.sendMessage(ChatColor.RED + "Added group to database.");
             });
+
+        } else if (arg.equalsIgnoreCase("playerInfo")) {
+            if (args.length < 2) {
+                commandSender.sendMessage(ChatColor.DARK_AQUA + "/group playerInfo <playerName>");
+                return true;
+            }
+
+            PlayerData d = MainData.getIns().getPlayerManager().getPlayer(args[1]);
+
+            if (d == null) {
+                commandSender.sendMessage(ChatColor.RED + "Player is not online.");
+                return true;
+            }
+
+            Group mainGroup = d.getMainGroup();
+
+            Group representingGroup = d.getRepresentingGroup();
+
+            Group serverGroup = MainData.getIns().getPermissionManager().getGroup(d.getServerGroup());
+
+            commandSender.sendMessage("Main Group: " + mainGroup.getGroupPrefix() + "(" + mainGroup.getGroupName() + ")");
+            commandSender.sendMessage("Server group: " + serverGroup.getGroupPrefix() + "(" + serverGroup.getGroupName() + ")");
+            commandSender.sendMessage("Representing group: " + representingGroup.getGroupPrefix() + "(" + representingGroup.getGroupName() + ")");
 
         }
         return true;

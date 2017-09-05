@@ -34,7 +34,6 @@ public class PlayerJoinListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
-        //FIXME : Why so slow ?
         com.nuno1212s.displays.Main.getIns().getScoreboardManager().handlePlayerJoin(MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId()), e.getPlayer());
 
         //MainData.getIns().getMessageManager().getMessage("ON_JOIN").sendTo(e.getPlayer());

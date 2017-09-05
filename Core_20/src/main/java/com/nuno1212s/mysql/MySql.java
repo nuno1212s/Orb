@@ -9,6 +9,8 @@ import com.nuno1212s.permissionmanager.util.PlayerGroupData;
 import com.nuno1212s.playermanager.CorePlayerData;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.rewards.Reward;
+import com.nuno1212s.rewards.bukkit.BukkitReward;
+import com.nuno1212s.rewards.bungee.BungeeReward;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
@@ -129,7 +131,11 @@ public class MySql {
                         List<Integer> toClaim = new ArrayList<>();
                         String[] rewards = resultSet.getString("REWARDSTOCLAIM").split(",");
                         for (String reward : rewards) {
-                            toClaim.add(Integer.parseInt(reward));
+                            try {
+                                toClaim.add(Integer.parseInt(reward));
+                            } catch (NumberFormatException e) {
+
+                            }
                         }
                         PlayerData playerData = new CorePlayerData(playerID, new PlayerGroupData(groupid), playerName, cash, lastLogin, premium, toClaim);
                         playerData.setTell(tell);
@@ -148,7 +154,11 @@ public class MySql {
                         List<Integer> toClaim = new ArrayList<>();
                         String[] rewards = resultSet.getString("REWARDSTOCLAIM").split(",");
                         for (String reward : rewards) {
-                            toClaim.add(Integer.parseInt(reward));
+                            try {
+                                toClaim.add(Integer.parseInt(reward));
+                            } catch (NumberFormatException e) {
+
+                            }
                         }
                         PlayerData playerData = new CorePlayerData(playerID, new PlayerGroupData(groupid), playerName, cash, lastLogin, premium, toClaim);
                         playerData.setTell(tell);
@@ -169,7 +179,7 @@ public class MySql {
 
         try (Connection c = getConnection();
              PreparedStatement select =
-                     c.prepareStatement("SELECT UUID, GROUPDATA, PLAYERNAME, CASH, PREMIUM, LASTLOGIN, TELL FROM playerData WHERE playerName=? LIMIT 1")
+                     c.prepareStatement("SELECT UUID, GROUPDATA, PLAYERNAME, CASH, PREMIUM, LASTLOGIN, REWARDSTOCLAIM, TELL FROM playerData WHERE playerName=? LIMIT 1")
         ) {
             select.setString(1, playerName);
             try (ResultSet resultSet = select.executeQuery()) {
@@ -341,7 +351,7 @@ public class MySql {
         }
     }
 
-    public List<Reward> getRewards() {
+    public List<Reward> getBungeeRewards() {
         List<Reward> rewards = new ArrayList<>();
 
         try (Connection c = getConnection();
@@ -350,11 +360,10 @@ public class MySql {
 
             while (resultSet.next()) {
                 int id = resultSet.getInt("ID");
-                Reward.RewardType type = Reward.RewardType.valueOf(resultSet.getString("REWARDTYPE"));
+                BukkitReward.RewardType type = BukkitReward.RewardType.valueOf(resultSet.getString("REWARDTYPE"));
                 String serverType = resultSet.getString("SERVERTYPE");
-                String reward = resultSet.getString("REWARD");
                 boolean isDefault = resultSet.getBoolean("ISDEFAULT");
-                rewards.add(new Reward(id, type, isDefault, serverType, reward));
+                rewards.add(new BungeeReward(id, type, serverType, isDefault));
             }
 
         } catch (SQLException e) {
@@ -364,7 +373,30 @@ public class MySql {
         return rewards;
     }
 
-    public int saveReward(Reward r) {
+    public List<BukkitReward> getRewards() {
+        List<BukkitReward> rewards = new ArrayList<>();
+
+        try (Connection c = getConnection();
+             PreparedStatement s = c.prepareStatement("SELECT * FROM rewards");
+             ResultSet resultSet = s.executeQuery()) {
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("ID");
+                BukkitReward.RewardType type = BukkitReward.RewardType.valueOf(resultSet.getString("REWARDTYPE"));
+                String serverType = resultSet.getString("SERVERTYPE");
+                String reward = resultSet.getString("REWARD");
+                boolean isDefault = resultSet.getBoolean("ISDEFAULT");
+                rewards.add(new BukkitReward(id, type, isDefault, serverType, reward));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return rewards;
+    }
+
+    public int saveReward(BukkitReward r) {
         try (Connection c = getConnection();
              PreparedStatement s = c.prepareStatement("INSERT INTO rewards(SERVERTYPE, REWARDTYPE, REWARD, ISDEFAULT) values(?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
             s.setString(1, r.getServerType());

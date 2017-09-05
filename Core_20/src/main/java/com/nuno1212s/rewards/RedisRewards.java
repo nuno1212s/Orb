@@ -3,6 +3,8 @@ package com.nuno1212s.rewards;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.rediscommunication.Message;
 import com.nuno1212s.rediscommunication.RedisReceiver;
+import com.nuno1212s.rewards.bukkit.BukkitReward;
+import com.nuno1212s.rewards.bungee.BungeeReward;
 import org.json.simple.JSONObject;
 
 /**
@@ -26,8 +28,13 @@ public class RedisRewards implements RedisReceiver {
                 String serverType = (String) data.get("ServerType");
                 String reward = (String) data.get("Reward");
 
+                Reward r;
 
-                Reward r = new Reward(rewardID, type, isDefault, serverType, reward);
+                if (MainData.getIns().isBungee()) {
+                    r = new BungeeReward(rewardID, type, serverType, isDefault);
+                } else {
+                    r = new BukkitReward(rewardID, type, isDefault, serverType, reward);
+                }
                 MainData.getIns().getRewardManager().redis_addReward(r);
             } else if (message.getReason().equalsIgnoreCase("REWARD_TO_CLAIM")) {
                 JSONObject data = message.getData();
@@ -44,7 +51,7 @@ public class RedisRewards implements RedisReceiver {
      *
      * @param r The reward
      */
-    public void publishNewReward(Reward r) {
+    public void publishNewReward(BukkitReward r) {
         JSONObject reward = new JSONObject();
         reward.put("RewardID", r.getId());
         reward.put("IsDefault", r.isDefault());
