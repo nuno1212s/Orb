@@ -104,9 +104,7 @@ public class NPCManager {
             eyeLocation.add(direction);
             Collection<Entity> nearbyEntities = eyeLocation.getWorld().getNearbyEntities(eyeLocation, 1, 1, 1);
             for (Entity nearbyEntity : nearbyEntities) {
-                if (nearbyEntity.getUniqueId().equals(player.getUniqueId())) {
-                    continue;
-                } else {
+                if (!nearbyEntity.getUniqueId().equals(player.getUniqueId())) {
                     return nearbyEntity;
                 }
             }

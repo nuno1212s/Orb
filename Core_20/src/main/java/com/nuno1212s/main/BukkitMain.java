@@ -39,6 +39,11 @@ public class BukkitMain extends JavaPlugin {
     @Getter
     static BukkitMain ins;
 
+    static {
+        //PRESTART
+        System.out.println("STARTING CORE");
+    }
+
     @Override
     public void onEnable() {
         ins = this;
