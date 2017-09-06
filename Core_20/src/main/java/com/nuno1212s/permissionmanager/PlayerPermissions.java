@@ -39,7 +39,9 @@ public class PlayerPermissions {
     public void unregisterPermissions(Player p) {
         if (this.playerAttachments.containsKey(p.getUniqueId())) {
             p.removeAttachment(this.playerAttachments.get(p.getUniqueId()));
+
             this.playerAttachments.remove(p.getUniqueId());
+
             p.recalculatePermissions();
         }
 

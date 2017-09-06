@@ -39,7 +39,7 @@ public class PlayerJoinListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerJoin(PlayerJoinEvent e) {
+    public void corePlayerJoin(PlayerJoinEvent e) {
         PlayerData d = MainData.getIns().getPlayerManager().validatePlayerJoin(e.getPlayer().getUniqueId());
         MainData.getIns().getPermissionManager().getPlayerPermissions().injectPermission(e.getPlayer(), d);
     }

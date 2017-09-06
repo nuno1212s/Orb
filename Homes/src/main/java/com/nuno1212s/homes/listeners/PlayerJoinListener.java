@@ -12,7 +12,12 @@ public class PlayerJoinListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
+        long l = System.currentTimeMillis();
+
         Main.getIns().getFileManager().loadHomesForPlayer(e.getPlayer().getUniqueId());
+
+        System.out.println(System.currentTimeMillis() - l);
+
     }
 
 }

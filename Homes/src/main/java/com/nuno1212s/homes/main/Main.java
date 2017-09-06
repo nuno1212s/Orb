@@ -6,6 +6,7 @@ import com.nuno1212s.homes.commands.SetHomeCommand;
 import com.nuno1212s.homes.filesystem.FileManager;
 import com.nuno1212s.homes.homemanager.HomeManager;
 import com.nuno1212s.homes.listeners.PlayerJoinListener;
+import com.nuno1212s.homes.listeners.PlayerMoveListener;
 import com.nuno1212s.homes.listeners.PlayerQuitListener;
 import com.nuno1212s.main.BukkitMain;
 import com.nuno1212s.modulemanager.Module;
@@ -16,7 +17,7 @@ import lombok.Getter;
  * Homes main class
  */
 @ModuleData(name = "Homes", version = "1.0", dependencies = {})
-public class Main extends Module{
+public class Main extends Module {
 
     @Getter
     static Main ins;
@@ -41,6 +42,7 @@ public class Main extends Module{
 
         ins.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new PlayerQuitListener(), ins);
+        ins.getServer().getPluginManager().registerEvents(new PlayerMoveListener(), ins);
 
     }
 

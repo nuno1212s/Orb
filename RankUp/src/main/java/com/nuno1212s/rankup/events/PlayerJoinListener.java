@@ -33,8 +33,12 @@ public class PlayerJoinListener implements Listener {
     }
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent e) {
-        com.nuno1212s.displays.Main.getIns().getScoreboardManager().handlePlayerJoin(MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId()), e.getPlayer());
+    public void onRJoin(PlayerJoinEvent e) {
+
+        MainData.getIns().getScheduler().runTaskAsync(() -> {
+            PlayerData player = MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
+            com.nuno1212s.displays.Main.getIns().getScoreboardManager().handlePlayerJoin(player, e.getPlayer());
+        });
 
         //MainData.getIns().getMessageManager().getMessage("ON_JOIN").sendTo(e.getPlayer());
 

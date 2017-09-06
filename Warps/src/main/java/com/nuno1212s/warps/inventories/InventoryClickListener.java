@@ -57,9 +57,10 @@ public class InventoryClickListener implements Listener {
                         MainData.getIns().getMessageManager().getMessage("WARPS_CANCELLED_ANOTHER_WARP").sendTo(e.getWhoClicked());
                     }
 
-                    if (w.isDelay() && !p.hasPermission("novus.warps.instant")) {
+                    if (w.isDelay() && !p.hasPermission("warps.instant")) {
                         Main.getIns().getWarpManager().getWarpTimer().registerWarp(p.getUniqueId(), w);
-                        MainData.getIns().getMessageManager().getMessage("WARPS_WARPING_IN").format("%time%", String.valueOf(w.getDelayInSeconds())).sendTo(p);
+                        MainData.getIns().getMessageManager().getMessage("WARPS_WARPING_IN")
+                                .format("%time%", String.valueOf(w.getDelayInSeconds())).sendTo(p);
                     } else {
                         p.teleport(w.getL());
                         MainData.getIns().getMessageManager().getMessage("WARPS_WARPED").sendTo(p);

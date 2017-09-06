@@ -20,6 +20,10 @@ public class FileManager {
 
     public FileManager(Module m) {
         this.dataFolder = new File(m.getDataFolder() + File.separator + "DataFiles" + File.separator);
+
+        if (!this.dataFolder.exists()) {
+            this.dataFolder.mkdirs();
+        }
     }
 
     /**
@@ -96,6 +100,12 @@ public class FileManager {
 
     }
 
+    /**
+     * Save the homes for player
+     *
+     * @param player
+     * @param homes
+     */
     public void saveHomesForPlayer(UUID player, List<Home> homes) {
         MainData.getIns().getScheduler().runTaskAsync(() -> {
 

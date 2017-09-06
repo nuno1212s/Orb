@@ -1,6 +1,7 @@
 package com.nuno1212s.homes.homemanager;
 
 import com.nuno1212s.homes.main.Main;
+import lombok.Getter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -16,6 +17,16 @@ public class HomeManager {
 
     private Map<UUID, List<Home>> playerHomes = new ConcurrentHashMap<>();
 
+    @Getter
+    private long timeNeeded = 5;
+
+    @Getter
+    private HomeTimer timer;
+
+    public HomeManager() {
+        this.timer = new HomeTimer();
+    }
+
     /**
      * Save the player homes to the playerHome map
      *
@@ -27,6 +38,7 @@ public class HomeManager {
     }
 
     /**
+     * Get the player homes
      *
      * @param player
      * @return
@@ -55,6 +67,7 @@ public class HomeManager {
     }
 
     /**
+     * Removes the player's homes from the RAM and saves them to the hard drive
      *
      * @param player
      */

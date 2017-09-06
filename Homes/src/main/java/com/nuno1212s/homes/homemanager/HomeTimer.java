@@ -1,45 +1,51 @@
-package com.nuno1212s.warps.warpmanager;
+package com.nuno1212s.homes.homemanager;
 
+import com.nuno1212s.homes.main.Main;
 import com.nuno1212s.main.MainData;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
-public class WarpTimer implements Runnable {
+/**
+ * Home timers
+ */
+public class HomeTimer implements Runnable {
 
-    public WarpTimer() {
+    private Map<UUID, HomeState> homes = new ConcurrentHashMap<>();
+
+    public HomeTimer() {
         MainData.getIns().getScheduler().runTaskTimerAsync(this, 10, 1);
     }
 
-    private ConcurrentMap<UUID, WarpState> map = new ConcurrentHashMap<>();
-
-    public boolean registerWarp(UUID u, Warp w) {
-        return map.putIfAbsent(u, new WarpState(w.getDelayInSeconds() * 1000, w.getDelayInSeconds() * 1000, w.getL().clone())) == null;
+    public boolean registerTeleport(UUID u, Home h) {
+        long timeNeeded = Main.getIns().getHomeManager().getTimeNeeded() * 1000;
+        return homes.putIfAbsent(u, new HomeState(timeNeeded, timeNeeded, h.getLocation().clone())) == null;
     }
 
-    public void cancelWarp(UUID u) {
-        if (map.containsKey(u)) {
-            map.remove(u);
+    public void cancelTeleport(UUID u) {
+        if (homes.containsKey(u)) {
+            homes.remove(u);
         }
     }
 
-    public boolean isWarping(UUID u) {
-        return this.map.containsKey(u);
+    public boolean isTeleporting(UUID u) {
+        return this.homes.containsKey(u);
     }
 
     @Override
     public void run() {
         List<UUID> toRemove = new ArrayList<>();
 
-        map.forEach((u, w) -> {
+        homes.forEach((u, w) -> {
             w.setTimeLeft(w.getTimeLeft() - 50);
             if (w.getTimeLeft() <= 0) {
                 w.safeTeleport(u);
@@ -47,18 +53,18 @@ public class WarpTimer implements Runnable {
             }
         });
 
-        toRemove.forEach(map::remove);
+        toRemove.forEach(homes::remove);
         toRemove.clear();
     }
 }
 
 @AllArgsConstructor
 @Data
-class WarpState {
+class HomeState {
 
     long timeNeeded, timeLeft;
 
-    Location teleportLocation;
+    Location homeLocation;
 
     void safeTeleport(UUID u) {
         MainData.getIns().getScheduler().runTask(() -> {
@@ -66,10 +72,9 @@ class WarpState {
             if (player == null || !player.isOnline()) {
                 return;
             }
-            player.teleport(teleportLocation);
-            MainData.getIns().getMessageManager().getMessage("WARPED").sendTo(player);
+            player.teleport(homeLocation);
+            MainData.getIns().getMessageManager().getMessage("TELEPORTED_HOME").sendTo(player);
         });
     }
 
 }
-

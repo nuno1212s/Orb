@@ -7,7 +7,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerTeleportEvent;
 
 import java.util.List;
 
@@ -33,36 +32,41 @@ public class HomeCommand implements CommandExecutor {
             if (playerHomes.size() > 1) {
                 String homes = getHomes(Main.getIns().getHomeManager().getPlayerHomes(player.getUniqueId()));
                 MainData.getIns().getMessageManager().getMessage("SPECIFY_HOME_NAME").sendTo(player);
-                MainData.getIns().getMessageManager().getMessage("PLAYER_HOMES").format("%homes%", homes);
+                MainData.getIns().getMessageManager().getMessage("PLAYER_HOMES")
+                        .format("%homes%", homes).sendTo(player);
             } else if (playerHomes.size() == 1) {
                 Home home = playerHomes.get(0);
 
-                player.teleport(home.getLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
-                MainData.getIns().getMessageManager().getMessage("TELEPORTED_HOME").sendTo(player);
+                home.teleport(player);
             } else {
                 MainData.getIns().getMessageManager().getMessage("NO_HOMES").sendTo(player);
             }
 
         } else {
-            homeName = args[1];
+            homeName = args[0];
 
             Home playerHomeWithName = Main.getIns().getHomeManager().getPlayerHomeWithName(player.getUniqueId(), homeName);
 
             if (playerHomeWithName == null) {
                 String homes = getHomes(Main.getIns().getHomeManager().getPlayerHomes(player.getUniqueId()));
                 MainData.getIns().getMessageManager().getMessage("NO_HOME_WITH_THAT_NAME").sendTo(player);
-                MainData.getIns().getMessageManager().getMessage("PLAYER_HOMES").format("%homes%", homes);
+                MainData.getIns().getMessageManager().getMessage("PLAYER_HOMES")
+                        .format("%homes%", homes).sendTo(player);
                 return true;
             }
 
-            player.teleport(playerHomeWithName.getLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
-            MainData.getIns().getMessageManager().getMessage("TELEPORTED_HOME").sendTo(player);
-
+            playerHomeWithName.teleport(player);
         }
 
         return true;
     }
 
+    /**
+     * Transform the homes into a string
+     *
+     * @param homes
+     * @return
+     */
     private String getHomes(List<Home> homes) {
         StringBuilder homeBuilder = new StringBuilder("");
 

@@ -21,6 +21,7 @@ import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Handles scoreboard creation
@@ -32,7 +33,7 @@ public class ScoreboardManager {
     private Map<Integer, String> scoreboardMessages;
 
     public ScoreboardManager(File f) {
-        scoreboards = new HashMap<>();
+        scoreboards = new ConcurrentHashMap<>();
         scoreboardMessages = new HashMap<>();
 
         JSONObject json;
