@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class ChatListener implements Listener {
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onChat(AsyncPlayerChatEvent e) {
         e.setCancelled(true);
         if (Main.getIns().getChatManager().isChatActivated() || e.getPlayer().hasPermission("chat.override")) {
@@ -28,7 +28,7 @@ public class ChatListener implements Listener {
             if (d instanceof ChatData) {
                 long lastUsage = ((ChatData) d).lastLocalChatUsage();
                 if (lastUsage + Main.getIns().getChatManager().getChatTimerLocal() > System.currentTimeMillis()
-                        && !e.getPlayer().hasPermission("chat.nocooldown")) {
+                        && !(e.getPlayer().hasPermission("chat.nocooldown") || e.getPlayer().hasPermission("chat.vipcooldown"))) {
                     MainData.getIns().getMessageManager().getMessage("LOCAL_CHAT_COOLDOWN")
                             .format("%time%", new TimeUtil("SS segundos")
                                     .toTime(lastUsage - System.currentTimeMillis()))
@@ -61,6 +61,8 @@ public class ChatListener implements Listener {
             if (!heard.get()) {
                 MainData.getIns().getMessageManager().getMessage("NO_ONE_CLOSE").sendTo(e.getPlayer());
             }
+        } else {
+            MainData.getIns().getMessageManager().getMessage("CHAT_DISABLED").sendTo(e.getPlayer());
         }
     }
 

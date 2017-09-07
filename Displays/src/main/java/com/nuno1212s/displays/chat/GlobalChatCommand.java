@@ -27,12 +27,14 @@ public class GlobalChatCommand implements CommandExecutor {
         PlayerData data = MainData.getIns().getPlayerManager().getPlayer(((Player) commandSender).getUniqueId());
 
         if (data instanceof ChatData) {
-            long lastUsage = ((ChatData) data).lastGlobalChatUsage();
-            if (lastUsage + Main.getIns().getChatManager().getChatTimerGlobal() > System.currentTimeMillis()
+            long lastUsage = ((ChatData) data).lastGlobalChatUsage(), chatTime =
+                    commandSender.hasPermission("chat.vipcooldown") ? 5000 : Main.getIns().getChatManager().getChatTimerGlobal();
+
+            if (lastUsage + chatTime > System.currentTimeMillis()
                     && !commandSender.hasPermission("chat.nocooldown")) {
                 MainData.getIns().getMessageManager().getMessage("GLOBAL_CHAT_COOLDOWN")
                         .format("%time%", new TimeUtil("SS segundos")
-                                .toTime(lastUsage - System.currentTimeMillis()))
+                                            .toTime(lastUsage - System.currentTimeMillis()))
                         .sendTo(commandSender);
                 return true;
             }
@@ -50,9 +52,9 @@ public class GlobalChatCommand implements CommandExecutor {
         String playerChat = data.getNameWithPrefix() + Main.getIns().getChatManager().getSeparator() + finalMessage;
 
 
-        Bukkit.getOnlinePlayers().forEach(player -> {
-            player.sendMessage(playerChat);
-        });
+        Bukkit.getOnlinePlayers().forEach(player ->
+            player.sendMessage(playerChat)
+        );
 
         return true;
     }

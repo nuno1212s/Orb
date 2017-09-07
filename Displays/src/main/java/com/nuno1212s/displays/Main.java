@@ -3,6 +3,7 @@ package com.nuno1212s.displays;
 import com.nuno1212s.displays.chat.ChatListener;
 import com.nuno1212s.displays.chat.ChatManager;
 import com.nuno1212s.displays.chat.GlobalChatCommand;
+import com.nuno1212s.displays.commands.ChatControlCommand;
 import com.nuno1212s.displays.placeholders.PlaceHolderManager;
 import com.nuno1212s.displays.scoreboard.ScoreboardManager;
 import com.nuno1212s.main.BukkitMain;
@@ -41,6 +42,7 @@ public class Main extends Module {
         MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));
 
         registerCommand(new String[]{"g", "global"}, new GlobalChatCommand());
+        registerCommand(new String[]{"chat"}, new ChatControlCommand());
 
         Plugin ins = BukkitMain.getIns();
         Bukkit.getServer().getPluginManager().registerEvents(new ChatListener(), ins);

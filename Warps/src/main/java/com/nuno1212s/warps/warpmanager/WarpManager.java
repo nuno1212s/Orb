@@ -2,15 +2,11 @@ package com.nuno1212s.warps.warpmanager;
 
 import com.nuno1212s.main.BukkitMain;
 import com.nuno1212s.modulemanager.Module;
-import com.nuno1212s.util.CommandUtil.Command;
 import lombok.Getter;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandMap;
-import org.bukkit.command.CommandSender;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.SimplePluginManager;
 import org.json.simple.JSONObject;
@@ -36,9 +32,9 @@ public class WarpManager {
     @Getter
     List<Warp> warps;
 
-    File f;
+    private File f;
 
-    JSONObject file;
+    private JSONObject file;
 
     public WarpManager(Module m) {
         warps = new ArrayList<>();
@@ -47,7 +43,11 @@ public class WarpManager {
         load(f);
     }
 
-    void load(File f) {
+    /**
+     *
+     * @param f
+     */
+    private void load(File f) {
         try (FileReader r = new FileReader(f)) {
             this.file = (JSONObject) new JSONParser().parse(r);
 

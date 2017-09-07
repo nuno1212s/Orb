@@ -1,6 +1,7 @@
 package com.nuno1212s.displays.chat;
 
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Chat manager
@@ -8,6 +9,7 @@ import lombok.Getter;
 public class ChatManager {
 
     @Getter
+    @Setter
     private boolean chatActivated;
 
     @Getter
@@ -19,8 +21,8 @@ public class ChatManager {
     public ChatManager() {
         this.chatActivated = true;
         this.separator = " » ";
-        this.chatTimerGlobal = 5000;
-        this.chatTimerLocal = 2000;
+        this.chatTimerGlobal = 15000;
+        this.chatTimerLocal = 3;
         this.range = (long) Math.pow(25L, 2);
     }
 

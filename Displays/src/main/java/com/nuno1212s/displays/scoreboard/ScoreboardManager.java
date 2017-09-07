@@ -107,7 +107,6 @@ public class ScoreboardManager {
         for (PlayerData playerData : MainData.getIns().getPlayerManager().getPlayers()) {
 
             Group representingGroup = playerData.getRepresentingGroup();
-
             Team team = b.getTeam(representingGroup.getScoreboardName());
 
             if (team == null) {
