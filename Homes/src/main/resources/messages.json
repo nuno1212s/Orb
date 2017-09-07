@@ -8,5 +8,5 @@
   "NO_HOME_WITH_THAT_NAME": "&cThere is no home with that name.",
   "TELEPORTED_HOME": "&cYou have been teleported",
   "TELEPORTING_IN": "&aYou will be teleported in %time% seconds",
-  "TELEPORT_CANCELLED_ANOTHER_TELEPORT": "&cA previous "
+  "HOME_CANCELLED_ANOTHER_HOME": "&cA previous "
 }

@@ -1,8 +1,8 @@
-package com.nuno1212s.homes.commands;
+package com.nuno1212s.warps.commands;
 
-import com.nuno1212s.homes.homemanager.Home;
-import com.nuno1212s.homes.main.Main;
 import com.nuno1212s.main.MainData;
+import com.nuno1212s.warps.homemanager.Home;
+import com.nuno1212s.warps.main.Main;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

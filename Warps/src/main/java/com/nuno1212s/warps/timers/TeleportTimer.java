@@ -1,4 +1,4 @@
-package com.nuno1212s.warps.warpmanager;
+package com.nuno1212s.warps.timers;
 
 import com.nuno1212s.main.MainData;
 import lombok.AllArgsConstructor;
@@ -9,37 +9,42 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
-public class WarpTimer implements Runnable {
+/**
+ * Handles teleports
+ */
+public class TeleportTimer implements Runnable {
 
-    public WarpTimer() {
+
+    private Map<UUID, TeleportState> teleports = new ConcurrentHashMap<>();
+
+    public TeleportTimer() {
         MainData.getIns().getScheduler().runTaskTimerAsync(this, 10, 1);
     }
 
-    private ConcurrentMap<UUID, WarpState> map = new ConcurrentHashMap<>();
-
-    public boolean registerWarp(UUID u, Warp w) {
-        return map.putIfAbsent(u, new WarpState(w.getDelayInSeconds() * 1000, w.getDelayInSeconds() * 1000, w.getL().clone())) == null;
+    public boolean registerTeleport(UUID u, Teleport h) {
+        long timeNeeded = h.getTimeNeeded() * 1000;
+        return teleports.putIfAbsent(u, new TeleportState(timeNeeded, timeNeeded, h.getLocation().clone())) == null;
     }
 
-    public void cancelWarp(UUID u) {
-        if (map.containsKey(u)) {
-            map.remove(u);
+    public void cancelTeleport(UUID u) {
+        if (teleports.containsKey(u)) {
+            teleports.remove(u);
         }
     }
 
-    public boolean isWarping(UUID u) {
-        return this.map.containsKey(u);
+    public boolean isTeleporting(UUID u) {
+        return this.teleports.containsKey(u);
     }
 
     @Override
     public void run() {
         List<UUID> toRemove = new ArrayList<>();
 
-        map.forEach((u, w) -> {
+        teleports.forEach((u, w) -> {
             w.setTimeLeft(w.getTimeLeft() - 50);
             if (w.getTimeLeft() <= 0) {
                 w.safeTeleport(u);
@@ -47,14 +52,15 @@ public class WarpTimer implements Runnable {
             }
         });
 
-        toRemove.forEach(map::remove);
+        toRemove.forEach(teleports::remove);
         toRemove.clear();
     }
 }
 
+
 @AllArgsConstructor
 @Data
-class WarpState {
+class TeleportState {
 
     long timeNeeded, timeLeft;
 
@@ -67,7 +73,7 @@ class WarpState {
                 return;
             }
             player.teleport(teleportLocation);
-            MainData.getIns().getMessageManager().getMessage("WARPED").sendTo(player);
+            MainData.getIns().getMessageManager().getMessage("TELEPORTED").sendTo(player);
         });
     }
 

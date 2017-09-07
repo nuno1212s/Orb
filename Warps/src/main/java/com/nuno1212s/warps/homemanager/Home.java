@@ -1,7 +1,8 @@
-package com.nuno1212s.homes.homemanager;
+package com.nuno1212s.warps.homemanager;
 
-import com.nuno1212s.homes.main.Main;
 import com.nuno1212s.main.MainData;
+import com.nuno1212s.warps.main.Main;
+import com.nuno1212s.warps.timers.Teleport;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -13,7 +14,7 @@ import org.json.simple.JSONObject;
  * Home data class
  */
 @Getter
-public class Home {
+public class Home implements Teleport {
 
     private String homeName;
 
@@ -54,6 +55,11 @@ public class Home {
         dataObject.put(homeName, home);
     }
 
+    @Override
+    public long getTimeNeeded() {
+        return Main.getIns().getHomeManager().getTimeNeeded();
+    }
+
     /**
      * Get the location of this home
      * @return
@@ -70,16 +76,16 @@ public class Home {
      */
     public void teleport(Player p) {
 
-        if (Main.getIns().getHomeManager().getTimer().isTeleporting(p.getUniqueId())) {
-            Main.getIns().getHomeManager().getTimer().cancelTeleport(p.getUniqueId());
-            MainData.getIns().getMessageManager().getMessage("HOME_CANCELLED_ANOTHER_HOME").sendTo(p);
+        if (Main.getIns().getTeleportTimer().isTeleporting(p.getUniqueId())) {
+            Main.getIns().getTeleportTimer().cancelTeleport(p.getUniqueId());
+            MainData.getIns().getMessageManager().getMessage("TELEPORT_CANCELLED_ANOTHER_TELEPORT").sendTo(p);
         }
 
         if (p.hasPermission("home.instantteleport")) {
             p.teleport(getLocation(), PlayerTeleportEvent.TeleportCause.PLUGIN);
             MainData.getIns().getMessageManager().getMessage("TELEPORTED_HOME").sendTo(p);
         } else {
-            Main.getIns().getHomeManager().getTimer().registerTeleport(p.getUniqueId(), this);
+            Main.getIns().getTeleportTimer().registerTeleport(p.getUniqueId(), this);
             MainData.getIns().getMessageManager().getMessage("TELEPORTING_IN")
                     .format("%time%", String.valueOf(Main.getIns().getHomeManager().getTimeNeeded())).sendTo(p);
         }

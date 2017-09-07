@@ -40,23 +40,7 @@ public class WarpCommand implements CommandExecutor {
                 return true;
             }
 
-            if (!commandSender.hasPermission(w.getPermission())) {
-                MainData.getIns().getMessageManager().getMessage("NO_PERMISSION").sendTo(commandSender);
-                return true;
-            }
-
-            if (Main.getIns().getWarpManager().getWarpTimer().isWarping(p.getUniqueId())) {
-                Main.getIns().getWarpManager().getWarpTimer().cancelWarp(p.getUniqueId());
-                MainData.getIns().getMessageManager().getMessage("WARPS_CANCELLED_ANOTHER_WARP").sendTo(p);
-            }
-
-            if (w.isDelay() && !p.hasPermission("warp.instant")) {
-                Main.getIns().getWarpManager().getWarpTimer().registerWarp(p.getUniqueId(), w);
-                MainData.getIns().getMessageManager().getMessage("WARPS_WARPING_IN").format("%time%", String.valueOf(w.getDelayInSeconds())).sendTo(p);
-            } else {
-                p.teleport(w.getL());
-                MainData.getIns().getMessageManager().getMessage("WARPS_WARPED").sendTo(p);
-            }
+            w.teleport(p);
 
 
         } else if (command.getName().equalsIgnoreCase("setwarp")) {
@@ -116,23 +100,7 @@ public class WarpCommand implements CommandExecutor {
                 return true;
             }
 
-            if (!p.hasPermission(w.getPermission())) {
-                MainData.getIns().getMessageManager().getMessage("WARPS_NO_PERMISSION").sendTo(commandSender);
-                return true;
-            }
-
-            if (Main.getIns().getWarpManager().getWarpTimer().isWarping(p.getUniqueId())) {
-                Main.getIns().getWarpManager().getWarpTimer().cancelWarp(p.getUniqueId());
-                MainData.getIns().getMessageManager().getMessage("WARPS_CANCELLED_ANOTHER_WARP").sendTo(commandSender);
-            }
-
-            if (w.isDelay() && !p.hasPermission("warps.instant")) {
-                Main.getIns().getWarpManager().getWarpTimer().registerWarp(p.getUniqueId(), w);
-                MainData.getIns().getMessageManager().getMessage("WARPS_WARPING_IN").format("%time%", String.valueOf(w.getDelayInSeconds())).sendTo(p);
-            } else {
-                p.teleport(w.getL());
-                MainData.getIns().getMessageManager().getMessage("WARPS_WARPED").sendTo(p);
-            }
+            w.teleport(p);
 
         }
         return true;

@@ -38,15 +38,11 @@ public class WarpManager {
 
     File f;
 
-    @Getter
-    WarpTimer warpTimer;
-
     JSONObject file;
 
     public WarpManager(Module m) {
         warps = new ArrayList<>();
         this.f = m.getFile("warps.json", false);
-        warpTimer = new WarpTimer();
 
         load(f);
     }
@@ -54,6 +50,11 @@ public class WarpManager {
     void load(File f) {
         try (FileReader r = new FileReader(f)) {
             this.file = (JSONObject) new JSONParser().parse(r);
+
+            file.forEach((warpName, warpData) -> {
+                warps.add(new Warp((JSONObject) warpData));
+            });
+
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
