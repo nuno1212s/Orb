@@ -82,6 +82,7 @@ public class BukkitMain extends JavaPlugin {
         //Module manager has to be the last thing that is initialized
         data.setModuleManager(new ModuleManager(this.getDataFolder(), this.getClassLoader()));
 
+        this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerDisconnectListener(), this);

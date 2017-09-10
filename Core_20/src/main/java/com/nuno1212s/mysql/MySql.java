@@ -15,7 +15,10 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Handles mysql database connections
@@ -255,7 +258,7 @@ public class MySql {
                 String permissions1 = resultSet.getString("PERMISSIONS");
                 List<String> permissions;
                 if (!permissions1.equalsIgnoreCase("")) {
-                    permissions = Arrays.asList(permissions1.split(","));
+                    permissions = new ArrayList<>(Arrays.asList(permissions1.split(",")));
                 } else {
                     permissions = new ArrayList<>();
                 }

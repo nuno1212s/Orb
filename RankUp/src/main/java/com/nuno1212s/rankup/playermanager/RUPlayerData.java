@@ -3,18 +3,20 @@ package com.nuno1212s.rankup.playermanager;
 import com.nuno1212s.classes.player.KitPlayer;
 import com.nuno1212s.displays.player.ChatData;
 import com.nuno1212s.events.PlayerInformationUpdateEvent;
-import com.nuno1212s.rankup.main.Main;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.Group;
 import com.nuno1212s.permissionmanager.util.PlayerGroupData;
 import com.nuno1212s.playermanager.PlayerData;
+import com.nuno1212s.rankup.main.Main;
 import com.nuno1212s.util.Callback;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,6 +33,9 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer {
     @Getter
     private Map<Integer, Long> kitUsages;
 
+    @Getter
+    private List<Integer> privateKits;
+
     volatile long coins;
 
     public RUPlayerData(PlayerData d) {
@@ -38,6 +43,7 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer {
         this.coins = 0;
         this.groupData = new PlayerGroupData();
         this.kitUsages = new HashMap<>();
+        this.privateKits = new ArrayList<>();
     }
 
     public synchronized final void setCoins(long coins) {
@@ -151,7 +157,6 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer {
 
     @Override
     public boolean ownsKit(int kitID) {
-        //TODO
-        return false;
+        return this.privateKits.contains(kitID);
     }
 }

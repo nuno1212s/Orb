@@ -13,6 +13,6 @@ public @interface ModuleData {
 
     String version();
 
-    String[] dependencies();
+    String[] dependencies() default {};
 
 }

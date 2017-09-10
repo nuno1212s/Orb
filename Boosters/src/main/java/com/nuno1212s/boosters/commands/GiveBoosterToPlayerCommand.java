@@ -27,7 +27,7 @@ public class GiveBoosterToPlayerCommand implements CommandExecutor {
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
 
         if (!commandSender.hasPermission("boosters.add")) {
-            MainData.getIns().getMessageManager().getMessage("NO_PERMISSION").send(commandSender);
+            MainData.getIns().getMessageManager().getMessage("NO_PERMISSION").sendTo(commandSender);
             return true;
         }
 
@@ -86,6 +86,6 @@ public class GiveBoosterToPlayerCommand implements CommandExecutor {
 
         });
 
-        return false;
+        return true;
     }
 }

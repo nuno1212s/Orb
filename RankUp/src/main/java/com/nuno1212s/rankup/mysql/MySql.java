@@ -1,8 +1,8 @@
 package com.nuno1212s.rankup.mysql;
 
-import com.nuno1212s.rankup.playermanager.RUPlayerData;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.util.PlayerGroupData;
+import com.nuno1212s.rankup.playermanager.RUPlayerData;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -41,6 +41,7 @@ public class MySql {
                     playerData.setCoins(resultSet.getLong("COINS"));
                     playerData.setGroupData(new PlayerGroupData(resultSet.getString("GROUPDATA")));
                     String kitUsage = resultSet.getString("KITUSAGE");
+
                     JSONObject jsonObject = (JSONObject) new JSONParser().parse(kitUsage);
                     Map<Integer, Long> kits = new HashMap<>(jsonObject.size());
                     jsonObject.forEach((key, value) -> {

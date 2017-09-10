@@ -19,6 +19,11 @@ public class PlayerDisconnectListener implements Listener {
 
         MainData.getIns().getPermissionManager().getPlayerPermissions().unregisterPermissions(e.getPlayer());
 
+        if (!p.isShouldSave()) {
+            MainData.getIns().getPlayerManager().removePlayer(p);
+            return;
+        }
+
         p.save(new Callback() {
             @Override
             public void callback(Object... args) {

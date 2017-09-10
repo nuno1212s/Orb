@@ -68,7 +68,7 @@ public class TellCommand extends Command implements TabExecutor{
                     }
 
                     PlayerData vpd = MainData.getIns().getPlayerManager().getPlayer(victim.getName());
-                    if (!vpd.isTell() && !d.getMainGroup().hasPermission("novus.staff")) {
+                    if (!vpd.isTell() && !d.getMainGroup().hasPermission("staff")) {
                         player.sendMessage(new ComponentBuilder("Este jogador tem o tell desativado.").color(ChatColor.RED).create());
                         return;
                     }

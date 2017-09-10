@@ -1,8 +1,0 @@
-Servers:
-    survival1:
-        name: 'Survival'
-        npclocation:
-        bungeeid: survival
-Status:
-    Online: '§e{ONLINE} Jogando.'
-    Offline: '§cOffline!'

@@ -3,7 +3,6 @@ package com.nuno1212s.playermanager;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.Group;
 import com.nuno1212s.permissionmanager.util.PlayerGroupData;
-import com.nuno1212s.rediscommunication.Message;
 import com.nuno1212s.util.Callback;
 import lombok.*;
 import org.bukkit.entity.Player;
@@ -21,7 +20,7 @@ import java.util.UUID;
 public abstract class PlayerData {
 
     @NonNull
-    protected UUID playerID;
+    protected final UUID playerID;
 
     @NonNull
     protected PlayerGroupData groups;
@@ -42,6 +41,8 @@ public abstract class PlayerData {
 
     @NonNull
     protected List<Integer> toClaim;
+
+    private boolean shouldSave = true;
 
     public PlayerData(PlayerData coreData) {
         this.playerID = coreData.getPlayerID();
@@ -136,6 +137,7 @@ public abstract class PlayerData {
     }
 
     /**
+     * Get the player name with the players group prefix already added
      *
      * @return
      */

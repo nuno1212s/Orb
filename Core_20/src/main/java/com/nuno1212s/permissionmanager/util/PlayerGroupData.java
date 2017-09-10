@@ -36,6 +36,10 @@ public class PlayerGroupData {
 
     }
 
+    /**
+     *
+     * @return
+     */
     public String toDatabase() {
         StringBuilder builder = new StringBuilder();
         this.groups.forEach(group -> {
@@ -45,6 +49,10 @@ public class PlayerGroupData {
         return builder.toString();
     }
 
+    /**
+     * Get the group ID of the current active group
+     * @return
+     */
     public short getActiveGroup() {
         for (PlayerGroup group : this.groups) {
             if (group.isActive()) {
@@ -54,6 +62,10 @@ public class PlayerGroupData {
         return 0;
     }
 
+    /**
+     * Get the Player Group instance of the current active group
+     * @return
+     */
     public PlayerGroup getActiveGroupIns() {
         for (PlayerGroup group : this.groups) {
             if (group.isActive()) {
@@ -94,7 +106,6 @@ public class PlayerGroupData {
         }
 
         if (this.groups.size() > MainData.getIns().getPermissionManager().getMaxGroupsPerPlayer()) {
-            //TODO: REMOVE A GROUP.
             deleteGroup();
         }
 
@@ -136,12 +147,10 @@ public class PlayerGroupData {
         return EXTENSION_RESULT.NEW_GROUP;
     }
 
-    public enum EXTENSION_RESULT {
-        EXTENDED_CURRENT,
-        EXTENDED_AND_ACTIVATED,
-        NEW_GROUP
-    }
-
+    /**
+     *
+     * @param p
+     */
     public void checkExpiration(Player p) {
 
         boolean expired = false;
@@ -202,6 +211,11 @@ public class PlayerGroupData {
 
     }
 
+    /**
+     * Delete a group to make space for a new group
+     *
+     * Deletes the oldest groups and makes sure there is always at least one permanent group to fallback on
+     */
     private void deleteGroup() {
         //Check to see if there are no permanent groups
         int currentIt = 0;
@@ -239,16 +253,31 @@ public class PlayerGroupData {
 
     }
 
+    /**
+     * Get the next group to be activated
+     * @return
+     */
     private PlayerGroup getNextGroup() {
         return this.groups.size() == 1 ? this.getActiveGroupIns() : this.groups.get(1);
     }
 
+    /**
+     * Send the player groups to a player
+     *
+     * @param p
+     */
     public void sendTo(Player p) {
         this.groups.forEach(group -> {
             p.sendMessage("");
             p.sendMessage(String.valueOf(group.getGroupID()));
             p.sendMessage(String.valueOf(group.getActivationTime()));
         });
+    }
+
+    public enum EXTENSION_RESULT {
+        EXTENDED_CURRENT,
+        EXTENDED_AND_ACTIVATED,
+        NEW_GROUP
     }
 
 }
