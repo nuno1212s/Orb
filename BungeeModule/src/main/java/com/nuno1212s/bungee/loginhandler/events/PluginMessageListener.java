@@ -58,7 +58,7 @@ public class PluginMessageListener implements Listener{
                 UUID oldId = d.getPlayerID();
 
                 d.setPremium(true);
-                d.setPlayerID(p.getUniqueId());
+                //d.set(p.getUniqueId());
 
                 ProxyServer.getInstance().getScheduler().runAsync(m, () -> {
                     //TODO: MySqlHandler.getIns().updatePlayer(oldId, d);

@@ -13,15 +13,15 @@ import java.util.Base64;
 public class RedisSubPub extends JedisPubSub implements Runnable {
 
     @Getter
-    Jedis subscribe;
+    Jedis subscriber;
 
-    public RedisSubPub(Jedis subscribe) {
-        this.subscribe = subscribe;
+    public RedisSubPub(Jedis subscriber) {
+        this.subscriber = subscriber;
     }
 
     @Override
     public void run() {
-        subscribe.subscribe(this, "ServerData");
+        subscriber.subscribe(this, "ServerData");
     }
 
     @Override
@@ -35,14 +35,21 @@ public class RedisSubPub extends JedisPubSub implements Runnable {
 
         Message msg = new Message(Base64.getDecoder().decode(split[2]));
 
-        if (!originalServer.equalsIgnoreCase(MainData.getIns().getServerManager().getServerName())) {
-            MainData.getIns().getRedisHandler().getRedisReceivers().forEach(redisReceiver -> redisReceiver.onReceived(msg));
-        }
-
+        //Still print out info, for debug
         System.out.println("REDIS(" + MainData.getIns().getServerManager().getServerName() + ") - ");
         System.out.println("OG SERVER: " + originalServer);
         System.out.println("TIME SENT: " + timeSent + " Took " + (System.currentTimeMillis() - timeSent) + " ms");
         System.out.println("MESSAGE (Base 64): " + split[2]);
+
+        if (originalServer.equalsIgnoreCase(MainData.getIns().getServerManager().getServerName())) {
+            //Redis message originated here...
+            return;
+        }
+
+        if (!originalServer.equalsIgnoreCase(MainData.getIns().getServerManager().getServerName())) {
+            MainData.getIns().getRedisHandler().getRedisReceivers().forEach(redisReceiver -> redisReceiver.onReceived(msg));
+        }
+
 
     }
 

@@ -7,16 +7,17 @@ import com.nuno1212s.bungee.commands.StaffCommand;
 import com.nuno1212s.bungee.commands.TellCommand;
 import com.nuno1212s.bungee.events.LoginEvent;
 import com.nuno1212s.bungee.events.PermissionCheckListener;
-import com.nuno1212s.bungee.events.PluginMessage;
 import com.nuno1212s.bungee.events.QuitEvent;
 import com.nuno1212s.bungee.loginhandler.MojangAPIConnector;
 import com.nuno1212s.bungee.loginhandler.events.PlayerLoginEvent;
 import com.nuno1212s.bungee.loginhandler.events.PluginMessageListener;
 import com.nuno1212s.bungee.motd.MOTDCommand;
 import com.nuno1212s.bungee.motd.ServerMOTD;
+import com.nuno1212s.bungee.redishandler.RedisListener;
 import com.nuno1212s.config.BungeeConfig;
 import com.nuno1212s.config.Config;
 import com.nuno1212s.main.BungeeMain;
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.modulemanager.ModuleData;
 import lombok.Getter;
@@ -59,7 +60,6 @@ public class Main extends Module {
         getProxy().getPluginManager().registerListener(plugin, new PlayerLoginEvent(this));
         getProxy().getPluginManager().registerListener(plugin, new PluginMessageListener());
         getProxy().getPluginManager().registerListener(plugin, new QuitEvent());
-        getProxy().getPluginManager().registerListener(plugin, new PluginMessage());
         getProxy().getPluginManager().registerListener(plugin, new PermissionCheckListener());
 
         getProxy().getPluginManager().registerCommand(plugin, new MOTDCommand());
@@ -77,9 +77,9 @@ public class Main extends Module {
 
         System.out.println(stringList);
 
+        MainData.getIns().getRedisHandler().registerRedisListener(new RedisListener());
+
         getProxy().registerChannel("AUTOLOGIN");
-        getProxy().registerChannel("TELLINFO");
-        getProxy().registerChannel("GROUPUPDATE");
 
     }
 

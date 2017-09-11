@@ -9,13 +9,22 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 
 /**
  * Click listener
  */
-public class InventoryClickListener implements Listener {
+public class ServerInventoryClickListener implements Listener {
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
+    public void onDrag(InventoryDragEvent e) {
+        InventoryData inventoryDataByName = Main.getIns().getServerSelectorManager().getInventoryDataByName(e.getInventory().getName());
+        if (inventoryDataByName != null) {
+            e.setResult(Event.Result.DENY);
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
     public void onClick(InventoryClickEvent e) {
         InventoryData inventoryData = Main.getIns().getServerSelectorManager().getInventoryDataByName(e.getInventory().getName());
         if (inventoryData.equals(e.getInventory())) {

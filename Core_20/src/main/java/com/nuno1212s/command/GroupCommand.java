@@ -122,6 +122,7 @@ public class GroupCommand implements CommandExecutor {
                     .sendTo(commandSender);
 
             player.getKey().save((o) -> {
+
             });
 
             if (player.getValue()) {

@@ -3,9 +3,11 @@ package com.nuno1212s.playermanager;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.Group;
 import com.nuno1212s.permissionmanager.util.PlayerGroupData;
+import com.nuno1212s.rediscommunication.Message;
 import com.nuno1212s.util.Callback;
 import lombok.*;
 import org.bukkit.entity.Player;
+import org.json.simple.JSONObject;
 
 import java.util.List;
 import java.util.UUID;
@@ -66,7 +68,31 @@ public abstract class PlayerData {
         if (MainData.getIns().getEventCaller() != null) {
             MainData.getIns().getEventCaller().callUpdateInformationEvent(this);
         }
-        MainData.getIns().getRedisHandler().sendMessage(new byte[0]);
+
+        JSONObject obj = new JSONObject();
+        obj.put("PlayerID", this.getPlayerID().toString());
+        obj.put("GroupID", groupID);
+        obj.put("Duration", duration);
+
+        MainData.getIns().getRedisHandler().sendMessage(new Message("BUNGEE", "GROUPUPDATE", obj).toByteArray());
+        return extension_result;
+    }
+
+    /**
+     * Set the main player group without calling Redis messaging
+     *
+     * {@link #setMainGroup(short, long)}
+     *
+     * @param groupID
+     * @param duration
+     * @return
+     */
+    public PlayerGroupData.EXTENSION_RESULT redis_setMainGroup(short groupID, long duration) {
+        PlayerGroupData.EXTENSION_RESULT extension_result = this.groups.setCurrentGroup(groupID, duration);
+        if (MainData.getIns().getEventCaller() != null) {
+            MainData.getIns().getEventCaller().callUpdateInformationEvent(this);
+        }
+
         return extension_result;
     }
 

@@ -25,7 +25,6 @@ public class HInventoryItem extends InventoryItem {
         PlayerData data = MainData.getIns().getPlayerManager().getPlayer(p.getUniqueId());
 
         BungeeSender.getIns().sendPlayer(data, p, this.connectingServer);
-
     }
 
 }

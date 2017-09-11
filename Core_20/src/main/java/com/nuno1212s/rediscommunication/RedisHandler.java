@@ -43,6 +43,7 @@ public class RedisHandler {
 
     /**
      * Register a redis listener
+     *
      * @param receiver
      */
     public void registerRedisListener(RedisReceiver receiver) {
@@ -56,10 +57,12 @@ public class RedisHandler {
         //Must have 2 redis connections, 1 for SUB, 1 for PUB
         Jedis subConnection = new Jedis(host, port);
         redisConnection = new Jedis(host, port);
-        if (!password.equalsIgnoreCase("")){
+
+        if (!password.equalsIgnoreCase("")) {
             redisConnection.auth(password);
             subConnection.auth(password);
         }
+
         b = new RedisSubPub(subConnection);
         MainData.getIns().getScheduler().runTaskAsync(b);
     }
@@ -76,7 +79,9 @@ public class RedisHandler {
                     "||" + System.currentTimeMillis() +
                     "||" + Base64.getEncoder().encodeToString(message);
 
-            redisConnection.publish("ServerData", messageBuilder);
+            MainData.getIns().getScheduler().runTaskAsync(() ->
+                    redisConnection.publish("ServerData", messageBuilder)
+            );
         }
     }
 
@@ -88,7 +93,7 @@ public class RedisHandler {
             this.redisConnection.close();
         }
         if (b != null) {
-            b.getSubscribe().close();
+            b.getSubscriber().close();
         }
     }
 
