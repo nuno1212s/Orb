@@ -30,7 +30,7 @@ public class PlayerOptionsManager {
     public PlayerOptionsManager(Module m) {
 
         this.optionsInventory = new InventoryData(m.getFile("optionsInv.json", true), null);
-        File file = m.getFile("items.json", true);
+        File file = m.getFile("optionItems.json", true);
 
         JSONObject items;
 

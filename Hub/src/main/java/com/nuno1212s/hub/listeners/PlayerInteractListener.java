@@ -1,6 +1,8 @@
 package com.nuno1212s.hub.listeners;
 
 import com.nuno1212s.hub.main.Main;
+import com.nuno1212s.hub.playerdata.HPlayerData;
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.util.inventories.InventoryItem;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -24,7 +26,8 @@ public class PlayerInteractListener implements Listener {
         if (item.hasItemFlag("SERVER_SELECTOR")) {
             e.getPlayer().openInventory(Main.getIns().getServerSelectorManager().getMainInventory());
         } else if (item.hasItemFlag("OPTIONS")) {
-
+            HPlayerData data = (HPlayerData) MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
+            e.getPlayer().openInventory(Main.getIns().getPlayerOptionsManager().getInventoryForPlayer(data));
         }
 
     }

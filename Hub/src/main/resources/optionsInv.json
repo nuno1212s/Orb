@@ -1,0 +1,30 @@
+{
+  "InventoryName": "&7Options inventory",
+  "InventorySize": 36,
+  "InventoryItems": [
+    {
+      "Slot": 13,
+      "Item": {
+        "Material": "PAPER",
+        "DisplayName": "&cChat"
+      },
+      "Flags": []
+    },
+    {
+      "Slot": 22,
+      "Flags": ["CHAT_TOGGLE"]
+    },
+    {
+      "Slot": 15,
+      "Item": {
+        "Material": "PAPER",
+        "DisplayName": "&cTell"
+      },
+      "Flags": []
+    },
+    {
+      "Slot": 24,
+      "Flags": ["TELL_TOGGLE"]
+    }
+  ]
+}

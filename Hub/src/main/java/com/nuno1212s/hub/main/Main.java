@@ -1,6 +1,5 @@
 package com.nuno1212s.hub.main;
 
-
 import com.nuno1212s.hub.hotbar.HotbarManager;
 import com.nuno1212s.hub.listeners.OptionsInventoryClickListener;
 import com.nuno1212s.hub.listeners.PlayerInteractListener;
@@ -17,7 +16,7 @@ import lombok.Getter;
 /**
  * Main class file
  */
-@ModuleData(name = "Hub", version = "1.0")
+@ModuleData(name = "Hub", version = "1.0", dependencies = {"Displays"})
 public class Main extends Module {
 
     @Getter

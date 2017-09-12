@@ -1,0 +1,14 @@
+{
+  "On": {
+    "Material": "INK_SACK",
+    "Data": 5,
+    "DisplayName": "&aActivated",
+    "Lore": ["&aClick to deactivate"]
+  },
+  "Off": {
+    "Material": "INK_SACK",
+    "Data": 14,
+    "DisplayName": "&cDeactivated",
+    "Lore": ["&aClick to activate"]
+  }
+}
