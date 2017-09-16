@@ -15,9 +15,9 @@ public class HPlayerData extends PlayerData {
 
     @Getter
     @Setter
-    private boolean chatEnabled = true;
+    private boolean chatEnabled = true, playerShown = false;
 
-    public HPlayerData(PlayerData d){
+    public HPlayerData(PlayerData d) {
         super(d);
     }
 
@@ -33,7 +33,10 @@ public class HPlayerData extends PlayerData {
 
     @Override
     public void save(Callback c) {
-        MainData.getIns().getScheduler().runTaskAsync(() -> MainData.getIns().getMySql().savePlayer(this));
+        MainData.getIns().getScheduler().runTaskAsync(() -> {
+            MainData.getIns().getMySql().savePlayer(this);
+            c.callback();
+        });
     }
 
     @Override

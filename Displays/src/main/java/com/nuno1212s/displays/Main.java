@@ -4,6 +4,7 @@ import com.nuno1212s.displays.chat.ChatListener;
 import com.nuno1212s.displays.chat.ChatManager;
 import com.nuno1212s.displays.chat.GlobalChatCommand;
 import com.nuno1212s.displays.commands.ChatControlCommand;
+import com.nuno1212s.displays.listeners.PlayerJoinListener;
 import com.nuno1212s.displays.placeholders.PlaceHolderManager;
 import com.nuno1212s.displays.scoreboard.ScoreboardManager;
 import com.nuno1212s.main.BukkitMain;
@@ -17,7 +18,7 @@ import org.bukkit.plugin.Plugin;
 /**
  * Main module class
  */
-@ModuleData(name = "Displays", version = "1.0", dependencies = {})
+@ModuleData(name = "Displays", version = "1.0")
 public class Main extends Module {
 
     @Getter
@@ -46,6 +47,7 @@ public class Main extends Module {
 
         Plugin ins = BukkitMain.getIns();
         Bukkit.getServer().getPluginManager().registerEvents(new ChatListener(), ins);
+        Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), ins);
 
     }
 

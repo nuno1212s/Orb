@@ -16,6 +16,7 @@ import com.nuno1212s.rediscommunication.RedisHandler;
 import com.nuno1212s.rewards.bukkit.BukkitRewardManager;
 import com.nuno1212s.scheduler.BukkitScheduler;
 import com.nuno1212s.serverstatus.ServerManager;
+import com.nuno1212s.util.BungeeSender;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
@@ -79,6 +80,7 @@ public class BukkitMain extends JavaPlugin {
 
         data.setMessageManager(new Messages(j));
         data.setRewardManager(new BukkitRewardManager());
+        new BungeeSender(this);
         //Module manager has to be the last thing that is initialized
         data.setModuleManager(new ModuleManager(this.getDataFolder(), this.getClassLoader()));
 

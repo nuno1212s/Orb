@@ -27,11 +27,16 @@ public class ServerInventoryClickListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onClick(InventoryClickEvent e) {
         InventoryData inventoryData = Main.getIns().getServerSelectorManager().getInventoryDataByName(e.getInventory().getName());
-        if (inventoryData.equals(e.getInventory())) {
+        //
+        if (inventoryData != null) {
             if (e.getClick().isShiftClick()) {
                 e.setResult(Event.Result.DENY);
             }
         } else {
+            return;
+        }
+
+        if (e.getClickedInventory() == null) {
             return;
         }
 

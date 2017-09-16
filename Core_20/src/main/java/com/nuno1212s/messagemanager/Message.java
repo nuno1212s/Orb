@@ -9,10 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Message classes
@@ -66,6 +63,16 @@ public class Message {
             return;
         }
         send(players);
+    }
+
+    public void sendTo(Collection<? extends CommandSender> players) {
+        if (!Bukkit.isPrimaryThread()) {
+            MainData.getIns().getScheduler().runTask(() ->
+                    sendTo(players)
+            );
+            return;
+        }
+        send(players.toArray(new CommandSender[players.size()]));
     }
 
     public void sendTo(PlayerData d) {

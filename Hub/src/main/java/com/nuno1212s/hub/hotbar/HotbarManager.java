@@ -1,5 +1,7 @@
 package com.nuno1212s.hub.hotbar;
 
+import com.nuno1212s.hub.main.Main;
+import com.nuno1212s.hub.playerdata.HPlayerData;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.util.inventories.InventoryItem;
 import org.bukkit.inventory.ItemStack;
@@ -23,6 +25,8 @@ public class HotbarManager {
 
     private List<InventoryItem> items;
 
+    private ItemStack playersOn, playersOff;
+
     public HotbarManager(Module m) {
         this.items = new ArrayList<>();
 
@@ -40,7 +44,7 @@ public class HotbarManager {
         }
 
         items.forEach(item ->
-            this.items.add(new InventoryItem((JSONObject) item))
+                this.items.add(new InventoryItem((JSONObject) item))
         );
 
     }
@@ -50,11 +54,20 @@ public class HotbarManager {
      *
      * @return
      */
-    public Map<Integer, ItemStack> getItems() {
+    public Map<Integer, ItemStack> getItems(HPlayerData d) {
         Map<Integer, ItemStack> items = new HashMap<>();
 
-        this.items.forEach((item) ->
-            items.put(item.getSlot(), item.getItem().clone())
+        this.items.forEach((item) -> {
+                    if (item.hasItemFlag("HIDE_PLAYERS")) {
+                        if (d.isPlayerShown()) {
+                            items.put(item.getSlot(), Main.getIns().getPlayerToggleManager().getPlayersOn());
+                        } else {
+                            items.put(item.getSlot(), Main.getIns().getPlayerToggleManager().getPlayersOff());
+                        }
+                        return;
+                    }
+                    items.put(item.getSlot(), item.getItem().clone());
+                }
         );
 
         return items;

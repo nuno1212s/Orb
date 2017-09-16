@@ -1,0 +1,18 @@
+{
+  "InventoryName": "&cServer Selector",
+  "InventorySize": 27,
+  "InventoryItems": [
+    {
+      "Slot": 13,
+      "Item": {
+        "Material": "DIAMOND_SWORD",
+        "Enchantments": [
+          "UNBREAKING:1"
+        ],
+        "ItemFlags": ["HIDE_ENCHANTS"],
+        "DisplayName": "&bFactions"
+      },
+      "ConnectingServer": "Beta1"
+    }
+  ]
+}

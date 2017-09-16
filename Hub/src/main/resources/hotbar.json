@@ -1,1 +1,28 @@
-[]
+[
+  {
+    "Slot": 2,
+    "Item": {
+      "Material": "COMPASS",
+      "DisplayName": "&cServer Selector"
+    },
+    "Flags": [
+      "SERVER_SELECTOR"
+    ]
+  },
+  {
+    "Slot": 7,
+    "Flags": [
+      "HIDE_PLAYERS"
+    ]
+  },
+  {
+    "Slot": 5,
+    "Item": {
+      "Material": "REDSTONE_COMPARATOR",
+      "DisplayName": "&cPlayer Options"
+    },
+    "Flags": [
+      "OPTIONS"
+    ]
+  }
+]

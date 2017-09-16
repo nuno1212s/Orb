@@ -1,0 +1,12 @@
+{
+  "PlayersOn": {
+    "Material": "INK_SACK",
+    "Data": 5,
+    "DisplayName": "&aPlayers shown. &cRight-click to disable"
+  },
+  "PlayersOff": {
+    "Material": "INK_SACK",
+    "Data": 14,
+    "DisplayName": "&cPlayers hidden. &aRight-click to enable"
+  }
+}

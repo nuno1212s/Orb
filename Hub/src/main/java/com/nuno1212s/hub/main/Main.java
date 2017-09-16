@@ -1,11 +1,9 @@
 package com.nuno1212s.hub.main;
 
 import com.nuno1212s.hub.hotbar.HotbarManager;
-import com.nuno1212s.hub.listeners.OptionsInventoryClickListener;
-import com.nuno1212s.hub.listeners.PlayerInteractListener;
-import com.nuno1212s.hub.listeners.PlayerJoinListener;
-import com.nuno1212s.hub.listeners.ServerInventoryClickListener;
+import com.nuno1212s.hub.listeners.*;
 import com.nuno1212s.hub.player_options.PlayerOptionsManager;
+import com.nuno1212s.hub.players_toggle.PlayerToggleManager;
 import com.nuno1212s.hub.redis.RedisHandler;
 import com.nuno1212s.hub.server_selector.ServerSelectorManager;
 import com.nuno1212s.main.BukkitMain;
@@ -16,7 +14,7 @@ import lombok.Getter;
 /**
  * Main class file
  */
-@ModuleData(name = "Hub", version = "1.0", dependencies = {"Displays"})
+@ModuleData(name = "Hub", version = "1.0")
 public class Main extends Module {
 
     @Getter
@@ -34,12 +32,16 @@ public class Main extends Module {
     @Getter
     private RedisHandler redisHandler;
 
+    @Getter
+    private PlayerToggleManager playerToggleManager;
+
     @Override
     public void onEnable() {
         ins = this;
         hotbarManager = new HotbarManager(this);
         serverSelectorManager = new ServerSelectorManager(this);
         playerOptionsManager = new PlayerOptionsManager(this);
+        playerToggleManager = new PlayerToggleManager(this);
         redisHandler = new RedisHandler();
 
         BukkitMain ins = BukkitMain.getIns();
@@ -47,6 +49,10 @@ public class Main extends Module {
         ins.getServer().getPluginManager().registerEvents(new ServerInventoryClickListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new OptionsInventoryClickListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), ins);
+        ins.getServer().getPluginManager().registerEvents(new PlayerDamageListener(), ins);
+        ins.getServer().getPluginManager().registerEvents(new PlayerDropItemListener(), ins);
+        ins.getServer().getPluginManager().registerEvents(new PlayerFoodChangeListener(), ins);
+        ins.getServer().getPluginManager().registerEvents(new WeatherChangeListener(), ins);
 
     }
 
