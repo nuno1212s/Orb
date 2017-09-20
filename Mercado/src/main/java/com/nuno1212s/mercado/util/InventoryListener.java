@@ -1,7 +1,7 @@
 package com.nuno1212s.mercado.util;
 
 import com.nuno1212s.mercado.main.Main;
-import com.nuno1212s.mercado.util.inventories.InventoryData;
+import com.nuno1212s.util.inventories.InventoryData;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.bukkit.event.Event;

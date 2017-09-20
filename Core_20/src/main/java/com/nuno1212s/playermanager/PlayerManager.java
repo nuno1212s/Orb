@@ -31,7 +31,7 @@ public class PlayerManager {
      * @return
      */
     public PlayerData buildNewPlayerData(UUID playerID, String playerName) {
-        return new CorePlayerData(playerID, new PlayerGroupData(), playerName, 0, System.currentTimeMillis(), true, MainData.getIns().getRewardManager().getDefaultRewards());
+        return new CorePlayerData(playerID, new PlayerGroupData(), playerName, 0, System.currentTimeMillis(), true, MainData.getIns().getRewardManager().getDefaultRewards(), null);
     }
 
     /**
@@ -44,7 +44,7 @@ public class PlayerManager {
      * @return
      */
     public PlayerData buildNewPiratePlayerData(UUID playerID, String playerName) {
-        return new CorePlayerData(playerID, new PlayerGroupData(), playerName, 0, System.currentTimeMillis(), false, MainData.getIns().getRewardManager().getDefaultRewards());
+        return new CorePlayerData(playerID, new PlayerGroupData(), playerName, 0, System.currentTimeMillis(), false, MainData.getIns().getRewardManager().getDefaultRewards(), null);
     }
 
     /**

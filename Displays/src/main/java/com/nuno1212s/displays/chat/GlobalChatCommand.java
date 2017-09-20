@@ -4,6 +4,7 @@ import com.nuno1212s.displays.Main;
 import com.nuno1212s.displays.player.ChatData;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
+import com.nuno1212s.punishments.Punishment;
 import com.nuno1212s.util.TimeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -25,6 +26,12 @@ public class GlobalChatCommand implements CommandExecutor {
         }
 
         PlayerData data = MainData.getIns().getPlayerManager().getPlayer(((Player) commandSender).getUniqueId());
+
+        if (data.getPunishment().getPunishmentType() == Punishment.PunishmentType.MUTE && data.getPunishment().hasExpired()) {
+            MainData.getIns().getMessageManager().getMessage("MUTED")
+                    .format("%time%", data.getPunishment().timeToString()).sendTo(commandSender);
+            return true;
+        }
 
         if (data instanceof ChatData) {
             long lastUsage = ((ChatData) data).lastGlobalChatUsage(), chatTime =

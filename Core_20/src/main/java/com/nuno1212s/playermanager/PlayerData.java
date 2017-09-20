@@ -3,6 +3,7 @@ package com.nuno1212s.playermanager;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.Group;
 import com.nuno1212s.permissionmanager.util.PlayerGroupData;
+import com.nuno1212s.punishments.Punishment;
 import com.nuno1212s.rediscommunication.Message;
 import com.nuno1212s.util.Callback;
 import lombok.*;
@@ -44,6 +45,8 @@ public abstract class PlayerData {
     @NonNull
     protected List<Integer> toClaim;
 
+    protected Punishment punishment;
+
     private boolean shouldSave = true;
 
     public PlayerData(PlayerData coreData) {
@@ -55,6 +58,7 @@ public abstract class PlayerData {
         this.premium = coreData.isPremium();
         this.tell = coreData.isTell();
         this.toClaim = coreData.getToClaim();
+        this.punishment = coreData.getPunishment();
     }
 
     /**

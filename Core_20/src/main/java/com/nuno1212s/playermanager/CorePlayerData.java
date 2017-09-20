@@ -3,6 +3,7 @@ package com.nuno1212s.playermanager;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.Group;
 import com.nuno1212s.permissionmanager.util.PlayerGroupData;
+import com.nuno1212s.punishments.Punishment;
 import com.nuno1212s.util.Callback;
 
 import java.util.List;
@@ -13,8 +14,10 @@ import java.util.UUID;
  */
 public class CorePlayerData extends PlayerData {
 
-    public CorePlayerData(UUID playerID, PlayerGroupData groupID, String playerName, long cash, long lastLogin, boolean premium, List<Integer> claimed) {
+    public CorePlayerData(UUID playerID, PlayerGroupData groupID, String playerName, long cash, long lastLogin, boolean premium, List<Integer> claimed, Punishment currentPunishment) {
         super(playerID, groupID, playerName, cash, lastLogin, premium, claimed);
+
+        setPunishment(punishment);
     }
 
     @Override

@@ -25,8 +25,6 @@ public class HotbarManager {
 
     private List<InventoryItem> items;
 
-    private ItemStack playersOn, playersOff;
-
     public HotbarManager(Module m) {
         this.items = new ArrayList<>();
 

@@ -4,6 +4,7 @@ import com.nuno1212s.displays.Main;
 import com.nuno1212s.displays.player.ChatData;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
+import com.nuno1212s.punishments.Punishment;
 import com.nuno1212s.util.TimeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -24,6 +25,12 @@ public class ChatListener implements Listener {
         e.setCancelled(true);
         if (Main.getIns().getChatManager().isChatActivated() || e.getPlayer().hasPermission("chat.override")) {
             PlayerData d = MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
+
+            if (d.getPunishment().getPunishmentType() == Punishment.PunishmentType.MUTE && d.getPunishment().hasExpired()) {
+                MainData.getIns().getMessageManager().getMessage("MUTED")
+                        .format("%time%", d.getPunishment().timeToString()).sendTo(e.getPlayer());
+                return;
+            }
 
             if (d instanceof ChatData) {
                 long lastUsage = ((ChatData) d).lastLocalChatUsage();

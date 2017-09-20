@@ -32,6 +32,9 @@ public class InventoryData {
     protected String inventoryName;
 
     @Getter
+    protected String inventoryID;
+
+    @Getter
     protected int inventorySize;
 
     @Getter
@@ -78,9 +81,11 @@ public class InventoryData {
      * @param loadItems    Should the items be loaded
      * @param customLoader The loader that should be used for the items
      */
-    private void load(JSONObject jsOB, boolean loadItems, Class<? extends InventoryItem> customLoader) {
+    protected void load(JSONObject jsOB, boolean loadItems, Class<? extends InventoryItem> customLoader) {
         this.inventoryName = ChatColor.translateAlternateColorCodes('&',
                 (String) jsOB.getOrDefault("InventoryName", "&cFailed to load name"));
+
+        this.inventoryID = (String) jsOB.getOrDefault("InventoryID", this.inventoryName);
 
         this.inventorySize = ((Long) jsOB.getOrDefault("InventorySize", 27)).intValue();
 

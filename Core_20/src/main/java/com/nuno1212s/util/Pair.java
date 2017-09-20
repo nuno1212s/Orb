@@ -24,6 +24,14 @@ public class Pair<E, V> {
         return value;
     }
 
+    public E key() {
+        return key;
+    }
+
+    public V value() {
+        return value;
+    }
+
     public Pair<E, V> setKey(E key) {
         this.key = key;
         return this;

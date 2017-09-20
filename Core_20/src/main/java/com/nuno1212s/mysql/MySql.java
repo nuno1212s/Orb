@@ -8,6 +8,7 @@ import com.nuno1212s.permissionmanager.PermissionManager;
 import com.nuno1212s.permissionmanager.util.PlayerGroupData;
 import com.nuno1212s.playermanager.CorePlayerData;
 import com.nuno1212s.playermanager.PlayerData;
+import com.nuno1212s.punishments.Punishment;
 import com.nuno1212s.rewards.Reward;
 import com.nuno1212s.rewards.bukkit.BukkitReward;
 import com.nuno1212s.rewards.bungee.BungeeReward;
@@ -85,7 +86,8 @@ public class MySql {
                     "LASTLOGIN TIMESTAMP," +
                     "TELL BOOL," +
                     "CASH BIGINT," +
-                    "REWARDSTOCLAIM varchar(255))";
+                    "REWARDSTOCLAIM varchar(255)," +
+                    "PUNISHMENT varchar(255))";
 
             st.execute(stm);
 
@@ -118,8 +120,8 @@ public class MySql {
         try (Connection c = getConnection();
              PreparedStatement select =
                      (playerName == null ?
-                             c.prepareStatement("SELECT GROUPDATA, PLAYERNAME, CASH, PREMIUM, LASTLOGIN, REWARDSTOCLAIM, TELL FROM playerData WHERE UUID=? LIMIT 1") :
-                             c.prepareStatement("SELECT GROUPDATA, CASH, PREMIUM, LASTLOGIN, REWARDSTOCLAIM, TELL FROM playerData WHERE UUID=? LIMIT 1"))
+                             c.prepareStatement("SELECT GROUPDATA, PLAYERNAME, CASH, PREMIUM, LASTLOGIN, REWARDSTOCLAIM, TELL, PUNISHMENT FROM playerData WHERE UUID=? LIMIT 1") :
+                             c.prepareStatement("SELECT GROUPDATA, CASH, PREMIUM, LASTLOGIN, REWARDSTOCLAIM, TELL, PUNISHMENT FROM playerData WHERE UUID=? LIMIT 1"))
         ) {
             if (playerName == null) {
                 select.setString(1, playerID.toString());
@@ -140,7 +142,17 @@ public class MySql {
 
                             }
                         }
-                        PlayerData playerData = new CorePlayerData(playerID, new PlayerGroupData(groupid), playerName, cash, lastLogin, premium, toClaim);
+
+                        Punishment punishmentInstance;
+                        String punishment = resultSet.getString("PUNISHMENT");
+
+                        if (punishment.equalsIgnoreCase("")) {
+                            punishmentInstance = null;
+                        } else {
+                            punishmentInstance = new Punishment(punishment);
+                        }
+
+                        PlayerData playerData = new CorePlayerData(playerID, new PlayerGroupData(groupid), playerName, cash, lastLogin, premium, toClaim, punishmentInstance);
                         playerData.setTell(tell);
                         return playerData;
                     }
@@ -163,7 +175,17 @@ public class MySql {
 
                             }
                         }
-                        PlayerData playerData = new CorePlayerData(playerID, new PlayerGroupData(groupid), playerName, cash, lastLogin, premium, toClaim);
+
+                        Punishment punishmentInstance;
+                        String punishment = resultSet.getString("PUNISHMENT");
+
+                        if (punishment.equalsIgnoreCase("")) {
+                            punishmentInstance = null;
+                        } else {
+                            punishmentInstance = new Punishment(punishment);
+                        }
+
+                        PlayerData playerData = new CorePlayerData(playerID, new PlayerGroupData(groupid), playerName, cash, lastLogin, premium, toClaim, punishmentInstance);
                         playerData.setTell(tell);
                         return playerData;
                     }
@@ -182,7 +204,7 @@ public class MySql {
 
         try (Connection c = getConnection();
              PreparedStatement select =
-                     c.prepareStatement("SELECT UUID, GROUPDATA, PLAYERNAME, CASH, PREMIUM, LASTLOGIN, REWARDSTOCLAIM, TELL FROM playerData WHERE playerName=? LIMIT 1")
+                     c.prepareStatement("SELECT UUID, GROUPDATA, PLAYERNAME, CASH, PREMIUM, LASTLOGIN, REWARDSTOCLAIM, TELL, PUNISHMENT FROM playerData WHERE playerName=? LIMIT 1")
         ) {
             select.setString(1, playerName);
             try (ResultSet resultSet = select.executeQuery()) {
@@ -198,7 +220,17 @@ public class MySql {
                     for (String reward : rewards) {
                         toClaim.add(Integer.parseInt(reward));
                     }
-                    PlayerData playerData = new CorePlayerData(playerID, new PlayerGroupData(groupid), playerName, cash, lastLogin, premium, toClaim);
+
+                    Punishment punishmentInstance;
+                    String punishment = resultSet.getString("PUNISHMENT");
+
+                    if (punishment.equalsIgnoreCase("")) {
+                        punishmentInstance = null;
+                    } else {
+                        punishmentInstance = new Punishment(punishment);
+                    }
+
+                    PlayerData playerData = new CorePlayerData(playerID, new PlayerGroupData(groupid), playerName, cash, lastLogin, premium, toClaim, punishmentInstance);
                     playerData.setTell(tell);
                     return playerData;
                 }
@@ -214,8 +246,8 @@ public class MySql {
     public void savePlayer(PlayerData d) {
 
         try (Connection c = getConnection();
-             PreparedStatement st = c.prepareStatement("INSERT INTO playerData (UUID, GROUPDATA, PLAYERNAME, CASH, PREMIUM, LASTLOGIN, TELL, REWARDSTOCLAIM) values(?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?) " +
-                     "ON DUPLICATE KEY UPDATE GROUPDATA=?, CASH=?, PLAYERNAME=?, LASTLOGIN=CURRENT_TIMESTAMP, PREMIUM=?, TELL=?, REWARDSTOCLAIM=?")) {
+             PreparedStatement st = c.prepareStatement("INSERT INTO playerData (UUID, GROUPDATA, PLAYERNAME, CASH, PREMIUM, LASTLOGIN, TELL, REWARDSTOCLAIM, PUNISHMENT) values(?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?, ?) " +
+                     "ON DUPLICATE KEY UPDATE GROUPDATA=?, CASH=?, PLAYERNAME=?, LASTLOGIN=CURRENT_TIMESTAMP, PREMIUM=?, TELL=?, REWARDSTOCLAIM=?, PUNISHMENT=?")) {
 
             st.setString(1, d.getPlayerID().toString());
             st.setString(2, d.getGroups().toDatabase());
@@ -224,12 +256,14 @@ public class MySql {
             st.setBoolean(5, d.isPremium());
             st.setBoolean(6, d.isTell());
             st.setString(7, d.getToClaimToString());
-            st.setString(8, d.getGroups().toDatabase());
-            st.setLong(9, d.getCash());
-            st.setString(10, d.getPlayerName());
-            st.setBoolean(11, d.isPremium());
-            st.setBoolean(12, d.isTell());
-            st.setString(13, d.getToClaimToString());
+            st.setString(8, d.getPunishment().toString());
+            st.setString(9, d.getGroups().toDatabase());
+            st.setLong(10, d.getCash());
+            st.setString(11, d.getPlayerName());
+            st.setBoolean(12, d.isPremium());
+            st.setBoolean(13, d.isTell());
+            st.setString(14, d.getToClaimToString());
+            st.setString(15, d.getPunishment().toString());
 
             st.executeUpdate();
 
