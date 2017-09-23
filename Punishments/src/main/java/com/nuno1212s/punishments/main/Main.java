@@ -1,10 +1,12 @@
 package com.nuno1212s.punishments.main;
 
+import com.nuno1212s.main.BukkitMain;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.modulemanager.ModuleData;
-import com.nuno1212s.punishments.commands.TestCommand;
+import com.nuno1212s.punishments.commands.PunishCommand;
 import com.nuno1212s.punishments.inventories.InventoryManager;
+import com.nuno1212s.punishments.listeners.InventoryClickListener;
 import com.nuno1212s.punishments.redis.PunishmentsRedis;
 import lombok.Getter;
 
@@ -22,13 +24,15 @@ public class Main extends Module {
         ins = this;
         inventoryManager = new InventoryManager(this);
 
-        registerCommand(new String[]{"testpunish"}, new TestCommand());
+        registerCommand(new String[]{"punish", "punir"}, new PunishCommand());
 
         MainData.getIns().getRedisHandler().registerRedisListener(new PunishmentsRedis());
+
+        BukkitMain ins = BukkitMain.getIns();
+        ins.getServer().getPluginManager().registerEvents(new InventoryClickListener(), ins);
     }
 
     @Override
     public void onDisable() {
-
     }
 }

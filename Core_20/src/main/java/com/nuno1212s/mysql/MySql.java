@@ -79,32 +79,32 @@ public class MySql {
         try (Connection c = getConnection();
              Statement st = c.createStatement()) {
 
-            String stm = "CREATE TABLE IF NOT EXISTS playerData(UUID char(40) NOT NULL PRIMARY KEY, " +
-                    "GROUPDATA varchar(100), " +
-                    "PLAYERNAME varchar(16), " +
+            String stm = "CREATE TABLE IF NOT EXISTS playerData(UUID CHAR(40) NOT NULL PRIMARY KEY, " +
+                    "GROUPDATA VARCHAR(100), " +
+                    "PLAYERNAME VARCHAR(16), " +
                     "PREMIUM BOOL," +
                     "LASTLOGIN TIMESTAMP," +
                     "TELL BOOL," +
                     "CASH BIGINT," +
-                    "REWARDSTOCLAIM varchar(255)," +
-                    "PUNISHMENT varchar(255))";
+                    "REWARDSTOCLAIM VARCHAR(255)," +
+                    "PUNISHMENT VARCHAR(255))";
 
             st.execute(stm);
 
-            String stm2 = "CREATE TABLE IF NOT EXISTS groupData(GROUPID SMALLINT, GROUPNAME varchar(25)," +
-                    "PREFIX varchar(32), SUFFIX varchar(32)," +
-                    "SCOREBOARD varchar(32)," +
+            String stm2 = "CREATE TABLE IF NOT EXISTS groupData(GROUPID SMALLINT, GROUPNAME VARCHAR(25)," +
+                    "PREFIX VARCHAR(32), SUFFIX VARCHAR(32)," +
+                    "SCOREBOARD VARCHAR(32)," +
                     "ISDEFAULT BOOL," +
-                    "APPLICABLESERVER varchar(25)," +
-                    "GROUPTYPE varchar(6)," +
+                    "APPLICABLESERVER VARCHAR(25)," +
+                    "GROUPTYPE VARCHAR(6)," +
                     "PERMISSIONS TEXT," +
                     "OVERRIDES BOOL)";
 
             st.execute(stm2);
 
             String rewardTable = "CREATE TABLE IF NOT EXISTS rewards(ID INTEGER PRIMARY KEY AUTO_INCREMENT" +
-                    ", SERVERTYPE varchar(25)" +
-                    ", REWARDTYPE varchar(10)" +
+                    ", SERVERTYPE VARCHAR(25)" +
+                    ", REWARDTYPE VARCHAR(10)" +
                     ", POSTDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
                     ", REWARD TEXT" +
                     ", ISDEFAULT BOOL)";
@@ -204,7 +204,7 @@ public class MySql {
 
         try (Connection c = getConnection();
              PreparedStatement select =
-                     c.prepareStatement("SELECT UUID, GROUPDATA, PLAYERNAME, CASH, PREMIUM, LASTLOGIN, REWARDSTOCLAIM, TELL, PUNISHMENT FROM playerData WHERE playerName=? LIMIT 1")
+                     c.prepareStatement("SELECT UUID, GROUPDATA, PLAYERNAME, CASH, PREMIUM, LASTLOGIN, REWARDSTOCLAIM, TELL, PUNISHMENT FROM playerData WHERE LOWER(playerName)=LOWER(?) LIMIT 1")
         ) {
             select.setString(1, playerName);
             try (ResultSet resultSet = select.executeQuery()) {
@@ -246,7 +246,7 @@ public class MySql {
     public void savePlayer(PlayerData d) {
 
         try (Connection c = getConnection();
-             PreparedStatement st = c.prepareStatement("INSERT INTO playerData (UUID, GROUPDATA, PLAYERNAME, CASH, PREMIUM, LASTLOGIN, TELL, REWARDSTOCLAIM, PUNISHMENT) values(?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?, ?) " +
+             PreparedStatement st = c.prepareStatement("INSERT INTO playerData (UUID, GROUPDATA, PLAYERNAME, CASH, PREMIUM, LASTLOGIN, TELL, REWARDSTOCLAIM, PUNISHMENT) VALUES(?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?, ?) " +
                      "ON DUPLICATE KEY UPDATE GROUPDATA=?, CASH=?, PLAYERNAME=?, LASTLOGIN=CURRENT_TIMESTAMP, PREMIUM=?, TELL=?, REWARDSTOCLAIM=?, PUNISHMENT=?")) {
 
             st.setString(1, d.getPlayerID().toString());
@@ -256,14 +256,22 @@ public class MySql {
             st.setBoolean(5, d.isPremium());
             st.setBoolean(6, d.isTell());
             st.setString(7, d.getToClaimToString());
-            st.setString(8, d.getPunishment().toString());
+
+            String punishments;
+            if (d.getPunishment() == null) {
+                punishments = "";
+            } else {
+                punishments = d.getPunishment().toString();
+            }
+
+            st.setString(8, punishments);
             st.setString(9, d.getGroups().toDatabase());
             st.setLong(10, d.getCash());
             st.setString(11, d.getPlayerName());
             st.setBoolean(12, d.isPremium());
             st.setBoolean(13, d.isTell());
             st.setString(14, d.getToClaimToString());
-            st.setString(15, d.getPunishment().toString());
+            st.setString(15, punishments);
 
             st.executeUpdate();
 
@@ -370,7 +378,7 @@ public class MySql {
     public void addGroup(Group g) {
         try (Connection c = getConnection();
              PreparedStatement s = c.prepareStatement("INSERT INTO groupData(GROUPID, GROUPNAME, APPLICABLESERVER, GROUPTYPE, ISDEFAULT, OVERRIDES, PREFIX, SUFFIX, SCOREBOARD, PERMISSIONS)" +
-                     " values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+                     " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
             s.setShort(1, g.getGroupID());
             s.setString(2, g.getGroupName());
             s.setString(3, g.getApplicableServer());
@@ -435,7 +443,7 @@ public class MySql {
 
     public int saveReward(BukkitReward r) {
         try (Connection c = getConnection();
-             PreparedStatement s = c.prepareStatement("INSERT INTO rewards(SERVERTYPE, REWARDTYPE, REWARD, ISDEFAULT) values(?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement s = c.prepareStatement("INSERT INTO rewards(SERVERTYPE, REWARDTYPE, REWARD, ISDEFAULT) VALUES(?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
             s.setString(1, r.getServerType());
             s.setString(2, r.getType().name());
             s.setString(3, r.rewardToString());

@@ -8,6 +8,7 @@ import com.nuno1212s.util.Pair;
 import com.nuno1212s.util.inventories.InventoryItem;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 
@@ -22,15 +23,23 @@ public class PInventoryItem extends InventoryItem {
     private String reason;
 
     @Getter
+    private String permission;
+
+    @Getter
     private long durationInMillis;
 
     public PInventoryItem(JSONObject json) {
         super(json);
+        this.permission = (String) json.getOrDefault("Permission", "punishments.all");
         this.type = Punishment.PunishmentType.valueOf((String) json.getOrDefault("PunishmentType", "MUTE"));
-        this.reason = (String) json.getOrDefault("Reason", "Default Reason");
-        this.durationInMillis = (Long) json.getOrDefault("Duration",  0) * 1000;
+        this.reason = ChatColor.translateAlternateColorCodes('&', (String) json.getOrDefault("Reason", "Default Reason"));
+        this.durationInMillis = (Long) json.getOrDefault("Duration",  0L) * 1000;
     }
 
+    /**
+     * Apply the punishment this item represents to a player
+     * @param playerID
+     */
     public void applyToPlayer(UUID playerID) {
         Punishment punishment = new Punishment(this.type, System.currentTimeMillis(), durationInMillis, this.reason);
 

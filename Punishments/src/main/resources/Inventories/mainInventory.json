@@ -3,5 +3,16 @@
   "InventoryID": "mainInventory",
   "InventorySize": 27,
   "InventoryItems": [
+    {
+      "Slot": 11,
+      "Item": {
+        "Material": "WOOL",
+        "Data": 5,
+        "DisplayName": "&cMute punishments"
+      },
+      "Flags": [
+        "CONNECTING_INV:muteInventory"
+      ]
+    }
   ]
 }

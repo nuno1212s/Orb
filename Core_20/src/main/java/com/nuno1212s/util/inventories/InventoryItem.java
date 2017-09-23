@@ -24,6 +24,8 @@ public class InventoryItem {
 
     private int slot;
 
+    private String connectingInv = null;
+
     public InventoryItem(JSONObject data) {
         if (!data.containsKey("Item")) {
             this.item = null;
@@ -32,8 +34,19 @@ public class InventoryItem {
         }
         this.slot = ((Long) data.get("Slot")).intValue();
         this.itemFlags = data.containsKey("Flags") ? (List<String>) data.get("Flags") : new ArrayList<>();
+
+        for (String s : this.getItemFlags()) {
+            if (s.startsWith("CONNECTING_INV")) {
+                this.connectingInv = s.split(":")[1];
+            }
+        }
     }
 
+    /**
+     * Check if the items
+     * @param itemFlag
+     * @return
+     */
     public boolean hasItemFlag(String itemFlag) {
         for (String flag : this.itemFlags) {
             if (flag.equalsIgnoreCase(itemFlag))
@@ -42,13 +55,12 @@ public class InventoryItem {
         return false;
     }
 
+    /**
+     * Get the inventory this inventory connects to
+     * @return
+     */
     public String getConnectingInventory() {
-        for (String s : this.getItemFlags()) {
-            if (s.startsWith("CONNECTING_INVENTORY")) {
-                return s.split("_")[1];
-            }
-        }
-        return null;
+        return this.connectingInv;
     }
 
 }

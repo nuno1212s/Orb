@@ -101,4 +101,8 @@ public class InventoryManager {
         this.playerTarget.put(player, target);
     }
 
+    public void removeTargetForPlayer(UUID player) {
+        this.playerTarget.remove(player);
+    }
+
 }

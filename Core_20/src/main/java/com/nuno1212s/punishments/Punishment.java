@@ -36,14 +36,33 @@ public class Punishment {
         this.reason = dataSplit[3];
     }
 
+    /**
+     * Has the punishment expired
+     *
+     * @return
+     */
     public boolean hasExpired() {
+        if (durationInMillis < 0) {
+            return false;
+        }
         return this.startTime + durationInMillis < System.currentTimeMillis();
     }
 
+    /**
+     * Get the time that this punishment has left
+     *
+     * @return
+     */
     public String timeToString() {
         StringBuilder builder = new StringBuilder("");
 
         long duration = durationInMillis;
+
+        if (duration < 0) {
+            builder.append(MainData.getIns().getMessageManager().getMessage("PERMANENT").toString());
+            return builder.toString();
+        }
+
         long days = TimeUnit.MILLISECONDS.toDays(durationInMillis);
         if (days > 0) {
             builder.append(days);
@@ -76,6 +95,18 @@ public class Punishment {
         }
 
         return builder.toString();
+    }
+
+    /**
+     * Build the reason the punishment
+     *
+     * @return
+     */
+    public String buildReason() {
+        return MainData.getIns().getMessageManager().getMessage("BAN_REASON")
+                .format("%reason%", getReason())
+                .format("%time%", timeToString())
+                .toString();
     }
 
     @Override

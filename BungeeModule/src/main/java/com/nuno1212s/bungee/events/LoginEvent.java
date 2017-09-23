@@ -4,6 +4,7 @@ import com.nuno1212s.bungee.main.Main;
 import com.nuno1212s.bungee.playermanager.BungeePlayerData;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
+import com.nuno1212s.punishments.Punishment;
 import com.nuno1212s.util.Callback;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
@@ -31,6 +32,18 @@ public class LoginEvent implements Listener {
             }
 
             cachedPlayer.setLastLogin(System.currentTimeMillis());
+
+            Punishment punishment = cachedPlayer.getPunishment();
+
+            if (punishment != null
+                    && punishment.getPunishmentType() == Punishment.PunishmentType.BAN
+                    && !punishment.hasExpired()) {
+                MainData.getIns().getPlayerManager().removeCachedPlayer(cachedPlayer.getPlayerID());
+                e.setCancelled(true);
+                e.setCancelReason(punishment.buildReason());
+                e.completeIntent(Main.getPlugin());
+                return;
+            }
 
             MainData.getIns().getPlayerManager().validatePlayerJoin(cachedPlayer.getPlayerID());
             cachedPlayer.save(new Callback() {

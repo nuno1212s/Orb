@@ -87,7 +87,7 @@ public class InventoryData {
 
         this.inventoryID = (String) jsOB.getOrDefault("InventoryID", this.inventoryName);
 
-        this.inventorySize = ((Long) jsOB.getOrDefault("InventorySize", 27)).intValue();
+        this.inventorySize = ((Long) jsOB.getOrDefault("InventorySize", 27L)).intValue();
 
         if (inventorySize % 9 != 0) {
             this.inventorySize = 27;

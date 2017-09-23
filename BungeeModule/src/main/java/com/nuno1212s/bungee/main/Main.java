@@ -13,6 +13,7 @@ import com.nuno1212s.bungee.loginhandler.events.PlayerLoginEvent;
 import com.nuno1212s.bungee.loginhandler.events.PluginMessageListener;
 import com.nuno1212s.bungee.motd.MOTDCommand;
 import com.nuno1212s.bungee.motd.ServerMOTD;
+import com.nuno1212s.bungee.redishandler.PRedisListener;
 import com.nuno1212s.bungee.redishandler.RedisListener;
 import com.nuno1212s.config.BungeeConfig;
 import com.nuno1212s.config.Config;
@@ -78,6 +79,7 @@ public class Main extends Module {
         System.out.println(stringList);
 
         MainData.getIns().getRedisHandler().registerRedisListener(new RedisListener());
+        MainData.getIns().getRedisHandler().registerRedisListener(new PRedisListener());
 
         getProxy().registerChannel("AUTOLOGIN");
 

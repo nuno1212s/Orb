@@ -8,8 +8,15 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class InventoryClickListener implements Listener {
+
+    private List<UUID> notRemove = new ArrayList<>();
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e) {
@@ -34,15 +41,35 @@ public class InventoryClickListener implements Listener {
             }
 
             if (item.getConnectingInventory() != null) {
+                notRemove.add(e.getWhoClicked().getUniqueId());
                 e.getWhoClicked().closeInventory();
-                e.getWhoClicked().openInventory(Main.getIns().getInventoryManager().getInventory(item.getConnectingInventory()));
+                InventoryData inventory = Main.getIns().getInventoryManager().getInventoryWithID(item.getConnectingInventory());
+
+                if (inventory == null) {
+                    System.out.println("WTF");
+                    return;
+                }
+
+                e.getWhoClicked().openInventory(inventory.buildInventory());
                 return;
             }
 
             item.applyToPlayer(Main.getIns().getInventoryManager().getTargetForPlayer(e.getWhoClicked().getUniqueId()));
 
+            e.getWhoClicked().closeInventory();
+
         }
 
+    }
+
+    @EventHandler
+    public void onClose(InventoryCloseEvent e) {
+        if (Main.getIns().getInventoryManager().getInventoryFromInventory(e.getInventory()) != null
+                && !notRemove.contains(e.getPlayer().getUniqueId())) {
+            Main.getIns().getInventoryManager().removeTargetForPlayer(e.getPlayer().getUniqueId());
+            return;
+        }
+        notRemove.remove(e.getPlayer().getUniqueId());
     }
 
 }

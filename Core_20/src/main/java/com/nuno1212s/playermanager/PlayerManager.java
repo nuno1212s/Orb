@@ -81,6 +81,14 @@ public class PlayerManager {
     }
 
     /**
+     * Removed a cached player from the cached players
+     * @param player
+     */
+    public void removeCachedPlayer(UUID player) {
+        this.cache.remove(player);
+    }
+
+    /**
      * Removes the player data from local storage
      * @param d
      */

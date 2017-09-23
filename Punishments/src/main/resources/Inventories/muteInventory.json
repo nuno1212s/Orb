@@ -1,0 +1,30 @@
+{
+  "InventoryName": "&7Mute inventories",
+  "InventoryID": "muteInventory",
+  "InventoryItems": [
+    {
+      "Slot": 11,
+      "Item": {
+        "Material": "WOOL",
+        "DisplayName": "30 second mute"
+      },
+      "Flags": [],
+      "Permission": "punishments.mute",
+      "PunishmentType": "MUTE",
+      "Reason": "&cTest mute",
+      "Duration": 30
+    },
+    {
+      "Slot": 12,
+      "Item": {
+        "Material": "WOOL",
+        "DisplayName": "30 minute mute"
+      },
+      "Flags": [],
+      "Permission": "punishments.mute",
+      "PunishmentType": "MUTE",
+      "Reason": "&cTest mute",
+      "Duration": 1800
+    }
+  ]
+}

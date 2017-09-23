@@ -27,7 +27,7 @@ public class GlobalChatCommand implements CommandExecutor {
 
         PlayerData data = MainData.getIns().getPlayerManager().getPlayer(((Player) commandSender).getUniqueId());
 
-        if (data.getPunishment().getPunishmentType() == Punishment.PunishmentType.MUTE && data.getPunishment().hasExpired()) {
+        if (data.getPunishment().getPunishmentType() == Punishment.PunishmentType.MUTE && !data.getPunishment().hasExpired()) {
             MainData.getIns().getMessageManager().getMessage("MUTED")
                     .format("%time%", data.getPunishment().timeToString()).sendTo(commandSender);
             return true;
