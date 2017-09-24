@@ -56,7 +56,7 @@ public class Punishment {
     public String timeToString() {
         StringBuilder builder = new StringBuilder("");
 
-        long duration = durationInMillis;
+        long duration = this.startTime + this.durationInMillis - System.currentTimeMillis();
 
         if (duration < 0) {
             builder.append(MainData.getIns().getMessageManager().getMessage("PERMANENT").toString());

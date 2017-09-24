@@ -26,6 +26,8 @@ public class Main extends Module {
 
         registerCommand(new String[]{"punish", "punir"}, new PunishCommand());
 
+        MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));
+
         MainData.getIns().getRedisHandler().registerRedisListener(new PunishmentsRedis());
 
         BukkitMain ins = BukkitMain.getIns();
@@ -34,5 +36,6 @@ public class Main extends Module {
 
     @Override
     public void onDisable() {
+
     }
 }

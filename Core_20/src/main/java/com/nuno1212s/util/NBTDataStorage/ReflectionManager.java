@@ -41,8 +41,6 @@ public class ReflectionManager {
         NMS = "net.minecraft.server." + version;
     }
 
-
-
     public Class<?> getClass(String classPath) {
         if (classCache.containsKey(classPath)) {
             return classCache.get(classPath);

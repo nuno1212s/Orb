@@ -1,6 +1,6 @@
 package com.nuno1212s.messagemanager.messagetypes;
 
-import org.bukkit.ChatColor;
+import com.nuno1212s.main.MainData;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
@@ -26,17 +26,24 @@ public class StringMessage implements IMessage {
     }
 
     @Override
-    public void sendTo(Map<String, String> formatting, CommandSender... sender) {
+    public void sendTo(Map<String, String> formatting, Object... sender) {
         for (String message : messages) {
             message = IMessage.formatMessage(message, formatting);
 
-            for (CommandSender commandSender : sender) {
-                commandSender.sendMessage(message);
+            if (!MainData.getIns().isBungee()) {
+                for (CommandSender commandSender : (CommandSender[]) sender) {
+                    commandSender.sendMessage(message);
+                }
             }
         }
     }
 
     public String toString(Map<String, String> formatting) {
-        return ChatColor.translateAlternateColorCodes('&', IMessage.formatMessage(messages[0], formatting));
+
+        if (messages.length < 1) {
+            return "";
+        }
+
+        return IMessage.formatMessage(messages[0], formatting);
     }
 }

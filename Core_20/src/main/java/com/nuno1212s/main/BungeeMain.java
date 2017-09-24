@@ -2,6 +2,7 @@ package com.nuno1212s.main;
 
 import com.nuno1212s.config.BungeeConfig;
 import com.nuno1212s.events.eventcaller.EventCaller;
+import com.nuno1212s.messagemanager.Messages;
 import com.nuno1212s.modulemanager.ModuleManager;
 import com.nuno1212s.mysql.MySql;
 import com.nuno1212s.permissionmanager.PermissionManager;
@@ -33,18 +34,19 @@ public class BungeeMain extends Plugin {
         }
         main.setEventCaller((o) -> {});
         main.setDataFolder(this.getDataFolder());
-        File config = new File(this.getDataFolder(), "config.yml");
+        File config = new File(this.getDataFolder(), "config.yml"),
+                messages = new File(this.getDataFolder(), "messages.json");
         main.setScheduler(new BungeeScheduler(this.getProxy().getScheduler(), this));
-        main.setMySql(
-                new MySql(
-                        new BungeeConfig(this,
-                                config)));
-        main.setRedisHandler(new RedisHandler(new BungeeConfig(this, config)));
+        BungeeConfig bungeeConfig = new BungeeConfig(this, config);
+        main.setMySql(new MySql(bungeeConfig));
+        main.setMessageManager(new Messages(messages));
+        main.setRedisHandler(new RedisHandler(bungeeConfig));
         main.setServerManager(new ServerManager(this.getDataFolder()));
         main.setPermissionManager(new PermissionManager(false));
         main.setPlayerManager(new PlayerManager());
         main.setRewardManager(new BungeeRewardManager());
         main.setModuleManager(new ModuleManager(this.getDataFolder(), getClass().getClassLoader()));
+        main.getMessageManager().reloadMessages();
     }
 
     @Override

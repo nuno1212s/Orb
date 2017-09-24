@@ -56,6 +56,9 @@ public class Message {
     }
 
     public void sendTo(CommandSender... players) {
+        if (MainData.getIns().isBungee()) {
+            return;
+        }
         if (!Bukkit.isPrimaryThread()) {
             MainData.getIns().getScheduler().runTask(() ->
                 sendTo(players)
@@ -66,16 +69,18 @@ public class Message {
     }
 
     public void sendTo(Collection<? extends CommandSender> players) {
-        if (!Bukkit.isPrimaryThread()) {
-            MainData.getIns().getScheduler().runTask(() ->
-                    sendTo(players)
-            );
+        if (MainData.getIns().isBungee()) {
             return;
         }
+
         send(players.toArray(new CommandSender[players.size()]));
     }
 
     public void sendTo(PlayerData d) {
+        if (MainData.getIns().isBungee()) {
+            return;
+        }
+
         if(!Bukkit.isPrimaryThread()) {
             MainData.getIns().getScheduler().runTask(() -> {
                 Player p = Bukkit.getPlayer(d.getPlayerID());

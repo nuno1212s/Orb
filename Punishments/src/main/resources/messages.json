@@ -1,0 +1,9 @@
+{
+  "Y_MUTED": "&cYou have been muted for %time%",
+  "MUTED": "&cYou are still muted for %time%",
+  "SECONDS": " &7seconds",
+  "MINUTES": " &7minutes",
+  "HOURS": " &7hours",
+  "DAYS": " &7days",
+  "PERMANENT": " &7permanent"
+}

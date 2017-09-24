@@ -40,7 +40,10 @@ public class LoginEvent implements Listener {
                     && !punishment.hasExpired()) {
                 MainData.getIns().getPlayerManager().removeCachedPlayer(cachedPlayer.getPlayerID());
                 e.setCancelled(true);
-                e.setCancelReason(punishment.buildReason());
+                e.setCancelReason(MainData.getIns().getMessageManager().getMessage("BANNED")
+                .format("%reason%", punishment.getReason())
+                .format("%time%", punishment.timeToString())
+                        .toString());
                 e.completeIntent(Main.getPlugin());
                 return;
             }

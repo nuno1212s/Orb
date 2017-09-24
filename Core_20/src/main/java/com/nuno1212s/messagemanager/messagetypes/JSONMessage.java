@@ -1,5 +1,6 @@
 package com.nuno1212s.messagemanager.messagetypes;
 
+import com.nuno1212s.main.MainData;
 import lombok.AllArgsConstructor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -34,13 +35,15 @@ public class JSONMessage implements IMessage {
     }
 
     @Override
-    public void sendTo(Map<String, String> formatting, CommandSender... sender) {
+    public void sendTo(Map<String, String> formatting, Object... sender) {
         for (String message : jsonMessage) {
             message = IMessage.formatMessage(message, formatting);
 
-            for (CommandSender commandSender : sender) {
-                if (commandSender instanceof Player) {
-                    ((Player) commandSender).spigot().sendMessage(TextComponent.fromLegacyText(message));
+            if (!MainData.getIns().isBungee()) {
+                for (CommandSender commandSender : (CommandSender[]) sender) {
+                    if (commandSender instanceof Player) {
+                        ((Player) commandSender).spigot().sendMessage(TextComponent.fromLegacyText(message));
+                    }
                 }
             }
         }

@@ -65,6 +65,7 @@ public class BukkitMain extends JavaPlugin {
         data.setServerManager(new ServerManager(this.getDataFolder()));
         data.setPermissionManager(new PermissionManager(true));
         data.setPlayerManager(new PlayerManager());
+
         data.setCommandRegister(new CommandRegister() {
             @Override
             public void registerCommand(String[] aliases, Object commandExecutor) {
@@ -83,6 +84,7 @@ public class BukkitMain extends JavaPlugin {
         new BungeeSender(this);
         //Module manager has to be the last thing that is initialized
         data.setModuleManager(new ModuleManager(this.getDataFolder(), this.getClassLoader()));
+        data.getMessageManager().reloadMessages();
 
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 

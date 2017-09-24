@@ -33,7 +33,7 @@ public class BungeeConfig extends Config {
                 e.printStackTrace();
             }
 
-            saveResource(p, config, "config.yml");
+            saveResource(p, config, config.getName());
         }
 
         try {
@@ -50,22 +50,22 @@ public class BungeeConfig extends Config {
 
     @Override
     public String getString(String key) {
-        return c.getString(key);
+        return c.getString(key, "");
     }
 
     @Override
     public int getInt(String key) {
-        return c.getInt(key);
+        return c.getInt(key, 0);
     }
 
     @Override
     public double getDouble(String key) {
-        return c.getDouble(key);
+        return c.getDouble(key, 0D);
     }
 
     @Override
     public boolean getBoolean(String key) {
-        return c.getBoolean(key);
+        return c.getBoolean(key, false);
     }
 
     @Override
@@ -86,8 +86,10 @@ public class BungeeConfig extends Config {
                 e.printStackTrace();
             }
         }
+
         InputStream resourceAsStream = p.getResourceAsStream(resource);
         OutputStream o = null;
+
         try {
             o = new FileOutputStream(path);
 

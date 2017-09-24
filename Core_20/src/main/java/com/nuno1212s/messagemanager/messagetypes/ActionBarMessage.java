@@ -1,5 +1,6 @@
 package com.nuno1212s.messagemanager.messagetypes;
 
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.util.ActionBarAPI;
 import lombok.AllArgsConstructor;
 import org.bukkit.command.CommandSender;
@@ -15,18 +16,21 @@ public class ActionBarMessage implements IMessage {
     private int durationInSeconds;
 
     @Override
-    public void sendTo(Map<String, String> formatting, CommandSender... sender) {
+    public void sendTo(Map<String, String> formatting, Object... sender) {
         String message = IMessage.formatMessage(this.message, formatting);
 
-        for (CommandSender commandSender : sender) {
-            if (!(commandSender instanceof Player)) {
-                continue;
-            }
+        if (!MainData.getIns().isBungee()) {
+            for (CommandSender commandSender : (CommandSender[]) sender) {
+                if (!(commandSender instanceof Player)) {
+                    continue;
+                }
 
-            if (durationInSeconds != -1) {
-                ActionBarAPI.sendActionBar((Player) commandSender, message, durationInSeconds);
-            } else {
-                ActionBarAPI.sendActionBar((Player) commandSender, message);
+                ActionBarAPI actionBarAPI = MainData.getIns().getMessageManager().getActionBarAPI();
+                if (durationInSeconds != -1) {
+                    actionBarAPI.sendActionBar((Player) commandSender, message, durationInSeconds);
+                } else {
+                    actionBarAPI.sendActionBar((Player) commandSender, message);
+                }
             }
         }
 

@@ -1,7 +1,8 @@
 package com.nuno1212s.messagemanager.messagetypes;
 
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.util.TitleAPI;
-import org.bukkit.ChatColor;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -22,7 +23,7 @@ public class Title implements IMessage {
     }
 
     @Override
-    public void sendTo(Map<String, String> formatting, CommandSender... sender) {
+    public void sendTo(Map<String, String> formatting, Object... sender) {
 
         String title = messages[0];
         String subTitle = messages[1];
@@ -35,12 +36,14 @@ public class Title implements IMessage {
         title = ChatColor.translateAlternateColorCodes('&', title);
         subTitle = ChatColor.translateAlternateColorCodes('&', subTitle);
 
-        for (CommandSender commandSender : sender) {
-            if (!(commandSender instanceof Player)) {
-                continue;
+        if (!MainData.getIns().isBungee()) {
+            for (CommandSender commandSender : (CommandSender[]) sender) {
+                if (!(commandSender instanceof Player)) {
+                    continue;
+                }
+                TitleAPI.sendTitle((Player) commandSender, fadeIn, stay, fadeOut, title, subTitle);
             }
-            TitleAPI.sendTitle((Player) commandSender, fadeIn, stay, fadeOut, title, subTitle);
         }
-
     }
+
 }

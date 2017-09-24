@@ -21,6 +21,7 @@ public class RedisSubPub extends JedisPubSub implements Runnable {
 
     @Override
     public void run() {
+        System.out.println("???");
         subscriber.subscribe(this, "ServerData");
     }
 

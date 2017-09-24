@@ -1,7 +1,9 @@
 package com.nuno1212s.messagemanager;
 
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.messagemanager.messagetypes.*;
 import com.nuno1212s.util.ActionBarAPI;
+import lombok.Getter;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -21,16 +23,27 @@ public class Messages {
 
     private List<File> registeredFiles;
 
+    @Getter
+    private ActionBarAPI actionBarAPI;
+
     public Messages(File j) {
-        new ActionBarAPI();
         this.registeredFiles = new ArrayList<>();
         this.registeredFiles.add(j);
-        reloadMessages();
+        if (!MainData.getIns().isBungee()) {
+            this.actionBarAPI = new ActionBarAPI();
+        }
+    }
+
+    public Messages() {
+        this.registeredFiles = new ArrayList<>();
+
+        if (!MainData.getIns().isBungee()) {
+            this.actionBarAPI = new ActionBarAPI();
+        }
     }
 
     public void addMessageFile(File messageFile) {
         this.registeredFiles.add(messageFile);
-        reloadMessages();
     }
 
     public void reloadMessages() {
@@ -113,7 +126,8 @@ public class Messages {
                                 if (so instanceof JSONObject) {
                                     JSONObject ob = (JSONObject) so;
                                     String sound_name = (String) ob.get("SOUND_NAME");
-                                    float volume = ((Double) ob.get("VOLUME")).floatValue(), pitch = ((Double) ob.get("PITCH")).floatValue();
+                                    float volume = ((Double) ob.get("VOLUME")).floatValue(),
+                                            pitch = ((Double) ob.get("PITCH")).floatValue();
                                     messages.add(new Sound(sound_name, pitch, volume));
                                 }
                             }
@@ -125,6 +139,11 @@ public class Messages {
         return messages;
     }
 
+    /**
+     *
+     * @param messageName
+     * @return
+     */
     public Message getMessage(String messageName) {
         if (!messages.containsKey(messageName)) {
             System.out.println("NO MESSAGE FOR " + messageName);

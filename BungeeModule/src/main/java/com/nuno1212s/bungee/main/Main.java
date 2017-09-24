@@ -76,6 +76,8 @@ public class Main extends Module {
 
         connector = new MojangAPIConnector(requestCache, getProxy().getLogger(), stringList, 600);
 
+        MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));
+
         System.out.println(stringList);
 
         MainData.getIns().getRedisHandler().registerRedisListener(new RedisListener());

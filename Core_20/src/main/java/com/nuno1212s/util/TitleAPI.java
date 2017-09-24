@@ -1,5 +1,6 @@
 package com.nuno1212s.util;
 
+import com.nuno1212s.util.NBTDataStorage.ReflectionManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -23,12 +24,8 @@ public class TitleAPI {
 
     public static Class<?> getNMSClass(String name) {
         String version = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
-        try {
-            return Class.forName("net.minecraft.server." + version + "." + name);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
+
+        return ReflectionManager.getIns().getClass("net.minecraft.server." + version + "." + name);
     }
 
     public static void sendTitle(Player player, Integer fadeIn, Integer stay, Integer fadeOut, String title, String subtitle) {

@@ -93,6 +93,7 @@ public class RedisHandler {
             this.redisConnection.close();
         }
         if (b != null) {
+            b.unsubscribe();
             b.getSubscriber().close();
         }
     }
