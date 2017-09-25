@@ -16,16 +16,14 @@ public class PlayerJoinListener implements Listener {
     @EventHandler
     public void onLogin(CoreLoginEvent e) {
         PlayerData playerInfo = e.getPlayerInfo();
-        RUPlayerData data = new RUPlayerData(playerInfo);
-        Main.getIns().getMysql().loadPlayerData(data);
+        RUPlayerData data = Main.getIns().getMysql().loadPlayerData(playerInfo);
         e.setPlayerInfo(data);
     }
 
     @EventHandler
     public void onPlayerInfoLoad(PlayerInformationLoadEvent e) {
         PlayerData playerInfo = e.getPlayerInfo();
-        RUPlayerData data = new RUPlayerData(playerInfo);
-        Main.getIns().getMysql().loadPlayerData(data);
+        RUPlayerData data = Main.getIns().getMysql().loadPlayerData(playerInfo);
         e.setPlayerInfo(data);
     }
 

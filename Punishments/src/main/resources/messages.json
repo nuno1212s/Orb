@@ -5,5 +5,6 @@
   "MINUTES": " &7minutes",
   "HOURS": " &7hours",
   "DAYS": " &7days",
-  "PERMANENT": " &7permanent"
+  "PERMANENT": " &7permanent",
+  "BAN_REASON": "&cYou are banned from the server from: \n%reason%\nUntil: %time%"
 }

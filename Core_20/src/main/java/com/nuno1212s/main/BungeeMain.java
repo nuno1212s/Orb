@@ -14,7 +14,7 @@ import com.nuno1212s.serverstatus.ServerManager;
 import lombok.Getter;
 import net.md_5.bungee.api.plugin.Plugin;
 
-import java.io.File;
+import java.io.*;
 
 /**
  * Main bungee class
@@ -56,5 +56,44 @@ public class BungeeMain extends Plugin {
         ins.getModuleManager().disable();
         ins.getMySql().closeConnection();
         ins.getRedisHandler().close();
+    }
+
+    public void saveResource(Plugin p, File path, String resource) {
+        if (!path.exists()) {
+            try {
+                path.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        InputStream resourceAsStream = p.getResourceAsStream(resource);
+        OutputStream o = null;
+
+        try {
+            o = new FileOutputStream(path);
+
+            byte[] bytes = new byte[1024];
+
+            int length;
+
+            while ((length = resourceAsStream.read(bytes)) != -1) {
+                o.write(bytes, 0, length);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resourceAsStream != null) {
+                    resourceAsStream.close();
+                }
+                if (o != null) {
+                    o.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

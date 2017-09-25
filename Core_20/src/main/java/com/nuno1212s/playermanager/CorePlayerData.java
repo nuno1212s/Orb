@@ -15,9 +15,7 @@ import java.util.UUID;
 public class CorePlayerData extends PlayerData {
 
     public CorePlayerData(UUID playerID, PlayerGroupData groupID, String playerName, long cash, long lastLogin, boolean premium, List<Integer> claimed, Punishment currentPunishment) {
-        super(playerID, groupID, playerName, cash, lastLogin, premium, claimed);
-
-        setPunishment(punishment);
+        super(playerID, groupID, playerName, cash, lastLogin, premium, claimed, currentPunishment);
     }
 
     @Override

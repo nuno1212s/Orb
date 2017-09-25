@@ -6,6 +6,7 @@ import com.nuno1212s.bungee.loginhandler.SessionHandler;
 import com.nuno1212s.bungee.playermanager.BungeePlayerData;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
+import com.nuno1212s.punishments.Punishment;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
@@ -20,7 +21,7 @@ import net.md_5.bungee.api.plugin.TabExecutor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TellCommand extends Command implements TabExecutor{
+public class TellCommand extends Command implements TabExecutor {
 
     public TellCommand() {
         super("tell", "", "msg", "message");
@@ -43,15 +44,26 @@ public class TellCommand extends Command implements TabExecutor{
 
             PlayerData d = MainData.getIns().getPlayerManager().getPlayer(player.getUniqueId());
 
+            Punishment punishment = d.getPunishment();
+            if (punishment != null
+                    && punishment.getPunishmentType() == Punishment.PunishmentType.MUTE
+                    && !punishment.hasExpired()) {
+                sender.sendMessage(TextComponent.fromLegacyText(
+                        MainData.getIns().getMessageManager().getMessage("MUTED")
+                                .format("%time%", punishment.timeToString())
+                                .format("%reason%", punishment.getReason()).toString()));
+                return;
+            }
+
             if (args.length == 1) {
                 if (args[0].equalsIgnoreCase("on")) {
                     d.setTell(true);
-                    player.sendMessage(new ComponentBuilder("Tell ativado com sucesso.").color(ChatColor.GREEN).create());
+                    player.sendMessage(TextComponent.fromLegacyText(MainData.getIns().getMessageManager().getMessage("ACTIVATED_TELL").toString()));
                     return;
                 }
                 if (args[0].equalsIgnoreCase("off")) {
                     d.setTell(false);
-                    player.sendMessage(new ComponentBuilder("Tell desativado com sucesso.").color(ChatColor.GREEN).create());
+                    player.sendMessage(TextComponent.fromLegacyText(MainData.getIns().getMessageManager().getMessage("DEACTIVATED_TELL").toString()));
                     return;
                 }
             }
@@ -67,14 +79,14 @@ public class TellCommand extends Command implements TabExecutor{
                         return;
                     }
 
-                    PlayerData vpd = MainData.getIns().getPlayerManager().getPlayer(victim.getName());
-                    if (!vpd.isTell() && !d.getMainGroup().hasPermission("staff")) {
-                        player.sendMessage(new ComponentBuilder("Este jogador tem o tell desativado.").color(ChatColor.RED).create());
+                    PlayerData victimPlayerData = MainData.getIns().getPlayerManager().getPlayer(victim.getName());
+                    if (!victimPlayerData.isTell() && !d.getMainGroup().hasPermission("staff")) {
+                        player.sendMessage(TextComponent.fromLegacyText(MainData.getIns().getMessageManager().getMessage("PLAYER_TELL_DEACTIVATED").toString()));
                         return;
                     }
 
-                    if (!d.isTell()) {
-                        player.sendMessage(new ComponentBuilder("Não podes enviar tells com o teu tell desativado.").color(ChatColor.RED).create());
+                    if (!d.isTell() && !d.getMainGroup().hasPermission("staff")) {
+                        player.sendMessage(TextComponent.fromLegacyText(MainData.getIns().getMessageManager().getMessage("PLAYER_OWN_TELL_DEACTIVATED").toString()));
                         return;
                     }
 
@@ -141,17 +153,14 @@ public class TellCommand extends Command implements TabExecutor{
         if (strings.length < 1) {
             return ImmutableSet.of();
         }
-        if (strings.length >= 1) {
-            List<String> words = new ArrayList<>();
-            String text = strings[0];
-            for (ProxiedPlayer p : ProxyServer.getInstance().getPlayers()) {
-                if (p.getName().toUpperCase().startsWith(text.toUpperCase())) {
-                    words.add(p.getName());
-                }
+        List<String> words = new ArrayList<>();
+        String text = strings[0];
+        for (ProxiedPlayer p : ProxyServer.getInstance().getPlayers()) {
+            if (p.getName().toUpperCase().startsWith(text.toUpperCase())) {
+                words.add(p.getName());
             }
-            return words;
         }
-        return null;
+        return words;
     }
 
 }

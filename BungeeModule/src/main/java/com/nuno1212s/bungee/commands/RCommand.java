@@ -40,7 +40,14 @@ public class RCommand extends Command {
 
             if (args.length > 0) {
 
-                UUID v = ((BungeePlayerData) MainData.getIns().getPlayerManager().getPlayer(player.getUniqueId())).getReply();
+                BungeePlayerData playerData = (BungeePlayerData) MainData.getIns().getPlayerManager().getPlayer(player.getUniqueId());
+
+                if (!playerData.isTell() && !playerData.getMainGroup().hasPermission("staff")) {
+                    player.sendMessage(TextComponent.fromLegacyText(MainData.getIns().getMessageManager().getMessage("PLAYER_OWN_TELL_DEACTIVATED").toString()));
+                    return;
+                }
+
+                UUID v = playerData.getReply();
                 if (BungeeCord.getInstance().getPlayer(v) == null) {
                     player.sendMessage(new ComponentBuilder("Jogador não encontrado.").color(ChatColor.RED).create());
                     return;
@@ -50,8 +57,8 @@ public class RCommand extends Command {
                 if (victim.isConnected()) {
 
                     PlayerData vpd = MainData.getIns().getPlayerManager().getPlayer(victim.getUniqueId());
-                    if (!vpd.isTell()) {
-                        player.sendMessage(new ComponentBuilder("Este jogador tem o tell desativado.").color(ChatColor.RED).create());
+                    if (!vpd.isTell() && !playerData.getMainGroup().hasPermission("staff")) {
+                        player.sendMessage(TextComponent.fromLegacyText(MainData.getIns().getMessageManager().getMessage("PLAYER_TELL_DEACTIVATED").toString()));
                         return;
                     }
 

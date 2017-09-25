@@ -1,0 +1,8 @@
+{
+  "BAN_REASON": "&cYou are banned from the server from: \n%reason%\nUntil: %time%",
+  "SECONDS": " &cseconds",
+  "MINUTES": " &cminutes",
+  "HOURS": " &chours",
+  "DAYS": " &cdays",
+  "PERMANENT": " &cpermanent"
+}

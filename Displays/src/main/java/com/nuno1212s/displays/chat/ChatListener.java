@@ -26,7 +26,7 @@ public class ChatListener implements Listener {
         if (Main.getIns().getChatManager().isChatActivated() || e.getPlayer().hasPermission("chat.override")) {
             PlayerData d = MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
 
-            if (d.getPunishment().getPunishmentType() == Punishment.PunishmentType.MUTE && !d.getPunishment().hasExpired()) {
+            if (d.getPunishment() != null && d.getPunishment().getPunishmentType() == Punishment.PunishmentType.MUTE && !d.getPunishment().hasExpired()) {
                 MainData.getIns().getMessageManager().getMessage("MUTED")
                         .format("%time%", d.getPunishment().timeToString()).sendTo(e.getPlayer());
                 return;

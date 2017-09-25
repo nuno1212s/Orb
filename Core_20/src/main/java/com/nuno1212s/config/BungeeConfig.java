@@ -1,5 +1,6 @@
 package com.nuno1212s.config;
 
+import com.nuno1212s.main.BungeeMain;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
@@ -33,7 +34,7 @@ public class BungeeConfig extends Config {
                 e.printStackTrace();
             }
 
-            saveResource(p, config, config.getName());
+            BungeeMain.getIns().saveResource(p, config, config.getName());
         }
 
         try {
@@ -76,45 +77,6 @@ public class BungeeConfig extends Config {
     @Override
     public Config getConfigurationSection(String key) {
         return new BungeeConfig(c.getSection(key));
-    }
-
-    public void saveResource(Plugin p, File path, String resource) {
-        if (!path.exists()) {
-            try {
-                path.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        InputStream resourceAsStream = p.getResourceAsStream(resource);
-        OutputStream o = null;
-
-        try {
-            o = new FileOutputStream(path);
-
-            byte[] bytes = new byte[1024];
-
-            int length;
-
-            while ((length = resourceAsStream.read(bytes)) != -1) {
-                o.write(bytes, 0, length);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (resourceAsStream != null) {
-                    resourceAsStream.close();
-                }
-                if (o != null) {
-                    o.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
 }

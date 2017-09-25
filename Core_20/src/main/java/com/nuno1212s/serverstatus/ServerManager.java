@@ -21,7 +21,7 @@ public class ServerManager {
     private File dataFile;
 
     public ServerManager(File dataFolder) {
-        dataFile = new File(dataFolder, "serverInfo.json");
+        this.dataFile = new File(dataFolder, "serverInfo.json");
         if (!dataFile.exists()) {
             try {
                 dataFile.createNewFile();
@@ -39,6 +39,7 @@ public class ServerManager {
         } catch (IOException | ParseException e) {
             this.serverName = "Default";
             this.serverType = "Default";
+            e.printStackTrace();
             return;
         }
 

@@ -2,16 +2,14 @@ package com.nuno1212s.rankup.mysql;
 
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.util.PlayerGroupData;
+import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.rankup.playermanager.RUPlayerData;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.sql.*;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * mysql data class
@@ -30,7 +28,7 @@ public class MySql {
 
     }
 
-    public void loadPlayerData(RUPlayerData playerData) {
+    public RUPlayerData loadPlayerData(PlayerData playerData) {
 
         try (Connection c = MainData.getIns().getMySql().getConnection();
              PreparedStatement st = c.prepareStatement("SELECT * FROM pvpData WHERE UUID=? LIMIT 1")) {
@@ -38,26 +36,27 @@ public class MySql {
 
             try (ResultSet resultSet = st.executeQuery()) {
                 if (resultSet.next()) {
-                    playerData.setCoins(resultSet.getLong("COINS"));
-                    playerData.setGroupData(new PlayerGroupData(resultSet.getString("GROUPDATA")));
+
+                    long coins = resultSet.getLong("COINS");
+                    PlayerGroupData groupData = new PlayerGroupData(resultSet.getString("GROUPDATA"));
                     String kitUsage = resultSet.getString("KITUSAGE");
 
                     JSONObject jsonObject = (JSONObject) new JSONParser().parse(kitUsage);
-                    Map<Integer, Long> kits = new HashMap<>(jsonObject.size());
+                    Map<Integer, Long> kitUsages = new HashMap<>(jsonObject.size());
                     jsonObject.forEach((key, value) -> {
                         int kitID = Integer.parseInt((String) key);
                         long lastUsage = (Long) value;
-                        kits.put(kitID, lastUsage);
+                        kitUsages.put(kitID, lastUsage);
                     });
 
-                    playerData.setKitUsages(kits);
-
+                    return new RUPlayerData(playerData, coins, groupData, kitUsages, new ArrayList<>());
                 }
             }
         } catch (SQLException | ParseException e) {
             e.printStackTrace();
         }
 
+        return new RUPlayerData(playerData, 0, new PlayerGroupData(), new HashMap<>(), new ArrayList<>());
     }
 
     public LinkedHashMap<UUID, Long> getCoinTop(int limit) {
@@ -79,6 +78,7 @@ public class MySql {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return null;
     }
 

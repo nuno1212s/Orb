@@ -38,12 +38,12 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer {
 
     volatile long coins;
 
-    public RUPlayerData(PlayerData d) {
+    public RUPlayerData(PlayerData d, long coins, PlayerGroupData groupData, Map<Integer, Long> kitUsages, List<Integer> privateKits) {
         super(d);
-        this.coins = 0;
-        this.groupData = new PlayerGroupData();
-        this.kitUsages = new HashMap<>();
-        this.privateKits = new ArrayList<>();
+        this.coins = coins;
+        this.groupData = groupData;
+        this.kitUsages = kitUsages;
+        this.privateKits = privateKits;
     }
 
     public synchronized final void setCoins(long coins) {

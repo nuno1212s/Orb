@@ -18,36 +18,39 @@ import java.util.UUID;
  */
 @Getter
 @Setter
-@RequiredArgsConstructor
 @ToString
 public abstract class PlayerData {
 
-    @NonNull
     protected final UUID playerID;
 
-    @NonNull
     protected PlayerGroupData groups;
 
-    @NonNull
     protected String playerName;
 
-    @NonNull
     protected long cash;
 
-    @NonNull
     protected long lastLogin;
 
-    @NonNull
     protected boolean premium;
 
     protected boolean tell;
 
-    @NonNull
     protected List<Integer> toClaim;
 
     protected Punishment punishment;
 
     private boolean shouldSave = true;
+
+    public PlayerData(UUID playerID, PlayerGroupData groups, String playerName, long cash, long lastLogin, boolean premium, List<Integer> toClaim, Punishment punishment) {
+        this.playerID = playerID;
+        this.groups = groups;
+        this.playerName = playerName;
+        this.cash = cash;
+        this.lastLogin = lastLogin;
+        this.premium = premium;
+        this.toClaim = toClaim;
+        this.punishment = punishment;
+    }
 
     public PlayerData(PlayerData coreData) {
         this.playerID = coreData.getPlayerID();

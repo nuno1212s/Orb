@@ -54,21 +54,13 @@ public class CoinCommand implements CommandExecutor {
                                 return;
                             }
 
-                            Pair<PlayerData, Boolean> loaded = MainData.getIns().getPlayerManager().getOrLoadPlayer(args[1]);
-                            PlayerData d = loaded.getKey();
+                            RUPlayerData d = getPlayerData(commandSender, args[1]);
 
                             if (d == null) {
-                                MainData.getIns().getMessageManager().getMessage("PLAYER_NEVER_JOINED")
-                                        .sendTo(commandSender);
                                 return;
                             }
 
-                            if (loaded.getValue()) {
-                                d = new RUPlayerData(d);
-                                Main.getIns().getMysql().loadPlayerData((RUPlayerData) d);
-                            }
-
-                            ((RUPlayerData) d).setCoins(coins);
+                            d.setCoins(coins);
                             Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(d));
 
                             MainData.getIns().getMessageManager().getMessage("COINS_SET_OTHER")
@@ -103,21 +95,13 @@ public class CoinCommand implements CommandExecutor {
                                 return;
                             }
 
-                            Pair<PlayerData, Boolean> loaded = MainData.getIns().getPlayerManager().getOrLoadPlayer(args[1]);
-                            PlayerData d = loaded.getKey();
+                            RUPlayerData d = getPlayerData(commandSender, args[1]);
 
                             if (d == null) {
-                                MainData.getIns().getMessageManager().getMessage("PLAYER_NEVER_JOINED")
-                                        .sendTo(commandSender);
                                 return;
                             }
 
-                            if (loaded.getValue()) {
-                                d = new RUPlayerData(d);
-                                Main.getIns().getMysql().loadPlayerData((RUPlayerData) d);
-                            }
-
-                            ((RUPlayerData) d).setCoins(((RUPlayerData) d).getCoins() + coins);
+                            d.setCoins(d.getCoins() + coins);
                             Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(d));
 
                             MainData.getIns().getMessageManager().getMessage("COINS_ADD_OTHER")
@@ -151,21 +135,13 @@ public class CoinCommand implements CommandExecutor {
                                 return;
                             }
 
-                            Pair<PlayerData, Boolean> loaded = MainData.getIns().getPlayerManager().getOrLoadPlayer(args[1]);
-                            PlayerData d = loaded.getKey();
+                            RUPlayerData d = getPlayerData(commandSender, args[1]);
 
                             if (d == null) {
-                                MainData.getIns().getMessageManager().getMessage("PLAYER_NEVER_JOINED")
-                                        .sendTo(commandSender);
                                 return;
                             }
 
-                            if (loaded.getValue()) {
-                                d = new RUPlayerData(d);
-                                Main.getIns().getMysql().loadPlayerData((RUPlayerData) d);
-                            }
-
-                            ((RUPlayerData) d).setCoins(((RUPlayerData) d).getCoins() - coins);
+                            d.setCoins(d.getCoins() - coins);
                             Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(d));
 
                             MainData.getIns().getMessageManager().getMessage("COINS_REMOVE_OTHER")
@@ -212,19 +188,10 @@ public class CoinCommand implements CommandExecutor {
                             return;
                         }
 
-                        Pair<PlayerData, Boolean> loaded = MainData.getIns().getPlayerManager().getOrLoadPlayer(args[0]);
-
-                        PlayerData d = loaded.getKey();
+                        RUPlayerData d = getPlayerData(commandSender, args[1]);
 
                         if (d == null) {
-                            MainData.getIns().getMessageManager().getMessage("PLAYER_NEVER_JOINED")
-                                    .sendTo(commandSender);
                             return;
-                        }
-
-                        if (loaded.getValue()) {
-                            d = new RUPlayerData(d);
-                            Main.getIns().getMysql().loadPlayerData((RUPlayerData) d);
                         }
 
                         MainData.getIns().getMessageManager().getMessage("COINS_OTHERS")
@@ -253,6 +220,22 @@ public class CoinCommand implements CommandExecutor {
             }
         }
         return true;
+    }
+
+    private RUPlayerData getPlayerData(CommandSender sender, String playerName) {
+        Pair<PlayerData, Boolean> loaded = MainData.getIns().getPlayerManager().getOrLoadPlayer(playerName);
+        PlayerData d = loaded.getKey();
+
+        if (d == null) {
+            MainData.getIns().getMessageManager().getMessage("PLAYER_NEVER_JOINED")
+                    .sendTo(sender);
+            return null;
+        }
+
+        if (loaded.getValue()) {
+            d = Main.getIns().getMysql().loadPlayerData(d);
+        }
+        return (RUPlayerData) d;
     }
 
 }

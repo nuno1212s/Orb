@@ -1,0 +1,19 @@
+{
+  "InventoryName": "&cBan inventories",
+  "InventoryID": "banInventory",
+  "InventorySize": 27,
+  "InventoryItems": [
+    {
+      "Slot": 11,
+      "Item": {
+        "Material": "WOOL",
+        "DisplayName": "&c30 minute ban"
+      },
+      "Flags": [],
+      "Permission": "punishments.ban",
+      "PunishmentType": "BAN",
+      "Reason": "&cTest ban",
+      "Duration": 1800
+    }
+  ]
+}

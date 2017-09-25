@@ -57,7 +57,7 @@ public class PInventoryItem extends InventoryItem {
 
             Player p = Bukkit.getPlayer(player.getPlayerID());
             if (punishment.getPunishmentType() == Punishment.PunishmentType.BAN && !punishment.hasExpired()) {
-                p.kickPlayer(reason);
+                p.kickPlayer(punishment.buildReason());
             } else if (punishment.getPunishmentType() == Punishment.PunishmentType.MUTE && !punishment.hasExpired()) {
                 MainData.getIns().getMessageManager().getMessage("Y_MUTED")
                         .format("%time%", punishment.timeToString()).sendTo(p);
