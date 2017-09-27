@@ -151,6 +151,10 @@ public class InventoryData {
     @Override
     public boolean equals(Object obj) {
 
+        if (obj == null) {
+            return false;
+        }
+
         if (obj instanceof InventoryData) {
             //Compare the size before the name because the size is much faster to compare than the name
             // and the size, like the name can't be changed

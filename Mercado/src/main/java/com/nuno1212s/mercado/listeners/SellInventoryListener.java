@@ -86,7 +86,8 @@ public class SellInventoryListener extends InventoryListener {
                             System.currentTimeMillis(),
                             0,
                             isServerCurrency(e.getClickedInventory().getItem(inventory.getItemWithFlag("CURRENCY_TYPE").getSlot())),
-                            false);
+                            false,
+                            MainData.getIns().getServerManager().getServerType());
                     addCallback(e.getWhoClicked().getUniqueId(), sellItem);
 
                     e.getWhoClicked().closeInventory();

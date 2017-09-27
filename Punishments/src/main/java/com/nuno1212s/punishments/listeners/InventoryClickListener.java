@@ -29,6 +29,7 @@ public class InventoryClickListener implements Listener {
             return;
         }
 
+
         if (inventoryFromInventory.equals(e.getClickedInventory())) {
             if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR) return;
 

@@ -6,6 +6,7 @@ import com.nuno1212s.mercado.commands.MarketCommand;
 import com.nuno1212s.mercado.database.MySql;
 import com.nuno1212s.mercado.listeners.*;
 import com.nuno1212s.mercado.marketmanager.MarketManager;
+import com.nuno1212s.mercado.redishandler.MRedisListener;
 import com.nuno1212s.mercado.searchmanager.inventorylisteners.SearchInventoryListener;
 import com.nuno1212s.mercado.util.RomanNumber;
 import com.nuno1212s.modulemanager.Module;
@@ -27,12 +28,16 @@ public class Main extends Module {
     @Getter
     private MarketManager marketManager;
 
+    @Getter
+    private MRedisListener redisHandler;
+
     @Override
     public void onEnable() {
         new RomanNumber();
         ins = this;
         mySql = new MySql();
         marketManager = new MarketManager(this);
+        redisHandler = new MRedisListener();
 
         registerCommand(new String[]{"market"}, new MarketCommand());
 

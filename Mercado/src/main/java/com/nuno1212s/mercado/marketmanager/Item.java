@@ -36,6 +36,7 @@ public class Item {
 
     private String itemID;
 
+    @Setter
     private UUID owner, buyer;
 
     private ItemStack item;
@@ -43,9 +44,12 @@ public class Item {
     @Setter
     private long cost, placeTime, soldTime;
 
+    @Setter
     private boolean serverCurrency, sold;
 
-    public Item(String itemID, UUID owner, UUID buyer, String item, long cost, long placeTime, long soldTime, boolean serverCurrency, boolean sold) {
+    private String applicableServer;
+
+    public Item(String itemID, UUID owner, UUID buyer, String item, long cost, long placeTime, long soldTime, boolean serverCurrency, boolean sold, String applicableServer) {
         this.itemID = itemID;
         this.owner = owner;
         this.buyer = buyer;
@@ -59,8 +63,13 @@ public class Item {
         this.soldTime = soldTime;
         this.serverCurrency = serverCurrency;
         this.sold = sold;
+        this.applicableServer = applicableServer;
     }
 
+    /**
+     * Get the item displayed on the market selling inventory
+     * @return
+     */
     public ItemStack getDisplayItem() {
 
         ItemStack clone1 = item.clone();
@@ -106,6 +115,11 @@ public class Item {
         return clone;
     }
 
+    /**
+     * Get item to be displayed on the own items inventory
+     *
+     * @return
+     */
     public ItemStack getDisplayItemOwn() {
         ItemStack clone = item.clone();
         ItemMeta itemMeta = clone.getItemMeta();
@@ -143,6 +157,11 @@ public class Item {
         return itemData.write(clone);
     }
 
+    /**
+     * Sell an item to a certain player
+     *
+     * Auto removes/adds player money
+     */
     public void deliverItem(Player player) {
         this.sold = true;
         this.soldTime = System.currentTimeMillis();

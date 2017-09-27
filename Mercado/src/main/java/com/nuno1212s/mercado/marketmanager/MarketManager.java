@@ -48,7 +48,7 @@ public class MarketManager {
 
     public MarketManager(Module module) {
         marketItems = new ArrayList<>();
-        marketItems = Main.getIns().getMySql().getAllItems();
+        marketItems = Main.getIns().getMySql().getAllItems(MainData.getIns().getServerManager().getServerType());
         pages = new HashMap<>();
         chatManager = new ChatHandlerManager();
         searchManager = new SearchParameterManager(module);
@@ -91,6 +91,7 @@ public class MarketManager {
     public void addItem(Item item) {
         marketItems.add(item);
 
+        Main.getIns().getRedisHandler().addItem(item);
         MainData.getIns().getScheduler().runTaskAsync(() -> {
             Main.getIns().getMySql().addItem(item);
         });
@@ -102,8 +103,10 @@ public class MarketManager {
      * @param itemID The ID of the Item
      */
     public void removeItem(String itemID) {
-        marketItems.remove(getItem(itemID));
+        Item item = getItem(itemID);
+        marketItems.remove(item);
 
+        Main.getIns().getRedisHandler().removeItem(item);
         MainData.getIns().getScheduler().runTaskAsync(() -> {
             Main.getIns().getMySql().removeItem(itemID);
         });
@@ -113,6 +116,7 @@ public class MarketManager {
      *
      */
     public void sellItem(Item item) {
+        Main.getIns().getRedisHandler().sellItem(item);
         MainData.getIns().getScheduler().runTaskAsync(() -> {
             Main.getIns().getMySql().updateItem(item);
         });
