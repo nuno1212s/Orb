@@ -18,13 +18,13 @@ import java.util.List;
 @AllArgsConstructor
 public class InventoryItem {
 
-    private ItemStack item;
+    protected ItemStack item;
 
-    private List<String> itemFlags;
+    protected List<String> itemFlags;
 
-    private int slot;
+    protected int slot;
 
-    private String connectingInv = null;
+    protected String connectingInv = null;
 
     public InventoryItem(JSONObject data) {
         if (!data.containsKey("Item")) {

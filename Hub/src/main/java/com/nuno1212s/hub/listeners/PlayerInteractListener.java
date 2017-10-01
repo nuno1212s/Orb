@@ -27,6 +27,10 @@ public class PlayerInteractListener implements Listener {
 
         InventoryItem item = Main.getIns().getHotbarManager().getItem(slot);
 
+        if (item == null) {
+            return;
+        }
+
         if (item.hasItemFlag("SERVER_SELECTOR")) {
             Inventory mainInventory = Main.getIns().getServerSelectorManager().getMainInventory();
             if (mainInventory != null)
@@ -44,6 +48,7 @@ public class PlayerInteractListener implements Listener {
                 MainData.getIns().getMessageManager().getMessage("TOGGLED_PLAYERS_OFF").sendTo(e.getPlayer());
             }
 
+            Main.getIns().getPlayerToggleManager().updatePlayer(data, e.getPlayer());
             Map<Integer, ItemStack> items = Main.getIns().getHotbarManager().getItems(data);
             e.getPlayer().getInventory().setItem(item.getSlot(), items.get((item.getSlot())));
         }

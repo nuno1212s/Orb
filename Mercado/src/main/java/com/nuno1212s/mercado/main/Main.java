@@ -37,7 +37,7 @@ public class Main extends Module {
         ins = this;
         mySql = new MySql();
         marketManager = new MarketManager(this);
-        redisHandler = new MRedisListener();
+        MainData.getIns().getRedisHandler().registerRedisListener((redisHandler = new MRedisListener()));
 
         registerCommand(new String[]{"market"}, new MarketCommand());
 

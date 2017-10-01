@@ -3,6 +3,7 @@ package com.nuno1212s.messagemanager;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.messagemanager.messagetypes.*;
 import com.nuno1212s.util.ActionBarAPI;
+import lombok.AccessLevel;
 import lombok.Getter;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -32,6 +33,8 @@ public class Messages {
         if (!MainData.getIns().isBungee()) {
             this.actionBarAPI = new ActionBarAPI();
         }
+
+        // TODO: 27/09/2017 Remake titleAPI
     }
 
     public Messages() {

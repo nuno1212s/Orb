@@ -18,33 +18,22 @@ public class SInventoryItem extends InventoryItem {
     @Getter
     SearchParameter searchParameter;
 
-    @Getter
-    private String connectingInventory;
-
     public SInventoryItem(JSONObject object) {
         super(object);
-
-        for (String s : this.getItemFlags()) {
-            if (s.contains("CONNECTING_INV")) {
-                String[] split = s.split(":");
-                connectingInventory = split[1];
-            }
-        }
-
     }
 
     public boolean hasConnectingInventory() {
-        return connectingInventory != null;
+        return this.connectingInv != null;
     }
 
     public SInventoryItem(ItemStack item, int slot, List<String> itemFlags, SearchParameter parameter) {
-        super(item, itemFlags, slot);
+        super(item, itemFlags, slot, null);
         this.searchParameter = parameter;
 
         for (String s : this.getItemFlags()) {
             if (s.contains("CONNECTING_INV")) {
                 String[] split = s.split(":");
-                connectingInventory = split[1];
+                this.connectingInv = split[1];
             }
         }
     }

@@ -93,7 +93,7 @@ public class MySql {
     public List<Item> getAllItems(String applicableServer) {
         List<Item> items = new ArrayList<>();
         try (Connection connection = MainData.getIns().getMySql().getConnection();
-             PreparedStatement statement = connection.prepareStatement("SELECT * FROM marketItems WHERE LOWER(APPLICABLESERVER)=" + applicableServer.toLowerCase());
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM marketItems WHERE LOWER(APPLICABLESERVER)='" + applicableServer.toLowerCase() + "'");
              ResultSet resultSet = statement.executeQuery();) {
             while (resultSet.next()) {
                 String itemID = resultSet.getString("ITEMID");

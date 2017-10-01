@@ -1,5 +1,6 @@
 package com.nuno1212s.hub.playerdata;
 
+import com.nuno1212s.hub.main.Main;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.Group;
 import com.nuno1212s.permissionmanager.util.PlayerGroupData;
@@ -17,8 +18,10 @@ public class HPlayerData extends PlayerData {
     @Setter
     private boolean chatEnabled = true, playerShown = false;
 
-    public HPlayerData(PlayerData d) {
+    public HPlayerData(PlayerData d, boolean chatEnabled, boolean playerShown) {
         super(d);
+        this.chatEnabled = chatEnabled;
+        this.playerShown = playerShown;
     }
 
     @Override
@@ -35,6 +38,7 @@ public class HPlayerData extends PlayerData {
     public void save(Callback c) {
         MainData.getIns().getScheduler().runTaskAsync(() -> {
             MainData.getIns().getMySql().savePlayer(this);
+            Main.getIns().getMySqlManager().savePlayerData(this);
             c.callback();
         });
     }

@@ -14,6 +14,7 @@ import java.util.List;
  */
 public class RedisHandler {
 
+    @Getter
     private Jedis redisConnection;
 
     private String host, password;

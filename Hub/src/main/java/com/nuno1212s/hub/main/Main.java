@@ -2,6 +2,7 @@ package com.nuno1212s.hub.main;
 
 import com.nuno1212s.hub.hotbar.HotbarManager;
 import com.nuno1212s.hub.listeners.*;
+import com.nuno1212s.hub.mysql.MySql;
 import com.nuno1212s.hub.player_options.PlayerOptionsManager;
 import com.nuno1212s.hub.players_toggle.PlayerToggleManager;
 import com.nuno1212s.hub.redis.RedisHandler;
@@ -35,9 +36,13 @@ public class Main extends Module {
     @Getter
     private PlayerToggleManager playerToggleManager;
 
+    @Getter
+    private MySql mySqlManager;
+
     @Override
     public void onEnable() {
         ins = this;
+        mySqlManager = new MySql();
         hotbarManager = new HotbarManager(this);
         serverSelectorManager = new ServerSelectorManager(this);
         playerOptionsManager = new PlayerOptionsManager(this);

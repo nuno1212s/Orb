@@ -22,7 +22,7 @@ public class PlayerJoinListener implements Listener {
     @EventHandler
     public void onCoreLogin(CoreLoginEvent e) {
         PlayerData playerInfo = e.getPlayerInfo();
-        e.setPlayerInfo(new HPlayerData(playerInfo));
+        e.setPlayerInfo(Main.getIns().getMySqlManager().getPlayerData(playerInfo));
     }
 
     @EventHandler

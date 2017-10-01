@@ -61,8 +61,13 @@ public class ModuleManager {
         enable((ArrayList<Module>) this.modules.clone());
     }
 
+    /**
+     * Get a module by name
+     * @param name
+     * @return
+     */
     Module getModule(String name) {
-        for (Module module : modules) {
+        for (Module module : this.modules) {
             if (module.getModuleName().equalsIgnoreCase(name)) {
                 return module;
             }
@@ -70,21 +75,26 @@ public class ModuleManager {
         return null;
     }
 
-    private void enable(List<Module> modules) {
+    /**
+     * Enable the specified methods
+     * Auto organizes the methods by their needed order (Dependencies)
+     *
+     * @param clonedModules
+     */
+    private void enable(List<Module> clonedModules) {
 
-        while (!modules.isEmpty()) {
+        while (!clonedModules.isEmpty()) {
             List<Module> moduleSorted = new ArrayList<>();
-            dep_resolve(modules.get(0), moduleSorted, new ArrayList<>());
+            dep_resolve(clonedModules.get(0), moduleSorted, new ArrayList<>());
             for (Module module : moduleSorted) {
                 try {
                     module.onEnable();
                 } catch (Exception e) {
                     System.out.println("Could not enable module " + module.getModuleName());
                     e.printStackTrace();
-                    continue;
                 } finally {
                     module.setEnabled(true);
-                    modules.remove(module);
+                    clonedModules.remove(module);
                 }
             }
             moduleSorted.clear();
@@ -96,11 +106,11 @@ public class ModuleManager {
         disable((ArrayList<Module>) this.modules.clone());
     }
 
-    private void disable(List<Module> modules) {
+    private void disable(List<Module> clonedModules) {
 
-        while (!modules.isEmpty()) {
+        while (!clonedModules.isEmpty()) {
             List<Module> moduleSorted = new ArrayList<>();
-            dep_resolve(modules.get(0), moduleSorted, new ArrayList<>());
+            dep_resolve(clonedModules.get(0), moduleSorted, new ArrayList<>());
             /*
             We want to reverse the array because if plugin a depends on b,
             b needs to start first and shutdown after a.
@@ -111,7 +121,7 @@ public class ModuleManager {
                     module.onDisable();
                     module.setEnabled(false);
                     module.disable();
-                    modules.remove(module);
+                    clonedModules.remove(module);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

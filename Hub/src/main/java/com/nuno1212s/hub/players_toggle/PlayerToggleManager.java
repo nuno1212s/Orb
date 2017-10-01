@@ -42,6 +42,40 @@ public class PlayerToggleManager {
 
     }
 
+    /**
+     * Updates the players shown / not shown
+     * @param d
+     * @param p
+     */
+    public void updatePlayer(HPlayerData d, Player p) {
+
+        for (Player player2 : Bukkit.getOnlinePlayers()) {
+            if (player2.getUniqueId().equals(d.getPlayerID())) {
+                continue;
+            }
+
+            if (!d.isPlayerShown()) {
+
+                if (player2.hasPermission("overrideHide")) {
+                    continue;
+                }
+
+                p.hidePlayer(player2);
+            } else {
+                p.showPlayer(player2);
+            }
+
+        }
+
+
+    }
+
+    /**
+     * Handle the player joining
+     *
+     * @param d
+     * @param p
+     */
     public void handleJoin(HPlayerData d, Player p) {
 
         boolean shouldHide = !p.hasPermission("overrideHide");
