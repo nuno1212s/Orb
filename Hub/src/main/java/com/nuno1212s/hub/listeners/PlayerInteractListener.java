@@ -23,6 +23,9 @@ public class PlayerInteractListener implements Listener {
     public void onInteract(PlayerInteractEvent e) {
         if (e.getItem() == null || e.getItem().getType() == Material.AIR) return;
         if (e.getAction() != Action.RIGHT_CLICK_BLOCK && e.getAction() != Action.RIGHT_CLICK_AIR) return;
+
+        e.setCancelled(true);
+
         int slot = e.getPlayer().getInventory().getHeldItemSlot();
 
         InventoryItem item = Main.getIns().getHotbarManager().getItem(slot);

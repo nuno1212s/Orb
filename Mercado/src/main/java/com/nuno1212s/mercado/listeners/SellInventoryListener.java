@@ -6,6 +6,7 @@ import com.nuno1212s.mercado.marketmanager.Item;
 import com.nuno1212s.mercado.util.InventoryListener;
 import com.nuno1212s.mercado.util.ItemIDUtils;
 import com.nuno1212s.util.Callback;
+import com.nuno1212s.util.Pair;
 import com.nuno1212s.util.inventories.InventoryItem;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -119,41 +120,42 @@ public class SellInventoryListener extends InventoryListener {
 
     /**
      * Adds the callback to the chat handler
-     *
+     * <p>
      * Handles the player disconnecting mid price typing {@link PlayerQuitListener#onQuit(PlayerQuitEvent)}
      *
      * @param player The owner of the item
-     * @param item The item that is being placed
+     * @param item   The item that is being placed
      */
     private void addCallback(UUID player, Item item) {
-        Main.getIns().getMarketManager().getChatManager().addCallback(player, new Callback() {
-            @Override
-            public void callback(Object... args) {
-                if (args.length > 0) {
-                    if (args[0] instanceof String) {
-                        long cost;
-                        try {
-                            cost = Long.parseLong((String) args[0]);
-                            if (cost <= 0) {
-                                MainData.getIns().getMessageManager().getMessage("COST_MUST_BE_POSITIVE").sendTo(Bukkit.getPlayer(player));
-                                addCallback(player, item);
-                                return;
-                            }
-                            item.setCost(cost);
-                            Main.getIns().getMarketManager().addItem(item);
-                            MainData.getIns().getMessageManager().getMessage("ANNOUNCED_ITEM")
-                                    .format("%price%", NumberFormat.getInstance().format(cost))
-                                    .format("%currency%", item.isServerCurrency() ? ChatColor.YELLOW + "coins" : ChatColor.GREEN + "cash").sendTo(Bukkit.getPlayer(player));
+        Main.getIns().getMarketManager().getChatManager().addCallback(player, new Callback<Pair<Boolean, Object>>() {
 
-                            return;
-                        } catch (NumberFormatException e) {}
-                    } else if (args[0] instanceof Boolean && !(boolean) args[0]) {
-                        //THIS MEANS THE PLAYER DISCONNECTED BEFORE WRITING THE PRICE
-                        Player arg = (Player) args[1];
-                        arg.getInventory().addItem(item.getItem());
+            @Override
+            public void callback(Pair<Boolean, Object> args) {
+                if (args.getKey()) {
+                    long cost = Long.parseLong((String) args.getValue());
+
+                    if (cost <= 0) {
+                        MainData.getIns().getMessageManager().getMessage("COST_MUST_BE_POSITIVE").sendTo(Bukkit.getPlayer(player));
+                        addCallback(player, item);
                         return;
                     }
+
+                    item.setCost(cost);
+                    Main.getIns().getMarketManager().addItem(item);
+                    MainData.getIns().getMessageManager().getMessage("ANNOUNCED_ITEM")
+                            .format("%price%", NumberFormat.getInstance().format(cost))
+                            .format("%currency%", item.isServerCurrency() ? ChatColor.YELLOW + "coins" : ChatColor.GREEN + "cash").sendTo(Bukkit.getPlayer(player));
+
+                    return;
+
+                } else if (!args.getKey()) {
+                    //THIS MEANS THE PLAYER DISCONNECTED BEFORE WRITING THE PRICE
+                    Player arg = (Player) args.getValue();
+                    arg.getInventory().addItem(item.getItem());
+
+                    return;
                 }
+
                 MainData.getIns().getMessageManager().getMessage("COST_MUST_BE_NUMBER").sendTo(Bukkit.getPlayer(player));
                 addCallback(player, item);
             }

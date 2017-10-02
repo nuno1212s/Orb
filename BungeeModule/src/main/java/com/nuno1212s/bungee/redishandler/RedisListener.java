@@ -51,7 +51,7 @@ public class RedisListener implements RedisReceiver {
                 return;
             }
 
-            playerData.redis_setMainGroup(newGroupID, duration);
+            playerData.setMainGroup(newGroupID, duration, false);
         }
 
     }

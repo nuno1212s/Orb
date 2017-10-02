@@ -11,6 +11,10 @@ public class VanishCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
+        if (!(commandSender instanceof Player)) {
+            return true;
+        }
+
         if (!commandSender.hasPermission("vanish")) {
             MainData.getIns().getMessageManager().getMessage("NO_PERMISSION").sendTo(commandSender);
             return true;
@@ -22,6 +26,7 @@ public class VanishCommand implements CommandExecutor {
         Main.getIns().getPlayerManager().setPlayerVanished(player.getUniqueId(), !playerVanished);
         if (!playerVanished) {
             MainData.getIns().getMessageManager().getMessage("VANISHED").sendTo(player);
+            Main.getIns().getVanishManager().vanishPlayer(player);
         } else {
             MainData.getIns().getMessageManager().getMessage("NOT_VANISHED").sendTo(player);
         }

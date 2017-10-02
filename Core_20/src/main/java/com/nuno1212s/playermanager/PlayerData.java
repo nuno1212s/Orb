@@ -70,37 +70,26 @@ public abstract class PlayerData {
      * @param groupID The ID of the group to set
      * @param duration The duration of the group (-1 = Permanent)
      */
-    public PlayerGroupData.EXTENSION_RESULT setMainGroup(short groupID, long duration) {
+    public final PlayerGroupData.EXTENSION_RESULT setMainGroup(short groupID, long duration, boolean shoudUseRedis) {
         PlayerGroupData.EXTENSION_RESULT extension_result = this.groups.setCurrentGroup(groupID, duration);
         if (MainData.getIns().getEventCaller() != null) {
             MainData.getIns().getEventCaller().callUpdateInformationEvent(this);
         }
 
-        JSONObject obj = new JSONObject();
-        obj.put("PlayerID", this.getPlayerID().toString());
-        obj.put("GroupID", groupID);
-        obj.put("Duration", duration);
+        if (shoudUseRedis) {
+            JSONObject obj = new JSONObject();
+            obj.put("PlayerID", this.getPlayerID().toString());
+            obj.put("GroupID", groupID);
+            obj.put("Duration", duration);
 
-        MainData.getIns().getRedisHandler().sendMessage(new Message("BUNGEE", "GROUPUPDATE", obj).toByteArray());
+            MainData.getIns().getRedisHandler().sendMessage(new Message("BUNGEE", "GROUPUPDATE", obj).toByteArray());
+        }
+
         return extension_result;
     }
 
-    /**
-     * Set the main player group without calling Redis messaging
-     *
-     * {@link #setMainGroup(short, long)}
-     *
-     * @param groupID
-     * @param duration
-     * @return
-     */
-    public PlayerGroupData.EXTENSION_RESULT redis_setMainGroup(short groupID, long duration) {
-        PlayerGroupData.EXTENSION_RESULT extension_result = this.groups.setCurrentGroup(groupID, duration);
-        if (MainData.getIns().getEventCaller() != null) {
-            MainData.getIns().getEventCaller().callUpdateInformationEvent(this);
-        }
-
-        return extension_result;
+    public final PlayerGroupData.EXTENSION_RESULT setMainGroup(short groupID, long duration) {
+        return this.setMainGroup(groupID, duration, true);
     }
 
     /**
@@ -178,6 +167,11 @@ public abstract class PlayerData {
         return this.getRepresentingGroup().getGroupPrefix() + this.getPlayerName();
     }
 
+    /**
+     * Get the players cash balance
+     *
+     * @return The players cash balance
+     */
     public synchronized final long getCash() {
         return this.cash;
     }
@@ -189,12 +183,20 @@ public abstract class PlayerData {
      *
      * @param cash
      */
-    public synchronized final void setCash(long cash) {
+    public synchronized final void setCash(long cash, boolean shouldUseRedis) {
         this.cash = cash;
-        MainData.getIns().getRedisHandler().sendMessage(new byte[0]);
+
+        if (shouldUseRedis) {
+            MainData.getIns().getRedisHandler().sendMessage(new byte[0]);
+        }
+
         if (MainData.getIns().getEventCaller() != null) {
             MainData.getIns().getEventCaller().callUpdateInformationEvent(this);
         }
+    }
+
+    public synchronized final void setCash(long cash) {
+        this.setCash(cash, true);
     }
 
     @Override
@@ -203,17 +205,23 @@ public abstract class PlayerData {
     }
 
     /**
+     * Has the player claimed a reward
      *
-     * @param id
-     * @return
+     * {@link com.nuno1212s.rewards.Reward}
+     *
+     * @param id The ID of the reward
+     * @return True if the player has claimed, false if not
      */
     public final boolean hasClaimed(int id) {
         return !this.toClaim.contains(id);
     }
 
     /**
+     * Claim a reward for the player
      *
-     * @param id
+     * {@link com.nuno1212s.rewards.Reward}
+     *
+     * @param id The ID of the reward
      */
     public final void claim(int id) {
         if (this.toClaim.contains(id)) {
@@ -222,14 +230,16 @@ public abstract class PlayerData {
     }
 
     /**
+     * Add a reward to be claimed
      *
-     * @param id
+     * @param id The ID of the reward
      */
     public final void addToClaim(int id) {
         toClaim.add(id);
     }
 
     /**
+     * Transform this players unclaimed rewards to a serialized string
      *
      * @return
      */

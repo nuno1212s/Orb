@@ -2,3 +2,7 @@ name: ${project.name}
 main: com.nuno1212s.main.BukkitMain
 version: ${project.version}
 author: Nuno1212SsS
+#Force this plugin to be the last plugin to load,
+#On the first try to load the plugin it will fail to find a plugin name LOADLAST,
+#so it will only try to load this plugin on the 2nd attempt
+softdepend: LOADLAST

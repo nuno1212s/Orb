@@ -46,12 +46,9 @@ public class LoginEvent implements Listener {
             }
 
             MainData.getIns().getPlayerManager().validatePlayerJoin(cachedPlayer.getPlayerID());
-            cachedPlayer.save(new Callback() {
-                @Override
-                public void callback(Object... args) {
-                    e.completeIntent(Main.getPlugin());
-                }
-            });
+            cachedPlayer.save((arg) ->
+                    e.completeIntent(Main.getPlugin())
+            );
 
         }
     }

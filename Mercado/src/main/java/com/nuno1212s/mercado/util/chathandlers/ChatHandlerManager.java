@@ -11,13 +11,13 @@ import java.util.UUID;
  */
 public class ChatHandlerManager {
 
-    private Map<UUID, Callback> players;
+    private Map<UUID, Callback<?>> players;
 
     public ChatHandlerManager() {
         players = new HashMap<>();
     }
 
-    public void addCallback(UUID player, Callback c) {
+    public void addCallback(UUID player, Callback<?> c) {
         this.players.put(player, c);
     }
 
@@ -25,7 +25,7 @@ public class ChatHandlerManager {
         return this.players.containsKey(player);
     }
 
-    public Callback getCallback(UUID player) {
+    public Callback<?> getCallback(UUID player) {
         return players.get(player);
     }
 

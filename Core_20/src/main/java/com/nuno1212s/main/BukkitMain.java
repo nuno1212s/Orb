@@ -106,12 +106,18 @@ public class BukkitMain extends JavaPlugin {
         ins.getMySql().closeConnection();
     }
 
+    /**
+     * Register a command with the given aliases
+     *
+     * @param aliases
+     */
     public void register(String... aliases) {
         PluginCommand command = getCommand(aliases[0], this);
 
         command.setAliases(Arrays.asList(aliases));
         getCommandMap().register(this.getDescription().getName(), command);
     }
+
 
     private static PluginCommand getCommand(String name, Plugin plugin) {
         PluginCommand command = null;

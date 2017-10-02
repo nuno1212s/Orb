@@ -5,17 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.nuno1212s</groupId>
-    <artifactId>RankUp</artifactId>
+    <artifactId>Factions</artifactId>
     <version>0.1</version>
 
     <dependencies>
-        <dependency>
-            <groupId>com.nuno1212s</groupId>
-            <artifactId>Core</artifactId>
-            <version>LATEST</version>
-            <scope>provided</scope>
-        </dependency>
-
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
@@ -26,6 +19,13 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <version>LATEST</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.nuno1212s</groupId>
+            <artifactId>Core</artifactId>
             <version>LATEST</version>
             <scope>provided</scope>
         </dependency>
@@ -59,13 +59,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.nuno1212s</groupId>
-            <artifactId>Minas</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
             <groupId>com.gmail.nossr50</groupId>
             <artifactId>mcMMO</artifactId>
             <version>1.1</version>
@@ -73,6 +66,13 @@
             <systemPath>${project.basedir}/src/main/libs/mcMMO.jar</systemPath>
         </dependency>
 
+        <dependency>
+            <groupId>com.massivecraft</groupId>
+            <artifactId>Factions</artifactId>
+            <version>2.13.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/libs/Factions.jar</systemPath>
+        </dependency>
 
     </dependencies>
 
@@ -98,7 +98,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <finalName>RankUp</finalName>
+                    <finalName>Factions</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
@@ -122,5 +122,6 @@
             </resource>
         </resources>
     </build>
+
 
 </project>

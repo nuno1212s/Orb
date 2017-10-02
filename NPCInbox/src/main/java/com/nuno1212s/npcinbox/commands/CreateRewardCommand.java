@@ -44,8 +44,11 @@ public class CreateRewardCommand implements Command {
         }
 
         String serverType = args[1].equalsIgnoreCase("CURRENT") ? MainData.getIns().getServerManager().getServerType() : args[1];
+
         BukkitReward.RewardType type;
+
         boolean isDefault = Boolean.parseBoolean(args[3]);
+
         try {
             type = BukkitReward.RewardType.valueOf(args[2]);
         } catch (IllegalArgumentException e) {
@@ -65,11 +68,13 @@ public class CreateRewardCommand implements Command {
                 player.sendMessage(ChatColor.GREEN + "Use /reward finish to create the reward");
                 break;
             }
+
             case ITEM: {
                 InventoryBuilder inventoryBuilder = Main.getIns().getInventoryManager().registerPlayer(player.getUniqueId(), r);
                 player.openInventory(inventoryBuilder.getInventory());
                 break;
             }
+
             case CASH: {
                 try {
                     long cash = Long.parseLong(args[3]);
@@ -81,6 +86,7 @@ public class CreateRewardCommand implements Command {
                 }
                 break;
             }
+
             case SV_CRRCY: {
                 try {
                     long coins = Long.parseLong(args[3]);
