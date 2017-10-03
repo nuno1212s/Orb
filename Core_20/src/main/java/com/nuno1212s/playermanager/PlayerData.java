@@ -129,7 +129,7 @@ public abstract class PlayerData {
      *
      * @param c The callback for when it is done saving
      */
-    public abstract void save(Callback c);
+    public abstract void save(Callback<?> c);
 
     /**
      * Set the server group
@@ -202,6 +202,11 @@ public abstract class PlayerData {
     @Override
     public boolean equals(Object obj) {
         return obj instanceof PlayerData && ((PlayerData) obj).getPlayerID().equals(this.getPlayerID());
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getPlayerID().hashCode();
     }
 
     /**

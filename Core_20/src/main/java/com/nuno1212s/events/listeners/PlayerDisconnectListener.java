@@ -3,6 +3,8 @@ package com.nuno1212s.events.listeners;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.Callback;
+import com.sun.org.apache.xpath.internal.operations.Bool;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -24,12 +26,11 @@ public class PlayerDisconnectListener implements Listener {
             return;
         }
 
-        p.save(new Callback() {
-            @Override
-            public void callback(Object... args) {
-                MainData.getIns().getPlayerManager().removePlayer(p);
-            }
-        });
+        p.save((o) ->
+            MainData.getIns().getPlayerManager().removePlayer(p)
+        );
+
+        MainData.getIns().getServerManager().savePlayerCount(Bukkit.getOnlinePlayers().size());
 
     }
 

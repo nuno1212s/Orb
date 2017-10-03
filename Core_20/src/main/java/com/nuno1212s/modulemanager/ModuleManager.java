@@ -3,10 +3,7 @@ package com.nuno1212s.modulemanager;
 import lombok.Getter;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 

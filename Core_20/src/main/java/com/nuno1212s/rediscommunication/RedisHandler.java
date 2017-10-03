@@ -3,7 +3,9 @@ package com.nuno1212s.rediscommunication;
 import com.nuno1212s.config.Config;
 import com.nuno1212s.main.MainData;
 import lombok.Getter;
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import java.util.ArrayList;
 import java.util.Base64;
@@ -15,7 +17,7 @@ import java.util.List;
 public class RedisHandler {
 
     @Getter
-    private Jedis redisConnection;
+    private JedisPool redisPool;
 
     private String host, password;
 
@@ -52,24 +54,24 @@ public class RedisHandler {
     }
 
     /**
-     * Connect to the redis database, setup Sub pool
+     * Connect to the redis database, setup Sub redisPool
      */
     public void redisConnect() {
-        //Must have 2 redis connections, 1 for SUB, 1 for PUB
-        Jedis subConnection = new Jedis(host, port);
-        redisConnection = new Jedis(host, port);
+        GenericObjectPoolConfig poolConfig = new GenericObjectPoolConfig();
+        poolConfig.setMaxTotal(15);
 
-        if (!password.equalsIgnoreCase("")) {
-            redisConnection.auth(password);
-            subConnection.auth(password);
-        }
+        this.redisPool = new JedisPool(poolConfig, host, port, 3000, password);
+
+
+        //Must have 2 redis connections, 1 for SUB, 1 for PUB
+        Jedis subConnection = this.redisPool.getResource();
 
         b = new RedisSubPub(subConnection);
         MainData.getIns().getScheduler().runTaskAsync(b);
     }
 
     /**
-     * Send a message to the message pool
+     * Send a message to the message redisPool
      *
      * @param message The byte data of the message {@link Message#toByteArray()}
      */
@@ -81,22 +83,20 @@ public class RedisHandler {
                     "||" + Base64.getEncoder().encodeToString(message);
 
             MainData.getIns().getScheduler().runTaskAsync(() ->
-                    redisConnection.publish("ServerData", messageBuilder)
+                    getConnection().publish("ServerData", messageBuilder)
             );
         }
+    }
+
+    public Jedis getConnection() {
+        return getRedisPool().getResource();
     }
 
     /**
      * Close all the redis connections
      */
     public void close() {
-        if (this.redisConnection != null) {
-            this.redisConnection.close();
-        }
-        if (b != null) {
-            b.unsubscribe();
-            b.getSubscriber().close();
-        }
+        redisPool.close();
     }
 
 }

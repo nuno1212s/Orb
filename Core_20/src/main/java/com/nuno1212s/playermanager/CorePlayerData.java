@@ -22,7 +22,7 @@ public class CorePlayerData extends PlayerData {
     public void save(Callback c) {
         MainData.getIns().getScheduler().runTaskAsync(() -> {
             MainData.getIns().getMySql().savePlayer(this);
-            c.callback();
+            c.callback(null);
         });
     }
 

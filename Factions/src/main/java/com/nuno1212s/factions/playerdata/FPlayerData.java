@@ -5,14 +5,21 @@ import com.nuno1212s.permissionmanager.Group;
 import com.nuno1212s.permissionmanager.util.PlayerGroupData;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.Callback;
+import lombok.Getter;
+import lombok.Setter;
 
 public class FPlayerData extends PlayerData {
 
     private PlayerGroupData serverGroup;
 
-    public FPlayerData(PlayerData original, PlayerGroupData serverGroup) {
+    @Getter
+    @Setter
+    private long coins, lastDatabaseAccess;
+
+    public FPlayerData(PlayerData original, PlayerGroupData serverGroup, long coins) {
         super(original);
         this.serverGroup = serverGroup;
+        this.coins = coins;
     }
 
     @Override
@@ -28,6 +35,7 @@ public class FPlayerData extends PlayerData {
     @Override
     public Group getRepresentingGroup() {
         Group mainGroup = this.getMainGroup();
+
         if (mainGroup.isOverrides()) {
             return mainGroup;
         }
@@ -43,4 +51,13 @@ public class FPlayerData extends PlayerData {
             c.callback(null);
         });
     }
+
+    public synchronized long getCoins() {
+        return coins;
+    }
+
+    public synchronized void setCoins(long coins) {
+        this.coins = coins;
+    }
+
 }

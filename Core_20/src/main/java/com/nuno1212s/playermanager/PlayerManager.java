@@ -14,12 +14,12 @@ import java.util.concurrent.TimeUnit;
  */
 public class PlayerManager {
 
-    private final List<PlayerData> players;
+    private final Set<PlayerData> players;
 
     private Map<Object, Object> cache;
 
     public PlayerManager() {
-        players = Collections.synchronizedList(new ArrayList<>());
+        players = Collections.synchronizedSet(new HashSet<>());
         cache = CacheBuilder.newBuilder().expireAfterWrite(5, TimeUnit.SECONDS).build().asMap();
     }
 
