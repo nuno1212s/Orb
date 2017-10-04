@@ -161,13 +161,16 @@ public class MySql {
                 select.setString(1, playerID.toString());
                 try (ResultSet resultSet = select.executeQuery()) {
                     if (resultSet.next()) {
+
                         String groupid = resultSet.getString("GROUPDATA");
                         long cash = resultSet.getLong("CASH");
                         boolean premium = resultSet.getBoolean("PREMIUM");
                         long lastLogin = resultSet.getDate("LASTLOGIN").getTime();
                         boolean tell = resultSet.getBoolean("TELL");
                         List<Integer> toClaim = new ArrayList<>();
+
                         String[] rewards = resultSet.getString("REWARDSTOCLAIM").split(",");
+
                         for (String reward : rewards) {
                             try {
                                 toClaim.add(Integer.parseInt(reward));
@@ -209,6 +212,7 @@ public class MySql {
             select.setString(1, playerName);
             try (ResultSet resultSet = select.executeQuery()) {
                 if (resultSet.next()) {
+
                     UUID playerID = UUID.fromString(resultSet.getString("UUID"));
                     String groupid = resultSet.getString("GROUPDATA");
                     long cash = resultSet.getLong("CASH");
@@ -216,6 +220,7 @@ public class MySql {
                     long lastLogin = resultSet.getDate("LASTLOGIN").getTime();
                     boolean tell = resultSet.getBoolean("TELL");
                     List<Integer> toClaim = new ArrayList<>();
+
                     String[] rewards = resultSet.getString("REWARDSTOCLAIM").split(",");
                     for (String reward : rewards) {
                         toClaim.add(Integer.parseInt(reward));

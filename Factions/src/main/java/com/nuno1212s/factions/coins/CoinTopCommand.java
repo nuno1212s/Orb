@@ -17,7 +17,7 @@ class CoinTopCommand {
 
     static LinkedHashMap<String, Long> getCoinTop() {
 
-        LinkedHashMap<UUID, Long> dataBaseEntries = new LinkedHashMap<>(); //Main.getIns().getMysql().getCoinTop(10);
+        LinkedHashMap<UUID, Long> dataBaseEntries = new LinkedHashMap<>(); //DisplayMain.getIns().getMysql().getCoinTop(10);
         // TODO: 02/10/2017 Add mysql coin top
 
         List<PlayerData> players = MainData.getIns().getPlayerManager().getPlayers();

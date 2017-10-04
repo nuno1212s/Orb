@@ -1,6 +1,6 @@
 package com.nuno1212s.displays.scoreboard;
 
-import com.nuno1212s.displays.Main;
+import com.nuno1212s.displays.DisplayMain;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.Group;
 import com.nuno1212s.playermanager.PlayerData;
@@ -140,7 +140,7 @@ public class ScoreboardManager {
     private String format(String message, PlayerData d) {
         message = message.replace("%cash%", NumberFormat.getInstance().format(d.getCash()));
         message = message.replace("%group%", String.valueOf(d.getRepresentingGroup().getGroupPrefix()));
-        message = Main.getIns().getPlaceHolderManager().format(message, d);
+        message = DisplayMain.getIns().getPlaceHolderManager().format(message, d);
         return message;
     }
 

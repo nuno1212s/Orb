@@ -88,6 +88,10 @@ public class RedisHandler {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public Jedis getConnection() {
         return getRedisPool().getResource();
     }

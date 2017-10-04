@@ -14,6 +14,13 @@ public class PlaceHolderManager {
 
     public PlaceHolderManager() {
         placeHolders = new HashMap<>();
+
+        placeHolders.put("%playerName%", new PlaceHolder() {
+            @Override
+            public String replacePlaceHolder(PlayerData d) {
+                return d.getNameWithPrefix();
+            }
+        });
     }
 
     public void registerPlaceHolder(String placeHolder, PlaceHolder holder) {

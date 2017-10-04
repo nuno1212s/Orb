@@ -232,7 +232,7 @@ public class CoinCommand implements CommandExecutor {
         }
 
         if (loaded.getValue()) {
-            //d = Main.getIns().getMysql().loadPlayerData(d);
+            //d = DisplayMain.getIns().getMysql().loadPlayerData(d);
             // TODO: 02/10/2017 Load player data
         }
         return (FPlayerData) d;

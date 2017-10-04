@@ -1,6 +1,6 @@
 package com.nuno1212s.displays.listeners;
 
-import com.nuno1212s.displays.Main;
+import com.nuno1212s.displays.DisplayMain;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
 import org.bukkit.event.EventHandler;
@@ -15,6 +15,6 @@ public class PlayerJoinListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         PlayerData player = MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
-        Main.getIns().getScoreboardManager().handlePlayerJoin(player, e.getPlayer());
+        DisplayMain.getIns().getScoreboardManager().handlePlayerJoin(player, e.getPlayer());
     }
 }

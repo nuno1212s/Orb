@@ -1,6 +1,6 @@
 package com.nuno1212s.displays.chat;
 
-import com.nuno1212s.displays.Main;
+import com.nuno1212s.displays.DisplayMain;
 import com.nuno1212s.displays.player.ChatData;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
@@ -23,7 +23,7 @@ public class ChatListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onChat(AsyncPlayerChatEvent e) {
         e.setCancelled(true);
-        if (Main.getIns().getChatManager().isChatActivated() || e.getPlayer().hasPermission("chat.override")) {
+        if (DisplayMain.getIns().getChatManager().isChatActivated() || e.getPlayer().hasPermission("chat.override")) {
             PlayerData d = MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
 
             if (d.getPunishment() != null && d.getPunishment().getPunishmentType() == Punishment.PunishmentType.MUTE && !d.getPunishment().hasExpired()) {
@@ -34,7 +34,7 @@ public class ChatListener implements Listener {
 
             if (d instanceof ChatData) {
                 long lastUsage = ((ChatData) d).lastLocalChatUsage();
-                if (lastUsage + Main.getIns().getChatManager().getChatTimerLocal() > System.currentTimeMillis()
+                if (lastUsage + DisplayMain.getIns().getChatManager().getChatTimerLocal() > System.currentTimeMillis()
                         && !(e.getPlayer().hasPermission("chat.nocooldown") || e.getPlayer().hasPermission("chat.vipcooldown"))) {
                     MainData.getIns().getMessageManager().getMessage("LOCAL_CHAT_COOLDOWN")
                             .format("%time%", new TimeUtil("SS segundos")
@@ -47,7 +47,7 @@ public class ChatListener implements Listener {
 
             String message = e.getPlayer().hasPermission("chat.color") ? ChatColor.translateAlternateColorCodes('&', e.getMessage()) : e.getMessage();
             String playerName = d.getNameWithPrefix();
-            String playerChat = playerName + Main.getIns().getChatManager().getSeparator() + message;
+            String playerChat = playerName + DisplayMain.getIns().getChatManager().getSeparator() + message;
 
             AtomicBoolean heard = new AtomicBoolean(false);
 
@@ -57,7 +57,7 @@ public class ChatListener implements Listener {
                             return;
                         }
                         if (player.getWorld().getName().equalsIgnoreCase(e.getPlayer().getWorld().getName())) {
-                            if (player.getLocation().distanceSquared(e.getPlayer().getLocation()) < Main.getIns().getChatManager().getRange()) {
+                            if (player.getLocation().distanceSquared(e.getPlayer().getLocation()) < DisplayMain.getIns().getChatManager().getRange()) {
                                 heard.set(true);
                                 player.sendMessage(playerChat);
                             }

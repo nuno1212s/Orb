@@ -46,10 +46,12 @@ public class ModuleLoader extends URLClassLoader {
             System.out.println("LOADING MODULE: " + moduleFile.getName());
 
             ZipEntry entry = file.getEntry("moduleInfo.yml");
+
             if (entry == null) {
                 System.out.println("Module Info is missing from module " + moduleFile.getName().replace(".jar", ""));
                 return;
             }
+
             @Cleanup
             InputStream stream = file.getInputStream(entry);
 
@@ -67,10 +69,14 @@ public class ModuleLoader extends URLClassLoader {
     public void setMainClass(Module j) {
         this.mainClass =  j;
         ModuleData annotation = j.getClass().getAnnotation(ModuleData.class);
+
         if (annotation == null) {
             System.out.println("Failed to load module data for module ");
             return;
         }
+
+        // TODO: 04/10/2017 Remake the way the dependencies are reloaded because they need to load before the creation of the main class
+
         mainClass.setModuleName(annotation.name());
         mainClass.setVersion(annotation.version());
         mainClass.setDependencies(annotation.dependencies());

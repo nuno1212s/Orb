@@ -56,7 +56,7 @@ public abstract class Module {
             Module module = ins.getModule(dependency);
 
             if (module == null) {
-                continue;
+                throw new IllegalArgumentException("COULD NOT ENABLE MODULE " + getModuleName() + " LACKING DEPENDENCY " + dependency);
             }
 
             modules.add(module);

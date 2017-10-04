@@ -1,11 +1,11 @@
 package com.nuno1212s.rankup.main;
 
+import com.nuno1212s.displays.DisplayMain;
 import com.nuno1212s.displays.placeholders.PlaceHolderManager;
 import com.nuno1212s.main.BukkitMain;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.modulemanager.ModuleData;
-import com.nuno1212s.permissionmanager.Group;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.rankup.economy.CoinCommand;
 import com.nuno1212s.rankup.events.*;
@@ -45,7 +45,7 @@ public class Main extends Module {
 
         registerServerEconomy();
 
-        PlaceHolderManager placeHolderManager = com.nuno1212s.displays.Main.getIns().getPlaceHolderManager();
+        PlaceHolderManager placeHolderManager = DisplayMain.getIns().getPlaceHolderManager();
 
         placeHolderManager.registerPlaceHolder("%coins%", (d) ->
                 NumberFormat.getInstance().format(((RUPlayerData) d).getCoins())

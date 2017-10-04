@@ -276,6 +276,7 @@ public class GroupCommand implements CommandExecutor {
                 }
 
                 group.addPermission(permission);
+
                 boolean added = MainData.getIns().getMySql().modifyGroup(groupID, "PERMISSIONS", group.permissionsToDB());
                 if (added) {
                     commandSender.sendMessage(ChatColor.RED + "Permission added successfully");

@@ -4,6 +4,7 @@ import lombok.Getter;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -82,9 +83,12 @@ public class ModuleManager {
 
         while (!clonedModules.isEmpty()) {
             List<Module> moduleSorted = new ArrayList<>();
+
             dep_resolve(clonedModules.get(0), moduleSorted, new ArrayList<>());
+
             for (Module module : moduleSorted) {
                 try {
+                    System.out.println("ENABLING " + module.getModuleName());
                     module.onEnable();
                 } catch (Exception e) {
                     System.out.println("Could not enable module " + module.getModuleName());
@@ -94,6 +98,7 @@ public class ModuleManager {
                     clonedModules.remove(module);
                 }
             }
+
             moduleSorted.clear();
         }
 
@@ -116,11 +121,12 @@ public class ModuleManager {
             for (Module module : moduleSorted) {
                 try {
                     module.onDisable();
-                    module.setEnabled(false);
-                    module.disable();
                     clonedModules.remove(module);
                 } catch (Exception e) {
                     e.printStackTrace();
+                } finally {
+                    module.setEnabled(false);
+                    module.disable();
                 }
             }
             moduleSorted.clear();
@@ -137,7 +143,9 @@ public class ModuleManager {
      */
     private void dep_resolve(Module a, List<Module> resolved, List<Module> unresolved) {
         unresolved.add(a);
+        System.out.println("RESOLVING " + a.getModuleName());
         for (Module m : a.getDependencies(this)) {
+            System.out.println("DEPENDENCY " + m.getModuleName());
             if (resolved.contains(m)) {
                 continue;
             }
@@ -152,6 +160,7 @@ public class ModuleManager {
 
             dep_resolve(m, resolved, unresolved);
         }
+
         resolved.add(a);
         unresolved.remove(a);
     }

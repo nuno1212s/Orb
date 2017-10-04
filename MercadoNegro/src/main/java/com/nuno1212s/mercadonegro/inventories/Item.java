@@ -1,14 +1,12 @@
 package com.nuno1212s.mercadonegro.inventories;
 
 import com.nuno1212s.main.MainData;
-import com.nuno1212s.mercadonegro.economy.ServerEconomyHandler;
-import com.nuno1212s.mercadonegro.main.Main;
 import com.nuno1212s.messagemanager.Message;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.ItemUtils;
+import com.nuno1212s.util.ServerCurrencyHandler;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -61,12 +59,14 @@ public class Item {
 
     public void buy(Player p, PlayerData playerData) {
         if (isServerCurrency()) {
-            ServerEconomyHandler economyHandler = Main.getIns().getEconomyHandler();
+            ServerCurrencyHandler economyHandler = MainData.getIns().getServerCurrencyHandler();
+
             if (economyHandler == null) {
                 MainData.getIns().getMessageManager().getMessage("NO_SUPPORT").sendTo(p);
                 return;
             }
-            if (economyHandler.charge(playerData.getPlayerID(), getCost())) {
+
+            if (economyHandler.removeCurrency(playerData, getCost())) {
                 MainData.getIns().getMessageManager().getMessage("BOUGHT_ITEM_SERVER_CURRENCY")
                         .format("%price%", String.valueOf(getCost()))
                         .sendTo(p);

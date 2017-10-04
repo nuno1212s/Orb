@@ -1,6 +1,6 @@
 package com.nuno1212s.displays.chat;
 
-import com.nuno1212s.displays.Main;
+import com.nuno1212s.displays.DisplayMain;
 import com.nuno1212s.displays.player.ChatData;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
@@ -27,7 +27,7 @@ public class GlobalChatCommand implements CommandExecutor {
 
         PlayerData data = MainData.getIns().getPlayerManager().getPlayer(((Player) commandSender).getUniqueId());
 
-        if (data.getPunishment().getPunishmentType() == Punishment.PunishmentType.MUTE && !data.getPunishment().hasExpired()) {
+        if (data.getPunishment() != null && data.getPunishment().getPunishmentType() == Punishment.PunishmentType.MUTE && !data.getPunishment().hasExpired()) {
             MainData.getIns().getMessageManager().getMessage("MUTED")
                     .format("%time%", data.getPunishment().timeToString()).sendTo(commandSender);
             return true;
@@ -35,7 +35,7 @@ public class GlobalChatCommand implements CommandExecutor {
 
         if (data instanceof ChatData) {
             long lastUsage = ((ChatData) data).lastGlobalChatUsage(), chatTime =
-                    commandSender.hasPermission("chat.vipcooldown") ? 5000 : Main.getIns().getChatManager().getChatTimerGlobal();
+                    commandSender.hasPermission("chat.vipcooldown") ? 5000 : DisplayMain.getIns().getChatManager().getChatTimerGlobal();
 
             if (lastUsage + chatTime > System.currentTimeMillis()
                     && !commandSender.hasPermission("chat.nocooldown")) {
@@ -56,7 +56,7 @@ public class GlobalChatCommand implements CommandExecutor {
         }
 
         String finalMessage = commandSender.hasPermission("chat.color") ? ChatColor.translateAlternateColorCodes('&', message.toString()) : message.toString();
-        String playerChat = data.getNameWithPrefix() + Main.getIns().getChatManager().getSeparator() + finalMessage;
+        String playerChat = data.getNameWithPrefix() + DisplayMain.getIns().getChatManager().getSeparator() + finalMessage;
 
 
         Bukkit.getOnlinePlayers().forEach(player ->

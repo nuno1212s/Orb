@@ -16,13 +16,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 /**
- * Main module class
+ * DisplayMain module class
  */
-@ModuleData(name = "Displays", version = "1.0")
-public class Main extends Module {
+@ModuleData(name = "Displays", version = "1.0", dependencies = {})
+public class DisplayMain extends Module {
 
     @Getter
-    static Main ins;
+    static DisplayMain ins;
 
     @Getter
     private ScoreboardManager scoreboardManager;

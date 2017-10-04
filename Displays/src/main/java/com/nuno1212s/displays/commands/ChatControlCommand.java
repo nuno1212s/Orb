@@ -1,6 +1,6 @@
 package com.nuno1212s.displays.commands;
 
-import com.nuno1212s.displays.Main;
+import com.nuno1212s.displays.DisplayMain;
 import com.nuno1212s.main.MainData;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -25,7 +25,7 @@ public class ChatControlCommand implements CommandExecutor {
 
             if (args[0].equalsIgnoreCase("on")) {
                 if (commandSender.hasPermission("chat.toggle")) {
-                    Main.getIns().getChatManager().setChatActivated(true);
+                    DisplayMain.getIns().getChatManager().setChatActivated(true);
                     commandSender.sendMessage(ChatColor.RED + "Chat has been activated");
                     Bukkit.broadcastMessage(MainData.getIns().getMessageManager().getMessage("CHAT_ACTIVATED").toString());
                 } else {
@@ -33,7 +33,7 @@ public class ChatControlCommand implements CommandExecutor {
                 }
             } else if (args[0].equalsIgnoreCase("off")) {
                 if (commandSender.hasPermission("chat.toggle")) {
-                    Main.getIns().getChatManager().setChatActivated(false);
+                    DisplayMain.getIns().getChatManager().setChatActivated(false);
                     commandSender.sendMessage(ChatColor.RED + "Chat has been deactivated");
                     Bukkit.broadcastMessage(MainData.getIns().getMessageManager().getMessage("CHAT_DEACTIVATED").toString());
                 }

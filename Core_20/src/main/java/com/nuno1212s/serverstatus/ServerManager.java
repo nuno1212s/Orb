@@ -1,6 +1,7 @@
 package com.nuno1212s.serverstatus;
 
 import com.nuno1212s.main.MainData;
+import com.nuno1212s.util.Callback;
 import com.nuno1212s.util.Pair;
 import lombok.Getter;
 import lombok.Setter;
@@ -68,17 +69,19 @@ public class ServerManager {
      */
     public void savePlayerCount(int playerCount) {
         MainData.getIns().getScheduler().runTaskAsync(() ->
-            this.getRedisHandler().updatePlayerCount(new Pair<>(playerCount, Bukkit.getMaxPlayers()))
+                this.getRedisHandler().updatePlayerCount(new Pair<>(playerCount, Bukkit.getMaxPlayers()))
         );
     }
 
     /**
      * Get the servers player counts
      */
-    public void fetchServerData() {
+    public void fetchServerData(Callback callback) {
         MainData.getIns().getScheduler().runTaskAsync(() -> {
-            this.serverPlayerCounts = this.getRedisHandler().getPlayerCounts();
-        });
+                    this.serverPlayerCounts = this.getRedisHandler().getPlayerCounts();
+                    callback.callback(null);
+                }
+        );
     }
 
     /**
@@ -93,6 +96,17 @@ public class ServerManager {
         }
 
         return new Pair<>(-1, -1);
+    }
+
+    public int getTotalPlayerCount() {
+
+        int currentPlayerCount = 0;
+
+        for (Pair<Integer, Integer> players : this.serverPlayerCounts.values()) {
+            currentPlayerCount += players.getKey();
+        }
+
+        return currentPlayerCount;
     }
 
     /**

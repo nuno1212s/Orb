@@ -11,7 +11,7 @@ import com.nuno1212s.vanish.redis.RedisHandler;
 import com.nuno1212s.vanish.vanishmanager.VanishManager;
 import lombok.Getter;
 
-@ModuleData(name = "Vanish", version = "1.0-BETA")
+@ModuleData(name = "Vanish", version = "1.0-BETA", dependencies = {})
 public class Main extends Module {
 
     @Getter

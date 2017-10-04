@@ -8,7 +8,8 @@ import java.util.Map;
 /**
  * Handles all module class loaders
  */
-public class GlobalClassLoader {
+public class
+GlobalClassLoader {
 
     private List<ModuleLoader> loaders;
 
@@ -54,6 +55,7 @@ public class GlobalClassLoader {
                 //This module has already been scanned it would be a waste of performance to scan it again
                 continue;
             }*/
+
             try {
                 Class = loader.find(name, false);
             } catch (ClassNotFoundException e) {}

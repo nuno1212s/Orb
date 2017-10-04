@@ -15,12 +15,13 @@ public class RedisHandler {
      * @return
      */
     public boolean isPlayerVanished(UUID playerID) {
-        Jedis redisConnection = MainData.getIns().getRedisHandler().getRedisConnection();
+        try (Jedis redisConnection = MainData.getIns().getRedisHandler().getConnection()) {
 
-        String key = playerID.toString();
+            String key = playerID.toString();
 
-        if (redisConnection.exists(key)) {
-            return Boolean.parseBoolean(redisConnection.get(key));
+            if (redisConnection.exists(key)) {
+                return Boolean.parseBoolean(redisConnection.get(key));
+            }
         }
 
         return false;
@@ -33,12 +34,13 @@ public class RedisHandler {
      * @param vanished
      */
     public void setPlayerVanished(UUID playerID, boolean vanished) {
-        Jedis redisConnection = MainData.getIns().getRedisHandler().getRedisConnection();
+        try (Jedis redisConnection = MainData.getIns().getRedisHandler().getConnection()) {
 
-        if (!vanished) {
-            redisConnection.set(playerID.toString(), null);
-        } else {
-            redisConnection.set(playerID.toString(), String.valueOf(vanished));
+            if (!vanished) {
+                redisConnection.set(playerID.toString(), null);
+            } else {
+                redisConnection.set(playerID.toString(), "true");
+            }
         }
 
     }

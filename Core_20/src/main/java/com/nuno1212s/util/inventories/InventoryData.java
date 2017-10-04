@@ -1,5 +1,6 @@
 package com.nuno1212s.util.inventories;
 
+import com.nuno1212s.util.ItemUtils;
 import com.nuno1212s.util.NBTDataStorage.ReflectionManager;
 import lombok.Getter;
 import lombok.ToString;
@@ -19,6 +20,7 @@ import java.io.Reader;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -114,9 +116,8 @@ public class InventoryData {
      * @return
      */
     public Inventory buildInventory() {
-        String inventoryName = this.inventoryName;
 
-        Inventory inventory = Bukkit.getServer().createInventory(null, this.inventorySize, inventoryName);
+        Inventory inventory = Bukkit.getServer().createInventory(null, this.inventorySize, this.inventoryName);
 
         this.items.forEach(item -> {
             ItemStack item1 = item.getItem();
@@ -125,6 +126,28 @@ public class InventoryData {
                 return;
             }
             inventory.setItem(item.getSlot(), item1.clone());
+        });
+
+        return inventory;
+    }
+
+    /**
+     * Build the inventory and format items with the given placeHolders
+     * @param placeHolders
+     * @return
+     */
+    public Inventory buildInventory(Map<String, String> placeHolders) {
+
+        Inventory inventory = Bukkit.getServer().createInventory(null, this.inventorySize, this.inventoryName);
+
+        this.items.forEach(item -> {
+            ItemStack item1 = item.getItem();
+            if (item1 == null) {
+                inventory.setItem(item.getSlot(), null);
+                return;
+            }
+
+            inventory.setItem(item.getSlot(), ItemUtils.formatItem(item1.clone(), placeHolders));
         });
 
         return inventory;
