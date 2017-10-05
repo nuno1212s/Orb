@@ -53,11 +53,14 @@ public class MySql {
 
     public void savePlayerData(HPlayerData data) {
         try (Connection c = MainData.getIns().getMySql().getConnection();
-             PreparedStatement s = c.prepareStatement("UPDATE hubPlayers SET CHATENABLED=?, PLAYERSSHOWN=? WHERE UUID=?")) {
+             PreparedStatement s = c.prepareStatement("INSERT INTO hubPlayers(UUID, CHATENABLED, PLAYERSSHOWN) values(?, ?, ?) " +
+                     "ON DUPLICATE KEY UPDATE CHATENABLED=?, PLAYERSSHOWN=?")) {
 
-            s.setBoolean(1, data.isChatEnabled());
-            s.setBoolean(2, data.isPlayerShown());
-            s.setString(3, data.getPlayerID().toString());
+            s.setString(1, data.getPlayerID().toString());
+            s.setBoolean(2, data.isChatEnabled());
+            s.setBoolean(3, data.isPlayerShown());
+            s.setBoolean(4, data.isChatEnabled());
+            s.setBoolean(5, data.isPlayerShown());
 
             s.executeUpdate();
 

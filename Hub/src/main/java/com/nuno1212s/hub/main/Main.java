@@ -21,7 +21,7 @@ import lombok.Getter;
 /**
  * Main class file
  */
-@ModuleData(name = "Hub", version = "1.0", dependencies = {"Displays"})
+@ModuleData(name = "Hub", version = "1.0", dependencies = {"Displays", "NPCInbox"})
 public class Main extends Module {
 
     @Getter

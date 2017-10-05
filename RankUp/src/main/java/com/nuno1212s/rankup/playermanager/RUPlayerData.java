@@ -92,7 +92,7 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer {
         MainData.getIns().getScheduler().runTaskAsync(() -> {
             MainData.getIns().getMySql().savePlayer(this);
             Main.getIns().getMysql().savePlayerData(this);
-            c.callback();
+            c.callback(null);
         });
     }
 

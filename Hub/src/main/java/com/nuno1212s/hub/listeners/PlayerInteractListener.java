@@ -3,6 +3,7 @@ package com.nuno1212s.hub.listeners;
 import com.nuno1212s.hub.main.Main;
 import com.nuno1212s.hub.playerdata.HPlayerData;
 import com.nuno1212s.main.MainData;
+import com.nuno1212s.util.inventories.InventoryData;
 import com.nuno1212s.util.inventories.InventoryItem;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -54,6 +55,9 @@ public class PlayerInteractListener implements Listener {
             Main.getIns().getPlayerToggleManager().updatePlayer(data, e.getPlayer());
             Map<Integer, ItemStack> items = Main.getIns().getHotbarManager().getItems(data);
             e.getPlayer().getInventory().setItem(item.getSlot(), items.get((item.getSlot())));
+        } else if (item.hasItemFlag("INBOX")) {
+            Inventory inventory = com.nuno1212s.npcinbox.main.Main.getIns().getInventoryManager().buildRewardInventoryForPlayer(MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId()));
+            e.getPlayer().openInventory(inventory);
         }
 
     }

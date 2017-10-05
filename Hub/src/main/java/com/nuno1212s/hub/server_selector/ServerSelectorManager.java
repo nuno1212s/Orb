@@ -6,7 +6,7 @@ import com.nuno1212s.hub.util.HInventoryData;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.playermanager.PlayerData;
-import com.nuno1212s.util.BungeeSender;
+import com.nuno1212s.server_sender.BukkitSender;
 import com.nuno1212s.util.Pair;
 import com.nuno1212s.util.inventories.InventoryData;
 import lombok.Getter;
@@ -59,12 +59,7 @@ public class ServerSelectorManager {
 
         }, 20, 20);
 
-        MainData.getIns().getScheduler().runTaskTimerAsync(() -> {
-            MainData.getIns().getServerManager().fetchServerData((ob) -> {
-
-                handleWaitingList();
-            });
-        }, 0, 5);
+        MainData.getIns().getScheduler().runTaskTimerAsync(this::handleWaitingList, 0, 5);
     }
 
     /**
@@ -182,7 +177,8 @@ public class ServerSelectorManager {
                     .format("%listPlace%", String.valueOf(currentPlayerWaitingList.size())).sendTo(p);
         } else {
             PlayerData player = MainData.getIns().getPlayerManager().getPlayer(p.getUniqueId());
-            BungeeSender.getIns().sendPlayer(player, p, serverName);
+
+            BukkitSender.getIns().sendPlayer(player, p, serverName);
         }
     }
 
@@ -215,7 +211,7 @@ public class ServerSelectorManager {
 
                     MainData.getIns().getMessageManager().getMessage("ATTEMPTING_TO_SEND").sendTo(p);
 
-                    BungeeSender.getIns().sendPlayer(MainData.getIns().getPlayerManager().getPlayer(playerID), p, server);
+                    BukkitSender.getIns().sendPlayer(MainData.getIns().getPlayerManager().getPlayer(playerID), p, server);
                 }
             } else {
                 Iterator<UUID> iterator = players.iterator();
@@ -230,7 +226,7 @@ public class ServerSelectorManager {
                         continue;
                     }
 
-                    BungeeSender.getIns().sendPlayer(MainData.getIns().getPlayerManager().getPlayer(player), p, server);
+                    BukkitSender.getIns().sendPlayer(MainData.getIns().getPlayerManager().getPlayer(player), p, server);
                 }
             }
 

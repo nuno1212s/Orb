@@ -2,6 +2,7 @@ package com.nuno1212s.util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.json.simple.JSONObject;
 
@@ -18,10 +19,16 @@ public class SerializableLocation extends Location {
         super(Bukkit.getWorlds().get(0), 0, 0, 0);
         String[] split = location.split(",");
         String world = split[0];
-        this.setWorld(Bukkit.getWorld(world));
         this.setX(Integer.parseInt(split[1]));
         this.setY(Integer.parseInt(split[2]));
         this.setZ(Integer.parseInt(split[3]));
+        World world1 = Bukkit.getWorld(world);
+
+        if (world1 == null) {
+            world1 = Bukkit.getWorlds().get(0);
+        }
+
+        this.setWorld(world1);
     }
 
     public SerializableLocation(ConfigurationSection cs) {
@@ -31,10 +38,16 @@ public class SerializableLocation extends Location {
 
     public SerializableLocation(JSONObject object) {
         super(null, 0, 0, 0);
-        this.setWorld(Bukkit.getWorld((String) object.get("World")));
         this.setX((Double) object.get("X"));
         this.setY((Double) object.get("Y"));
         this.setZ((Double) object.get("Z"));
+        World world1 = Bukkit.getWorld((String) object.get("World"));
+
+        if (world1 == null) {
+            world1 = Bukkit.getWorlds().get(0);
+        }
+
+        this.setWorld(world1);
         if (object.containsKey("Yaw")) {
             this.setYaw(((Double) object.get("Yaw")).floatValue());
         }

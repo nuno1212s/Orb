@@ -129,7 +129,7 @@ public abstract class PlayerData {
      *
      * @param c The callback for when it is done saving
      */
-    public abstract void save(Callback<?> c);
+    public abstract void save(Callback c);
 
     /**
      * Set the server group

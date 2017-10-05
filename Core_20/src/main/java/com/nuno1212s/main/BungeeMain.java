@@ -10,6 +10,7 @@ import com.nuno1212s.playermanager.PlayerManager;
 import com.nuno1212s.rediscommunication.RedisHandler;
 import com.nuno1212s.rewards.bungee.BungeeRewardManager;
 import com.nuno1212s.scheduler.BungeeScheduler;
+import com.nuno1212s.server_sender.BungeeSender;
 import com.nuno1212s.serverstatus.ServerManager;
 import lombok.Getter;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -47,6 +48,8 @@ public class BungeeMain extends Plugin {
         main.setRewardManager(new BungeeRewardManager());
         main.setModuleManager(new ModuleManager(this.getDataFolder(), getClass().getClassLoader()));
         main.getMessageManager().reloadMessages();
+
+        new BungeeSender(this);
     }
 
     @Override

@@ -49,7 +49,7 @@ public class Main extends Module {
         homeManager = new HomeManager();
         teleportTimer = new TeleportTimer();
 
-        WarpCommand cE = new WarpCommand();
+        WarpCommand cE = warpManager.getCommand();
         registerCommand(new String[]{"warp"}, cE);
         registerCommand(new String[]{"setwarp"}, cE);
         registerCommand(new String[]{"delwarp"}, cE);

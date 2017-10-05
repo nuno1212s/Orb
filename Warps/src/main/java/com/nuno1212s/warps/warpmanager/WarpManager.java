@@ -1,8 +1,14 @@
 package com.nuno1212s.warps.warpmanager;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.nuno1212s.main.BukkitMain;
 import com.nuno1212s.modulemanager.Module;
+import com.nuno1212s.util.typeadapters.LocationTypeAdapter;
+import com.nuno1212s.warps.commands.WarpCommand;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandMap;
@@ -20,6 +26,7 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,12 +41,17 @@ public class WarpManager {
 
     private File f;
 
-    private JSONObject file;
+    @Getter
+    @Setter
+    private WarpCommand command;
+
+    private Gson gson;
 
     public WarpManager(Module m) {
-        warps = new ArrayList<>();
         this.f = m.getFile("warps.json", false);
 
+        this.gson = new GsonBuilder().registerTypeAdapter(Location.class, new LocationTypeAdapter()).create();
+        command = new WarpCommand();
         load(f);
     }
 
@@ -49,26 +61,24 @@ public class WarpManager {
      */
     private void load(File f) {
         try (FileReader r = new FileReader(f)) {
-            this.file = (JSONObject) new JSONParser().parse(r);
 
-            file.forEach((warpName, warpData) -> {
-                warps.add(new Warp((JSONObject) warpData));
-            });
 
-        } catch (IOException | ParseException e) {
+            Type listType = new TypeToken<ArrayList<Warp>>(){}.getType();
+
+            this.warps = this.gson.fromJson(r, listType);
+
+            if (this.warps == null) {
+                this.warps = new ArrayList<>();
+            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void save() {
-        file = new JSONObject();
-
-        for (Warp warp : this.warps) {
-            file.put(warp.getWarpName(), warp.save());
-        }
 
         try (FileWriter r = new FileWriter(f)) {
-            file.writeJSONString(r);
+            gson.toJson(this.warps, r);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -77,9 +87,11 @@ public class WarpManager {
     public void registerWarp(String name, Location l, boolean delay, int delaySeconds, boolean console){
         if (getWarp(name) == null) {
             Warp w = new Warp(name, l.clone(), "warp." + name, delay, console, delaySeconds);
+
             if (!w.isRequiredConsole()) {
                 registerCommand(w.getWarpName());
             }
+
             this.warps.add(w);
         }
 
@@ -105,7 +117,7 @@ public class WarpManager {
 
         command.setAliases(Arrays.asList(aliases));
         getCommandMap().register(BukkitMain.getIns().getDescription().getName(), command);
-        BukkitMain.getIns().getCommand(aliases[0]).setExecutor(null);
+        BukkitMain.getIns().getCommand(aliases[0]).setExecutor(this.command);
     }
 
 

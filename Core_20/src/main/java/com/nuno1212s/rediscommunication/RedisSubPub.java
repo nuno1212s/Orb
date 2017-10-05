@@ -34,7 +34,7 @@ public class RedisSubPub extends JedisPubSub implements Runnable {
 
         long timeSent = Long.parseLong(split[1]);
 
-        Message msg = new Message(Base64.getDecoder().decode(split[2]));
+        Message msg = new Message(Base64.getDecoder().decode(split[2]), originalServer);
 
         //Still print out info, for debug
         System.out.println("REDIS(" + MainData.getIns().getServerManager().getServerName() + ") - ");

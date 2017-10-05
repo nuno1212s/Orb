@@ -82,14 +82,16 @@ public class RedisHandler {
                     "||" + System.currentTimeMillis() +
                     "||" + Base64.getEncoder().encodeToString(message);
 
-            MainData.getIns().getScheduler().runTaskAsync(() ->
-                    getConnection().publish("ServerData", messageBuilder)
+            MainData.getIns().getScheduler().runTaskAsync(() -> {
+                        try (Jedis j = getConnection()) {
+                            j.publish("ServerData", messageBuilder);
+                        }
+                    }
             );
         }
     }
 
     /**
-     *
      * @return
      */
     public Jedis getConnection() {

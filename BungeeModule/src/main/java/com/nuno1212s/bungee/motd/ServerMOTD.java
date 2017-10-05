@@ -33,6 +33,7 @@ public class ServerMOTD implements Listener {
     public ServerMOTD(File dataFolder) {
 
         dataFile = new File(dataFolder, "motd.json");
+        activeTimers = new ArrayList<>();
 
         reloadConfig();
 
@@ -43,15 +44,15 @@ public class ServerMOTD implements Listener {
 
     public void reloadConfig() {
 
+        this.motds = new HashMap<>();
+        this.activeTimers = new ArrayList<>();
+
         if (!dataFile.exists()) {
             try {
                 dataFile.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            motds = new HashMap<>();
-            activeTimers = new ArrayList<>();
 
         } else {
             JSONObject data;
@@ -62,8 +63,6 @@ public class ServerMOTD implements Listener {
                 return;
             }
 
-            this.motds = new HashMap<>();
-            this.activeTimers = new ArrayList<>();
 
             JSONObject motds = (JSONObject) data.get("MOTDS");
             motds.forEach((key, value) -> {

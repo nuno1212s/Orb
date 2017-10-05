@@ -69,6 +69,7 @@ public class Main extends Module {
         getProxy().getPluginManager().registerCommand(plugin, new TellCommand());
         getProxy().getPluginManager().registerCommand(plugin, new StaffChatCommand());
 
+
         ConcurrentMap<Object, Object> requestCache = CacheBuilder.newBuilder()
                 .expireAfterWrite(10, TimeUnit.MINUTES).build().asMap();
 

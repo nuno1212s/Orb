@@ -81,13 +81,14 @@ public class MySql {
 
             String stm = "CREATE TABLE IF NOT EXISTS playerData(UUID CHAR(40) NOT NULL PRIMARY KEY, " +
                     "GROUPDATA VARCHAR(100), " +
-                    "PLAYERNAME VARCHAR(16), " +
+                    "PLAYERNAME VARCHAR(16) NOT NULL, " +
                     "PREMIUM BOOL," +
                     "LASTLOGIN TIMESTAMP," +
                     "TELL BOOL," +
                     "CASH BIGINT," +
                     "REWARDSTOCLAIM VARCHAR(255)," +
-                    "PUNISHMENT VARCHAR(255))";
+                    "PUNISHMENT VARCHAR(255)," +
+                    "UNIQUE(PLAYERNAME))";
 
             st.execute(stm);
 
@@ -223,7 +224,12 @@ public class MySql {
 
                     String[] rewards = resultSet.getString("REWARDSTOCLAIM").split(",");
                     for (String reward : rewards) {
-                        toClaim.add(Integer.parseInt(reward));
+                        try {
+                            toClaim.add(Integer.parseInt(reward));
+                        } catch (NumberFormatException e) {
+                            System.out.println("Failed to load rewards for Player " + playerName);
+                            System.out.println(resultSet.getString("REWARDSTOCLAIM"));
+                        }
                     }
 
                     Punishment punishmentInstance;
@@ -401,6 +407,10 @@ public class MySql {
         }
     }
 
+    /**
+     * Get rewards for the bungee server
+     * @return
+     */
     public List<Reward> getBungeeRewards() {
         List<Reward> rewards = new ArrayList<>();
 

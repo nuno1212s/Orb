@@ -20,7 +20,6 @@ public class PunishmentsRedis implements RedisReceiver {
 
     @Override
     public void onReceived(Message message) {
-        System.out.println(Bukkit.isPrimaryThread());
         if (message.getChannel().equalsIgnoreCase(channel())) {
             if (message.getReason().equalsIgnoreCase("NEWPUNISHMENT")) {
                 JSONObject data = message.getData();

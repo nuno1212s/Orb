@@ -17,6 +17,7 @@ public class PlayerUpdateListener implements Listener {
     public void onUpdate(PlayerInformationUpdateEvent e) {
         PlayerData player = e.getPlayer();
         Player player1 = Bukkit.getPlayer(player.getPlayerID());
+
         if (player1 != null) {
             DisplayMain.getIns().getScoreboardManager().createScoreboard(player, player1);
         }

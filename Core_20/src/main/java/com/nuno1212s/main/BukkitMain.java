@@ -16,7 +16,7 @@ import com.nuno1212s.rediscommunication.RedisHandler;
 import com.nuno1212s.rewards.bukkit.BukkitRewardManager;
 import com.nuno1212s.scheduler.BukkitScheduler;
 import com.nuno1212s.serverstatus.ServerManager;
-import com.nuno1212s.util.BungeeSender;
+import com.nuno1212s.server_sender.BukkitSender;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
@@ -81,7 +81,7 @@ public class BukkitMain extends JavaPlugin {
 
         data.setMessageManager(new Messages(j));
         data.setRewardManager(new BukkitRewardManager());
-        new BungeeSender(this);
+        new BukkitSender(this);
         //Module manager has to be the last thing that is initialized
         data.setModuleManager(new ModuleManager(this.getDataFolder(), this.getClassLoader()));
         data.getMessageManager().reloadMessages();
@@ -95,7 +95,9 @@ public class BukkitMain extends JavaPlugin {
         MainData.getIns().getCommandRegister().registerCommand(new String[]{"reloadmessages"}, new ReloadMessages());
         MainData.getIns().getCommandRegister().registerCommand(new String[]{"server"}, new ServerSettingCommand());
         MainData.getIns().getCommandRegister().registerCommand(new String[]{"group"}, new GroupCommand());
+        MainData.getIns().getCommandRegister().registerCommand(new String[]{"server"}, new ServerCommand());
 
+        data.getServerManager().savePlayerCount(0, getServer().getMaxPlayers());
     }
 
     @Override

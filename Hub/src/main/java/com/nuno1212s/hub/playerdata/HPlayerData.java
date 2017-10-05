@@ -39,7 +39,7 @@ public class HPlayerData extends PlayerData {
         MainData.getIns().getScheduler().runTaskAsync(() -> {
             MainData.getIns().getMySql().savePlayer(this);
             Main.getIns().getMySqlManager().savePlayerData(this);
-            c.callback(null);
+            c.callback("");
         });
     }
 

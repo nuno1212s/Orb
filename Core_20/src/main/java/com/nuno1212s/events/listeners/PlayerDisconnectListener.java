@@ -21,6 +21,8 @@ public class PlayerDisconnectListener implements Listener {
 
         MainData.getIns().getPermissionManager().getPlayerPermissions().unregisterPermissions(e.getPlayer());
 
+        MainData.getIns().getServerManager().savePlayerCount(Bukkit.getOnlinePlayers().size() - 1, Bukkit.getMaxPlayers());
+
         if (!p.isShouldSave()) {
             MainData.getIns().getPlayerManager().removePlayer(p);
             return;
@@ -29,9 +31,6 @@ public class PlayerDisconnectListener implements Listener {
         p.save((o) ->
             MainData.getIns().getPlayerManager().removePlayer(p)
         );
-
-        MainData.getIns().getServerManager().savePlayerCount(Bukkit.getOnlinePlayers().size());
-
     }
 
 }

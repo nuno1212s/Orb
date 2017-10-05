@@ -28,6 +28,7 @@ public class MarketCommandManager extends CommandManager {
             MainData.getIns().getMessageManager().getMessage("NO_PERMISSION").sendTo(commandSender);
             return true;
         }
+
         if (args.length == 0) {
             ((Player) commandSender).openInventory(Main.getIns().getInventoryManager().getStartingInventory());
             return true;

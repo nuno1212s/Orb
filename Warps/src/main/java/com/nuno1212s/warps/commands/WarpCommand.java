@@ -33,8 +33,9 @@ public class WarpCommand implements CommandExecutor {
 
             Player p = (Player) commandSender;
 
-            String warp = args[1];
+            String warp = args[0];
             Warp w = Main.getIns().getWarpManager().getWarp(warp);
+
             if (w == null) {
                 MainData.getIns().getMessageManager().getMessage("WARP_DOES_NOT_EXIST").sendTo(commandSender);
                 return true;

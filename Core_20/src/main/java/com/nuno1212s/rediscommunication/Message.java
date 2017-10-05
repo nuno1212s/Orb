@@ -3,6 +3,8 @@ package com.nuno1212s.rediscommunication;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import com.nuno1212s.main.MainData;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -20,13 +22,17 @@ public class Message {
     private String channel, reason;
 
     @Getter
+    private String OGServer;
+
+    @Getter
     private JSONObject data;
 
     /**
      * Reads the message from the data
      * @param data
      */
-    public Message(byte[] data) {
+    public Message(byte[] data, String OGServer) {
+        this.OGServer = OGServer;
         ByteArrayDataInput dataInput = ByteStreams.newDataInput(data);
         this.channel = dataInput.readUTF();
         this.reason = dataInput.readUTF();
@@ -43,6 +49,7 @@ public class Message {
         this.channel = channel;
         this.reason = reason;
         this.data = data;
+        this.OGServer = MainData.getIns().getServerManager().getServerName();
     }
 
     public byte[] toByteArray() {

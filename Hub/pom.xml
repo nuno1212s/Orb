@@ -36,6 +36,13 @@
             <version>LATEST</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.nuno1212s</groupId>
+            <artifactId>NPCInbox</artifactId>
+            <version>1.0-BETA</version>
+            <scope>provided</scope>
+        </dependency>
         
     </dependencies>
 
