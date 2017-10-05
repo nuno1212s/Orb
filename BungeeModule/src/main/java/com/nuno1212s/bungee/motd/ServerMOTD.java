@@ -122,6 +122,7 @@ public class ServerMOTD implements Listener {
         if (this.motds.isEmpty()) {
             return "Default MOTD";
         }
+
         String s = this.motds.get(new Random().nextInt(this.motds.size()) + 1);
 
         for (Timer activeTimer : this.activeTimers) {

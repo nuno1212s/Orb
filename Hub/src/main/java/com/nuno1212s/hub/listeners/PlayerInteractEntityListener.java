@@ -14,7 +14,11 @@ public class PlayerInteractEntityListener implements Listener {
         if (e.getRightClicked() instanceof LivingEntity) {
             NPC npc = Main.getIns().getNpcManager().getNPC((LivingEntity) e.getRightClicked());
 
-            e.setCancelled(true);
+            if (npc == null) {
+                e.setCancelled(true);
+                return;
+            }
+
             npc.handleClick(e.getPlayer());
 
         }

@@ -3,6 +3,7 @@ package com.nuno1212s.hub.commands;
 import com.nuno1212s.hub.main.Main;
 import com.nuno1212s.hub.npcs.NPC;
 import com.nuno1212s.main.MainData;
+import net.citizensnpcs.api.CitizensAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -26,20 +27,39 @@ public class RegisterNPCCommand implements CommandExecutor {
 
         Player p = (Player) commandSender;
 
-        if (strings.length < 1) {
-            commandSender.sendMessage(ChatColor.RED + "You must specify the server the npc represents");
+        if (strings.length < 2) {
+            commandSender.sendMessage(ChatColor.RED + "/registernpc <server> <displayName>");
             return true;
         }
 
-        LivingEntity e = Main.getIns().getNpcManager().getEntity(p);
+        net.citizensnpcs.api.npc.NPC selected = CitizensAPI.getDefaultNPCSelector().getSelected(commandSender);
 
-        if (e == null) {
-            p.sendMessage(ChatColor.RED + "You are not looking at an entity");
+        if (selected == null) {
+            p.sendMessage(ChatColor.RED + "You must select an NPC");
             return true;
         }
 
-        NPC npc = Main.getIns().getNpcManager().addNPC(e, strings[0]);
+        StringBuilder builder = new StringBuilder();
+
+        for (int i = 1; i < strings.length; i++) {
+            builder.append(strings[i]);
+
+            if (i == strings.length - 1) {
+                continue;
+            }
+
+            builder.append(" ");
+        }
+
+        if (Main.getIns().getNpcManager().getNPC((LivingEntity) selected.getEntity()) != null) {
+            p.sendMessage(ChatColor.RED + "That NPC is already registered");
+            return true;
+        }
+
+        NPC npc = Main.getIns().getNpcManager().addNPC((LivingEntity) selected.getEntity(), strings[0], ChatColor.translateAlternateColorCodes('&', builder.toString()));
+
         npc.updateNPC();
+
         p.sendMessage(ChatColor.RED + "Registered NPC");
 
         return true;

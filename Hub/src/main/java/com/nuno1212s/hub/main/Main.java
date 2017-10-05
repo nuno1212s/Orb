@@ -61,6 +61,7 @@ public class Main extends Module {
 
         BukkitMain ins = BukkitMain.getIns();
         ins.getServer().getPluginManager().registerEvents(new PlayerInteractListener(), ins);
+        ins.getServer().getPluginManager().registerEvents(new PlayerInteractEntityListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new ServerInventoryClickListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new OptionsInventoryClickListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), ins);
@@ -68,6 +69,8 @@ public class Main extends Module {
         ins.getServer().getPluginManager().registerEvents(new PlayerDropItemListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new PlayerFoodChangeListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new WeatherChangeListener(), ins);
+
+        MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));
 
         registerCommand(new String[]{"getplayers"}, new GetPlayerCountCommand());
         registerCommand(new String[]{"registernpc"}, new RegisterNPCCommand());

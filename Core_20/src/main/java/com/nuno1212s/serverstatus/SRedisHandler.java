@@ -43,7 +43,7 @@ public class SRedisHandler {
 
             servers.forEach((serverName, playerCount) -> {
                 String[] player = playerCount.split("/");
-                serverPlayerCount.put(serverName, new Pair<>(Integer.parseInt(player[0]), Integer.parseInt(player[1])));
+                serverPlayerCount.put(serverName.toLowerCase(), new Pair<>(Integer.parseInt(player[0]), Integer.parseInt(player[1])));
             });
 
             return serverPlayerCount;

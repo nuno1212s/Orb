@@ -8,6 +8,18 @@
     <artifactId>Hub</artifactId>
     <version>0.1-ALPHA</version>
 
+    <repositories>
+        <repository>
+            <id>Citizens</id>
+            <url>http://repo.citizensnpcs.co/</url>
+        </repository>
+
+        <repository>
+            <id>filoghost-repo</id>
+            <url>http://novaguilds.pl/repo/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>com.nuno1212s</groupId>
@@ -43,7 +55,21 @@
             <version>1.0-BETA</version>
             <scope>provided</scope>
         </dependency>
-        
+
+        <dependency>
+            <groupId>com.gmail.filoghost</groupId>
+            <artifactId>holographicdisplays.api</artifactId>
+            <version>2.1.7</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/libs/HolographicDisplaysAPI_v2.1.7.jar</systemPath>
+        </dependency>
+
+        <dependency>
+            <groupId>net.citizensnpcs</groupId>
+            <artifactId>citizensapi</artifactId>
+            <version>2.0.16-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>

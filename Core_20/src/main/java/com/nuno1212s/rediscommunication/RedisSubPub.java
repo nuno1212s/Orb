@@ -30,6 +30,10 @@ public class RedisSubPub extends JedisPubSub implements Runnable {
 
         String[] split = message.split("\\|\\|");
 
+        if (split.length < 3) {
+            return;
+        }
+
         String originalServer = split[0];
 
         long timeSent = Long.parseLong(split[1]);

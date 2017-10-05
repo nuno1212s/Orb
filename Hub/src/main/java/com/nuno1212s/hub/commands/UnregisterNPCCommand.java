@@ -3,6 +3,7 @@ package com.nuno1212s.hub.commands;
 import com.nuno1212s.hub.main.Main;
 import com.nuno1212s.hub.npcs.NPC;
 import com.nuno1212s.main.MainData;
+import net.citizensnpcs.api.CitizensAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -26,19 +27,15 @@ public class UnregisterNPCCommand implements CommandExecutor {
 
         Player p = (Player) commandSender;
 
-        if (strings.length < 1) {
-            commandSender.sendMessage(ChatColor.RED + "You must specify the server the npc represents");
+        net.citizensnpcs.api.npc.NPC selected = CitizensAPI.getDefaultNPCSelector().getSelected(commandSender);
+
+        if (selected == null) {
+            p.sendMessage(ChatColor.RED + "You must select an NPC");
             return true;
         }
 
-        LivingEntity e = Main.getIns().getNpcManager().getEntity(p);
 
-        if (e == null) {
-            p.sendMessage(ChatColor.RED + "You are not looking at an entity");
-            return true;
-        }
-
-        NPC npc = Main.getIns().getNpcManager().getNPC(e);
+        NPC npc = Main.getIns().getNpcManager().getNPC((LivingEntity) selected.getEntity());
 
         if (npc == null) {
             p.sendMessage(ChatColor.RED + "That NPC is not registered");

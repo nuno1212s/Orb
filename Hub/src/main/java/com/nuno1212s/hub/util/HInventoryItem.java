@@ -35,6 +35,7 @@ public class HInventoryItem extends InventoryItem {
         ItemStack item = super.getItem().clone();
 
         Pair<Integer, Integer> serverPlayerCount = MainData.getIns().getServerManager().getPlayerCount(connectingServer);
+
         String playerCount = String.valueOf(serverPlayerCount.key());
         String maxPlayerCount = String.valueOf(serverPlayerCount.value());
 

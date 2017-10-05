@@ -31,7 +31,7 @@ public class Main extends Module {
         kitManager = new KitManager(this);
 
         registerCommand(new String[]{"class"}, new ClassCommandManager());
-        registerCommand(new String[]{"classes"}, new ClassesCommand());
+        registerCommand(new String[]{"classes", "kits", "kit"}, new ClassesCommand());
 
         MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));
 

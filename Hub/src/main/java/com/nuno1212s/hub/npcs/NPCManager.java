@@ -68,8 +68,8 @@ public class NPCManager {
      * @param entity The entity of the npc
      * @param connectingServer The server you are trying to connecting to
      */
-    public NPC addNPC(LivingEntity entity, String connectingServer) {
-        NPC e = new NPC(entity, connectingServer);
+    public NPC addNPC(LivingEntity entity, String connectingServer, String displayName) {
+        NPC e = new NPC(entity, connectingServer, displayName);
 
         this.registeredNPCS.add(e);
 
@@ -97,6 +97,7 @@ public class NPCManager {
      * @param c
      */
     public void removeNPC(NPC c) {
+        c.deleteNPC();
         this.registeredNPCS.remove(c);
     }
 

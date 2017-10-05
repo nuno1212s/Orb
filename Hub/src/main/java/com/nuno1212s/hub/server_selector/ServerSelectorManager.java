@@ -163,7 +163,7 @@ public class ServerSelectorManager {
     public void sendPlayerToServer(Player p, String serverName) {
         Pair<Integer, Integer> playerCount = MainData.getIns().getServerManager().getPlayerCount(serverName);
         if (playerCount.key() >= playerCount.value()) {
-            List<UUID> currentPlayerWaitingList = this.waitingList.getOrDefault(serverName, new ArrayList<>());
+            List<UUID> currentPlayerWaitingList = this.waitingList.getOrDefault(serverName.toLowerCase(), new ArrayList<>());
 
             if (currentPlayerWaitingList.contains(p.getUniqueId())) {
                 return;
@@ -171,7 +171,7 @@ public class ServerSelectorManager {
 
             currentPlayerWaitingList.add(p.getUniqueId());
 
-            this.waitingList.put(serverName, currentPlayerWaitingList);
+            this.waitingList.put(serverName.toLowerCase(), currentPlayerWaitingList);
 
             MainData.getIns().getMessageManager().getMessage("ADDED_TO_WAITING_LIST")
                     .format("%listPlace%", String.valueOf(currentPlayerWaitingList.size())).sendTo(p);

@@ -102,8 +102,8 @@ public class ServerManager {
      * @return
      */
     public Pair<Integer, Integer> getPlayerCount(String serverName) {
-        if (this.serverPlayerCounts.containsKey(serverName)) {
-            return this.serverPlayerCounts.get(serverName);
+        if (this.serverPlayerCounts.containsKey(serverName.toLowerCase())) {
+            return this.serverPlayerCounts.get(serverName.toLowerCase());
         }
 
         return new Pair<>(-1, -1);

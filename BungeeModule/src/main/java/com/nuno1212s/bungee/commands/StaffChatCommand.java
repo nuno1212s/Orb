@@ -4,9 +4,9 @@ import com.nuno1212s.bungee.loginhandler.SessionData;
 import com.nuno1212s.bungee.loginhandler.SessionHandler;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
-import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -48,9 +48,9 @@ public class StaffChatCommand extends Command {
             }
         }
 
-        BaseComponent[] baseComponents = TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', "&d[SC] " + data.getNameWithPrefix() + ":" + message.toString()));
+        BaseComponent[] baseComponents = TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', "&d[SC] " + data.getNameWithPrefix() + " : " + message.toString()));
 
-        for (ProxiedPlayer player : BungeeCord.getInstance().getPlayers()) {
+        for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
             PlayerData receivingPlayer = MainData.getIns().getPlayerManager().getPlayer(player.getUniqueId());
 
             if (receivingPlayer.getMainGroup().hasPermission("staff")) {
