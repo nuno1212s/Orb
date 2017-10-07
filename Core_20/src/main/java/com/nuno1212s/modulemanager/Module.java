@@ -33,7 +33,7 @@ public abstract class Module {
     @Getter
     private ModuleLoader initLoader;
 
-    public File getDataFolder() {
+    public final File getDataFolder() {
         File moduleFolder = MainData.getIns().getDataFolder();
         File dataFolder = new File(moduleFolder + File.separator + this.moduleName + File.separator);
         if (!dataFolder.exists()) {
@@ -48,7 +48,7 @@ public abstract class Module {
      * @param ins
      * @return
      */
-    public List<Module> getDependencies(ModuleManager ins) {
+    public final List<Module> getDependencies(ModuleManager ins) {
 
         ArrayList<Module> modules = new ArrayList<>();
 
@@ -71,7 +71,7 @@ public abstract class Module {
      * @param names The aliases of the command
      * @param commandExecutor The executor of the command (CommandExecutor in bukkit, Command in bungee)
      */
-    protected void registerCommand(String[] names, Object commandExecutor) {
+    protected final void registerCommand(String[] names, Object commandExecutor) {
         MainData.getIns().getCommandRegister().registerCommand(names, commandExecutor);
     }
 
@@ -81,7 +81,7 @@ public abstract class Module {
      * @param target
      * @param path
      */
-    protected void saveResource(File target, String path) {
+    protected final void saveResource(File target, String path) {
 
         if (!target.exists()) {
             try {
@@ -120,7 +120,7 @@ public abstract class Module {
      * @param isResource Is the file a resource of the module
      * @return
      */
-    public File getFile(String filePath, boolean isResource) {
+    public final File getFile(String filePath, boolean isResource) {
         File file = new File(getDataFolder(), filePath);
 
         if (!file.exists()) {
@@ -149,7 +149,7 @@ public abstract class Module {
      * @param path The path to the resource
      * @return
      */
-    private InputStream getResourceAsStream(String path) {
+    private final InputStream getResourceAsStream(String path) {
         URL resource = this.getInitLoader().getResource(path);
         if (resource == null) {
             return null;
@@ -165,7 +165,7 @@ public abstract class Module {
         return null;
     }
 
-    public void disable() {
+    public final void disable() {
         MainData.getIns().getModuleManager().getLoader().removeLoader(this.getInitLoader());
         this.initLoader.shutdown();
     }

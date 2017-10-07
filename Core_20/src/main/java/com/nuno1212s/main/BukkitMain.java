@@ -51,12 +51,14 @@ public class BukkitMain extends JavaPlugin {
         MainData data = new MainData();
 
         this.saveDefaultConfig();
+
         data.setEventCaller(new EventCaller() {
             @Override
             public void callUpdateInformationEvent(PlayerData data) {
                 Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(data));
             }
         });
+
         data.setDataFolder(this.getDataFolder());
         BukkitConfig config = new BukkitConfig(this.getConfig());
         data.setScheduler(new BukkitScheduler(this.getServer().getScheduler(), this));
@@ -93,7 +95,7 @@ public class BukkitMain extends JavaPlugin {
 
         MainData.getIns().getCommandRegister().registerCommand(new String[]{"cash"}, new CashCommand());
         MainData.getIns().getCommandRegister().registerCommand(new String[]{"reloadmessages"}, new ReloadMessages());
-        MainData.getIns().getCommandRegister().registerCommand(new String[]{"server"}, new ServerSettingCommand());
+        MainData.getIns().getCommandRegister().registerCommand(new String[]{"serversetting"}, new ServerSettingCommand());
         MainData.getIns().getCommandRegister().registerCommand(new String[]{"group"}, new GroupCommand());
         MainData.getIns().getCommandRegister().registerCommand(new String[]{"server"}, new ServerCommand());
 

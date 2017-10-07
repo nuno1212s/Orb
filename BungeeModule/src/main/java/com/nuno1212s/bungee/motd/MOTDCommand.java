@@ -1,9 +1,14 @@
 package com.nuno1212s.bungee.motd;
 
+import com.nuno1212s.bungee.loginhandler.SessionData;
+import com.nuno1212s.bungee.loginhandler.SessionHandler;
 import com.nuno1212s.bungee.main.Main;
+import com.nuno1212s.main.MainData;
+import com.nuno1212s.playermanager.PlayerData;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 
 import java.util.Map;
@@ -20,6 +25,21 @@ public class MOTDCommand extends Command {
 
     @Override
     public void execute(CommandSender commandSender, String[] args) {
+
+        if (commandSender instanceof ProxiedPlayer) {
+            PlayerData d = MainData.getIns().getPlayerManager().getPlayer(((ProxiedPlayer) commandSender).getUniqueId());
+
+            if (!d.getMainGroup().hasPermission("motd.edit")) {
+                return;
+            }
+
+            SessionData session = SessionHandler.getIns().getSession(((ProxiedPlayer) commandSender).getUniqueId());
+            if (session == null || !session.isAuthenticated()) {
+                commandSender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', "&cNão podes fazer este comando sem estar logado.")));
+                return;
+            }
+        }
+
         if (args.length == 0) {
             commandSender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "/motd <add/list/remove/addtimer>"));
             return;

@@ -45,6 +45,8 @@ public class PlayerJoinListener implements Listener {
                     .sendTo(Bukkit.getOnlinePlayers());
         }
 
+        e.getPlayer().teleport(e.getPlayer().getWorld().getSpawnLocation());
+
     }
 
 }

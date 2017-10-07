@@ -33,6 +33,11 @@ public class ChatListener implements Listener {
             }
 
             if (d instanceof ChatData) {
+                if (!((ChatData) d).shouldReceive() && !e.getPlayer().hasPermission("chat.override")) {
+                    MainData.getIns().getMessageManager().getMessage("CHAT_DISABLED").sendTo(e.getPlayer());
+                    return;
+                }
+
                 long lastUsage = ((ChatData) d).lastLocalChatUsage();
                 if (lastUsage + DisplayMain.getIns().getChatManager().getChatTimerLocal() > System.currentTimeMillis()
                         && !(e.getPlayer().hasPermission("chat.nocooldown") || e.getPlayer().hasPermission("chat.vipcooldown"))) {
@@ -42,12 +47,33 @@ public class ChatListener implements Listener {
                             .sendTo(e.getPlayer());
                     return;
                 }
+
                 ((ChatData) d).setLastLocalChatUsage(System.currentTimeMillis());
             }
 
             String message = e.getPlayer().hasPermission("chat.color") ? ChatColor.translateAlternateColorCodes('&', e.getMessage()) : e.getMessage();
             String playerName = d.getNameWithPrefix();
             String playerChat = playerName + DisplayMain.getIns().getChatManager().getSeparator() + message;
+
+            if (!DisplayMain.getIns().getChatManager().isLocalChatActivated()) {
+                Bukkit.getServer().getOnlinePlayers().forEach((player) -> {
+                    if (player.getUniqueId().equals(e.getPlayer().getUniqueId())) {
+                        player.sendMessage(playerChat);
+                        return;
+                    }
+
+                    PlayerData playerData = MainData.getIns().getPlayerManager().getPlayer(player.getUniqueId());
+
+                    if (playerData instanceof ChatData) {
+                        if (!((ChatData) playerData).shouldReceive()) {
+                            return;
+                        }
+                    }
+                    player.sendMessage(playerChat);
+
+                });
+                return;
+            }
 
             AtomicBoolean heard = new AtomicBoolean(false);
 
@@ -56,6 +82,15 @@ public class ChatListener implements Listener {
                             player.sendMessage(playerChat);
                             return;
                         }
+
+                        PlayerData playerData = MainData.getIns().getPlayerManager().getPlayer(player.getUniqueId());
+
+                        if (playerData instanceof ChatData) {
+                            if (!((ChatData) playerData).shouldReceive()) {
+                                return;
+                            }
+                        }
+
                         if (player.getWorld().getName().equalsIgnoreCase(e.getPlayer().getWorld().getName())) {
                             if (player.getLocation().distanceSquared(e.getPlayer().getLocation()) < DisplayMain.getIns().getChatManager().getRange()) {
                                 heard.set(true);

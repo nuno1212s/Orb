@@ -1,6 +1,8 @@
 package com.nuno1212s.bungee.main;
 
 import com.google.common.cache.CacheBuilder;
+import com.nuno1212s.bungee.automessenger.AutoMessageManager;
+import com.nuno1212s.bungee.automessenger.commands.MessageCommand;
 import com.nuno1212s.bungee.commands.RCommand;
 import com.nuno1212s.bungee.commands.StaffChatCommand;
 import com.nuno1212s.bungee.commands.StaffCommand;
@@ -46,6 +48,9 @@ public class Main extends Module {
     private MojangAPIConnector connector;
 
     @Getter
+    private AutoMessageManager autoMessageManager;
+
+    @Getter
     private ServerMOTD motdManager;
 
     @Override
@@ -56,6 +61,7 @@ public class Main extends Module {
         Config c = new BungeeConfig(BungeeMain.getIns(), new File(this.getDataFolder(), "config.yml"));
 
         motdManager = new ServerMOTD(this.getDataFolder());
+        autoMessageManager = new AutoMessageManager(this);
         getProxy().getPluginManager().registerListener(plugin, motdManager);
         getProxy().getPluginManager().registerListener(plugin, new LoginEvent());
         getProxy().getPluginManager().registerListener(plugin, new PlayerLoginEvent(this));
@@ -68,6 +74,7 @@ public class Main extends Module {
         getProxy().getPluginManager().registerCommand(plugin, new StaffCommand());
         getProxy().getPluginManager().registerCommand(plugin, new TellCommand());
         getProxy().getPluginManager().registerCommand(plugin, new StaffChatCommand());
+        getProxy().getPluginManager().registerCommand(plugin, new MessageCommand());
 
 
         ConcurrentMap<Object, Object> requestCache = CacheBuilder.newBuilder()
@@ -95,6 +102,7 @@ public class Main extends Module {
     @Override
     public void onDisable() {
         System.out.println("Saving");
+        this.autoMessageManager.save();
         this.motdManager.save();
     }
 }

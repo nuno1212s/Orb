@@ -45,16 +45,31 @@ public class PermissionManager {
         return g.getGroupType() == GroupType.GLOBAL
                 ||
                 (g.getGroupType() == GroupType.LOCAL
-                && g.getApplicableServer().equalsIgnoreCase(
+                        && g.getApplicableServer().equalsIgnoreCase(
                         MainData.getIns().getServerManager().getServerType()));
     }
 
     public Group getDefaultGroup() {
+
+        Group mostFitting = null;
+
+        /*
+        If the default group is LOCAL, it has a better priority than GLOBAL
+
+         */
+
         for (Group group : this.groups) {
             if (group.isDefaultGroup()) {
-                return group;
+                if (mostFitting != null) {
+                    if (mostFitting.getGroupType() == GroupType.GLOBAL && (group.getGroupType() == GroupType.LOCAL && isApplicable(group))) {
+                        mostFitting = group;
+                    }
+                } else {
+                    mostFitting = group;
+                }
             }
         }
+
         return null;
     }
 
@@ -75,7 +90,6 @@ public class PermissionManager {
         }
         return null;
     }
-
 
 
 }

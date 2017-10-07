@@ -63,8 +63,8 @@ public class ServerManager {
             return;
         }
 
-        this.serverName = (String) json.get("ServerName");
-        this.serverType = (String) json.get("ServerType");
+        this.serverName = (String) json.getOrDefault("ServerName", "");
+        this.serverType = (String) json.getOrDefault("ServerType", "");
 
         savePlayerCount(0, 0);
 
@@ -102,8 +102,10 @@ public class ServerManager {
      * @return
      */
     public Pair<Integer, Integer> getPlayerCount(String serverName) {
-        if (this.serverPlayerCounts.containsKey(serverName.toLowerCase())) {
-            return this.serverPlayerCounts.get(serverName.toLowerCase());
+        if (serverName != null) {
+            if (this.serverPlayerCounts.containsKey(serverName.toLowerCase())) {
+                return this.serverPlayerCounts.get(serverName.toLowerCase());
+            }
         }
 
         return new Pair<>(-1, -1);

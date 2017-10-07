@@ -13,4 +13,6 @@ public interface ChatData {
 
     void setLastLocalChatUsage(long time);
 
+    boolean shouldReceive();
+
 }

@@ -37,12 +37,14 @@ public class DisplayMain extends Module {
     public void onEnable() {
         ins = this;
         placeHolderManager = new PlaceHolderManager();
-        chatManager = new ChatManager();
+        chatManager = new ChatManager(this);
         scoreboardManager = new ScoreboardManager(getFile("scoreboard.json", true));
 
         MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));
 
-        registerCommand(new String[]{"g", "global"}, new GlobalChatCommand());
+        if (chatManager.isLocalChatActivated()) {
+            registerCommand(new String[]{"g", "global"}, new GlobalChatCommand());
+        }
         registerCommand(new String[]{"chat"}, new ChatControlCommand());
 
         Plugin ins = BukkitMain.getIns();

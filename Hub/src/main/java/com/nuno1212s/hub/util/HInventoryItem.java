@@ -33,7 +33,6 @@ public class HInventoryItem extends InventoryItem {
     @Override
     public ItemStack getItem() {
         ItemStack item = super.getItem().clone();
-
         Pair<Integer, Integer> serverPlayerCount = MainData.getIns().getServerManager().getPlayerCount(connectingServer);
 
         String playerCount = String.valueOf(serverPlayerCount.key());

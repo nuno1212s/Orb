@@ -5,10 +5,9 @@ import com.nuno1212s.bungee.loginhandler.SessionHandler;
 import com.nuno1212s.bungee.playermanager.BungeePlayerData;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
-import com.nuno1212s.playermanager.PlayerManager;
-import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -48,12 +47,12 @@ public class RCommand extends Command {
                 }
 
                 UUID v = playerData.getReply();
-                if (BungeeCord.getInstance().getPlayer(v) == null) {
+                if (ProxyServer.getInstance().getPlayer(v) == null) {
                     player.sendMessage(new ComponentBuilder("Jogador não encontrado.").color(ChatColor.RED).create());
                     return;
                 }
 
-                ProxiedPlayer victim = BungeeCord.getInstance().getPlayer(v);
+                ProxiedPlayer victim = ProxyServer.getInstance().getPlayer(v);
                 if (victim.isConnected()) {
 
                     PlayerData vpd = MainData.getIns().getPlayerManager().getPlayer(victim.getUniqueId());

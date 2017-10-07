@@ -1,0 +1,8 @@
+{
+  "ChatActivated": true,
+  "Separator": " » ",
+  "ChatCooldownGlobal": 15,
+  "ChatCooldownLocal": 3,
+  "Range": 25,
+  "LocalChatActivated": true
+}

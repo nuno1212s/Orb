@@ -119,9 +119,14 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer {
         this.lastLocalChat = time;
     }
 
+    @Override
+    public boolean shouldReceive() {
+        return true;
+    }
+
     /*
-    Kit plugin compat
-     */
+        Kit plugin compat
+         */
     public void setKitUsages(Map<Integer, Long> kitUsages) {
         this.kitUsages = kitUsages;
     }

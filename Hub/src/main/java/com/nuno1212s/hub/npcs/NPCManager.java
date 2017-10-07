@@ -45,6 +45,9 @@ public class NPCManager {
         }
     }
 
+    /**
+     * Save the NPCs
+     */
     public void save() {
         if (!this.dataFile.exists()) {
             try {

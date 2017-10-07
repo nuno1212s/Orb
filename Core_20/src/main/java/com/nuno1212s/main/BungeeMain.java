@@ -29,19 +29,24 @@ public class BungeeMain extends Plugin {
     public void onEnable() {
         ins = this;
         MainData main = new MainData();
+
         main.setBungee(true);
+
         if (!this.getDataFolder().exists()) {
             this.getDataFolder().mkdirs();
         }
+
         main.setEventCaller((o) -> {});
         main.setDataFolder(this.getDataFolder());
         File config = new File(this.getDataFolder(), "config.yml"),
                 messages = new File(this.getDataFolder(), "messages.json");
         main.setScheduler(new BungeeScheduler(this.getProxy().getScheduler(), this));
+
         BungeeConfig bungeeConfig = new BungeeConfig(this, config);
+
         main.setMySql(new MySql(bungeeConfig));
-        main.setMessageManager(new Messages(messages));
         main.setRedisHandler(new RedisHandler(bungeeConfig));
+        main.setMessageManager(new Messages(messages));
         main.setServerManager(new ServerManager(this.getDataFolder()));
         main.setPermissionManager(new PermissionManager(false));
         main.setPlayerManager(new PlayerManager());

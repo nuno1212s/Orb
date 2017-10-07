@@ -73,6 +73,10 @@ public class WarpManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        for (Warp w : this.warps) {
+            registerCommand(w.getWarpName());
+        }
     }
 
     public void save() {

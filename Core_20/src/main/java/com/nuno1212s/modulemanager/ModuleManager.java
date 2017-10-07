@@ -121,10 +121,10 @@ public class ModuleManager {
             for (Module module : moduleSorted) {
                 try {
                     module.onDisable();
-                    clonedModules.remove(module);
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
+                    clonedModules.remove(module);
                     module.setEnabled(false);
                     module.disable();
                 }

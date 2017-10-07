@@ -1,5 +1,6 @@
 package com.nuno1212s.hub.playerdata;
 
+import com.nuno1212s.displays.player.ChatData;
 import com.nuno1212s.hub.main.Main;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.Group;
@@ -12,11 +13,13 @@ import lombok.Setter;
 /**
  * Player Data
  */
-public class HPlayerData extends PlayerData {
+public class HPlayerData extends PlayerData implements ChatData {
 
     @Getter
     @Setter
     private boolean chatEnabled = true, playerShown = false;
+
+    private long lastGlobalChatUsage, lastLocalChatUsage;
 
     public HPlayerData(PlayerData d, boolean chatEnabled, boolean playerShown) {
         super(d);
@@ -46,5 +49,30 @@ public class HPlayerData extends PlayerData {
     @Override
     public Group getRepresentingGroup() {
         return getMainGroup();
+    }
+
+    @Override
+    public void setLastGlobalChatUsage(long time) {
+        this.lastGlobalChatUsage = time;
+    }
+
+    @Override
+    public void setLastLocalChatUsage(long time) {
+        this.lastLocalChatUsage = time;
+    }
+
+    @Override
+    public long lastGlobalChatUsage() {
+        return lastGlobalChatUsage;
+    }
+
+    @Override
+    public long lastLocalChatUsage() {
+        return lastLocalChatUsage;
+    }
+
+    @Override
+    public boolean shouldReceive() {
+        return this.chatEnabled;
     }
 }

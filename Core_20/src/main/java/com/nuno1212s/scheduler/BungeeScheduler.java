@@ -28,7 +28,7 @@ public class BungeeScheduler implements Scheduler {
 
     @Override
     public void runTaskLater(Runnable r, long ticks) {
-        scheduler.schedule(p, r, ticks / 20, TimeUnit.SECONDS);
+        scheduler.schedule(p, r, ticks * 50, TimeUnit.MILLISECONDS);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class BungeeScheduler implements Scheduler {
 
     @Override
     public void runTaskTimer(Runnable r, long initDelay, long delay) {
-        scheduler.schedule(p, r, initDelay / 20, delay / 20, TimeUnit.SECONDS);
+        scheduler.schedule(p, r, initDelay * 50, delay * 50, TimeUnit.MILLISECONDS);
     }
 
     @Override
