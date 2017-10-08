@@ -55,7 +55,6 @@ public class PermissionManager {
 
         /*
         If the default group is LOCAL, it has a better priority than GLOBAL
-
          */
 
         for (Group group : this.groups) {
@@ -70,7 +69,7 @@ public class PermissionManager {
             }
         }
 
-        return null;
+        return mostFitting;
     }
 
     public Group getGroup(short groupID) {

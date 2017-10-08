@@ -57,6 +57,9 @@ public class PlayerJoinListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void corePlayerJoin(PlayerJoinEvent e) {
         PlayerData d = MainData.getIns().getPlayerManager().validatePlayerJoin(e.getPlayer().getUniqueId());
+
+        d.setPlayerReference(e.getPlayer());
+
         MainData.getIns().getPermissionManager().getPlayerPermissions().injectPermission(e.getPlayer(), d);
         MainData.getIns().getServerManager().savePlayerCount(Bukkit.getOnlinePlayers().size(), Bukkit.getMaxPlayers());
     }

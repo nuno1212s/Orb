@@ -52,55 +52,16 @@ public class ChatListener implements Listener {
             }
 
             String message = e.getPlayer().hasPermission("chat.color") ? ChatColor.translateAlternateColorCodes('&', e.getMessage()) : e.getMessage();
-            String playerName = d.getNameWithPrefix();
-            String playerChat = playerName + DisplayMain.getIns().getChatManager().getSeparator() + message;
+
+            boolean heard;
 
             if (!DisplayMain.getIns().getChatManager().isLocalChatActivated()) {
-                Bukkit.getServer().getOnlinePlayers().forEach((player) -> {
-                    if (player.getUniqueId().equals(e.getPlayer().getUniqueId())) {
-                        player.sendMessage(playerChat);
-                        return;
-                    }
-
-                    PlayerData playerData = MainData.getIns().getPlayerManager().getPlayer(player.getUniqueId());
-
-                    if (playerData instanceof ChatData) {
-                        if (!((ChatData) playerData).shouldReceive()) {
-                            return;
-                        }
-                    }
-                    player.sendMessage(playerChat);
-
-                });
-                return;
+                heard = DisplayMain.getIns().getChatManager().sendMessage(message, d, e.getPlayer().getLocation(), true);
+            } else {
+                heard = DisplayMain.getIns().getChatManager().sendMessage(message, d, e.getPlayer().getLocation(), false);
             }
 
-            AtomicBoolean heard = new AtomicBoolean(false);
-
-            Bukkit.getServer().getOnlinePlayers().forEach(player -> {
-                        if (player.getUniqueId().equals(e.getPlayer().getUniqueId())) {
-                            player.sendMessage(playerChat);
-                            return;
-                        }
-
-                        PlayerData playerData = MainData.getIns().getPlayerManager().getPlayer(player.getUniqueId());
-
-                        if (playerData instanceof ChatData) {
-                            if (!((ChatData) playerData).shouldReceive()) {
-                                return;
-                            }
-                        }
-
-                        if (player.getWorld().getName().equalsIgnoreCase(e.getPlayer().getWorld().getName())) {
-                            if (player.getLocation().distanceSquared(e.getPlayer().getLocation()) < DisplayMain.getIns().getChatManager().getRange()) {
-                                heard.set(true);
-                                player.sendMessage(playerChat);
-                            }
-                        }
-                    }
-            );
-
-            if (!heard.get()) {
+            if (!heard) {
                 MainData.getIns().getMessageManager().getMessage("NO_ONE_CLOSE").sendTo(e.getPlayer());
             }
         } else {

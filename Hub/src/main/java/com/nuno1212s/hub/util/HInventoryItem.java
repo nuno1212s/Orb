@@ -34,13 +34,18 @@ public class HInventoryItem extends InventoryItem {
     public ItemStack getItem() {
         ItemStack item = super.getItem().clone();
         Pair<Integer, Integer> serverPlayerCount = MainData.getIns().getServerManager().getPlayerCount(connectingServer);
+        Map<String, String> placeHolders = new HashMap<>();
+
+        if (serverPlayerCount.getValue() < 0) {
+            String serverOffline = MainData.getIns().getMessageManager().getMessage("SERVER_OFFLINE").toString();
+            placeHolders.put("%serverStatus%", serverOffline);
+            ItemUtils.formatItem(item, placeHolders);
+        }
 
         String playerCount = String.valueOf(serverPlayerCount.key());
         String maxPlayerCount = String.valueOf(serverPlayerCount.value());
 
-        Map<String, String> placeHolders = new HashMap<>();
-        placeHolders.put("%playerCount%", playerCount);
-        placeHolders.put("%maxPlayers%", maxPlayerCount);
+        placeHolders.put("%serverStatus%", playerCount + "/" + maxPlayerCount);
 
         return ItemUtils.formatItem(item, placeHolders);
     }

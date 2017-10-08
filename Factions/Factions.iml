@@ -38,9 +38,18 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Maven: com.massivecraft:Factions:2.13.1">
+      <library name="Maven: com.massivecraft.factions:Factions:2.13.1">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/src/main/libs/Factions.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: com.massivecraft.massivecore:MassiveCore:2.13.2-SNAPSHOT">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/src/main/libs/MassiveCore.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

@@ -1,10 +1,12 @@
 package com.nuno1212s.playermanager;
 
 import com.google.common.cache.CacheBuilder;
+import com.nuno1212s.economy.EconomyRedisHandler;
 import com.nuno1212s.events.PlayerInformationLoadEvent;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.util.PlayerGroupData;
 import com.nuno1212s.util.Pair;
+import lombok.Getter;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -16,11 +18,15 @@ public class PlayerManager {
 
     private final Set<PlayerData> players;
 
-    private Map<Object, Object> cache;
+    private final Map<Object, Object> cache;
+
+    @Getter
+    private EconomyRedisHandler economyRedisHandler;
 
     public PlayerManager() {
         players = Collections.synchronizedSet(new HashSet<>());
         cache = CacheBuilder.newBuilder().expireAfterWrite(5, TimeUnit.SECONDS).build().asMap();
+        economyRedisHandler = new EconomyRedisHandler();
     }
 
     /**

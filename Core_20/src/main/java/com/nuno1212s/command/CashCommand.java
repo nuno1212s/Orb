@@ -1,10 +1,8 @@
 package com.nuno1212s.command;
 
-import com.nuno1212s.events.PlayerInformationUpdateEvent;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.Pair;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -79,7 +77,6 @@ public class CashCommand implements CommandExecutor {
                         }
 
                         d.setCash(cash);
-                        Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(d));
 
                         MainData.getIns().getMessageManager().getMessage("CASH_SET_OTHER")
                                 .format("%cashAmount%", String.valueOf(cash))
@@ -120,7 +117,6 @@ public class CashCommand implements CommandExecutor {
                         }
 
                         d.setCash(d.getCash() + cash);
-                        Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(d));
 
                         MainData.getIns().getMessageManager().getMessage("CASH_ADD_OTHER")
                                 .format("%cashAmount%", String.valueOf(cash))
@@ -160,7 +156,6 @@ public class CashCommand implements CommandExecutor {
                         }
 
                         d.setCash(d.getCash() - cash);
-                        Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(d));
 
                         MainData.getIns().getMessageManager().getMessage("CASH_REMOVE_OTHER")
                                 .format("%cashAmount%", String.valueOf(cash))

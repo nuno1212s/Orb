@@ -87,7 +87,7 @@ public class ModuleLoader extends URLClassLoader {
         String mainClassPath = yml.getString("MainClass");
 
         try {
-            Class toLoad = Class.forName(mainClassPath, true, this);
+            Class toLoad = Class.forName(mainClassPath, false, this);
             Class<? extends Module> subClass;
 
             try {

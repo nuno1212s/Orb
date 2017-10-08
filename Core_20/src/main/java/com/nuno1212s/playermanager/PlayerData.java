@@ -10,6 +10,7 @@ import lombok.*;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,6 +41,11 @@ public abstract class PlayerData {
     protected Punishment punishment;
 
     private boolean shouldSave = true;
+
+    /**
+     * Use a weak reference to the player class to avoid any sort of memory leaks
+     */
+    private WeakReference<Object> playerReference;
 
     public PlayerData(UUID playerID, PlayerGroupData groups, String playerName, long cash, long lastLogin, boolean premium, List<Integer> toClaim, Punishment punishment) {
         this.playerID = playerID;
@@ -125,7 +131,7 @@ public abstract class PlayerData {
      * All classes that extend Player Data should override this method and do their own
      * form of saving player data
      *
-     * The {@link Callback#callback(Object...)} should be called when the player data is finished saving
+     * The {@link Callback#callback(Object)} should be called when the player data is finished saving
      *
      * @param c The callback for when it is done saving
      */
@@ -187,10 +193,10 @@ public abstract class PlayerData {
         this.cash = cash;
 
         if (shouldUseRedis) {
-            MainData.getIns().getRedisHandler().sendMessage(new byte[0]);
+            MainData.getIns().getPlayerManager().getEconomyRedisHandler().sendCashUpdate(getPlayerID(), cash);
         }
 
-        if (MainData.getIns().getEventCaller() != null) {
+        if (MainData.getIns().getEventCaller() != null && isPlayerOnServer()) {
             MainData.getIns().getEventCaller().callUpdateInformationEvent(this);
         }
     }
@@ -262,4 +268,36 @@ public abstract class PlayerData {
         }
         return builder.toString();
     }
+
+    /**
+     * Set the player reference
+     * @param playerReference
+     */
+    public void setPlayerReference(Object playerReference) {
+        this.playerReference = new WeakReference<>(playerReference);
+    }
+
+    /**
+     * Get the player reference
+     *
+     * @param playerType The type of player stored
+     * @param <T>
+     * @return
+     */
+    public <T> T getPlayerReference(Class<T> playerType) {
+        if (this.playerReference == null) {
+            return null;
+        }
+
+        if (this.playerReference.get() == null) {
+            return null;
+        }
+
+        return playerType.cast(this.playerReference.get());
+    }
+
+    public boolean isPlayerOnServer() {
+        return this.playerReference != null && this.playerReference.get() != null;
+    }
+
 }

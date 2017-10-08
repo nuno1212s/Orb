@@ -4,6 +4,7 @@ import com.nuno1212s.displays.chat.ChatListener;
 import com.nuno1212s.displays.chat.ChatManager;
 import com.nuno1212s.displays.chat.GlobalChatCommand;
 import com.nuno1212s.displays.commands.ChatControlCommand;
+import com.nuno1212s.displays.commands.ReloadConfigCommand;
 import com.nuno1212s.displays.listeners.PlayerJoinListener;
 import com.nuno1212s.displays.placeholders.PlaceHolderManager;
 import com.nuno1212s.displays.scoreboard.ScoreboardManager;
@@ -45,6 +46,7 @@ public class DisplayMain extends Module {
         if (chatManager.isLocalChatActivated()) {
             registerCommand(new String[]{"g", "global"}, new GlobalChatCommand());
         }
+        registerCommand(new String[]{"chatreload"}, new ReloadConfigCommand());
         registerCommand(new String[]{"chat"}, new ChatControlCommand());
 
         Plugin ins = BukkitMain.getIns();

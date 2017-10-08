@@ -92,6 +92,12 @@ public class NPC {
         hologram.appendTextLine(displayName);
         Pair<Integer, Integer> playerCount = MainData.getIns().getServerManager().getPlayerCount(this.connectingServer);
 
+        if (playerCount.getValue() < 0) {
+            String serverOffline = MainData.getIns().getMessageManager().getMessage("SERVER_OFFLINE").toString();
+            hologram.appendTextLine(serverOffline);
+            return hologram;
+        }
+
         Message server_player_count = MainData.getIns().getMessageManager().getMessage("SERVER_PLAYER_COUNT");
         String name = server_player_count.format("%playerAmount%", String.valueOf(playerCount.key()))
                 .format("%maxplayers%", String.valueOf(playerCount.value())).toString();
@@ -117,9 +123,15 @@ public class NPC {
 
         Pair<Integer, Integer> playerCount = MainData.getIns().getServerManager().getPlayerCount(this.connectingServer);
 
-        Message server_player_count = MainData.getIns().getMessageManager().getMessage("SERVER_PLAYER_COUNT");
-        String name = server_player_count.format("%playerAmount%", String.valueOf(playerCount.key()))
-                .format("%maxplayers%", String.valueOf(playerCount.value())).toString();
+        String name;
+
+        if (playerCount.getValue() < 0) {
+            name = MainData.getIns().getMessageManager().getMessage("SERVER_OFFLINE").toString();
+        } else {
+            Message server_player_count = MainData.getIns().getMessageManager().getMessage("SERVER_PLAYER_COUNT");
+            name = server_player_count.format("%playerAmount%", String.valueOf(playerCount.key()))
+                    .format("%maxplayers%", String.valueOf(playerCount.value())).toString();
+        }
 
         if (this.hologram == null) {
             this.hologram = getCorrespondingHologram();

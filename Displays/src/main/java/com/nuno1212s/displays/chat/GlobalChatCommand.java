@@ -56,12 +56,8 @@ public class GlobalChatCommand implements CommandExecutor {
         }
 
         String finalMessage = commandSender.hasPermission("chat.color") ? ChatColor.translateAlternateColorCodes('&', message.toString()) : message.toString();
-        String playerChat = data.getNameWithPrefix() + DisplayMain.getIns().getChatManager().getSeparator() + finalMessage;
 
-
-        Bukkit.getOnlinePlayers().forEach(player ->
-            player.sendMessage(playerChat)
-        );
+        DisplayMain.getIns().getChatManager().sendMessage(finalMessage, data, ((Player) commandSender).getLocation(), true);
 
         return true;
     }

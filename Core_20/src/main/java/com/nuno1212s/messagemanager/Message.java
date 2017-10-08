@@ -83,14 +83,16 @@ public class Message {
 
         if(!Bukkit.isPrimaryThread()) {
             MainData.getIns().getScheduler().runTask(() -> {
-                Player p = Bukkit.getPlayer(d.getPlayerID());
+                Player p = d.getPlayerReference(Player.class);
+
                 if (p == null) {
                     return;
                 }
+
                 send(p);
             });
         } else {
-            Player p = Bukkit.getPlayer(d.getPlayerID());
+            Player p = d.getPlayerReference(Player.class);
             if (p == null) {
                 return;
             }

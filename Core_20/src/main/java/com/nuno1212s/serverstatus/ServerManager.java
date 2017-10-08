@@ -37,7 +37,7 @@ public class ServerManager {
     public ServerManager(File dataFolder) {
         this.dataFile = new File(dataFolder, "serverInfo.json");
         this.serverPlayerCounts = new HashMap<>();
-        this.redisHandler = new SRedisHandler();
+        this.redisHandler = new SRedisHandler(this);
         this.senderRedisHandler = new SenderRedisHandler();
 
         if (!dataFile.exists()) {
@@ -68,11 +68,12 @@ public class ServerManager {
 
         savePlayerCount(0, 0);
 
+
         MainData.getIns().getScheduler().runTaskTimerAsync(() -> {
             fetchServerData((o) -> {
 
             });
-        }, 0, 5);
+        }, 1, 5);
     }
 
     /**

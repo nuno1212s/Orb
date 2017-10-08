@@ -9,7 +9,9 @@ import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.Callback;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.entity.Player;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Map;
 

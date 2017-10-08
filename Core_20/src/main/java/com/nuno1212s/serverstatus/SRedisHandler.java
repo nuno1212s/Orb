@@ -2,12 +2,16 @@ package com.nuno1212s.serverstatus;
 
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.util.Pair;
+import lombok.AllArgsConstructor;
 import redis.clients.jedis.Jedis;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@AllArgsConstructor
 public class SRedisHandler {
+
+    private ServerManager serverManager;
 
     /**
      * Update the player count of the current server
@@ -17,7 +21,7 @@ public class SRedisHandler {
     public void updatePlayerCount(Pair<Integer, Integer> playerCount) {
         try (Jedis redisConnection = MainData.getIns().getRedisHandler().getConnection()) {
             redisConnection.hset("ServerPlayerCount",
-                    MainData.getIns().getServerManager().getServerName(),
+                    serverManager.getServerName(),
                     String.valueOf(playerCount.key()) + "/" + String.valueOf(playerCount.value()));
         }
     }
@@ -27,7 +31,7 @@ public class SRedisHandler {
      */
     public void removePlayerCount() {
         try (Jedis redisConnection = MainData.getIns().getRedisHandler().getConnection()) {
-            redisConnection.hdel("ServerPlayerCount", MainData.getIns().getServerManager().getServerName());
+            redisConnection.hdel("ServerPlayerCount", serverManager.getServerName());
         }
     }
 
