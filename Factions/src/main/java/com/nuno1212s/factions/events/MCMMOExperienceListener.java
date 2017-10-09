@@ -18,9 +18,9 @@ public class MCMMOExperienceListener implements Listener {
     public void onExpReceive(McMMOPlayerXpGainEvent e) {
         PlayerData data = MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
         double multiplier = Main.getIns().getBoosterManager().getFinalMultiplierForPlayer(data);
-        int xpGained = e.getXpGained(), newXP;
+        float xpGained = e.getRawXpGained(), newXP;
         newXP = (int) Math.floor(xpGained * multiplier);
-        e.setXpGained(newXP);
+        e.setRawXpGained(newXP);
         MainData.getIns().getMessageManager().getMessage("RECEIVED_MCMMO_XP")
                 .format("%xp%", String.valueOf(newXP))
                 .format("%skill%", LocaleLoader.getString(StringUtils.getCapitalized(e.getSkill().name()) + ".SkillName"))

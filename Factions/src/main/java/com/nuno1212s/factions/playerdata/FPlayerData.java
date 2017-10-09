@@ -5,17 +5,17 @@ import com.nuno1212s.displays.player.ChatData;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.Group;
 import com.nuno1212s.permissionmanager.util.PlayerGroupData;
+import com.nuno1212s.enderchest.playerdata.EnderChestData;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.Callback;
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
-import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Map;
 
-public class FPlayerData extends PlayerData implements ChatData, KitPlayer {
+public class FPlayerData extends PlayerData implements ChatData, KitPlayer, EnderChestData {
 
     @Getter
     private PlayerGroupData serverGroupData;
@@ -32,12 +32,15 @@ public class FPlayerData extends PlayerData implements ChatData, KitPlayer {
     @Getter
     private List<Integer> privateKits;
 
-    public FPlayerData(PlayerData original, PlayerGroupData serverGroup, long coins, Map<Integer, Long> kitUsages, List<Integer> privateKits) {
+    private ItemStack[] enderChest;
+
+    public FPlayerData(PlayerData original, PlayerGroupData serverGroup, long coins, Map<Integer, Long> kitUsages, List<Integer> privateKits, String enderChest) {
         super(original);
         this.serverGroupData = serverGroup;
         this.coins = coins;
         this.kitUsages = kitUsages;
         this.privateKits = privateKits;
+        this.enderChest = EnderChestData.inventoryFromJSON(enderChest);
     }
 
     @Override
@@ -143,4 +146,13 @@ public class FPlayerData extends PlayerData implements ChatData, KitPlayer {
         return this.privateKits.contains(kitID);
     }
 
+    @Override
+    public ItemStack[] getItems() {
+        return this.enderChest;
+    }
+
+    @Override
+    public void updateEnderChestData(ItemStack[] items) {
+        this.enderChest = items;
+    }
 }
