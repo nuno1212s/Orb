@@ -21,7 +21,7 @@ public class EnderChestManager {
     private String inventoryName;
 
     public EnderChestManager(Module m) {
-        File configFile = m.getFile("config.yml", true);
+        File configFile = m.getFile("config.json", true);
 
         try (FileReader r = new FileReader(configFile)) {
 
@@ -45,13 +45,13 @@ public class EnderChestManager {
     public Inventory getEnderChestFor(Player p, EnderChestData playerData) {
 
         int enderChestSize = getSizeForPlayer(p);
-        if (enderChestSize != playerData.getItems().length) {
-            playerData.updateEnderChestData(EnderChestData.expandInventory(playerData.getItems(), enderChestSize));
+        if (enderChestSize != playerData.getEnderChest().length) {
+            playerData.updateEnderChestData(EnderChestData.expandInventory(playerData.getEnderChest(), enderChestSize));
         }
 
-        Inventory inventory = Bukkit.getServer().createInventory(null, playerData.getItems().length, inventoryName);
+        Inventory inventory = Bukkit.getServer().createInventory(null, playerData.getEnderChest().length, inventoryName);
 
-        inventory.setContents(playerData.getItems());
+        inventory.setContents(playerData.getEnderChest());
 
         return inventory;
     }
@@ -62,7 +62,7 @@ public class EnderChestManager {
      * @param p
      * @return
      */
-    private int getSizeForPlayer(Player p) {
+    public int getSizeForPlayer(Player p) {
         if (p.hasPermission("ec.54")) {
             return 54;
         } else if (p.hasPermission("ec.45")) {

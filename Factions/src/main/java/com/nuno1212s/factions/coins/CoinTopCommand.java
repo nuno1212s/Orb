@@ -1,5 +1,6 @@
 package com.nuno1212s.factions.coins;
 
+import com.nuno1212s.factions.main.Main;
 import com.nuno1212s.factions.playerdata.FPlayerData;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
@@ -17,8 +18,7 @@ class CoinTopCommand {
 
     static LinkedHashMap<String, Long> getCoinTop() {
 
-        LinkedHashMap<UUID, Long> dataBaseEntries = new LinkedHashMap<>(); //DisplayMain.getIns().getMysql().getCoinTop(10);
-        // TODO: 02/10/2017 Add mysql coin top
+        LinkedHashMap<UUID, Long> dataBaseEntries = Main.getIns().getMysql().getCoinTop(10); //DisplayMain.getIns().getMysql().getCoinTop(10);
 
         List<PlayerData> players = MainData.getIns().getPlayerManager().getPlayers();
 

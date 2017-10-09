@@ -26,12 +26,4 @@ public class PlayerJoinListener implements Listener {
         e.setPlayerInfo(data);
     }
 
-    @EventHandler
-    public void onJoin(PlayerJoinEvent e) {
-        FPlayerData player = (FPlayerData) MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
-        player.setPlayerReference(e.getPlayer());
-
-    }
-
-
 }

@@ -2,6 +2,7 @@ package com.nuno1212s.factions.playerdata;
 
 import com.nuno1212s.classes.player.KitPlayer;
 import com.nuno1212s.displays.player.ChatData;
+import com.nuno1212s.factions.main.Main;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.Group;
 import com.nuno1212s.permissionmanager.util.PlayerGroupData;
@@ -68,7 +69,7 @@ public class FPlayerData extends PlayerData implements ChatData, KitPlayer, Ende
     public void save(Callback c) {
         MainData.getIns().getScheduler().runTaskAsync(() -> {
             MainData.getIns().getMySql().savePlayer(this);
-
+            Main.getIns().getMysql().savePlayerData(this);
             c.callback(null);
         });
     }
@@ -147,7 +148,7 @@ public class FPlayerData extends PlayerData implements ChatData, KitPlayer, Ende
     }
 
     @Override
-    public ItemStack[] getItems() {
+    public ItemStack[] getEnderChest() {
         return this.enderChest;
     }
 

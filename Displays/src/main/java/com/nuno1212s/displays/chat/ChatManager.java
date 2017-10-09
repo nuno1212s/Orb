@@ -105,7 +105,7 @@ public class ChatManager {
 
         for (String hoverElement : hoverElements) {
             builder.append(DisplayMain.getIns().getPlaceHolderManager().format(hoverElement, data));
-            if (++current < hoverElements.size() - 1)
+            if (++current < hoverElements.size())
                 builder.append("\n");
         }
 

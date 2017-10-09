@@ -1,8 +1,8 @@
 package com.nuno1212s.enderchest.listeners;
 
-import com.nuno1212s.main.Main;
-import com.nuno1212s.main.MainData;
+import com.nuno1212s.enderchest.main.Main;
 import com.nuno1212s.enderchest.playerdata.EnderChestData;
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

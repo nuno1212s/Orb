@@ -1,6 +1,7 @@
 package com.nuno1212s.factions.coins;
 
 import com.nuno1212s.events.PlayerInformationUpdateEvent;
+import com.nuno1212s.factions.main.Main;
 import com.nuno1212s.factions.playerdata.FPlayerData;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.messagemanager.Message;
@@ -232,8 +233,7 @@ public class CoinCommand implements CommandExecutor {
         }
 
         if (loaded.getValue()) {
-            //d = DisplayMain.getIns().getMysql().loadPlayerData(d);
-            // TODO: 02/10/2017 Load player data
+            d = Main.getIns().getMysql().getPlayerData(d);
         }
         return (FPlayerData) d;
     }
