@@ -41,6 +41,7 @@ public class Main extends Module {
         ins.getServer().getPluginManager().registerEvents(new MCMMOExperienceListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new FactionCreateListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new PowerChangeListener(), ins);
+        ins.getServer().getPluginManager().registerEvents(new PlayerDeathListener(), ins);
 
         DisplayMain.getIns().getPlaceHolderManager().registerPlaceHolder("%coins%", (player) ->
                 String.valueOf(((FPlayerData) player).getCoins())

@@ -8,6 +8,7 @@ import com.nuno1212s.displays.commands.ReloadConfigCommand;
 import com.nuno1212s.displays.listeners.PlayerJoinListener;
 import com.nuno1212s.displays.placeholders.PlaceHolderManager;
 import com.nuno1212s.displays.scoreboard.ScoreboardManager;
+import com.nuno1212s.displays.tab.TabManager;
 import com.nuno1212s.main.BukkitMain;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
@@ -19,7 +20,7 @@ import org.bukkit.plugin.Plugin;
 /**
  * DisplayMain module class
  */
-@ModuleData(name = "Displays", version = "1.0", dependencies = {})
+@ModuleData(name = "Displays", version = "1.0")
 public class DisplayMain extends Module {
 
     @Getter
@@ -32,6 +33,9 @@ public class DisplayMain extends Module {
     private PlaceHolderManager placeHolderManager;
 
     @Getter
+    private TabManager tabManager;
+
+    @Getter
     private ChatManager chatManager;
 
     @Override
@@ -40,6 +44,7 @@ public class DisplayMain extends Module {
         placeHolderManager = new PlaceHolderManager();
         chatManager = new ChatManager(this);
         scoreboardManager = new ScoreboardManager(getFile("scoreboard.json", true));
+        this.tabManager = new TabManager(this);
 
         MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));
 

@@ -16,5 +16,6 @@ public class PlayerJoinListener implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         PlayerData player = MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
         DisplayMain.getIns().getScoreboardManager().handlePlayerJoin(player, e.getPlayer());
+        DisplayMain.getIns().getTabManager().sendDisplay(e.getPlayer());
     }
 }
