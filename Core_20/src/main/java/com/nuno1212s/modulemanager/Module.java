@@ -72,6 +72,7 @@ public abstract class Module {
      * @param commandExecutor The executor of the command (CommandExecutor in bukkit, Command in bungee)
      */
     protected final void registerCommand(String[] names, Object commandExecutor) {
+        // TODO: 11/10/2017 Fix aliases not working ??
         MainData.getIns().getCommandRegister().registerCommand(names, commandExecutor);
     }
 

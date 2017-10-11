@@ -40,7 +40,9 @@ public class Main extends Module {
         this.inventoryManager = new InventoryManager(this);
         this.npcManager = new NPCManager(this);
 
-        registerCommand(new String[]{"reward", "inbox"}, new RewardsCommand());
+        RewardsCommand commandExecutor = new RewardsCommand();
+        registerCommand(new String[]{"reward"}, commandExecutor);
+        registerCommand(new String[]{"inbox"}, commandExecutor);
 
         BukkitMain ins = BukkitMain.getIns();
 

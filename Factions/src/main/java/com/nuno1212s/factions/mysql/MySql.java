@@ -20,7 +20,7 @@ public class MySql {
         gson = new GsonBuilder().create();
         try (Connection c = MainData.getIns().getMySql().getConnection();
              Statement s = c.createStatement()) {
-            String factionTable = "CREATE TABLE IF NOT EXISTS factionsPlayers(UUID CHAR(40) NOT NULL PRIMARY KEY, COINS BIGINT, GROUPDATA varchar(100), KITUSAGE varchar(200), ENDERCHEST TEXT NOT NULL DEFAULT '')";
+            String factionTable = "CREATE TABLE IF NOT EXISTS factionsPlayers(UUID CHAR(40) NOT NULL PRIMARY KEY, COINS BIGINT, GROUPDATA varchar(100), KITUSAGE varchar(200), ENDERCHEST TEXT NOT NULL)";
 
             s.execute(factionTable);
         } catch (SQLException e) {
