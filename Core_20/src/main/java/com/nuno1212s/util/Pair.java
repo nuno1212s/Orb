@@ -9,6 +9,7 @@ import java.util.Map;
 public class Pair<E, V> {
 
     private E key;
+
     private V value;
 
     public Pair(E key, V value) {

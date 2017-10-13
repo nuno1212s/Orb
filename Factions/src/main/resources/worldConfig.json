@@ -1,0 +1,5 @@
+{
+    "WorldName": "MiningWorld",
+    "Size": 1000,
+    "BetweenResets": 60000
+}

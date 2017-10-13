@@ -7,6 +7,8 @@ import com.nuno1212s.displays.DisplayMain;
 import com.nuno1212s.displays.placeholders.PlaceHolder;
 import com.nuno1212s.factions.coins.CoinCommand;
 import com.nuno1212s.factions.events.*;
+import com.nuno1212s.factions.miningworld.MiningWorld;
+import com.nuno1212s.factions.miningworld.commands.MiningWorldCommand;
 import com.nuno1212s.factions.mysql.MySql;
 import com.nuno1212s.factions.playerdata.FPlayerData;
 import com.nuno1212s.main.BukkitMain;
@@ -27,10 +29,14 @@ public class Main extends Module {
     @Getter
     private MySql mysql;
 
+    @Getter
+    private MiningWorld miningWorld;
+
     @Override
     public void onEnable() {
         ins = this;
         mysql = new MySql();
+        miningWorld = new MiningWorld(this);
 
         MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));
 
@@ -73,11 +79,12 @@ public class Main extends Module {
         });
 
         registerCommand(new String[]{"coins", "coin"}, new CoinCommand());
+        registerCommand(new String[]{"minar"}, new MiningWorldCommand());
 
     }
 
     @Override
     public void onDisable() {
-
+        miningWorld.saveToFile();
     }
 }
