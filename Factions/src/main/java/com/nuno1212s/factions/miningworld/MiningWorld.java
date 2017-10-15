@@ -71,13 +71,15 @@ public class MiningWorld implements Listener {
      */
     public void regenerateWorld() {
         isLoading = true;
-        deleteWorld((arg) -> {
-                createWorld((world) -> {
-                    currentMiningWorld = world;
-                    lastReset = System.currentTimeMillis();
-                    isLoading = false;
-                });
-            });
+        MainData.getIns().getScheduler().runTask(() ->
+                deleteWorld((arg) -> {
+                    createWorld((world) -> {
+                        currentMiningWorld = world;
+                        lastReset = System.currentTimeMillis();
+                        isLoading = false;
+                    });
+                })
+        );
     }
 
     /**
@@ -131,6 +133,7 @@ public class MiningWorld implements Listener {
 
     /**
      * Delete a worlds folder
+     *
      * @param w
      */
     private void deleteWorld(World w) {
@@ -140,6 +143,7 @@ public class MiningWorld implements Listener {
 
     /**
      * Delete a file
+     *
      * @param f
      */
     private void deleteFile(File f) {

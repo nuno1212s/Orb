@@ -2,6 +2,7 @@ package com.nuno1212s.permissionmanager;
 
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.util.CheckExpirationTimer;
+import com.nuno1212s.permissionmanager.util.PermissionRedisHandler;
 import lombok.Getter;
 
 import java.util.*;
@@ -20,6 +21,7 @@ public class PermissionManager {
     @Getter
     private int maxGroupsPerPlayer;
 
+    private PermissionRedisHandler permissionRedisHandler;
 
     public PermissionManager(boolean bukkit) {
         groups = MainData.getIns().getMySql().getGroups();
@@ -29,16 +31,26 @@ public class PermissionManager {
             MainData.getIns().getScheduler().runTaskTimer(new CheckExpirationTimer(), 0, 20);
         }
 
+        this.permissionRedisHandler = new PermissionRedisHandler();
         this.maxGroupsPerPlayer = 6;
 
     }
 
+    /**
+     * Update the groups
+     */
     public void updateGroups() {
         groups = MainData.getIns().getMySql().getGroups();
     }
 
+    /**
+     * Add a group
+     *
+     * @param group The group to add
+     */
     public void addGroup(Group group) {
         this.groups.add(group);
+        permissionRedisHandler.publishGroupUpdate();
     }
 
     public static boolean isApplicable(Group g) {
@@ -49,6 +61,10 @@ public class PermissionManager {
                         MainData.getIns().getServerManager().getServerType()));
     }
 
+    /**
+     * Get the default group
+     * @return
+     */
     public Group getDefaultGroup() {
 
         Group mostFitting = null;
@@ -70,6 +86,27 @@ public class PermissionManager {
         }
 
         return mostFitting;
+    }
+
+    /**
+     * Modify
+     *
+     * @param g
+     * @param parameter
+     * @param variable
+     */
+    public void modifyGroup(Group g, String parameter, String variable) {
+
+        if (parameter.equalsIgnoreCase("prefix")) {
+            g.setGroupPrefix(variable);
+        } else if (parameter.equalsIgnoreCase("suffix")) {
+            g.setGroupSuffix(variable);
+        } else if (parameter.equalsIgnoreCase("scoreboard")) {
+            g.setScoreboardName(variable);
+        }
+
+        MainData.getIns().getPlayerManager().getPlayers().forEach(MainData.getIns().getEventCaller()::callGroupUpdateEvent);
+        permissionRedisHandler.publishGroupUpdate();
     }
 
     public Group getGroup(short groupID) {

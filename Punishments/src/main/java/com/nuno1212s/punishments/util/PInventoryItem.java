@@ -55,7 +55,8 @@ public class PInventoryItem extends InventoryItem {
             PlayerData player = playerData.key();
             player.setPunishment(punishment);
 
-            Player p = Bukkit.getPlayer(player.getPlayerID());
+            Player p = player.getPlayerReference(Player.class);
+
             if (punishment.getPunishmentType() == Punishment.PunishmentType.BAN && !punishment.hasExpired()) {
                 p.kickPlayer(punishment.buildReason());
             } else if (punishment.getPunishmentType() == Punishment.PunishmentType.MUTE && !punishment.hasExpired()) {

@@ -4,7 +4,7 @@ import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.FactionColl;
 import com.massivecraft.factions.entity.MPlayer;
 import com.nuno1212s.displays.DisplayMain;
-import com.nuno1212s.displays.placeholders.PlaceHolder;
+import com.nuno1212s.displays.listeners.PlayerUpdateListener;
 import com.nuno1212s.factions.coins.CoinCommand;
 import com.nuno1212s.factions.events.*;
 import com.nuno1212s.factions.miningworld.MiningWorld;
@@ -15,7 +15,6 @@ import com.nuno1212s.main.BukkitMain;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.modulemanager.ModuleData;
-import com.nuno1212s.playermanager.PlayerData;
 import lombok.Getter;
 import org.bukkit.ChatColor;
 
@@ -48,6 +47,7 @@ public class Main extends Module {
         ins.getServer().getPluginManager().registerEvents(new FactionCreateListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new PowerChangeListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new PlayerDeathListener(), ins);
+        ins.getServer().getPluginManager().registerEvents(new PlayerUpdateListener(), ins);
 
         DisplayMain.getIns().getPlaceHolderManager().registerPlaceHolder("%coins%", (player) ->
                 String.valueOf(((FPlayerData) player).getCoins())

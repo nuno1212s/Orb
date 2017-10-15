@@ -73,6 +73,7 @@ public class ScoreboardManager {
 
             team.removeEntry(d.getPlayerName());
         }));
+
         this.scoreboards.remove(d.getPlayerID());
     }
 
@@ -101,10 +102,17 @@ public class ScoreboardManager {
 
     }
 
-    private void setScoreboardPrefixes(PlayerData d) {
+    public void setScoreboardPrefixes(PlayerData d) {
         Scoreboard b = this.scoreboards.get(d.getPlayerID()).getScoreboard();
 
         for (PlayerData playerData : MainData.getIns().getPlayerManager().getPlayers()) {
+
+            for (Team team : b.getTeams()) {
+                if (team.getEntries().contains(d.getPlayerName())) {
+                    team.removeEntry(d.getPlayerName());
+                    break;
+                }
+            }
 
             Group representingGroup = playerData.getRepresentingGroup();
             Team team = b.getTeam(representingGroup.getScoreboardName());
@@ -122,7 +130,16 @@ public class ScoreboardManager {
             if (uuid.equals(d.getPlayerID())) {
                 return;
             }
+
             Scoreboard scoreboard = simpleScoreboard.getScoreboard();
+
+            for (Team team : scoreboard.getTeams()) {
+                if (team.getEntries().contains(d.getPlayerName())) {
+                    team.removeEntry(d.getPlayerName());
+                    break;
+                }
+            }
+
             Group representingGroup = d.getRepresentingGroup();
             Team team = scoreboard.getTeam(representingGroup.getScoreboardName());
 

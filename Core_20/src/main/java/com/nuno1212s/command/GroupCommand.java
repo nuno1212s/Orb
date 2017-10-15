@@ -126,7 +126,7 @@ public class GroupCommand implements CommandExecutor {
             });
 
             if (player.getValue()) {
-                MainData.getIns().getEventCaller().callUpdateInformationEvent(player.getKey());
+                MainData.getIns().getEventCaller().callGroupUpdateEvent(player.getKey());
             }
 
             return true;
@@ -190,7 +190,7 @@ public class GroupCommand implements CommandExecutor {
             });
 
             if (player.getValue()) {
-                MainData.getIns().getEventCaller().callUpdateInformationEvent(player.getKey());
+                MainData.getIns().getEventCaller().callGroupUpdateEvent(player.getKey());
             }
 
             return true;
@@ -219,6 +219,7 @@ public class GroupCommand implements CommandExecutor {
 
                 String parameter = args[2], value = ChatColor.translateAlternateColorCodes('&', args[3].replace("__", " "));
 
+                MainData.getIns().getPermissionManager().modifyGroup(group, parameter, value);
                 boolean success = MainData.getIns().getMySql().modifyGroup(groupID, parameter, value);
                 if (success) {
                     commandSender.sendMessage(ChatColor.RED + "Group modified successfully");

@@ -12,4 +12,6 @@ public interface EventCaller {
      */
     void callUpdateInformationEvent(PlayerData args);
 
+    void callGroupUpdateEvent(PlayerData data);
+
 }

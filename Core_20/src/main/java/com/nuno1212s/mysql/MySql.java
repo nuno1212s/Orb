@@ -93,8 +93,8 @@ public class MySql {
             st.execute(stm);
 
             String stm2 = "CREATE TABLE IF NOT EXISTS groupData(GROUPID SMALLINT, GROUPNAME VARCHAR(25)," +
-                    "PREFIX VARCHAR(32), SUFFIX VARCHAR(32)," +
-                    "SCOREBOARD VARCHAR(32)," +
+                    "PREFIX VARCHAR(32) NOT NULL DEFAULT '', SUFFIX VARCHAR(32) NOT NULL DEFAULT ''," +
+                    "SCOREBOARD VARCHAR(32) NOT NULL DEFAULT ''," +
                     "ISDEFAULT BOOL," +
                     "APPLICABLESERVER VARCHAR(25)," +
                     "GROUPTYPE VARCHAR(6)," +

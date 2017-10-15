@@ -1,6 +1,7 @@
 package com.nuno1212s.permissionmanager;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ public class Group {
 
     private short groupID;
 
+    @Setter
     private String groupName, groupPrefix, groupSuffix, scoreboardName, applicableServer;
 
     private boolean defaultGroup, overrides;
@@ -75,10 +77,12 @@ public class Group {
 
     public String permissionsToDB() {
         StringBuilder builder = new StringBuilder();
+
         this.permissions.forEach(perm -> {
             builder.append(perm);
             builder.append(",");
         });
+
         return builder.toString();
     }
 

@@ -41,6 +41,11 @@ public class WorldCreateTask implements Runnable {
 
     }
 
+    /**
+     * Get the next chunk to load
+     *
+     * @return The next chunk to load
+     */
     private Pair<Integer, Integer> getNextChunk() {
 
         if (current < length) {
@@ -85,14 +90,14 @@ public class WorldCreateTask implements Runnable {
 
             if (nextChunk == null) {
                 System.out.println("Loaded World.");
-                this.callback.callback(this.w);
                 task.cancel();
+                this.callback.callback(this.w);
                 return;
             }
 
             w.loadChunk(nextChunk.getKey(), nextChunk.getValue(), true);
 
-            System.out.println("Loaded chunk " + nextChunk.toString() + " in " + String.valueOf(System.currentTimeMillis() - initTime) + "ms");
+            //System.out.println("Loaded chunk " + nextChunk.toString() + " in " + String.valueOf(System.currentTimeMillis() - initTime) + "ms");
 
             currentTimeTaken += System.currentTimeMillis() - initTime;
         }

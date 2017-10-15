@@ -2,6 +2,7 @@ package com.nuno1212s.main;
 
 import com.nuno1212s.command.*;
 import com.nuno1212s.config.BukkitConfig;
+import com.nuno1212s.events.PlayerGroupUpdateEvent;
 import com.nuno1212s.events.PlayerInformationUpdateEvent;
 import com.nuno1212s.events.eventcaller.EventCaller;
 import com.nuno1212s.events.listeners.PlayerDisconnectListener;
@@ -56,6 +57,11 @@ public class BukkitMain extends JavaPlugin {
             @Override
             public void callUpdateInformationEvent(PlayerData data) {
                 Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(data));
+            }
+
+            @Override
+            public void callGroupUpdateEvent(PlayerData data) {
+                Bukkit.getServer().getPluginManager().callEvent(new PlayerGroupUpdateEvent(data));
             }
         });
 
