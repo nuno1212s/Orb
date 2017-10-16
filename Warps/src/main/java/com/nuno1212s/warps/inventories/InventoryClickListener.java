@@ -22,18 +22,23 @@ public class InventoryClickListener implements Listener {
         if (inventory != null) {
             e.setResult(Event.Result.DENY);
 
-            if (e.getClickedInventory().equals(inventory)) {
+            if (inventory.equals(e.getClickedInventory())) {
                 WInventoryItem item = (WInventoryItem) inventory.getItem(e.getSlot());
                 if (item.getConnectingWarp() == null) {
+
                     String connectingInventory = item.getConnectingInventory();
+
                     if (connectingInventory != null) {
+
                         Inventory inventory1 = Main.getIns().getInventoryManager().getInventory(connectingInventory);
                         if (inventory1 == null) {
                             return;
                         }
+
                         e.getWhoClicked().closeInventory();
                         e.getWhoClicked().openInventory(inventory1);
                     }
+
                 } else {
                     e.getWhoClicked().closeInventory();
 

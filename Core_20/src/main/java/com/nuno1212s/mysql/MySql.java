@@ -409,6 +409,7 @@ public class MySql {
 
     /**
      * Get rewards for the bungee server
+     *
      * @return
      */
     public List<Reward> getBungeeRewards() {
@@ -478,11 +479,14 @@ public class MySql {
 
     public void removeReward(int id) {
         try (Connection c = MainData.getIns().getMySql().getConnection();
-             PreparedStatement s = c.prepareStatement("DELETE FROM rewards WHERE ID=?")) {
+             PreparedStatement s = c.prepareStatement("DELETE FROM rewards WHERE ID=?");
+             PreparedStatement s2 = c.prepareStatement("UPDATE playerData SET REWARDSTOCLAIM=" +
+                     "REPLACE(REWARDSTOCLAIM, \"" + String.valueOf(id) + ",\", \"\")")) {
 
             s.setInt(1, id);
 
             s.executeUpdate();
+            s2.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -490,11 +494,10 @@ public class MySql {
 
     public void addRewardToClaim(int rewardID) {
         try (Connection c = MainData.getIns().getMySql().getConnection();
-             PreparedStatement s = c.prepareStatement("UPDATE playerData SET REWARDSTOCLAIM=CONCAT(REWARDSTOCLAIM" +
-                     ", IF(REWARDSTOCLAIM = '', '', \", \"), \"" + String.valueOf(rewardID) + "\"")) {
+             PreparedStatement s = c.prepareStatement("UPDATE playerData SET REWARDSTOCLAIM=CONCAT(REWARDSTOCLAIM, IF(REWARDSTOCLAIM = \"\", \"\", \",\"), \"" + String.valueOf(rewardID) + "\")")) {
             s.executeUpdate();
         } catch (SQLException e) {
-
+            e.printStackTrace();
         }
     }
 

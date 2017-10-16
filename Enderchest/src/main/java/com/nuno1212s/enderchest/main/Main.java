@@ -1,5 +1,6 @@
 package com.nuno1212s.enderchest.main;
 
+import com.nuno1212s.enderchest.commands.CraftingTableCommand;
 import com.nuno1212s.enderchest.commands.EnderChestCommand;
 import com.nuno1212s.enderchest.enderchestmanager.EnderChestManager;
 import com.nuno1212s.enderchest.listeners.InventoryCloseListener;
@@ -24,6 +25,7 @@ public class Main extends Module {
         enderChestManager = new EnderChestManager(this);
 
         registerCommand(new String[]{"enderchest"}, new EnderChestCommand());
+        registerCommand(new String[]{"craft"}, new CraftingTableCommand());
 
         BukkitMain ins = BukkitMain.getIns();
 

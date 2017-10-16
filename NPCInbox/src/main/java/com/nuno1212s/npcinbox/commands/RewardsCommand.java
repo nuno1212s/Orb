@@ -28,6 +28,8 @@ public class RewardsCommand extends CommandManager {
         addCommand(new OpenRewardInventoryCommand());
         addCommand(new RegisterEntityCommand());
         addCommand(new UnregisterEntityCommand());
+        addCommand(new ListRewardsCommand());
+        addCommand(new RemoveRewardCommand());
     }
 
     @Override

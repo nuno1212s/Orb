@@ -42,6 +42,18 @@ public class RedisRewards implements RedisReceiver {
                 int rewardID = ((Long) data.get("RewardID")).intValue();
 
                 MainData.getIns().getRewardManager().redis_addRewardToClaim(rewardID);
+            } else if (message.getReason().equalsIgnoreCase("REWARD_TO_REMOVE")) {
+                JSONObject data = message.getData();
+
+                int rewardID = ((Long) data.get("RewardID")).intValue();
+
+                Reward reward = MainData.getIns().getRewardManager().getReward(rewardID);
+
+                if (reward == null) {
+                    return;
+                }
+
+                MainData.getIns().getRewardManager().redis_removeReward(reward);
             }
         }
     }
@@ -74,6 +86,20 @@ public class RedisRewards implements RedisReceiver {
         data.put("RewardID", reward);
 
         Message message = new Message(channel(), "REWARD_TO_CLAIM", data);
+
+        MainData.getIns().getRedisHandler().sendMessage(message.toByteArray());
+    }
+
+    /**
+     * Remove a reward
+     *
+     * @param rewardID
+     */
+    public void removeReward(int rewardID) {
+        JSONObject data = new JSONObject();
+        data.put("RewardID", rewardID);
+
+        Message message = new Message(channel(), "REWARD_TO_REMOVE", data);
 
         MainData.getIns().getRedisHandler().sendMessage(message.toByteArray());
     }

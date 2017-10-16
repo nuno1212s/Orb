@@ -9,6 +9,7 @@ public class PlayerQuitListener implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
+        e.setQuitMessage(null);
         Main.getIns().getServerSelectorManager().handlePlayerDisconnect(e.getPlayer());
     }
 

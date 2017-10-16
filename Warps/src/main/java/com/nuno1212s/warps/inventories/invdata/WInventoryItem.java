@@ -16,16 +16,9 @@ public class WInventoryItem extends InventoryItem {
         super(jsonObject);
         if (jsonObject.containsKey("ConnectingWarp")) {
             connectingWarp = (String) jsonObject.get("ConnectingWarp");
+        } else {
+            connectingWarp = null;
         }
-    }
-
-    public String getConnectingInventory() {
-        for (String s : this.getItemFlags()) {
-            if (s.startsWith("CONNECTING_INVENTORY")) {
-                return s.split("_")[1];
-            }
-        }
-        return null;
     }
 
 }

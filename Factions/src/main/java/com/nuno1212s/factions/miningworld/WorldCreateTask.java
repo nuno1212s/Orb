@@ -33,7 +33,7 @@ public class WorldCreateTask implements Runnable {
     public WorldCreateTask(World w, Callback<World> callback, int size) {
         this.w = w;
         this.callback = callback;
-        this.completeLength = (int) Math.pow(size >> 4, 2);
+        this.completeLength = (int) Math.pow((size / 2) >> 4, 2);
 
         Location spawnLocation = w.getSpawnLocation();
         currentChunk = new Pair<>(spawnLocation.getBlockX() >> 4, spawnLocation.getBlockZ() >> 4);

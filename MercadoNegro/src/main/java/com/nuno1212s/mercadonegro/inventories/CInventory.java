@@ -47,13 +47,16 @@ public class CInventory {
         HashMap<String, Object> data = new HashMap<>();
         data.put("InventoryName", this.getInventoryName());
         data.put("Size", this.getSize());
+
         Map<String, Object> items = new HashMap<>();
+
         for (int i = 0; i < this.getItems().length; i++) {
             if (this.items[i] == null) {
                 continue;
             }
             items.put(String.valueOf(i), this.items[i].toJSONData());
         }
+
         data.put("Items", items);
         return data;
     }

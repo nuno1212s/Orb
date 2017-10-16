@@ -77,7 +77,7 @@ public class CreateRewardCommand implements Command {
 
             case CASH: {
                 try {
-                    long cash = Long.parseLong(args[3]);
+                    long cash = Long.parseLong(args[4]);
                     r.setReward(cash);
                     MainData.getIns().getRewardManager().createReward(r);
                 } catch (NumberFormatException e) {
@@ -89,7 +89,7 @@ public class CreateRewardCommand implements Command {
 
             case SV_CRRCY: {
                 try {
-                    long coins = Long.parseLong(args[3]);
+                    long coins = Long.parseLong(args[4]);
                     r.setReward(coins);
                     MainData.getIns().getRewardManager().createReward(r);
                 } catch (NumberFormatException e) {

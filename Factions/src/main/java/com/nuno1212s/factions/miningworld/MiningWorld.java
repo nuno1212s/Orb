@@ -46,7 +46,7 @@ public class MiningWorld implements Listener {
             JSONObject config = (JSONObject) new JSONParser().parse(r), dataJSON = (JSONObject) new JSONParser().parse(fR);
 
             this.worldName = (String) config.getOrDefault("WorldName", "MiningWorld");
-            this.size = ((Long) config.getOrDefault("Size", 1000)).intValue();
+            this.size = ((Long) config.getOrDefault("Size", 2000)).intValue();
             this.betweenResets = (Long) config.getOrDefault("BetweenResets", TimeUnit.DAYS.toMillis(2));
 
             this.lastReset = (Long) dataJSON.getOrDefault("LastReset", 0);

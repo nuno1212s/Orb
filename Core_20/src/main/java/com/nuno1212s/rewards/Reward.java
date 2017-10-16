@@ -2,10 +2,12 @@ package com.nuno1212s.rewards;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * Handles the master reward class
  */
+@ToString
 public abstract class Reward {
 
     @Getter

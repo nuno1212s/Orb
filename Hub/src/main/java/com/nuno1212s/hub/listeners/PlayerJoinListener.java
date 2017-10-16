@@ -27,6 +27,7 @@ public class PlayerJoinListener implements Listener {
 
     @EventHandler
     public void onHubJoin(PlayerJoinEvent e) {
+        e.setJoinMessage(null);
         HPlayerData player = (HPlayerData) MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
         Map<Integer, ItemStack> items = Main.getIns().getHotbarManager().getItems(player);
 
