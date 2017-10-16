@@ -14,7 +14,9 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,170 +25,69 @@ import java.util.Map;
 public class InventoryManager {
 
     @Getter
-    private Map<Integer, CInventory> inventories;
-
-    /**
-     * Integer - The distance to the last slot of the inventorylisteners (slot = Inventory.size() - Pair.getKey())
-     */
-    @Getter
-    private Pair<Integer, ItemStack> previousPageItem, nextPageItem;
-
-    private File file;
-
+    private List<CInventoryData> inventories;
 
     public InventoryManager(Module m) {
-        inventories = new HashMap<>();
-        this.previousPageItem = new Pair<>(0, new ItemStack(Material.AIR));
-        this.nextPageItem = new Pair<>(1, new ItemStack(Material.AIR));
-        file = m.getFile("inventories.json", false);
+        this.inventories = new ArrayList<>();
 
-        JSONObject jsonObject;
+        File dataFolder = new File(m.getDataFolder() + File.separator + "Inventories" + File.separator);
 
-        try (Reader r = new FileReader(file)) {
-
-            jsonObject = (JSONObject) new JSONParser().parse(r);
-
-        } catch (IOException | ParseException e) {
-            System.out.println("Failed to load inventories");
-            return;
+        if (!dataFolder.exists()) {
+            dataFolder.mkdir();
+            saveDefaultInventory(m);
         }
 
-        Map<String, Object> inventories = (Map<String, Object>) jsonObject.get("Inventories");
-        inventories.forEach((page, inventory) -> {
-            int iPage = Integer.parseInt(page);
-            CInventory inv = new CInventory((Map<String, Object>) inventory);
-            this.inventories.put(iPage, inv);
-        });
-
-        Map<String, Object> previousPageItem = (Map<String, Object>) jsonObject.get("PreviousPageItem"),
-                nextPageItem = (Map<String, Object>) jsonObject.get("NextPageItem");
-
-        try {
-            this.previousPageItem = new Pair<>(((Long) previousPageItem.get("Slot")).intValue(),
-                    ItemUtils.itemFrom64((String) previousPageItem.get("Item")));
-            this.nextPageItem = new Pair<>(((Long) nextPageItem.get("Slot")).intValue(),
-                    ItemUtils.itemFrom64((String) nextPageItem.get("Item")));
-        } catch (IOException e) {
-            e.printStackTrace();
+        for (File file : dataFolder.listFiles()) {
+            this.inventories.add(new CInventoryData(file));
         }
 
+        assert getInventory("mainInventory") != null;
+
     }
 
-    public void save() {
-        JSONObject data = new JSONObject(), inventories = new JSONObject(), previousPage = new JSONObject(), nextPage = new JSONObject();
-
-        this.inventories.forEach((page, inventory) ->
-            inventories.put(String.valueOf(page), inventory.toJSONData())
-        );
-
-        data.put("Inventories", inventories);
-
-        previousPage.put("Slot", this.previousPageItem.getKey());
-        previousPage.put("Item", ItemUtils.itemTo64(this.previousPageItem.getValue()));
-
-        data.put("PreviousPageItem", previousPage);
-
-        nextPage.put("Slot", this.nextPageItem.getKey());
-        nextPage.put("Item", ItemUtils.itemTo64(this.nextPageItem.getValue()));
-
-        data.put("NextPageItem", nextPage);
-
-        try (Writer w = new FileWriter(this.file)) {
-            data.writeJSONString(w);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    /**
+     * Saves the default main inventory
+     * @param m
+     */
+    private void saveDefaultInventory(Module m) {
+        m.getFile("Inventories" + File.separator + "mainInventory.json", true);
     }
 
-    public CInventory getInventory(int page) {
-        return this.inventories.get(page);
+    /**
+     * Get the main black market inventory
+     * @return
+     */
+    public Inventory getMainInventory() {
+        return buildInventory("mainInventory");
     }
 
-    public Inventory getStartingInventory() {
-        return buildInventory(1);
-    }
-
-    public Inventory buildInventory(int page) {
-        CInventory inventory = getInventory(page);
-
-        if (inventory == null) {
-            return Bukkit.getServer().createInventory(null, 27, ChatColor.RED + "Black Market");
-        }
-
-        return inventory.getInventory((this.inventories.size() > page), page > 1);
-    }
-
-    public int addInventory(CInventory inventory) {
-        int i = this.inventories.size() + 1;
-        this.inventories.put(i, inventory);
-        return i;
-    }
-
-    public void removeInventory(int page) {
-        if (this.inventories.containsKey(page)) {
-            //Check to see if it is the last page
-            if (page == this.inventories.size()) {
-                this.inventories.remove(page);
-            } else {
-                for (int i = page; i <= this.inventories.size(); i++) {
-                    if (i == page) {
-                        this.inventories.remove(page);
-                    } else {
-                        this.inventories.put(i - 1, this.inventories.get(i));
-                        this.inventories.remove(i);
-                    }
-                }
-            }
-        }
-    }
-
-    public boolean isInventory(String inventoryName) {
-        if (inventoryName.equalsIgnoreCase(ChatColor.RED + "Black Market")) {
-            return true;
-        }
-
-        for (CInventory cInventory : this.inventories.values()) {
-            if (cInventory.getInventoryName().equalsIgnoreCase(inventoryName)) {
-                return true;
+    public CInventoryData getInventory(String inventoryID) {
+        for (CInventoryData inventory : this.inventories) {
+            if (inventory.getInventoryID().equalsIgnoreCase(inventoryID)) {
+                return inventory;
             }
         }
 
-        return false;
-    }
-
-    public CInventory getInventory(String inventory) {
-        for (CInventory cInventory : this.inventories.values()) {
-            if (cInventory.getInventoryName().equalsIgnoreCase(inventory)) {
-                return cInventory;
-            }
-        }
         return null;
     }
 
-    public int getPage(CInventory c) {
-        for (Map.Entry<Integer, CInventory> inventoryEntry : this.inventories.entrySet()) {
-            if (inventoryEntry.getValue().equals(c)) {
-                return inventoryEntry.getKey();
+    public CInventoryData getInventory(Inventory i) {
+        for (CInventoryData inventory : this.inventories) {
+            if (inventory.equals(i)) {
+                return inventory;
             }
         }
-        return 0;
+
+        return null;
     }
 
-    public void setPreviousPageItem(int distanceToLastSlot, ItemStack item) {
-        this.previousPageItem = new Pair<>(distanceToLastSlot, item);
-    }
+    public Inventory buildInventory(String inventoryID) {
+        CInventoryData inventory = getInventory(inventoryID);
+        if (inventory == null) {
+            return null;
+        }
 
-    public void setNextPageItem(int distanceToLastSlot, ItemStack item) {
-        this.nextPageItem = new Pair<>(distanceToLastSlot, item);
+        return inventory.buildInventory();
     }
-
-    public boolean isPreviousPageSlot(Inventory inv, int slot) {
-        return ((inv.getSize() - 1) - slot) == this.previousPageItem.getKey();
-    }
-
-    public boolean isNextPageSlot(Inventory inv, int slot) {
-        return ((inv.getSize() - 1) - slot) == this.nextPageItem.getKey();
-    }
-
 
 }

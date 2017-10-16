@@ -2,7 +2,7 @@ package com.nuno1212s.mercadonegro.main;
 
 import com.nuno1212s.main.BukkitMain;
 import com.nuno1212s.main.MainData;
-import com.nuno1212s.mercadonegro.commands.MarketCommandManager;
+import com.nuno1212s.mercadonegro.commands.MarketOpenCommand;
 import com.nuno1212s.mercadonegro.events.InventoryClickListener;
 import com.nuno1212s.mercadonegro.inventories.InventoryManager;
 import com.nuno1212s.modulemanager.Module;
@@ -27,9 +27,9 @@ public class Main extends Module {
         ins = this;
         inventoryManager = new InventoryManager(this);
 
-        MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));
+        registerCommand(new String[]{"blackmarket", "mercadonegro"}, new MarketOpenCommand());
 
-        registerCommand(new String[]{"market"}, new MarketCommandManager());
+        MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));
 
         Plugin p = BukkitMain.getIns();
         p.getServer().getPluginManager().registerEvents(new InventoryClickListener(), p);
@@ -37,6 +37,5 @@ public class Main extends Module {
 
     @Override
     public void onDisable() {
-        inventoryManager.save();
     }
 }

@@ -1,0 +1,32 @@
+{
+  "InventoryID": "mainInventory",
+  "InventoryName": "&cBlack Market - 1",
+  "InventorySize": 27,
+  "InventoryItems": [
+    {
+      "Slot": 10,
+      "Item":
+      {
+        "Material": "STONE"
+      },
+      "Cost": 1000,
+      "IsServerCurrency": true,
+      "RewardType": "COMMAND",
+      "Reward": "f addpower {player} 1"
+    },
+    {
+      "Slot": 10,
+      "Item":
+      {
+        "Material": "STONE"
+      },
+      "Cost": 1000,
+      "IsServerCurrency": true,
+      "RewardType": "ITEM",
+      "Reward": {
+        "Material": "DIAMOND",
+        "Amount": 64
+      }
+    }
+  ]
+}

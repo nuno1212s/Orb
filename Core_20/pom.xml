@@ -10,12 +10,8 @@
 
     <repositories>
         <repository>
-            <id>fanciful-mvn-repo</id>
-            <url>http://repo.franga2000.com/artifactory/public</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
+            <id>stealthyone-repo</id>
+            <url>http://repo.stealthyone.com/content/groups/public</url>
         </repository>
 
         <repository>

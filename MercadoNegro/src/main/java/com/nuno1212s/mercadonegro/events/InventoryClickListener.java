@@ -1,9 +1,9 @@
 package com.nuno1212s.mercadonegro.events;
 
 import com.nuno1212s.main.MainData;
-import com.nuno1212s.mercadonegro.inventories.CInventory;
+import com.nuno1212s.mercadonegro.inventories.CInventoryData;
+import com.nuno1212s.mercadonegro.inventories.CInventoryItem;
 import com.nuno1212s.mercadonegro.inventories.InventoryManager;
-import com.nuno1212s.mercadonegro.inventories.Item;
 import com.nuno1212s.mercadonegro.main.Main;
 import com.nuno1212s.playermanager.PlayerData;
 import org.bukkit.entity.Player;
@@ -18,17 +18,17 @@ import org.bukkit.event.inventory.InventoryDragEvent;
  */
 public class InventoryClickListener implements Listener {
 
-
     @EventHandler
     public void onDrag(InventoryDragEvent e) {
-        if (Main.getIns().getInventoryManager().isInventory(e.getInventory().getName())) {
+        if (Main.getIns().getInventoryManager().getInventory(e.getInventory()) != null) {
             e.setResult(Event.Result.DENY);
         }
     }
 
     @EventHandler
     public void inventoryClick(InventoryClickEvent e) {
-        if (Main.getIns().getInventoryManager().isInventory(e.getInventory().getName())) {
+        CInventoryData inventory1 = Main.getIns().getInventoryManager().getInventory(e.getInventory());
+        if (inventory1 != null) {
             if (e.getClick().isShiftClick()) {
                 e.setResult(Event.Result.DENY);
             }
@@ -36,41 +36,34 @@ public class InventoryClickListener implements Listener {
             return;
         }
 
-        if (e.getClickedInventory() != null && e.getClickedInventory().getName().equalsIgnoreCase(e.getInventory().getName())) {
+        if (e.getClickedInventory() != null && inventory1.equals(e.getClickedInventory())) {
             if (e.getCurrentItem() == null) {
                 return;
             }
 
             e.setResult(Event.Result.DENY);
 
-            CInventory inventory = Main.getIns().getInventoryManager().getInventory(e.getClickedInventory().getName());
-
-            if (inventory == null) {
-                return;
-            }
-
-            InventoryManager iM = Main.getIns().getInventoryManager();
-            if (iM.isNextPageSlot(e.getClickedInventory(), e.getSlot())) {
-                e.getWhoClicked().closeInventory();
-                e.getWhoClicked().openInventory(iM.buildInventory(iM.getPage(inventory) + 1));
-                return;
-            }
-
-            if (iM.isPreviousPageSlot(e.getClickedInventory(), e.getSlot())) {
-                e.getWhoClicked().closeInventory();
-                e.getWhoClicked().openInventory(iM.buildInventory(iM.getPage(inventory) - 1));
-                return;
-            }
-
-            Item item = inventory.getItem(e.getSlot());
+            CInventoryItem item = (CInventoryItem) inventory1.getItem(e.getSlot());
 
             if (item == null) {
                 return;
             }
 
+            if (item.getConnectingInventory() != null) {
+                e.getWhoClicked().closeInventory();
+
+                CInventoryData nextInventory = Main.getIns().getInventoryManager().getInventory(item.getConnectingInventory());
+
+                if (nextInventory != null) {
+                    e.getWhoClicked().openInventory(nextInventory.buildInventory());
+                }
+
+                return;
+            }
+
             PlayerData playerData = MainData.getIns().getPlayerManager().getPlayer(e.getWhoClicked().getUniqueId());
 
-            item.buy((Player) e.getWhoClicked(), playerData);
+            item.buyItem(playerData);
 
         }
 

@@ -6,6 +6,7 @@ import com.nuno1212s.messagemanager.Messages;
 import com.nuno1212s.modulemanager.ModuleManager;
 import com.nuno1212s.mysql.MySql;
 import com.nuno1212s.permissionmanager.PermissionManager;
+import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.playermanager.PlayerManager;
 import com.nuno1212s.rediscommunication.RedisHandler;
 import com.nuno1212s.rewards.bungee.BungeeRewardManager;
@@ -36,7 +37,16 @@ public class BungeeMain extends Plugin {
             this.getDataFolder().mkdirs();
         }
 
-        main.setEventCaller((o) -> {});
+        main.setEventCaller(new EventCaller() {
+            @Override
+            public void callUpdateInformationEvent(PlayerData args) {
+            }
+
+            @Override
+            public void callGroupUpdateEvent(PlayerData data) {
+            }
+        });
+
         main.setDataFolder(this.getDataFolder());
         File config = new File(this.getDataFolder(), "config.yml"),
                 messages = new File(this.getDataFolder(), "messages.json");
