@@ -8,6 +8,10 @@ import org.bukkit.entity.Player;
  */
 public interface Teleport {
 
+    /**
+     * The time needed for the teleport in seconds.
+     * @return
+     */
     long getTimeNeeded();
 
     Location getLocation();
