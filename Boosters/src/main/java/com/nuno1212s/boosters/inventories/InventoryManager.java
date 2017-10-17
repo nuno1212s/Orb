@@ -34,7 +34,7 @@ public class InventoryManager {
     @Getter
     private InventoryData myBoostersInventory, confirmInventory, sellInventory, confirmSellInventory, landingInventory;
 
-    private ItemStack boosterItem, buyBoosterItem;
+    private ItemStack boosterItem, activeBoosterItem, buyBoosterItem;
 
     private Map<UUID, Integer> pages;
 
@@ -59,6 +59,7 @@ public class InventoryManager {
         }
 
         this.boosterItem = new SerializableItem((JSONObject) boosterItem.get("NormalItem"));
+        this.activeBoosterItem = new SerializableItem((JSONObject) boosterItem.get("ActiveItem"));
         this.buyBoosterItem = new SerializableItem((JSONObject) boosterItem.get("BuyItem"));
     }
 
@@ -261,9 +262,11 @@ public class InventoryManager {
      */
     private ItemStack formatDisplayBooster(BInventoryItem b) {
         ItemStack boosterItem = this.buyBoosterItem.clone();
+
         Map<String, String> placeHolders = new HashMap<>();
 
         BoosterData data = b.getData();
+
         placeHolders.put("%booster%", data.getCustomName());
 
         placeHolders.put("%multiplier%", String.format("%.2f", data.getMultiplier() + 1));
@@ -275,6 +278,7 @@ public class InventoryManager {
         boosterItem.setAmount(data.getQuantity());
 
         boosterItem = ItemUtils.formatItem(boosterItem, placeHolders);
+
         return data.writeToItem(boosterItem);
     }
 
@@ -285,7 +289,8 @@ public class InventoryManager {
      * @return
      */
     private ItemStack formatItem(Booster b) {
-        ItemStack boosterItem = this.boosterItem.clone();
+        ItemStack boosterItem = b.isActivated() ? this.activeBoosterItem.clone() : this.boosterItem.clone();
+
         Map<String, String> placeHolders = new HashMap<>();
 
         placeHolders.put("%booster%", b.getCustomName());

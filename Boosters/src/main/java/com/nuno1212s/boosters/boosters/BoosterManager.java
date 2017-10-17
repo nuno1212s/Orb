@@ -289,6 +289,7 @@ public class BoosterManager {
     public boolean canActivateBooster(UUID owner) {
         synchronized (boosters) {
             for (Booster booster : boosters) {
+                System.out.println(booster.isActivated() + "||" + booster.isApplicable(owner) + "||" + (booster.getOwner() != null) + "||" + booster.getOwner().equals(owner)) ;
                 if (booster.isActivated() && booster.isApplicable(owner)
                         && booster.getOwner() != null && booster.getOwner().equals(owner)) {
                     return false;

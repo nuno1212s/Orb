@@ -51,6 +51,7 @@ public class TPAManager {
         }
 
         this.tpas.put(playerID, teleportInstance);
+        teleportInstance.notifyCreation();
 
     }
 

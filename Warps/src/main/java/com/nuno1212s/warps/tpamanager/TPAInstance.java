@@ -69,7 +69,7 @@ public class TPAInstance implements Teleport {
     public void start() {
         this.hasAccepted = true;
         Player senderPlayer = this.getSender().getPlayerReference(Player.class),
-            targetPlayer = this.getTarget().getPlayerReference(Player.class);
+                targetPlayer = this.getTarget().getPlayerReference(Player.class);
 
         if (senderPlayer == null || targetPlayer == null) {
             return;
@@ -104,7 +104,29 @@ public class TPAInstance implements Teleport {
     }
 
     /**
+     * Notify the recipient that he has received a teleport
+     */
+    public void notifyCreation() {
+        Player targetPlayer = this.getTarget().getPlayerReference(Player.class),
+                senderPlayer = this.getSender().getPlayerReference(Player.class);
+
+        if (targetPlayer == null) {
+            return;
+        }
+
+        if (this.type == TeleportType.TPA) {
+            MainData.getIns().getMessageManager().getMessage("TPA_REQUESTED")
+                    .format("%player%", getSender().getNameWithPrefix()).sendTo(targetPlayer);
+        } else if (this.type == TeleportType.TPHERE) {
+            MainData.getIns().getMessageManager().getMessage("TPHERE_REQUESTED")
+                    .format("%player%", getSender().getNameWithPrefix()).sendTo(targetPlayer);
+        }
+
+    }
+
+    /**
      * Check if this teleport request has expired
+     *
      * @return
      */
     public boolean hasExpired() {

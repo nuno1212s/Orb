@@ -66,9 +66,8 @@ public class Booster {
             }
         }
 
-        String serverType = MainData.getIns().getServerManager().getServerType();
         return (type == BoosterType.GLOBAL_GLOBAL || type == BoosterType.PLAYER_GLOBAL)
-                || (serverType.equalsIgnoreCase(applicableServer) && (type == BoosterType.GLOBAL_SERVER || (type == BoosterType.PLAYER_SERVER)));
+                || (MainData.getIns().getServerManager().isApplicable(this.applicableServer) && (type == BoosterType.GLOBAL_SERVER || (type == BoosterType.PLAYER_SERVER)));
     }
 
     @Override

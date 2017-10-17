@@ -46,6 +46,7 @@ public class ConfirmSellInventoryListener implements Listener {
             InventoryItem boosterItem = cSI.getItemWithFlag("BOOSTER");
 
             if (boosterItem == null) {
+                return;
             }
 
             if (item.hasItemFlag("CONFIRM")) {

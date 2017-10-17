@@ -38,6 +38,7 @@ public class BoosterData {
         nbt.add("Type", this.getType().name());
         nbt.add("ApplicableServer", this.getApplicableServer());
         nbt.add("CashItem", this.isCash() ? 1 : 0);
+
         return nbt.write(item);
     }
 

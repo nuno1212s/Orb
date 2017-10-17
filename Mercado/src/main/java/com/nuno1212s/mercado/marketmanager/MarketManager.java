@@ -258,7 +258,6 @@ public class MarketManager {
      */
     public Inventory getOwnItemInventory(UUID player, int page) {
         this.pages.put(player, page);
-        System.out.println(this.ownInventory);
         List<Item> ownItemsForPage = getOwnItemsForPage(player, page, this.ownInventory.getInventorySize() - 9);
 
         ownItemsForPage.sort(new Comparator<Item>() {

@@ -55,8 +55,7 @@ public class SearchInventoryListener extends SInventoryListener {
                     } else {
                         SearchParameter searchParameter = ((SInventoryItem) item).getSearchParameter();
                         SearchParameterBuilder searchParameterBuilder = searchManager.getSearchParameterBuilder(e.getWhoClicked().getUniqueId());
-                        System.out.println(searchParameter);
-                        System.out.println(item);
+
                         if (searchParameterBuilder.containsParameter(searchParameter)) {
                             searchParameterBuilder.removeSearchParameter(searchParameter);
                         } else {

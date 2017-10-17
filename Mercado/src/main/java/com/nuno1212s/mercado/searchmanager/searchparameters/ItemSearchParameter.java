@@ -44,10 +44,8 @@ public class ItemSearchParameter extends SearchParameter {
     @Override
     public boolean fitsSearch(Item item) {
         if (match != null) {
-            System.out.println(match);
             return item.getItem().getType().name().contains(match);
         }
-        System.out.println("eksde");
         return item.getItem().getType() == this.material;
     }
 
