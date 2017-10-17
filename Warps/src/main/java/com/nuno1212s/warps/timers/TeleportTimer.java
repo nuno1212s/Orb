@@ -27,9 +27,14 @@ public class TeleportTimer implements Runnable {
 
     public boolean registerTeleport(UUID u, Teleport h) {
         long timeNeeded = h.getTimeNeeded() * 1000;
-        return teleports.putIfAbsent(u, new TeleportState(timeNeeded, timeNeeded, h.getLocation().clone())) == null;
+        return teleports.putIfAbsent(u, new TeleportState(h, timeNeeded)) == null;
     }
 
+    /**
+     * Cancel the teleport related to a player
+     *
+     * @param u
+     */
     public void cancelTeleport(UUID u) {
         if (teleports.containsKey(u)) {
             teleports.remove(u);
@@ -62,17 +67,19 @@ public class TeleportTimer implements Runnable {
 @Data
 class TeleportState {
 
-    long timeNeeded, timeLeft;
+    Teleport originalClass;
 
-    Location teleportLocation;
+    long timeLeft;
 
     void safeTeleport(UUID u) {
         MainData.getIns().getScheduler().runTask(() -> {
             Player player = Bukkit.getPlayer(u);
+
             if (player == null || !player.isOnline()) {
                 return;
             }
-            player.teleport(teleportLocation);
+
+            player.teleport(originalClass.getLocation());
             MainData.getIns().getMessageManager().getMessage("TELEPORTED").sendTo(player);
         });
     }

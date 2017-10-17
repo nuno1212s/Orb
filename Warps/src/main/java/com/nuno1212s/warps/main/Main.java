@@ -13,6 +13,7 @@ import com.nuno1212s.warps.listeners.PlayerJoinListener;
 import com.nuno1212s.warps.listeners.PlayerMoveListener;
 import com.nuno1212s.warps.listeners.PlayerQuitListener;
 import com.nuno1212s.warps.timers.TeleportTimer;
+import com.nuno1212s.warps.tpamanager.TPAManager;
 import com.nuno1212s.warps.warpmanager.WarpManager;
 import lombok.Getter;
 
@@ -40,6 +41,9 @@ public class Main extends Module {
     @Getter
     private TeleportTimer teleportTimer;
 
+    @Getter
+    private TPAManager tpaManager;
+
     @Override
     public void onEnable() {
         ins = this;
@@ -48,6 +52,7 @@ public class Main extends Module {
         fileManager = new FileManager(this);
         homeManager = new HomeManager();
         teleportTimer = new TeleportTimer();
+        tpaManager = new TPAManager();
 
         WarpCommand cE = warpManager.getCommand();
         registerCommand(new String[]{"warp"}, cE);
