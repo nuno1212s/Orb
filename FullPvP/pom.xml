@@ -12,7 +12,7 @@
         <dependency>
             <groupId>com.nuno1212s</groupId>
             <artifactId>Core</artifactId>
-            <version>1.2</version>
+            <version>LATEST</version>
             <scope>provided</scope>
         </dependency>
 

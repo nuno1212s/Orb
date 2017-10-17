@@ -9,10 +9,11 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class TPAAcceptCommand implements CommandExecutor {
+public class TPADenyCommand implements CommandExecutor {
 
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
+    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
+
         if (!(commandSender instanceof Player)) {
             commandSender.sendMessage(ChatColor.RED + "This command is only for players");
             return true;
@@ -20,14 +21,15 @@ public class TPAAcceptCommand implements CommandExecutor {
 
         Player p = (Player) commandSender;
 
-        TPAInstance teleport = Main.getIns().getTpaManager().getTeleportFromRecipient(p.getUniqueId());
+        TPAInstance teleportFromRecipient = Main.getIns().getTpaManager().getTeleportFromRecipient(p.getUniqueId());
 
-        if (teleport == null) {
-            MainData.getIns().getMessageManager().getMessage("TPA_NO_PENDING").sendTo(commandSender);
+        if (teleportFromRecipient == null || teleportFromRecipient.hasExpired()) {
+            MainData.getIns().getMessageManager().getMessage("TPA_NO_PENDING_TELEPORT").sendTo(p);
             return true;
         }
 
-        teleport.start();
+        teleportFromRecipient.notifyCancel();
+        Main.getIns().getTpaManager().removeTeleportFromRecipient(p.getUniqueId());
 
         return true;
     }

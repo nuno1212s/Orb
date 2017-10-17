@@ -52,7 +52,7 @@ public class Main extends Module {
         fileManager = new FileManager(this);
         homeManager = new HomeManager();
         teleportTimer = new TeleportTimer();
-        tpaManager = new TPAManager();
+        tpaManager = new TPAManager(this);
 
         WarpCommand cE = warpManager.getCommand();
         registerCommand(new String[]{"warp"}, cE);

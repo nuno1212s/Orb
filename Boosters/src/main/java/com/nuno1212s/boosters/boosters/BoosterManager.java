@@ -20,8 +20,6 @@ import java.util.stream.Collectors;
  */
 public class BoosterManager {
 
-    //TODO: The boosters must store the ID of their owner, because they need to be globally accessible
-
     @Getter
     private final List<Booster> boosters;
 
