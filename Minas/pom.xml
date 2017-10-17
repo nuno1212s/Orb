@@ -34,7 +34,8 @@
             <groupId>com.boydti</groupId>
             <artifactId>fawe-api</artifactId>
             <version>16.09.11-3a8d54b-284</version>
-            <scope>provided</scope>
+            <systemPath>${project.basedir}/src/main/libs/fawe-api-16.09.11-3a8d54b-284.jar</systemPath>
+            <scope>system</scope>
         </dependency>
 
     </dependencies>

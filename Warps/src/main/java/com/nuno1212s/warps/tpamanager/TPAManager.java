@@ -34,6 +34,16 @@ public class TPAManager {
         return this.tpas.containsKey(playerID);
     }
 
+    public TPAInstance getTeleportFromRecipient(UUID recipient) {
+        for (TPAInstance tpaInstance : this.tpas.values()) {
+            if (tpaInstance.getTarget().getPlayerID().equals(recipient)) {
+                return tpaInstance;
+            }
+        }
+
+        return null;
+    }
+
     public TPAInstance getTeleport(UUID player) {
         return this.tpas.get(player);
     }
