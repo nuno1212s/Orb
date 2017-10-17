@@ -3,6 +3,9 @@ package com.nuno1212s.mercado.listeners;
 import com.nuno1212s.mercado.main.Main;
 import com.nuno1212s.mercado.marketmanager.Item;
 import com.nuno1212s.mercado.util.chathandlers.ChatHandlerManager;
+import com.nuno1212s.util.Callback;
+import com.nuno1212s.util.Pair;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -24,7 +27,8 @@ public class PlayerQuitListener implements Listener {
     public void onQuit(PlayerQuitEvent e) {
         ChatHandlerManager chatManager = Main.getIns().getMarketManager().getChatManager();
         if (chatManager.hasCallback(e.getPlayer().getUniqueId())) {
-            chatManager.getCallback(e.getPlayer().getUniqueId()).callback(false, e.getPlayer());
+            Callback<Pair<Boolean, Player>> callback = (Callback<Pair<Boolean,Player>>) chatManager.getCallback(e.getPlayer().getUniqueId());
+            callback.callback(new Pair<>(false, e.getPlayer()));
             chatManager.removeCallback(e.getPlayer().getUniqueId());
         }
     }

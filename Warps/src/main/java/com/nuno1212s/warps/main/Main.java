@@ -14,6 +14,9 @@ import com.nuno1212s.warps.listeners.PlayerMoveListener;
 import com.nuno1212s.warps.listeners.PlayerQuitListener;
 import com.nuno1212s.warps.timers.TeleportTimer;
 import com.nuno1212s.warps.tpamanager.TPAManager;
+import com.nuno1212s.warps.tpamanager.commands.TPAAcceptCommand;
+import com.nuno1212s.warps.tpamanager.commands.TPACommand;
+import com.nuno1212s.warps.tpamanager.commands.TPADenyCommand;
 import com.nuno1212s.warps.warpmanager.WarpManager;
 import lombok.Getter;
 
@@ -63,6 +66,9 @@ public class Main extends Module {
         registerCommand(new String[]{"sethome"}, new SetHomeCommand());
         registerCommand(new String[]{"delhome"}, new DelHomeCommand());
         registerCommand(new String[]{"home"}, new HomeCommand());
+        registerCommand(new String[]{"tpa"}, new TPACommand());
+        registerCommand(new String[]{"tpaaccept"}, new TPAAcceptCommand());
+        registerCommand(new String[]{"tpadeny"}, new TPADenyCommand());
 
         MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));
 

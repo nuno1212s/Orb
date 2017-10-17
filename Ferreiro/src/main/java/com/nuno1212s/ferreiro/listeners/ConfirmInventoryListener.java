@@ -20,7 +20,7 @@ public class ConfirmInventoryListener implements Listener {
             e.setResult(Event.Result.DENY);
             if (e.getClickedInventory().getName().equalsIgnoreCase(ChatColor.RED + "Confirm the repair")) {
                 if (e.getSlot() == 11) {
-                    Main.getIns().getInventory(e.getWhoClicked().getUniqueId()).getC().callback();
+                    Main.getIns().getInventory(e.getWhoClicked().getUniqueId()).getC().callback(null);
                     e.getWhoClicked().closeInventory();
                 } else if (e.getSlot() == 15) {
                     Main.getIns().removeInventory(e.getWhoClicked().getUniqueId());
