@@ -110,9 +110,11 @@ public class TPAInstance implements Teleport {
         Player targetPlayer = this.getTarget().getPlayerReference(Player.class),
                 senderPlayer = this.getSender().getPlayerReference(Player.class);
 
-        if (targetPlayer == null) {
+        if (targetPlayer == null || senderPlayer == null) {
             return;
         }
+
+        MainData.getIns().getMessageManager().getMessage("TPA_SENT").sendTo(senderPlayer);
 
         if (this.type == TeleportType.TPA) {
             MainData.getIns().getMessageManager().getMessage("TPA_REQUESTED")

@@ -21,6 +21,7 @@ public class Warp implements Teleport {
 
     private String warpName;
 
+    // TODO: 18/10/2017 Remove direct reference to location, as location stores the world reference and can cause memory leaks
     private Location l;
 
     private String permission;

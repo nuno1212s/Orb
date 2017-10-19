@@ -53,7 +53,7 @@ public class MRedisListener implements RedisReceiver {
         data.put("ItemID", item.getItemID());
         data.put("APPLICABLESERVER", item.getApplicableServer());
         data.put("ITEM", ItemUtils.itemTo64(item.getItem()));
-        data.put("BUYER", item.getBuyer().toString());
+        data.put("BUYER", item.getBuyer() == null ? "" : item.getBuyer().toString());
         data.put("OWNER", item.getOwner().toString());
         data.put("COST", item.getCost());
         data.put("PLACETIME", item.getPlaceTime());
