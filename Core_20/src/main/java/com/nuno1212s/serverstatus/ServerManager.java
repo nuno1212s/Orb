@@ -66,8 +66,7 @@ public class ServerManager {
         this.serverName = (String) json.getOrDefault("ServerName", "");
         this.serverType = (String) json.getOrDefault("ServerType", "");
 
-        savePlayerCount(0, 0);
-
+        this.getRedisHandler().updatePlayerCount(new Pair<>(0, 0));
 
         MainData.getIns().getScheduler().runTaskTimerAsync(() -> {
             fetchServerData((o) -> {

@@ -1,6 +1,7 @@
 package com.nuno1212s.warps.warpmanager;
 
 import com.nuno1212s.main.MainData;
+import com.nuno1212s.util.LLocation;
 import com.nuno1212s.util.SerializableLocation;
 import com.nuno1212s.warps.main.Main;
 import com.nuno1212s.warps.timers.Teleport;
@@ -21,8 +22,7 @@ public class Warp implements Teleport {
 
     private String warpName;
 
-    // TODO: 18/10/2017 Remove direct reference to location, as location stores the world reference and can cause memory leaks
-    private Location l;
+    private LLocation l;
 
     private String permission;
 
@@ -32,7 +32,7 @@ public class Warp implements Teleport {
 
     @Override
     public Location getLocation() {
-        return l;
+        return l.getLocation();
     }
 
     @Override
@@ -57,7 +57,7 @@ public class Warp implements Teleport {
             Main.getIns().getTeleportTimer().registerTeleport(p.getUniqueId(), this);
             MainData.getIns().getMessageManager().getMessage("WARPS_WARPING_IN").format("%time%", String.valueOf(getDelayInSeconds())).sendTo(p);
         } else {
-            p.teleport(getL());
+            p.teleport(getLocation());
             MainData.getIns().getMessageManager().getMessage("WARPS_WARPED").sendTo(p);
         }
     }

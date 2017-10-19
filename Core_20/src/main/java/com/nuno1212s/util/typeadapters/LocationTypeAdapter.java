@@ -3,16 +3,17 @@ package com.nuno1212s.util.typeadapters;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import com.nuno1212s.util.LLocation;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 
 import java.io.IOException;
 
-public class LocationTypeAdapter extends TypeAdapter<Location> {
+public class LocationTypeAdapter extends TypeAdapter<LLocation> {
 
     @Override
-    public Location read(JsonReader jsonReader) throws IOException {
+    public LLocation read(JsonReader jsonReader) throws IOException {
 
         jsonReader.beginObject();
 
@@ -53,23 +54,18 @@ public class LocationTypeAdapter extends TypeAdapter<Location> {
 
         jsonReader.endObject();
 
-        World w = Bukkit.getWorld(world);
-        if (w == null) {
-            w = Bukkit.getWorlds().get(0);
-        }
-
-        return new Location(w, x, y, z, yaw, pitch);
+        return new LLocation(x, y, z, yaw, pitch, world);
     }
 
     @Override
-    public void write(JsonWriter jsonWriter, Location o) throws IOException {
+    public void write(JsonWriter jsonWriter, LLocation o) throws IOException {
         jsonWriter.beginObject();
         jsonWriter.name("X").value(o.getX());
         jsonWriter.name("Y").value(o.getY());
         jsonWriter.name("Z").value(o.getZ());
         jsonWriter.name("Yaw").value(o.getYaw());
         jsonWriter.name("Pitch").value(o.getPitch());
-        jsonWriter.name("World").value(o.getWorld().getName());
+        jsonWriter.name("World").value(o.getWorld());
         jsonWriter.endObject();
     }
 }

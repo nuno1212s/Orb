@@ -5,6 +5,7 @@ import com.nuno1212s.displays.chat.ChatManager;
 import com.nuno1212s.displays.chat.GlobalChatCommand;
 import com.nuno1212s.displays.commands.ChatControlCommand;
 import com.nuno1212s.displays.commands.ReloadConfigCommand;
+import com.nuno1212s.displays.listeners.PlayerDisconnectListener;
 import com.nuno1212s.displays.listeners.PlayerJoinListener;
 import com.nuno1212s.displays.listeners.PlayerUpdateListener;
 import com.nuno1212s.displays.placeholders.PlaceHolderManager;
@@ -59,6 +60,7 @@ public class DisplayMain extends Module {
         Bukkit.getServer().getPluginManager().registerEvents(new ChatListener(), ins);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), ins);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerUpdateListener(), ins);
+        Bukkit.getServer().getPluginManager().registerEvents(new PlayerDisconnectListener(), ins);
 
     }
 

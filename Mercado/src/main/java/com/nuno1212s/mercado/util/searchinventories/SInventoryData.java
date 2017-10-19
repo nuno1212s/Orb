@@ -1,5 +1,6 @@
 package com.nuno1212s.mercado.util.searchinventories;
 
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.mercado.searchmanager.SearchParameter;
 import com.nuno1212s.mercado.searchmanager.SearchParameterBuilder;
 import com.nuno1212s.mercado.searchmanager.searchparameters.SearchParameters;
@@ -57,7 +58,8 @@ public class SInventoryData extends InventoryData {
                         ItemMeta itemMeta = item1.getItemMeta();
                         List<String> lore = itemMeta.getLore() == null ? new ArrayList<>() : itemMeta.getLore();
                         lore.add("");
-                        lore.add(ChatColor.RED + "Selected");
+                        String search_selected = MainData.getIns().getMessageManager().getMessage("SEARCH_SELECTED").toString();
+                        lore.add(search_selected);
                         itemMeta.setLore(lore);
                         itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                         item1.setItemMeta(itemMeta);
@@ -68,7 +70,8 @@ public class SInventoryData extends InventoryData {
                         ItemMeta itemMeta = item1.getItemMeta();
                         List<String> lore = itemMeta.getLore() == null ? new ArrayList<>() : itemMeta.getLore();
                         lore.add("");
-                        lore.add(ChatColor.GREEN + "Click to select");
+                        String search_select = MainData.getIns().getMessageManager().getMessage("SEARCH_SELECT").toString();
+                        lore.add(search_select);
                         itemMeta.setLore(lore);
                         item1.setItemMeta(itemMeta);
                         inv.setItem(item.getSlot(), item1);

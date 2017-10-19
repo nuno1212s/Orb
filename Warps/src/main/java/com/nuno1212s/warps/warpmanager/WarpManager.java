@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.nuno1212s.main.BukkitMain;
 import com.nuno1212s.modulemanager.Module;
+import com.nuno1212s.util.LLocation;
 import com.nuno1212s.util.typeadapters.LocationTypeAdapter;
 import com.nuno1212s.warps.commands.WarpCommand;
 import lombok.Getter;
@@ -90,7 +91,7 @@ public class WarpManager {
 
     public void registerWarp(String name, Location l, boolean delay, int delaySeconds, boolean console){
         if (getWarp(name) == null) {
-            Warp w = new Warp(name, l.clone(), "warp." + name, delay, console, delaySeconds);
+            Warp w = new Warp(name, new LLocation(l.clone()), "warp." + name, delay, console, delaySeconds);
 
             if (!w.isRequiredConsole()) {
                 registerCommand(w.getWarpName());

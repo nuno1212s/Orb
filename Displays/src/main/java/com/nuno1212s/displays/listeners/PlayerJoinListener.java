@@ -4,6 +4,7 @@ import com.nuno1212s.displays.DisplayMain;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
@@ -12,10 +13,11 @@ import org.bukkit.event.player.PlayerJoinEvent;
  */
 public class PlayerJoinListener implements Listener {
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onJoin(PlayerJoinEvent e) {
         PlayerData player = MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
         DisplayMain.getIns().getScoreboardManager().handlePlayerJoin(player, e.getPlayer());
         DisplayMain.getIns().getTabManager().sendDisplay(e.getPlayer());
+
     }
 }

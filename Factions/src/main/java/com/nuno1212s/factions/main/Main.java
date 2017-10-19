@@ -4,7 +4,7 @@ import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.FactionColl;
 import com.massivecraft.factions.entity.MPlayer;
 import com.nuno1212s.displays.DisplayMain;
-import com.nuno1212s.displays.listeners.PlayerUpdateListener;
+import com.nuno1212s.displays.listeners.PlayerUpdateListener;e
 import com.nuno1212s.factions.coins.CoinCommand;
 import com.nuno1212s.factions.events.*;
 import com.nuno1212s.factions.miningworld.MiningWorld;
@@ -42,7 +42,7 @@ public class Main extends Module {
         BukkitMain ins = BukkitMain.getIns();
 
         ins.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), ins);
-        ins.getServer().getPluginManager().registerEvents(new PlayerDisconnectListener(), ins);
+        //ins.getServer().getPluginManager().registerEvents(new PlayerDisconnectListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new MCMMOExperienceListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new FactionCreateListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new PowerChangeListener(), ins);
