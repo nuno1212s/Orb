@@ -229,6 +229,15 @@ public class Crate {
             }
         }
 
+        InventoryItem aReturn = Main.getIns().getCrateManager().getCrateDisplayInventory().getItemWithFlag("RETURN");
+        if (aReturn == null) {
+            return displayInventory;
+        }
+
+        ItemStack i = displayInventory.getItem(aReturn.getSlot());
+
+        // TODO: 22/10/2017 Append this crates name to the return item NBT so we can return to this inventory later
+
         return displayInventory;
     }
 
