@@ -1,6 +1,7 @@
-package com.nuno1212s.crates;
+package com.nuno1212s.crates.crates;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.bukkit.inventory.ItemStack;
 
@@ -8,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
  * Reward class
  */
 @ToString
+@NoArgsConstructor
 public class Reward {
 
     @Getter
@@ -17,7 +19,7 @@ public class Reward {
     double probability;
 
     @Getter
-    transient final double originalProbability;
+    transient double originalProbability;
 
     @Getter
     private ItemStack item;

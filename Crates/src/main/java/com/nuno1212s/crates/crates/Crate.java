@@ -1,6 +1,5 @@
 package com.nuno1212s.crates.crates;
 
-import com.nuno1212s.crates.Reward;
 import com.nuno1212s.crates.animations.Animation;
 import com.nuno1212s.crates.Main;
 import com.nuno1212s.main.MainData;
@@ -13,8 +12,6 @@ import com.nuno1212s.util.inventories.InventoryItem;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;

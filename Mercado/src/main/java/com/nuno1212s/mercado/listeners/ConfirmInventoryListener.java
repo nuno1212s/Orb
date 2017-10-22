@@ -52,6 +52,7 @@ public class ConfirmInventoryListener extends InventoryListener {
                 NBTCompound itemData = new NBTCompound(item1);
                 String itemID = (String) itemData.getValues().get("ItemID");
                 Item buyItem = marketManager.getItem(itemID);
+
                 if (buyItem == null) {
                     addCloseException(e.getWhoClicked().getUniqueId());
                     MainData.getIns().getMessageManager().getMessage("ERROR_NO_ITEM").sendTo(e.getWhoClicked());

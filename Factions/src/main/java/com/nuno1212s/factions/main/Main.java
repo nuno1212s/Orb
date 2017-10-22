@@ -4,7 +4,7 @@ import com.massivecraft.factions.entity.Faction;
 import com.massivecraft.factions.entity.FactionColl;
 import com.massivecraft.factions.entity.MPlayer;
 import com.nuno1212s.displays.DisplayMain;
-import com.nuno1212s.displays.listeners.PlayerUpdateListener;e
+import com.nuno1212s.displays.listeners.PlayerUpdateListener;
 import com.nuno1212s.factions.coins.CoinCommand;
 import com.nuno1212s.factions.events.*;
 import com.nuno1212s.factions.miningworld.MiningWorld;
@@ -15,6 +15,8 @@ import com.nuno1212s.main.BukkitMain;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.modulemanager.ModuleData;
+import com.nuno1212s.playermanager.PlayerData;
+import com.nuno1212s.util.ServerCurrencyHandler;
 import lombok.Getter;
 import org.bukkit.ChatColor;
 
@@ -78,6 +80,8 @@ public class Main extends Module {
             return faction.getName();
         });
 
+        registerServerCurrency();
+
         registerCommand(new String[]{"coins", "coin"}, new CoinCommand());
         registerCommand(new String[]{"minar"}, new MiningWorldCommand());
 
@@ -87,4 +91,59 @@ public class Main extends Module {
     public void onDisable() {
         miningWorld.saveToFile();
     }
+
+    void registerServerCurrency() {
+        MainData.getIns().setServerCurrencyHandler(new ServerCurrencyHandler() {
+            @Override
+            public long getCurrencyAmount(PlayerData playerData) {
+
+                if (!(playerData instanceof FPlayerData)) {
+                    return 0;
+                }
+
+                return ((FPlayerData) playerData).getCoins();
+            }
+
+            @Override
+            public boolean removeCurrency(PlayerData playerData, long amount) {
+
+                if (!(playerData instanceof FPlayerData)) {
+                    return false;
+                }
+
+                if (((FPlayerData) playerData).getCoins() >= amount) {
+                    ((FPlayerData) playerData).setCoins(((FPlayerData) playerData).getCoins() - amount);
+                    return true;
+                }
+
+                return false;
+            }
+
+            @Override
+            public void addCurrency(PlayerData playerData, long amount) {
+
+                if (!(playerData instanceof FPlayerData)) {
+                    return;
+                }
+
+                ((FPlayerData) playerData).setCoins(((FPlayerData) playerData).getCoins() + amount);
+
+            }
+
+            @Override
+            public boolean hasCurrency(PlayerData playerData, long amount) {
+
+                if (!(playerData instanceof FPlayerData)) {
+                    return false;
+                }
+
+                if (((FPlayerData) playerData).getCoins() >= amount) {
+                    return true;
+                }
+
+                return false;
+            }
+        });
+    }
+
 }

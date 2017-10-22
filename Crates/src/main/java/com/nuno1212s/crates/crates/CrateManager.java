@@ -3,33 +3,21 @@ package com.nuno1212s.crates.crates;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.nuno1212s.crates.Reward;
 import com.nuno1212s.crates.animations.AnimationManager;
-import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.util.LLocation;
-import com.nuno1212s.util.Pair;
-import com.nuno1212s.util.SerializableLocation;
 import com.nuno1212s.util.inventories.InventoryData;
-import com.nuno1212s.util.inventories.InventoryItem;
 import com.nuno1212s.util.typeadapters.ItemStackTypeAdapter;
 import com.nuno1212s.util.typeadapters.LocationTypeAdapter;
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -122,6 +110,7 @@ public class CrateManager {
         try (Writer crateFileWriter = new FileWriter(this.crateFile);
             Writer crateLocationWriter = new FileWriter(this.crateLocationFile)) {
             this.gson.toJson(this.crates, crateFileWriter);
+
             this.gson.toJson(this.crateBlocks, crateLocationWriter);
         } catch (IOException e) {
             e.printStackTrace();

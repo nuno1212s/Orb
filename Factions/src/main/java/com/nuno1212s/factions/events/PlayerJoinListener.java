@@ -20,6 +20,11 @@ public class PlayerJoinListener implements Listener {
     }
 
     @EventHandler
+    public void onJoin(PlayerJoinEvent e) {
+        e.setJoinMessage(null);
+    }
+
+    @EventHandler
     public void onPlayerInfoLoad(PlayerInformationLoadEvent e) {
         PlayerData playerInfo = e.getPlayerInfo();
         FPlayerData data = Main.getIns().getMysql().getPlayerData(playerInfo);

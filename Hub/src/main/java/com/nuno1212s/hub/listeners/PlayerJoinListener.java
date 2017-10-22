@@ -40,6 +40,7 @@ public class PlayerJoinListener implements Listener {
         Main.getIns().getPlayerToggleManager().handleJoin(player, e.getPlayer());
 
         MainData.getIns().getMessageManager().getMessage("JOIN").sendTo(e.getPlayer());
+
         if (e.getPlayer().hasPermission("joinMessage")) {
             MainData.getIns().getMessageManager().getMessage("PLAYER_JOINED")
                     .format("%player%", player.getNameWithPrefix())
