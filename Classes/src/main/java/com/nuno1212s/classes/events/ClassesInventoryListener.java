@@ -32,6 +32,8 @@ public class ClassesInventoryListener implements Listener {
                 e.setResult(Event.Result.DENY);
             }
 
+            e.setResult(Event.Result.DENY);
+
             if (e.getClickedInventory() != null && byInventory.equals(e.getClickedInventory())) {
                 return;
             }
@@ -40,52 +42,48 @@ public class ClassesInventoryListener implements Listener {
                 return;
             }
 
-            if (byInventory.equals(e.getClickedInventory())) {
-                e.setResult(Event.Result.DENY);
 
-                KInventoryItem item = (KInventoryItem) byInventory.getItem(e.getSlot());
+            KInventoryItem item = (KInventoryItem) byInventory.getItem(e.getSlot());
 
-                if (item == null) {
-                    return;
-                }
-
-                if (item.isKit()) {
-
-
-                    Kit kit = item.getKit();
-
-                    if (e.getClick().isLeftClick()) {
-
-                        kit.giveKitTo((Player) e.getWhoClicked());
-                        e.getClickedInventory().setContents(byInventory.buildInventory((Player) e.getWhoClicked()).getContents());
-
-                    } else if (e.getClick().isRightClick()) {
-
-                        e.getWhoClicked().closeInventory();
-                        e.getWhoClicked().openInventory(kit.getClassItems());
-
-                    }
-
-                    return;
-                }
-
-                String connectingInventory = item.getConnectingInventory();
-
-                if (connectingInventory == null) {
-                    return;
-                }
-
-                e.getWhoClicked().closeInventory();
-
-                KInventoryData inventoryByID = Main.getIns().getKitManager().getInventoryByID(connectingInventory);
-
-                if (inventoryByID == null) {
-                    return;
-                }
-
-                e.getWhoClicked().openInventory(inventoryByID.buildInventory((Player) e.getWhoClicked()));
-
+            if (item == null) {
+                return;
             }
+
+            if (item.isKit()) {
+
+
+                Kit kit = item.getKit();
+
+                if (e.getClick().isLeftClick()) {
+
+                    kit.giveKitTo((Player) e.getWhoClicked());
+                    e.getClickedInventory().setContents(byInventory.buildInventory((Player) e.getWhoClicked()).getContents());
+
+                } else if (e.getClick().isRightClick()) {
+
+                    e.getWhoClicked().closeInventory();
+                    e.getWhoClicked().openInventory(kit.getClassItems());
+
+                }
+
+                return;
+            }
+
+            String connectingInventory = item.getConnectingInventory();
+
+            if (connectingInventory == null) {
+                return;
+            }
+
+            e.getWhoClicked().closeInventory();
+
+            KInventoryData inventoryByID = Main.getIns().getKitManager().getInventoryByID(connectingInventory);
+
+            if (inventoryByID == null) {
+                return;
+            }
+
+            e.getWhoClicked().openInventory(inventoryByID.buildInventory((Player) e.getWhoClicked()));
 
         }
     }

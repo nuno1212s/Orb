@@ -1,0 +1,15 @@
+{
+  "InventoryName": "&cCrate display",
+  "InventorySize": 54,
+  "InventoryID": "crateDisplay",
+  "InventoryItems": [
+    {
+      "Slot": 49,
+      "Item": {
+        "Material": "ARROW",
+        "DisplayName": "&cReturn"
+      },
+      "Flags": ["RETURN"]
+    }
+  ]
+}

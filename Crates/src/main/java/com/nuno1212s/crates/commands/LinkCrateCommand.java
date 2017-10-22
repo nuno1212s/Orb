@@ -29,7 +29,7 @@ public class LinkCrateCommand implements Command {
     @Override
     public void execute(Player player, String[] args) {
         if (!player.hasPermission("crate.link")) {
-            MainData.getIns().getMessageManager().getMessage("NO_PERMISSION").send(player);
+            MainData.getIns().getMessageManager().getMessage("NO_PERMISSION").sendTo(player);
             return;
         }
 

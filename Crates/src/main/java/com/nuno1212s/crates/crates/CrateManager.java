@@ -13,6 +13,7 @@ import com.nuno1212s.util.SerializableLocation;
 import com.nuno1212s.util.inventories.InventoryData;
 import com.nuno1212s.util.inventories.InventoryItem;
 import com.nuno1212s.util.typeadapters.ItemStackTypeAdapter;
+import com.nuno1212s.util.typeadapters.LocationTypeAdapter;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.ChatColor;
@@ -61,7 +62,8 @@ public class CrateManager {
     @SuppressWarnings("unchecked")
     public CrateManager(Module mainModule) {
 
-        this.gson = new GsonBuilder().registerTypeAdapter(ItemStack.class, new ItemStackTypeAdapter()).create();
+        this.gson = new GsonBuilder().registerTypeAdapter(ItemStack.class, new ItemStackTypeAdapter())
+                .registerTypeAdapter(LLocation.class, new LocationTypeAdapter()).create();
 
         this.defaultKeyItem = new ItemStack(Material.TRIPWIRE_HOOK);
 
@@ -127,6 +129,12 @@ public class CrateManager {
 
     }
 
+    /**
+     * Get a crate linked to a block at a certain location
+     *
+     * @param l
+     * @return
+     */
     public Crate getCrateAtLocation(Location l) {
         for (Map.Entry<LLocation, String> crateLocation : this.crateBlocks.entrySet()) {
             LLocation locations = crateLocation.getKey();
@@ -150,6 +158,14 @@ public class CrateManager {
             }
         }
         return false;
+    }
+
+    public void handleCrateRemoval(Crate c) {
+        for (Map.Entry<LLocation, String> crateLocation : this.crateBlocks.entrySet()) {
+            if (crateLocation.getValue().equalsIgnoreCase(c.getCrateName())) {
+                this.crateBlocks.remove(crateLocation.getKey());
+            }
+        }
     }
 
     public void setCrateAtLocation(Location l, Crate c) {
@@ -188,6 +204,7 @@ public class CrateManager {
 
     public void removeCrate(Crate c) {
         this.crates.remove(c);
+        handleCrateRemoval(c);
     }
 
     public Crate getCrate(String crateName) {

@@ -20,6 +20,8 @@ public class CInventoryData extends InventoryData {
         for (InventoryItem inventoryItem : this.getItems()) {
             if (inventoryItem instanceof CInventoryItem) {
                 i.setItem(inventoryItem.getSlot(), ((CInventoryItem) inventoryItem).getDisplayItem());
+            } else {
+                i.setItem(inventoryItem.getSlot(), inventoryItem.getItem());
             }
         }
 

@@ -39,6 +39,7 @@ public class Main extends Module {
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerInteractListener(), plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerBreakBlockListener(), plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerChangeItemNameListener(), plugin);
+        Bukkit.getServer().getPluginManager().registerEvents(new CrateDisplayClickListener(), plugin);
     }
 
     @Override

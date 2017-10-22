@@ -39,7 +39,7 @@ public class CInventoryItem extends InventoryItem {
         this.cost = ((Long) itemData.getOrDefault("Cost", 0L)).intValue();
         this.isServerCurrency = (Boolean) itemData.getOrDefault("IsServerCurrency", false);
         this.type = RewardType.valueOf((String) itemData.getOrDefault("RewardType", "COMMAND"));
-        this.reward = this.type.fromJSON((JSONObject) itemData.getOrDefault("Reward", ""));
+        this.reward = this.type.fromJSON(itemData);
 
     }
 
@@ -123,9 +123,9 @@ public class CInventoryItem extends InventoryItem {
 
         public Object fromJSON(JSONObject itemData) {
             if (this == COMMAND) {
-                return itemData.getOrDefault("Command", "");
+                return (String) itemData.getOrDefault("Reward", "");
             } else if (this == ITEM) {
-                return new SerializableItem(itemData);
+                return new SerializableItem((JSONObject) itemData.getOrDefault("Reward", new JSONObject()));
             }
 
             return null;

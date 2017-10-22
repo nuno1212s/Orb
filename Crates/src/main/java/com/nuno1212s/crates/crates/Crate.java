@@ -120,6 +120,11 @@ public class Crate {
         p.openInventory(animation.getToEdit());
     }
 
+    /**
+     * Get a random reward
+     *
+     * @return
+     */
     public ItemStack getRandomReward() {
         Random r = new Random();
 
