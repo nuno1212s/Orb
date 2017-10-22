@@ -1,7 +1,7 @@
 package com.nuno1212s.crates.commands;
 
 import com.google.common.collect.Sets;
-import com.nuno1212s.crates.Crate;
+import com.nuno1212s.crates.crates.Crate;
 import com.nuno1212s.crates.Main;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.util.CommandUtil.Command;

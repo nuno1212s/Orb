@@ -64,6 +64,9 @@ public class CInventoryItem extends InventoryItem {
 
     }
 
+    /**
+     * Buy the item from the player
+     */
     public void buyItem(PlayerData playerData) {
         Player p = playerData.getPlayerReference(Player.class);
 
@@ -79,7 +82,7 @@ public class CInventoryItem extends InventoryItem {
                 MainData.getIns().getMessageManager().getMessage("BOUGHT_ITEM_SERVER_CURRENCY")
                         .format("%price%", String.valueOf(getCost()))
                         .sendTo(p);
-                giveReward(p);
+                giveItem(p);
             } else {
                 MainData.getIns().getMessageManager().getMessage("NO_SERVER_CURRENCY")
                         .sendTo(p);
@@ -90,7 +93,7 @@ public class CInventoryItem extends InventoryItem {
                 MainData.getIns().getMessageManager().getMessage("BOUGHT_ITEM_CASH")
                         .format("%price%", String.valueOf(getCost()))
                         .sendTo(p);
-                giveReward(p);
+                giveItem(p);
             } else {
                 MainData.getIns().getMessageManager().getMessage("NO_CASH")
                         .sendTo(p);
@@ -99,7 +102,10 @@ public class CInventoryItem extends InventoryItem {
 
     }
 
-    private void giveReward(Player p) {
+    /**
+     * Give the reward to a player
+     */
+    private void giveItem(Player p) {
         if (getType() == ITEM) {
             p.getInventory().addItem((ItemStack) getReward());
         } else if (getType() == COMMAND) {

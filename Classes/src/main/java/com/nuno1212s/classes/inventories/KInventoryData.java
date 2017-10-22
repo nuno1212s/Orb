@@ -13,13 +13,8 @@ import java.util.ArrayList;
 
 public class KInventoryData extends InventoryData {
 
-    @Getter
-    String inventoryID;
-
     public KInventoryData(JSONObject j) {
         super(j);
-
-        this.inventoryID = (String) j.get("InventoryID");
 
         JSONArray inventoryItems = (JSONArray) j.get("InventoryItems");
 

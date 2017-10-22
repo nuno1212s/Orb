@@ -1,6 +1,6 @@
 package com.nuno1212s.crates.animations.animations;
 
-import com.nuno1212s.crates.Crate;
+import com.nuno1212s.crates.crates.Crate;
 import com.nuno1212s.crates.Main;
 import com.nuno1212s.crates.animations.Animation;
 import org.bukkit.Bukkit;

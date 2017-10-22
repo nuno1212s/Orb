@@ -17,7 +17,7 @@ public class Reward {
     double probability;
 
     @Getter
-    final double originalProbability;
+    transient final double originalProbability;
 
     @Getter
     private ItemStack item;

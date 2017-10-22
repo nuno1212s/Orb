@@ -39,6 +39,12 @@ public class KInventoryItem extends InventoryItem {
         return Main.getIns().getKitManager().getKit(kitID);
     }
 
+    /**
+     * Build the item to get displayed in the kit inventory
+     *
+     * @param p
+     * @return
+     */
     public ItemStack buildItem(Player p) {
         Kit k = Main.getIns().getKitManager().getKit(kitID);
 

@@ -1,6 +1,6 @@
 package com.nuno1212s.crates.animations;
 
-import com.nuno1212s.crates.Crate;
+import com.nuno1212s.crates.crates.Crate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bukkit.entity.Player;

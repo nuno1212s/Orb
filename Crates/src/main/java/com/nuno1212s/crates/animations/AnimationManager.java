@@ -1,7 +1,7 @@
 package com.nuno1212s.crates.animations;
 
-import com.nuno1212s.crates.Crate;
-import com.nuno1212s.crates.CrateManager;
+import com.nuno1212s.crates.crates.Crate;
+import com.nuno1212s.crates.crates.CrateManager;
 import com.nuno1212s.crates.animations.AnimationTimer.AnimationTimer;
 import com.nuno1212s.crates.animations.animations.DefaultAnimation;
 import com.nuno1212s.main.MainData;
@@ -48,8 +48,11 @@ public class AnimationManager {
         }
 
         timer = new AnimationTimer();
+
         MainData.getIns().getScheduler().runTaskTimer(timer, 0, 1);
+
         this.animationStuff = animationStuff;
+
         showItems = new ArrayList<>();
 
         JSONObject json;
@@ -83,7 +86,9 @@ public class AnimationManager {
             return;
         }
         List<String> displayItems = new ArrayList<>();
+
         JSONObject obj = new JSONObject();
+
         this.showItems.forEach(displayItem ->
             displayItems.add(CrateManager.itemTo64(displayItem))
         );
@@ -134,6 +139,7 @@ public class AnimationManager {
         Crate crate = animation.getCrate();
 
         ItemStack randomReward;
+
         try {
             randomReward = crate.getRandomReward();
         } catch (Exception e) {

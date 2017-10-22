@@ -1,6 +1,6 @@
 package com.nuno1212s.crates.events;
 
-import com.nuno1212s.crates.Crate;
+import com.nuno1212s.crates.crates.Crate;
 import com.nuno1212s.crates.Main;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
@@ -62,6 +62,14 @@ public class InventoryClickEventListener implements Listener {
                     }
                 } else if (item.hasItemFlag("CANCEL")) {
                     e.getWhoClicked().closeInventory();
+                } else if (item.hasItemFlag("SHOW_ITEMS")) {
+                    e.getWhoClicked().closeInventory();
+
+                    Crate c = Main.getIns().getCrateManager()
+                            .getCrateForKey(e.getClickedInventory()
+                                    .getItem(confirmInventory.getItemWithFlag("SHOW_ITEM").getSlot()));
+
+                    e.getWhoClicked().openInventory(c.buildCrateDisplay());
                 }
             }
 

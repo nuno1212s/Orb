@@ -31,7 +31,9 @@ import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Main plugin class
@@ -124,7 +126,13 @@ public class BukkitMain extends JavaPlugin {
     public void register(String... aliases) {
         PluginCommand command = getCommand(aliases[0], this);
 
-        command.setAliases(Arrays.asList(aliases));
+        List<String> alias = new ArrayList<>();
+
+        for (int i = 1; i < aliases.length; i++) {
+            alias.add(aliases[i]);
+        }
+
+        command.setAliases(alias);
         getCommandMap().register(this.getDescription().getName(), command);
     }
 

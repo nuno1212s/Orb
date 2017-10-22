@@ -4,6 +4,7 @@ import com.nuno1212s.classes.Main;
 import com.nuno1212s.classes.classmanager.Kit;
 import com.nuno1212s.classes.inventories.KInventoryData;
 import com.nuno1212s.classes.inventories.KInventoryItem;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -31,10 +32,19 @@ public class ClassesInventoryListener implements Listener {
                 e.setResult(Event.Result.DENY);
             }
 
+            if (e.getClickedInventory() != null && byInventory.equals(e.getClickedInventory())) {
+                return;
+            }
+
+            if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR) {
+                return;
+            }
+
             if (byInventory.equals(e.getClickedInventory())) {
                 e.setResult(Event.Result.DENY);
 
                 KInventoryItem item = (KInventoryItem) byInventory.getItem(e.getSlot());
+
                 if (item == null) {
                     return;
                 }
