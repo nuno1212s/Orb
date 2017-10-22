@@ -142,6 +142,7 @@ public class Kit {
         PlayerData player1 = MainData.getIns().getPlayerManager().getPlayer(player.getUniqueId());
         if (player1 instanceof KitPlayer) {
             KitPlayer player11 = (KitPlayer) player1;
+
             if (!player11.canUseKit(getId(), this.getDelay())) {
                 MainData.getIns().getMessageManager().getMessage("CANT_USE_KIT")
                         .format("%time%", new TimeUtil("DD days:HH hours:MM minutes:SS seconds")
@@ -149,6 +150,7 @@ public class Kit {
                         .sendTo(player);
                 return;
             }
+
             ((KitPlayer) player1).registerKitUsage(getId(), System.currentTimeMillis());
         }
 

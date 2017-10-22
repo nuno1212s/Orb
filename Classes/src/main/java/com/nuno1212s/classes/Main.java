@@ -4,7 +4,7 @@ import com.nuno1212s.classes.classmanager.KitManager;
 import com.nuno1212s.classes.commands.ClassCommandManager;
 import com.nuno1212s.classes.commands.ClassesCommand;
 import com.nuno1212s.classes.events.ClassEditInventoryListener;
-import com.nuno1212s.classes.events.ClassInventoryClickListener;
+import com.nuno1212s.classes.events.ClassDisplayInventoryClickListener;
 import com.nuno1212s.classes.events.ClassesInventoryListener;
 import com.nuno1212s.main.BukkitMain;
 import com.nuno1212s.main.MainData;
@@ -37,7 +37,7 @@ public class Main extends Module {
 
         Plugin p = BukkitMain.getIns();
         p.getServer().getPluginManager().registerEvents(new ClassEditInventoryListener(), p);
-        p.getServer().getPluginManager().registerEvents(new ClassInventoryClickListener(), p);
+        p.getServer().getPluginManager().registerEvents(new ClassDisplayInventoryClickListener(), p);
         p.getServer().getPluginManager().registerEvents(new ClassesInventoryListener(), p);
     }
 

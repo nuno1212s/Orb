@@ -34,7 +34,7 @@ public class ClassesInventoryListener implements Listener {
 
             e.setResult(Event.Result.DENY);
 
-            if (e.getClickedInventory() != null && byInventory.equals(e.getClickedInventory())) {
+            if (e.getClickedInventory() == null || !byInventory.equals(e.getClickedInventory())) {
                 return;
             }
 
@@ -44,6 +44,8 @@ public class ClassesInventoryListener implements Listener {
 
 
             KInventoryItem item = (KInventoryItem) byInventory.getItem(e.getSlot());
+
+            System.out.println(e.getSlot());
 
             if (item == null) {
                 return;

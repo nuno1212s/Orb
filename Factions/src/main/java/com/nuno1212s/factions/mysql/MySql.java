@@ -20,7 +20,7 @@ public class MySql {
         gson = new GsonBuilder().create();
         try (Connection c = MainData.getIns().getMySql().getConnection();
              Statement s = c.createStatement()) {
-            String factionTable = "CREATE TABLE IF NOT EXISTS factionsPlayers(UUID CHAR(40) NOT NULL PRIMARY KEY, COINS BIGINT, GROUPDATA varchar(100), KITUSAGE varchar(200), ENDERCHEST TEXT NOT NULL)";
+            String factionTable = "CREATE TABLE IF NOT EXISTS factionsPlayers(UUID CHAR(40) NOT NULL PRIMARY KEY, COINS BIGINT, GROUPDATA varchar(100), KITUSAGE varchar(200), ENDERCHEST MEDIUMTEXT NOT NULL)";
 
             s.execute(factionTable);
         } catch (SQLException e) {
@@ -85,11 +85,12 @@ public class MySql {
             s.setString(2, d.getServerGroupData().toDatabase());
             s.setLong(3, d.getCoins());
             s.setString(4, gson.toJson(d.getKitUsages()));
-            s.setString(5, EnderChestData.inventoryToJSON(d.getEnderChest()));
+            String enderChest = EnderChestData.inventoryToJSON(d.getEnderChest());
+            s.setString(5, enderChest);
             s.setString(6, d.getServerGroupData().toDatabase());
             s.setLong(7, d.getCoins());
             s.setString(8, gson.toJson(d.getKitUsages()));
-            s.setString(9, EnderChestData.inventoryToJSON(d.getEnderChest()));
+            s.setString(9, enderChest);
             s.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

@@ -9,7 +9,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 /**
  * Handles clicking in class inventories
  */
-public class ClassInventoryClickListener implements Listener {
+public class ClassDisplayInventoryClickListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onInventoryClick(InventoryClickEvent e) {
