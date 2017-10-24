@@ -56,7 +56,7 @@ public class CInventoryItem extends InventoryItem {
         lore.add("");
         Message cost = this.isServerCurrency ? MainData.getIns().getMessageManager().getMessage("COST_COINS")
                 : MainData.getIns().getMessageManager().getMessage("COST_CASH");
-        cost.format("%price", String.valueOf(this.getCost()));
+        cost.format("%price%", String.valueOf(this.getCost()));
         lore.add(cost.toString());
         itemMeta.setLore(lore);
         item.setItemMeta(itemMeta);

@@ -63,7 +63,7 @@ public class CrateManager {
 
 
         Type type = new TypeToken<List<Crate>>() {}.getType(),
-                type2 = new TypeToken<Map<LLocation, String>>() {}.getType();
+                type2 = new TypeToken<Map<String, LLocation>>() {}.getType();
 
         try (Reader reader = new FileReader(this.crateFile);
              Reader reader2 = new FileReader(this.crateLocationFile)) {
