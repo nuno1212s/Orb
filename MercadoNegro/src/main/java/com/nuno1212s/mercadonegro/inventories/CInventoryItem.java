@@ -49,7 +49,7 @@ public class CInventoryItem extends InventoryItem {
      * @return The display item
      */
     public ItemStack getDisplayItem() {
-        ItemStack item = getItem();
+        ItemStack item = getItem().clone();
 
         ItemMeta itemMeta = item.getItemMeta();
         List<String> lore = itemMeta.hasLore() ? itemMeta.getLore() : new ArrayList<>();

@@ -35,7 +35,7 @@ public class CrateManager {
 
     private File crateFile, crateLocationFile;
 
-    private Map<LLocation, String> crateBlocks;
+    private Map<String, LLocation> crateBlocks;
 
     @Getter
     private Gson gson;
@@ -125,11 +125,11 @@ public class CrateManager {
      * @return
      */
     public Crate getCrateAtLocation(Location l) {
-        for (Map.Entry<LLocation, String> crateLocation : this.crateBlocks.entrySet()) {
-            LLocation locations = crateLocation.getKey();
+        for (Map.Entry<String, LLocation> crateLocation : this.crateBlocks.entrySet()) {
+            LLocation locations = crateLocation.getValue();
             if (locations.getWorld().equalsIgnoreCase(l.getWorld().getName())) {
                 if (locations.getLocation().distanceSquared(l) < 2) {
-                    return getCrate(crateLocation.getValue());
+                    return getCrate(crateLocation.getKey());
                 }
             }
         }
@@ -138,8 +138,8 @@ public class CrateManager {
     }
 
     public boolean isCrateLocation(Location l) {
-        for (Map.Entry<LLocation, String> crateLocation : this.crateBlocks.entrySet()) {
-            LLocation locations = crateLocation.getKey();
+        for (Map.Entry<String, LLocation> crateLocation : this.crateBlocks.entrySet()) {
+            LLocation locations = crateLocation.getValue();
             if (locations.getWorld().equalsIgnoreCase(l.getWorld().getName())) {
                 if (locations.getLocation().distanceSquared(l) < 2) {
                     return true;
@@ -150,8 +150,8 @@ public class CrateManager {
     }
 
     public void handleCrateRemoval(Crate c) {
-        for (Map.Entry<LLocation, String> crateLocation : this.crateBlocks.entrySet()) {
-            if (crateLocation.getValue().equalsIgnoreCase(c.getCrateName())) {
+        for (Map.Entry<String, LLocation> crateLocation : this.crateBlocks.entrySet()) {
+            if (crateLocation.getKey().equalsIgnoreCase(c.getCrateName())) {
                 this.crateBlocks.remove(crateLocation.getKey());
             }
         }
@@ -161,7 +161,8 @@ public class CrateManager {
         if (isCrateLocation(l)) {
             return;
         }
-        this.crateBlocks.put(new LLocation(l), c.getCrateName());
+
+        this.crateBlocks.put(c.getCrateName(), new LLocation(l));
     }
 
     public void removeCrateAtLocation(Location l) {
