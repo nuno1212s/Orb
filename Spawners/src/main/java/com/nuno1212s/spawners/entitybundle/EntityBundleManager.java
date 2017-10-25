@@ -78,7 +78,6 @@ public class EntityBundleManager {
      * Load the entity bundles
      */
     private void loadEntities() {
-        this.entityBundles = new ArrayList<>();
 
         try (Reader r = new FileReader(this.entitiesFile)) {
 
@@ -88,6 +87,8 @@ public class EntityBundleManager {
 
         } catch (IOException | JsonParseException e) {
             e.printStackTrace();
+        } finally {
+            this.entityBundles = new ArrayList<>();
         }
     }
 

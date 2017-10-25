@@ -2,6 +2,7 @@ package com.nuno1212s.spawners.entitybundle;
 
 import com.nuno1212s.spawners.main.Main;
 import lombok.Getter;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -27,18 +28,21 @@ public class EntityBundle {
 
         this.entity = lastKnownLocation.getWorld().spawnEntity(lastKnownLocation, type);
 
-        // TODO: 25-10-2017 update name
+        updateName();
     }
 
     public EntityBundle(Entity toBundle) {
-        this.entity = toBundle;
-        this.mobCount = 1;
+
+        this.entity = toBundle.getWorld().spawnEntity(toBundle.getLocation(), toBundle.getType());
+        this.mobCount = 0;
+
+        updateName();
     }
 
     public void addToBundle(int entityCount) {
         this.mobCount += entityCount;
 
-        // TODO: 25-10-2017 Update entity display name to fit the new mob count
+        updateName();
     }
 
     /**
@@ -81,6 +85,11 @@ public class EntityBundle {
         }
 
         getEntity().remove();
+    }
+
+    public void updateName() {
+        getEntity().setCustomName(ChatColor.RED + "x" + String.valueOf(this.getMobCount()));
+        getEntity().setCustomNameVisible(true);
     }
 
     /**
