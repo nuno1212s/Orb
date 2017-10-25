@@ -6,7 +6,6 @@ import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
@@ -105,25 +104,25 @@ public class EntityBundle {
             lootingLevel = itemInHand.getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS);
         }
 
+        double modifier = Main.getIns().getEntityManager().getModifierForLooting(lootingLevel);
+
         for (ItemStack item : dropsForEntity) {
-            int itemAmount = item.getAmount() * mobCount;
+            int itemAmount = (int) Math.floor(item.getAmount() * mobCount * modifier);
             int stacks;
-            if (itemAmount % item.getMaxStackSize() == 0) {
-                stacks = itemAmount / item.getMaxStackSize();
+            stacks = itemAmount / item.getMaxStackSize() + (itemAmount % item.getMaxStackSize() == 0 ? 0 : 1);
 
-                for (int i = 0; i < stacks; i++) {
-                    ItemStack clone = item.clone();
+            for (int i = 0; i < stacks; i++) {
+
+                ItemStack clone = item.clone();
+
+                if (itemAmount >= item.getMaxStackSize()) {
                     clone.setAmount(item.getMaxStackSize());
-                    multipliedDrops.add(clone);
-                }
-            } else {
-                stacks = itemAmount / item.getMaxStackSize() + 1;
-
-                for (int i = 0; i < stacks; i++) {
-                    ItemStack clone = item.clone();
-                    clone.setAmount((itemAmount >= item.getMaxStackSize()) ? item.getMaxStackSize() : itemAmount);
                     itemAmount -= item.getMaxStackSize();
+                } else {
+                    clone.setAmount(itemAmount);
                 }
+
+                multipliedDrops.add(clone);
             }
 
         }

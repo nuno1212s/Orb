@@ -1,3 +1,14 @@
 {
-
+  "PIG": [
+    {
+      "Material": "PORK",
+      "Amount": 2
+    }
+  ],
+  "COW": [
+    {
+      "Material": "BEEF",
+      "Amount": 2
+    }
+  ]
 }

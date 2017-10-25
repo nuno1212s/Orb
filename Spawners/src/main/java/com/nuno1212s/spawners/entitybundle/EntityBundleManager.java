@@ -30,17 +30,21 @@ public class EntityBundleManager {
 
     private Map<EntityType, ItemStack[]> entityDrops = new HashMap<>();
 
+    private Map<Integer, Double> lootingModifier = new HashMap<>();
+
     private List<EntityBundle> entityBundles;
 
-    private File dropsFile, entitiesFile;
+    private File dropsFile, entitiesFile, lootingConfig;
 
     private Gson gson;
 
     public EntityBundleManager(Module m) {
         this.dropsFile = m.getFile("drops.json", true);
+        this.lootingConfig = m.getFile("lootingConfig.json", true);
         this.entitiesFile = m.getFile("entityBundles.json", false);
         this.gson = new GsonBuilder().registerTypeAdapter(EntityBundle.class, new EntityBundleTypeAdapter()).create();
 
+        loadLootingConfig();
         loadDrops();
         loadEntities();
     }
@@ -72,6 +76,21 @@ public class EntityBundleManager {
 
         } catch (IOException | ParseException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void loadLootingConfig() {
+        try (Reader r = new FileReader(this.lootingConfig)) {
+
+            Type t = new TypeToken<Map<Integer, Double>>(){}.getType();
+            this.lootingModifier = this.gson.fromJson(r, t);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (this.lootingModifier == null) {
+                this.lootingModifier = new HashMap<>();
+            }
         }
     }
 
@@ -206,6 +225,16 @@ public class EntityBundleManager {
             bundle.kill(new ItemStack(Material.AIR));
         }
         this.entityBundles.remove(bundle);
+    }
+
+    /**
+     * Get the modifier for the looting enchantment
+     *
+     * @param lootingLevel The level of the looting enchantment
+     * @return
+     */
+    public double getModifierForLooting(int lootingLevel) {
+        return this.lootingModifier.getOrDefault(lootingLevel, 1D);
     }
 
 }
