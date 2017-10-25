@@ -49,10 +49,10 @@ public class Main extends Module {
 
         ins.getServer().getPluginManager().registerEvents(new PlayerKillMobListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new PlayerQuitListener(), ins);
-        ins.getServer().getPluginManager().registerEvents(new MobKillListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new MobSpawnListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new ChunkUnloadListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new ChunkLoadListener(), ins);
+        ins.getServer().getPluginManager().registerEvents(new EntityDeathListener(), ins);
 
     }
 

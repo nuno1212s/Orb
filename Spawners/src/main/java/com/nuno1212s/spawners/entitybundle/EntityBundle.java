@@ -5,6 +5,7 @@ import com.nuno1212s.util.LLocation;
 import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
@@ -127,19 +128,19 @@ public class EntityBundle {
             location.getWorld().dropItemNaturally(location, multipliedDrop);
         }
 
-        entityReference.remove();
     }
 
     public void updateName() {
+        if (!isLoaded()) {
+            return;
+        }
+
         Entity entityReference = getEntityReference();
         entityReference.setCustomName(ChatColor.RED + "x" + String.valueOf(this.getMobCount()));
         entityReference.setCustomNameVisible(true);
     }
 
-    /**
-     * Remove the entity
-     */
-    public void remove() {
+    public void forceRemove() {
         getEntityReference().remove();
     }
 
@@ -168,7 +169,7 @@ public class EntityBundle {
         System.out.println("Unloaded entity.");
         this.spawnLocation = new LLocation(getEntityReference().getLocation());
 
-        remove();
+        forceRemove();
 
         this.entityReference = null;
         this.entity = UUID.randomUUID();

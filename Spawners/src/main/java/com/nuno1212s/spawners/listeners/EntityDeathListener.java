@@ -5,22 +5,19 @@ import com.nuno1212s.spawners.main.Main;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 
-public class MobKillListener implements Listener {
+public class EntityDeathListener implements Listener {
 
     @EventHandler
-    public void onKill(EntityDamageEvent e) {
-        LivingEntity entity = (LivingEntity) e.getEntity();
-        if (entity.getHealth() - e.getFinalDamage() <= 0) {
+    public void onDeath(EntityDeathEvent e) {
+        LivingEntity entity = e.getEntity();
             EntityBundle entityBundle = Main.getIns().getEntityManager().getEntityBundle(entity);
 
             if (entityBundle != null) {
-                e.setCancelled(true);
-
+                e.getDrops().clear();
                 Main.getIns().getEntityManager().handleDeath(entityBundle);
             }
-        }
 
     }
 

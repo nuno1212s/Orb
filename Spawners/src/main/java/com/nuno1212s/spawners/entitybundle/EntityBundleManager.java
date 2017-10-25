@@ -109,7 +109,7 @@ public class EntityBundleManager {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            this.entityBundles.forEach(EntityBundle::remove);
+            this.entityBundles.forEach(EntityBundle::forceRemove);
         }
     }
 
