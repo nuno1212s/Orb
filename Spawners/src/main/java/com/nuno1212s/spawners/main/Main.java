@@ -6,6 +6,9 @@ import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.modulemanager.ModuleData;
 import com.nuno1212s.spawners.commands.InstantRewardCommand;
 import com.nuno1212s.spawners.commands.SellCommand;
+import com.nuno1212s.spawners.entitybundle.EntityBundleManager;
+import com.nuno1212s.spawners.listeners.MobKillListener;
+import com.nuno1212s.spawners.listeners.MobSpawnListener;
 import com.nuno1212s.spawners.listeners.PlayerKillMobListener;
 import com.nuno1212s.spawners.listeners.PlayerQuitListener;
 import com.nuno1212s.spawners.playerdata.PlayerManager;
@@ -22,10 +25,13 @@ public class Main extends Module {
     static Main ins;
 
     @Getter
-    RewardManager rewardManager;
+    private RewardManager rewardManager;
 
     @Getter
-    PlayerManager playerManager;
+    private PlayerManager playerManager;
+
+    @Getter
+    private EntityBundleManager entityManager;
 
     @Override
     public void onEnable() {
@@ -34,6 +40,8 @@ public class Main extends Module {
         rewardManager = new RewardManager(this);
 
         playerManager = new PlayerManager();
+
+        entityManager = new EntityBundleManager(this);
 
         MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));
 
@@ -44,11 +52,14 @@ public class Main extends Module {
 
         ins.getServer().getPluginManager().registerEvents(new PlayerKillMobListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new PlayerQuitListener(), ins);
+        ins.getServer().getPluginManager().registerEvents(new MobKillListener(), ins);
+        ins.getServer().getPluginManager().registerEvents(new MobSpawnListener(), ins);
 
     }
 
     @Override
     public void onDisable() {
         rewardManager.saveConfig();
+        entityManager.saveEntities();
     }
 }
