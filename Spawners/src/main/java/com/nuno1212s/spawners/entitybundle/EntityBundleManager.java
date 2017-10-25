@@ -3,10 +3,10 @@ package com.nuno1212s.spawners.entitybundle;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
-import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.util.SerializableItem;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -28,8 +28,6 @@ public class EntityBundleManager {
     private Map<EntityType, ItemStack[]> entityDrops = new HashMap<>();
 
     private List<EntityBundle> entityBundles;
-
-    //private List<TempEntityBundle> unloadedEntities;
 
     private File dropsFile, entitiesFile;
 
@@ -137,16 +135,17 @@ public class EntityBundleManager {
         Location l = entity.getLocation();
 
         for (EntityBundle entityBundle : this.entityBundles) {
-            if (entityBundle.getEntity().getType() == entity.getType()) {
-                if (entityBundle.getEntity().getWorld().getName().equalsIgnoreCase(l.getWorld().getName())) {
-                    if (entityBundle.getEntity().getLocation().distanceSquared(l) < maxRadius) {
+            if (entityBundle.getType() == entity.getType() && entityBundle.isLoaded()) {
+                Entity entityReference = entityBundle.getEntityReference();
+                if (entityReference.getName().equalsIgnoreCase(l.getWorld().getName())) {
+                    if (entityReference.getLocation().distanceSquared(l) < maxRadius) {
                         return entityBundle;
                     }
                 }
             }
         }
 
-        EntityBundle entityBundle = new EntityBundle(entity);
+        EntityBundle entityBundle = new EntityBundle(entity.getType(), entity.getLocation().clone());
 
         this.entityBundles.add(entityBundle);
 
@@ -161,12 +160,27 @@ public class EntityBundleManager {
      */
     public EntityBundle getEntityBundle(Entity e) {
         for (EntityBundle entityBundle : this.entityBundles) {
-            if (entityBundle.getEntity().getUniqueId().equals(e.getUniqueId())) {
+            if (entityBundle.getEntity().equals(e.getUniqueId())) {
                 return entityBundle;
             }
         }
 
         return null;
+    }
+
+    public List<EntityBundle> getUnspawnedBundles(Chunk chunk) {
+        List<EntityBundle> bundles = new ArrayList<>();
+
+        for (EntityBundle entityBundle : this.entityBundles) {
+            if (entityBundle.getSpawnLocation() != null) {
+                Location location = entityBundle.getSpawnLocation().getLocation();
+                if (location != null && location.getChunk().equals(chunk)) {
+                    bundles.add(entityBundle);
+                }
+            }
+        }
+
+        return bundles;
     }
 
 }

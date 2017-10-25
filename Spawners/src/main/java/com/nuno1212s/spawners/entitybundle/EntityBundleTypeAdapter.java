@@ -20,29 +20,24 @@ public class EntityBundleTypeAdapter extends TypeAdapter<EntityBundle> {
     public EntityBundle read(JsonReader jsonReader) throws IOException {
         jsonReader.beginObject();
 
-        Location location = null;
+        LLocation location = null;
         int mobCount = 0;
         EntityType type = EntityType.PIG;
 
         while (jsonReader.hasNext()) {
             switch (jsonReader.nextName()) {
                 case "Last-Known-Location": {
-                    LLocation read = locationTypeAdapter.read(jsonReader);
-
-                    World world = Bukkit.getWorld(read.getWorld());
-                    if (world == null) {
-                        return null;
-                    }
-
-                    location = read.getLocation();
+                    location = locationTypeAdapter.read(jsonReader);
                     break;
                 }
+
                 case "EntityType": {
                     String entity = jsonReader.nextString();
                     type = EntityType.valueOf(entity);
 
                     break;
                 }
+
                 case "MobCount": {
                     mobCount = jsonReader.nextInt();
                     break;
@@ -58,11 +53,18 @@ public class EntityBundleTypeAdapter extends TypeAdapter<EntityBundle> {
         jsonWriter.beginObject();
         jsonWriter.name("Last-Known-Location");
 
-        Location location = entityBundle.getEntity().getLocation();
+        LLocation location;
 
-        locationTypeAdapter.write(jsonWriter, new LLocation(location));
+        if (entityBundle.isLoaded()) {
+            location = new LLocation(entityBundle.getEntityReference().getLocation());
+        } else {
+            location = entityBundle.getSpawnLocation();
+        }
 
-        jsonWriter.name("EntityType").value(entityBundle.getEntity().getType().name());
+
+        locationTypeAdapter.write(jsonWriter, location);
+
+        jsonWriter.name("EntityType").value(entityBundle.getType().name());
         jsonWriter.name("MobCount").value(entityBundle.getMobCount());
         jsonWriter.endObject();
     }

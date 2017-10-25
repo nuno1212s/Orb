@@ -7,10 +7,7 @@ import com.nuno1212s.modulemanager.ModuleData;
 import com.nuno1212s.spawners.commands.InstantRewardCommand;
 import com.nuno1212s.spawners.commands.SellCommand;
 import com.nuno1212s.spawners.entitybundle.EntityBundleManager;
-import com.nuno1212s.spawners.listeners.MobKillListener;
-import com.nuno1212s.spawners.listeners.MobSpawnListener;
-import com.nuno1212s.spawners.listeners.PlayerKillMobListener;
-import com.nuno1212s.spawners.listeners.PlayerQuitListener;
+import com.nuno1212s.spawners.listeners.*;
 import com.nuno1212s.spawners.playerdata.PlayerManager;
 import com.nuno1212s.spawners.rewardhandler.RewardManager;
 import lombok.Getter;
@@ -54,6 +51,8 @@ public class Main extends Module {
         ins.getServer().getPluginManager().registerEvents(new PlayerQuitListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new MobKillListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new MobSpawnListener(), ins);
+        ins.getServer().getPluginManager().registerEvents(new ChunkUnloadListener(), ins);
+        ins.getServer().getPluginManager().registerEvents(new ChunkLoadListener(), ins);
 
     }
 
