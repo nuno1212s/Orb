@@ -156,6 +156,7 @@ public class EntityBundle {
         //When we load the actual entity, we do not need to remember the spawnLocation
         this.spawnLocation = null;
 
+        System.out.println("Loaded entity.");
         updateName();
     }
 
@@ -165,6 +166,7 @@ public class EntityBundle {
     public void unload() {
         if (!isLoaded()) return;
 
+        System.out.println("Unloaded entity.");
         this.spawnLocation = new LLocation(getEntityReference().getLocation());
 
         remove();
@@ -173,4 +175,19 @@ public class EntityBundle {
         this.entity = UUID.randomUUID();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+
+        if (obj instanceof EntityBundle) {
+            if (isLoaded() && ((EntityBundle) obj).isLoaded()) {
+                return getEntity().equals(((EntityBundle) obj).getEntity());
+            } else if (!isLoaded() && !((EntityBundle) obj).isLoaded()) {
+                return getSpawnLocation().equals(((EntityBundle) obj).getSpawnLocation());
+            } else {
+                return false;
+            }
+        }
+
+        return false;
+    }
 }

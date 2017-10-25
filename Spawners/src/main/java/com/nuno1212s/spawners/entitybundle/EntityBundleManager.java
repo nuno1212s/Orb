@@ -168,6 +168,12 @@ public class EntityBundleManager {
         return null;
     }
 
+    /**
+     * Get the unspawned entity bundles for a certain chunk
+     *
+     * @param chunk The chunk in question
+     * @return
+     */
     public List<EntityBundle> getUnspawnedBundles(Chunk chunk) {
         List<EntityBundle> bundles = new ArrayList<>();
 
@@ -181,6 +187,16 @@ public class EntityBundleManager {
         }
 
         return bundles;
+    }
+
+    /**
+     * Handle the death of an entity bundle
+     *
+     * @param bundle The entity bundle
+     */
+    public void handleDeath(EntityBundle bundle) {
+        bundle.kill();
+        this.entityBundles.remove(bundle);
     }
 
 }

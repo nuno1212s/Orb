@@ -18,7 +18,7 @@ public class MobKillListener implements Listener {
             if (entityBundle != null) {
                 e.setCancelled(true);
 
-                entityBundle.kill();
+                Main.getIns().getEntityManager().handleDeath(entityBundle);
             }
         }
 
