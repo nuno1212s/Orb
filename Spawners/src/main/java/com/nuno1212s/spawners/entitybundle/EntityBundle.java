@@ -5,6 +5,7 @@ import com.nuno1212s.util.LLocation;
 import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -91,13 +92,18 @@ public class EntityBundle {
     /**
      * Kill the entity and drop all of the items
      */
-    public void kill() {
+    public void kill(ItemStack itemInHand) {
         Entity entityReference = getEntityReference();
         EntityType type = entityReference.getType();
 
         ItemStack[] dropsForEntity = Main.getIns().getEntityManager().getDropsForEntity(type);
 
         List<ItemStack> multipliedDrops = new ArrayList<>();
+
+        int lootingLevel = 0;
+        if (itemInHand.hasItemMeta() && itemInHand.getItemMeta().hasEnchant(Enchantment.LOOT_BONUS_MOBS)) {
+            lootingLevel = itemInHand.getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS);
+        }
 
         for (ItemStack item : dropsForEntity) {
             int itemAmount = item.getAmount() * mobCount;

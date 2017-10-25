@@ -8,8 +8,11 @@ import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.util.SerializableItem;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -195,7 +198,13 @@ public class EntityBundleManager {
      * @param bundle The entity bundle
      */
     public void handleDeath(EntityBundle bundle) {
-        bundle.kill();
+        Player killer = ((LivingEntity) bundle.getEntityReference()).getKiller();
+
+        if (killer != null) {
+            bundle.kill(killer.getItemInHand());
+        } else {
+            bundle.kill(new ItemStack(Material.AIR));
+        }
         this.entityBundles.remove(bundle);
     }
 
