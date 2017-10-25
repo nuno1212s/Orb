@@ -137,7 +137,7 @@ public class EntityBundleManager {
         for (EntityBundle entityBundle : this.entityBundles) {
             if (entityBundle.getType() == entity.getType() && entityBundle.isLoaded()) {
                 Entity entityReference = entityBundle.getEntityReference();
-                if (entityReference.getName().equalsIgnoreCase(l.getWorld().getName())) {
+                if (entityReference.getWorld().getName().equalsIgnoreCase(l.getWorld().getName())) {
                     if (entityReference.getLocation().distanceSquared(l) < maxRadius) {
                         return entityBundle;
                     }

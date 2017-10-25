@@ -40,12 +40,12 @@ public class EntityBundle {
 
         this.type = type;
         this.mobCount = mobCount;
+        this.spawnLocation = lastKnownLocation;
 
         Location location = lastKnownLocation.getLocation();
         //If the LLocation .getLocation returns null, the world is not loaded
         if (location == null) {
             this.entity = UUID.randomUUID();
-            this.spawnLocation = lastKnownLocation;
             return;
         }
 
@@ -55,7 +55,6 @@ public class EntityBundle {
             load();
         } else {
             this.entity = UUID.randomUUID();
-            this.spawnLocation = lastKnownLocation;
         }
 
         updateName();
@@ -85,7 +84,7 @@ public class EntityBundle {
      * @return
      */
     public boolean isLoaded() {
-        return this.entityReference == null || this.entityReference.get() == null;
+        return this.entityReference != null && this.entityReference.get() != null;
     }
 
     /**
@@ -151,7 +150,7 @@ public class EntityBundle {
         Location spawnLocation = getSpawnLocation().getLocation();
         Entity e = spawnLocation.getWorld().spawnEntity(spawnLocation, getType());
 
-        this.entityReference = new WeakReference<Entity>(e);
+        this.entityReference = new WeakReference<>(e);
         this.entity = e.getUniqueId();
         //When we load the actual entity, we do not need to remember the spawnLocation
         this.spawnLocation = null;

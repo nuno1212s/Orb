@@ -61,7 +61,6 @@ public class EntityBundleTypeAdapter extends TypeAdapter<EntityBundle> {
             location = entityBundle.getSpawnLocation();
         }
 
-
         locationTypeAdapter.write(jsonWriter, location);
 
         jsonWriter.name("EntityType").value(entityBundle.getType().name());
