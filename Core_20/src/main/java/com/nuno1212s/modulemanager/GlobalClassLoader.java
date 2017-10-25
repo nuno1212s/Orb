@@ -1,9 +1,9 @@
 package com.nuno1212s.modulemanager;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Handles all module class loaders
@@ -20,7 +20,7 @@ GlobalClassLoader {
     public GlobalClassLoader(ClassLoader bukkitLoader) {
         this.bukkitLoader = bukkitLoader;
         loaders = new ArrayList<>();
-        classes = new HashMap<>();
+        classes = new ConcurrentHashMap<>();
     }
 
     public void addLoader(ModuleLoader loader) {

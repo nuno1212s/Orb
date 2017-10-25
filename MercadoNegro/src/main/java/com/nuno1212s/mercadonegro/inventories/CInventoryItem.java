@@ -51,13 +51,22 @@ public class CInventoryItem extends InventoryItem {
     public ItemStack getDisplayItem() {
         ItemStack item = getItem().clone();
 
+        if (getConnectingInventory() != null) {
+            return item;
+        }
+
         ItemMeta itemMeta = item.getItemMeta();
         List<String> lore = itemMeta.hasLore() ? itemMeta.getLore() : new ArrayList<>();
+
         lore.add("");
+
         Message cost = this.isServerCurrency ? MainData.getIns().getMessageManager().getMessage("COST_COINS")
                 : MainData.getIns().getMessageManager().getMessage("COST_CASH");
+
         cost.format("%price%", String.valueOf(this.getCost()));
+
         lore.add(cost.toString());
+
         itemMeta.setLore(lore);
         item.setItemMeta(itemMeta);
 

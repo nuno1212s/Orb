@@ -15,6 +15,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
@@ -31,7 +32,7 @@ public class ModuleLoader extends URLClassLoader {
     private GlobalClassLoader globalLoader;
 
     @Getter
-    private Map<String, Class<?>> localClasses = new HashMap<>();
+    private Map<String, Class<?>> localClasses = new ConcurrentHashMap<>();
 
     public ModuleLoader(File moduleFile, GlobalClassLoader mainLoader) throws MalformedURLException {
         super(new URL[]{moduleFile.toURI().toURL()});

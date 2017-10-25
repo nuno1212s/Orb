@@ -15,7 +15,7 @@ public class CInventoryData extends InventoryData {
 
     @Override
     public Inventory buildInventory() {
-        Inventory i = Bukkit.getServer().createInventory(null, getInventorySize(), getInventoryID());
+        Inventory i = Bukkit.getServer().createInventory(null, getInventorySize(), getInventoryName());
 
         for (InventoryItem inventoryItem : this.getItems()) {
             if (inventoryItem instanceof CInventoryItem) {

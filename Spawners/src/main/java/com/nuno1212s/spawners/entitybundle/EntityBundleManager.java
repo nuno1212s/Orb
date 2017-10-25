@@ -29,14 +29,13 @@ public class EntityBundleManager {
 
     private List<EntityBundle> entityBundles;
 
-    private List<TempEntityBundle> unloadedEntities;
+    //private List<TempEntityBundle> unloadedEntities;
 
     private File dropsFile, entitiesFile;
 
     private Gson gson;
 
     public EntityBundleManager(Module m) {
-        this.entityBundles = new ArrayList<>();
         this.dropsFile = m.getFile("drops.json", true);
         this.entitiesFile = m.getFile("entityBundles.json", false);
         this.gson = new GsonBuilder().registerTypeAdapter(EntityBundle.class, new EntityBundleTypeAdapter()).create();
@@ -79,6 +78,8 @@ public class EntityBundleManager {
      * Load the entity bundles
      */
     private void loadEntities() {
+        this.entityBundles = new ArrayList<>();
+
         try (Reader r = new FileReader(this.entitiesFile)) {
 
             Type type = new TypeToken<List<EntityBundle>>() {}.getType();

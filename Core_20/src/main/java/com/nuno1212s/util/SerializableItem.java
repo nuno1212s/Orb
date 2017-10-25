@@ -63,7 +63,7 @@ public class SerializableItem extends ItemStack {
                 String[] split = ((String) enchantment).split(":");
                 Enchantment enc = getEnchantment(split[0].toUpperCase());
                 int level = Integer.parseInt(split[1]);
-                addUnsafeEnchantment(enc, level);
+                m.addEnchant(enc, level ,true);
             });
         }
 
