@@ -4,9 +4,7 @@ import com.nuno1212s.main.BukkitMain;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.modulemanager.ModuleData;
-import com.nuno1212s.spawners.commands.InstantRewardCommand;
-import com.nuno1212s.spawners.commands.ReloadConfigCommand;
-import com.nuno1212s.spawners.commands.SellCommand;
+import com.nuno1212s.spawners.commands.*;
 import com.nuno1212s.spawners.entitybundle.EntityBundleManager;
 import com.nuno1212s.spawners.listeners.*;
 import com.nuno1212s.spawners.playerdata.PlayerManager;
@@ -46,6 +44,8 @@ public class Main extends Module {
         registerCommand(new String[]{"vender"}, new SellCommand());
         registerCommand(new String[]{"instantreward"}, new InstantRewardCommand());
         registerCommand(new String[]{"reloadspawner"}, new ReloadConfigCommand());
+        registerCommand(new String[]{"spawnerset"}, new SpawnerSetCommand());
+        registerCommand(new String[]{"spawnerget"}, new SpawnerGetCommand());
 
         BukkitMain ins = BukkitMain.getIns();
 
@@ -56,6 +56,7 @@ public class Main extends Module {
         ins.getServer().getPluginManager().registerEvents(new ChunkLoadListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new EntityDeathListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new SpawnerPlaceListener(), ins);
+        ins.getServer().getPluginManager().registerEvents(new SpawnerBreakListener(), ins);
 
     }
 
