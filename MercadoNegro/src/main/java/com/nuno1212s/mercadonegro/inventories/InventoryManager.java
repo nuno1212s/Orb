@@ -42,7 +42,7 @@ public class InventoryManager {
             saveDefaultInventory(m);
         }
 
-        confirmInventory = new CInventoryData(m.getFile("confirmInventory.json", true));
+        confirmInventory = new InventoryData(m.getFile("confirmInventory.json", true), InventoryItem.class);
 
         for (File file : dataFolder.listFiles()) {
             this.inventories.add(new CInventoryData(file));
@@ -82,7 +82,7 @@ public class InventoryManager {
      * @param toSell The item to sell to the player
      * @return
      */
-    public Inventory buildConfirmInventory(CInventoryItem toSell) {
+    public Inventory buildConfirmInventory(InventoryData ogInv, CInventoryItem toSell) {
         InventoryData confirmInventory = getConfirmInventory();
 
         Inventory inventory = confirmInventory.buildInventory();
@@ -92,8 +92,8 @@ public class InventoryManager {
         ItemStack displayItem = toSell.getDisplayItem();
         NBTCompound nbt = new NBTCompound(displayItem);
 
-        nbt.add("ID", confirmInventory.getInventoryID());
-        nbt.add("Slot", item.getItem());
+        nbt.add("ID", ogInv.getInventoryID());
+        nbt.add("Slot", toSell.getSlot());
 
         inventory.setItem(item.getSlot(), nbt.write(displayItem));
 

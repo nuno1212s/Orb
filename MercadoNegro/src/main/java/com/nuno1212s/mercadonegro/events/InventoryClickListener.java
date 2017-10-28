@@ -62,7 +62,7 @@ public class InventoryClickListener implements Listener {
             }
 
             e.getWhoClicked().closeInventory();
-            e.getWhoClicked().openInventory(Main.getIns().getInventoryManager().buildConfirmInventory(item));
+            e.getWhoClicked().openInventory(Main.getIns().getInventoryManager().buildConfirmInventory(inventory1, item));
 
         }
 
