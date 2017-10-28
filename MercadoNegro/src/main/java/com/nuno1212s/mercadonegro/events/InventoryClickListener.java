@@ -61,9 +61,8 @@ public class InventoryClickListener implements Listener {
                 return;
             }
 
-            PlayerData playerData = MainData.getIns().getPlayerManager().getPlayer(e.getWhoClicked().getUniqueId());
-
-            item.buyItem(playerData);
+            e.getWhoClicked().closeInventory();
+            e.getWhoClicked().openInventory(Main.getIns().getInventoryManager().buildConfirmInventory(item));
 
         }
 

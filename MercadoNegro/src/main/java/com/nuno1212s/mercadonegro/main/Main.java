@@ -3,6 +3,7 @@ package com.nuno1212s.mercadonegro.main;
 import com.nuno1212s.main.BukkitMain;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.mercadonegro.commands.MarketOpenCommand;
+import com.nuno1212s.mercadonegro.events.ConfirmInventoryListener;
 import com.nuno1212s.mercadonegro.events.InventoryClickListener;
 import com.nuno1212s.mercadonegro.inventories.InventoryManager;
 import com.nuno1212s.modulemanager.Module;
@@ -33,6 +34,7 @@ public class Main extends Module {
 
         Plugin p = BukkitMain.getIns();
         p.getServer().getPluginManager().registerEvents(new InventoryClickListener(), p);
+        p.getServer().getPluginManager().registerEvents(new ConfirmInventoryListener(), p);
     }
 
     @Override
