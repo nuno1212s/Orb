@@ -16,7 +16,7 @@ public class SpawnerGetCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
-        if (commandSender.hasPermission("spawners.get")) {
+        if (!commandSender.hasPermission("spawners.get")) {
             MainData.getIns().getMessageManager().getMessage("NO_PERMISSION").sendTo(commandSender);
             return true;
         }
@@ -36,7 +36,7 @@ public class SpawnerGetCommand implements CommandExecutor {
         EntityType type;
 
         try {
-            type = EntityType.valueOf(args[1]);
+            type = EntityType.valueOf(args[0]);
         } catch (IllegalArgumentException e) {
             p.sendMessage(ChatColor.RED + "Mob type does not exist!");
             return true;
