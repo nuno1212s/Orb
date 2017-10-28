@@ -20,6 +20,8 @@ import com.nuno1212s.util.ServerCurrencyHandler;
 import lombok.Getter;
 import org.bukkit.ChatColor;
 
+import java.text.NumberFormat;
+
 
 @ModuleData(name = "Factions", version = "0.1", dependencies = {"Boosters", "Displays", "Classes"})
 public class Main extends Module {
@@ -52,7 +54,7 @@ public class Main extends Module {
         ins.getServer().getPluginManager().registerEvents(new PlayerUpdateListener(), ins);
 
         DisplayMain.getIns().getPlaceHolderManager().registerPlaceHolder("%coins%", (player) ->
-                String.valueOf(((FPlayerData) player).getCoins())
+                NumberFormat.getInstance().format(((FPlayerData) player).getCoins())
         );
 
         DisplayMain.getIns().getPlaceHolderManager().registerPlaceHolder("%faction%", (player) -> {

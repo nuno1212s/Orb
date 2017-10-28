@@ -32,16 +32,24 @@ public class RewardManager {
     @Setter
     private boolean instantReward;
 
-    private File configFile;
+    private File configFile, rewardsFile;
 
     public RewardManager(Module m) {
         rewardPerEntity = new HashMap<>();
         rewardPerItem = new HashMap<>();
 
-        JSONObject jsonObject, entityRewards, itemRewards, config;
 
         configFile = m.getFile("config.json", true);
-        try (FileReader r = new FileReader(m.getFile("rewards.json", true));
+        rewardsFile = m.getFile("rewards.json", true);
+
+        load();
+    }
+
+    public void load() {
+
+        JSONObject jsonObject, entityRewards, itemRewards, config;
+
+        try (FileReader r = new FileReader(rewardsFile);
              FileReader r2 = new FileReader(configFile)) {
 
             jsonObject = (JSONObject) new JSONParser().parse(r);
@@ -65,7 +73,6 @@ public class RewardManager {
         for (String ob : (Set<String>) itemRewards.keySet()) {
             rewardPerItem.put(Material.getMaterial(ob), (Long) itemRewards.get(ob));
         }
-
     }
 
     public void saveConfig() {

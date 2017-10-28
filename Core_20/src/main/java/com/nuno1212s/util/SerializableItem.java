@@ -77,6 +77,9 @@ public class SerializableItem extends ItemStack {
 
         setItemMeta(m);
 
+        if (jsonObject.containsKey("NBTData")) {
+            // TODO: 25/10/2017 Add NBTData support
+        }
     }
 
     public static Enchantment getEnchantment(String enchantment) {

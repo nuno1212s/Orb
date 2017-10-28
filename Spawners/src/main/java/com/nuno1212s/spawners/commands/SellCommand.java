@@ -12,6 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.text.NumberFormat;
 import java.util.ListIterator;
 
 /**
@@ -34,9 +35,11 @@ public class SellCommand implements CommandExecutor {
             ListIterator<ItemStack> iterator = p.getInventory().iterator();
             while (iterator.hasNext()) {
                 ItemStack content = iterator.next();
+
                 if (content == null || content.getType() == Material.AIR) {
                     continue;
                 }
+
                 if (Main.getIns().getRewardManager().getRewardPerItem().containsKey(content.getType())) {
                     long price = Main.getIns().getRewardManager().getRewardPerItem().get(content.getType()) * content.getAmount();
 
@@ -58,8 +61,8 @@ public class SellCommand implements CommandExecutor {
                 sCH.addCurrency(d, finalPrice);
                 MainData.getIns().getEventCaller().callUpdateInformationEvent(d);
                 MainData.getIns().getMessageManager().getMessage("SOLD_ITEMS")
-                        .format("%amount%", String.valueOf(amount))
-                        .format("%coins%", String.valueOf(finalPrice))
+                        .format("%amount%", NumberFormat.getInstance().format(amount))
+                        .format("%coins%", NumberFormat.getInstance().format(finalPrice))
                         .format("%multiplier%", String.format("%.1f", rankMultiplierForPlayer)).sendTo(p);
             } else {
                 MainData.getIns().getMessageManager().getMessage("NO_SERVER_CURRENCY_AVAILABLE").sendTo(p);

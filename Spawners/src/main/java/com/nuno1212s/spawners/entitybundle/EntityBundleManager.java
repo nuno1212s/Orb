@@ -52,7 +52,7 @@ public class EntityBundleManager {
     /**
      * Load the entity drops
      */
-    private void loadDrops() {
+    public void loadDrops() {
         this.entityDrops = new HashMap<>();
 
         try (Reader r = new FileReader(dropsFile)) {
@@ -76,6 +76,10 @@ public class EntityBundleManager {
 
         } catch (IOException | ParseException e) {
             e.printStackTrace();
+        } finally {
+            if (this.entityDrops == null) {
+                this.entityDrops = new HashMap<>();
+            }
         }
     }
 
@@ -108,7 +112,9 @@ public class EntityBundleManager {
         } catch (IOException | JsonParseException e) {
             e.printStackTrace();
         } finally {
-            this.entityBundles = new ArrayList<>();
+            if (this.entityBundles == null) {
+                this.entityBundles = new ArrayList<>();
+            }
         }
     }
 

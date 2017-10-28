@@ -100,6 +100,7 @@ public class EntityBundle {
         List<ItemStack> multipliedDrops = new ArrayList<>();
 
         int lootingLevel = 0;
+
         if (itemInHand.hasItemMeta() && itemInHand.getItemMeta().hasEnchant(Enchantment.LOOT_BONUS_MOBS)) {
             lootingLevel = itemInHand.getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS);
         }
@@ -132,7 +133,6 @@ public class EntityBundle {
         for (ItemStack multipliedDrop : multipliedDrops) {
             location.getWorld().dropItemNaturally(location, multipliedDrop);
         }
-
     }
 
     public void updateName() {
@@ -146,7 +146,9 @@ public class EntityBundle {
     }
 
     public void forceRemove() {
-        getEntityReference().remove();
+        if (isLoaded()) {
+            getEntityReference().remove();
+        }
     }
 
     /**

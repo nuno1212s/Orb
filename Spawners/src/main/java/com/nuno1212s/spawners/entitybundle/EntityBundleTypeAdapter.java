@@ -45,6 +45,7 @@ public class EntityBundleTypeAdapter extends TypeAdapter<EntityBundle> {
             }
         }
 
+        jsonReader.endObject();
         return new EntityBundle(type, location, mobCount);
     }
 
