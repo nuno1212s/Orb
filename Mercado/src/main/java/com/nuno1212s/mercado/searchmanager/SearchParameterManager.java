@@ -56,7 +56,11 @@ public class SearchParameterManager {
 
         List<String> inventories = (List<String>) json.get("Inventories");
         for (String inventory : inventories) {
-            this.inventories.add(loadInventory(inventory));
+            SInventoryData e = loadInventory(inventory);
+            if (e == null) {
+                continue;
+            }
+            this.inventories.add(e);
         }
 
         String landingInventory = (String) json.get("LandingInventory");

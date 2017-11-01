@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
 import com.nuno1212s.modulemanager.Module;
+import com.nuno1212s.spawners.entitybundle.timers.EntityBundler;
 import com.nuno1212s.util.SerializableItem;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -21,10 +22,8 @@ import org.json.simple.parser.ParseException;
 
 import java.io.*;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class EntityBundleManager {
 
@@ -36,12 +35,17 @@ public class EntityBundleManager {
 
     private File dropsFile, entitiesFile, lootingConfig;
 
+    private EntityBundler entityBundler;
+
     private Gson gson;
 
     public EntityBundleManager(Module m) {
         this.dropsFile = m.getFile("drops.json", true);
         this.lootingConfig = m.getFile("lootingConfig.json", true);
         this.entitiesFile = m.getFile("entityBundles.json", false);
+
+        entityBundler = new EntityBundler();
+
         this.gson = new GsonBuilder().registerTypeAdapter(EntityBundle.class, new EntityBundleTypeAdapter()).create();
 
         loadLootingConfig();
@@ -107,13 +111,13 @@ public class EntityBundleManager {
 
             Type type = new TypeToken<List<EntityBundle>>() {}.getType();
 
-            this.entityBundles = gson.fromJson(r, type);
+            this.entityBundles = Collections.synchronizedList(gson.fromJson(r, type));
 
         } catch (IOException | JsonParseException e) {
             e.printStackTrace();
         } finally {
             if (this.entityBundles == null) {
-                this.entityBundles = new ArrayList<>();
+                this.entityBundles = Collections.synchronizedList(new ArrayList<>());
             }
         }
     }
@@ -162,22 +166,24 @@ public class EntityBundleManager {
         maxRadius *= maxRadius;
         Location l = entity.getLocation();
 
-        for (EntityBundle entityBundle : this.entityBundles) {
-            if (entityBundle.getType() == entity.getType() && entityBundle.isLoaded()) {
-                Entity entityReference = entityBundle.getEntityReference();
-                if (entityReference.getWorld().getName().equalsIgnoreCase(l.getWorld().getName())) {
-                    if (entityReference.getLocation().distanceSquared(l) < maxRadius) {
-                        return entityBundle;
+        synchronized (this.entityBundles) {
+            for (EntityBundle entityBundle : this.entityBundles) {
+                if (entityBundle.getType() == entity.getType() && entityBundle.isLoaded()) {
+                    Entity entityReference = entityBundle.getEntityReference();
+                    if (entityReference.getWorld().getName().equalsIgnoreCase(l.getWorld().getName())) {
+                        if (entityReference.getLocation().distanceSquared(l) < maxRadius) {
+                            return entityBundle;
+                        }
                     }
                 }
             }
+
+            EntityBundle entityBundle = new EntityBundle(entity.getType(), entity.getLocation().clone());
+
+            this.entityBundles.add(entityBundle);
+
+            return entityBundle;
         }
-
-        EntityBundle entityBundle = new EntityBundle(entity.getType(), entity.getLocation().clone());
-
-        this.entityBundles.add(entityBundle);
-
-        return entityBundle;
     }
 
     /**
@@ -187,13 +193,45 @@ public class EntityBundleManager {
      * @return
      */
     public EntityBundle getEntityBundle(Entity e) {
-        for (EntityBundle entityBundle : this.entityBundles) {
-            if (entityBundle.getEntity().equals(e.getUniqueId())) {
-                return entityBundle;
+        synchronized (this.entityBundles) {
+            for (EntityBundle entityBundle : this.entityBundles) {
+                if (entityBundle.getEntity().equals(e.getUniqueId())) {
+                    return entityBundle;
+                }
             }
+
+            return null;
+        }
+    }
+
+    /**
+     * Get all the spawned entity bundles
+     *
+     * @return
+     */
+    public List<EntityBundle> getSpawnedEntityBundles() {
+        synchronized (this.entityBundles) {
+            return this.entityBundles.stream().filter(EntityBundle::isLoaded).collect(Collectors.toList());
+        }
+    }
+
+    /**
+     * Get the entities sorted by the world
+     * @return
+     */
+    public Map<String, List<EntityBundle>> getSpawnedEntitiesByWorld() {
+        List<EntityBundle> spawnedEntityBundles = getSpawnedEntityBundles();
+
+        Map<String, List<EntityBundle>> entities = new HashMap<>();
+
+        for (EntityBundle spawnedEntityBundle : spawnedEntityBundles) {
+            String WorldName = spawnedEntityBundle.getEntityReference().getWorld().getName();
+            List<EntityBundle> orDefault = entities.getOrDefault(WorldName, new ArrayList<>());
+            orDefault.add(spawnedEntityBundle);
+            entities.put(WorldName, orDefault);
         }
 
-        return null;
+        return entities;
     }
 
     /**
@@ -205,14 +243,17 @@ public class EntityBundleManager {
     public List<EntityBundle> getUnspawnedBundles(Chunk chunk) {
         List<EntityBundle> bundles = new ArrayList<>();
 
-        for (EntityBundle entityBundle : this.entityBundles) {
-            if (entityBundle.getSpawnLocation() != null) {
-                Location location = entityBundle.getSpawnLocation().getLocation();
-                if (location != null && location.getChunk().equals(chunk)) {
-                    bundles.add(entityBundle);
+        synchronized (this.entityBundles) {
+            for (EntityBundle entityBundle : this.entityBundles) {
+                if (entityBundle.getSpawnLocation() != null) {
+                    Location location = entityBundle.getSpawnLocation().getLocation();
+                    if (location != null && location.getChunk().equals(chunk)) {
+                        bundles.add(entityBundle);
+                    }
                 }
             }
         }
+
 
         return bundles;
     }
@@ -230,7 +271,10 @@ public class EntityBundleManager {
         } else {
             bundle.kill(new ItemStack(Material.AIR));
         }
-        this.entityBundles.remove(bundle);
+
+        synchronized (this.entityBundles) {
+            this.entityBundles.remove(bundle);
+        }
     }
 
     /**

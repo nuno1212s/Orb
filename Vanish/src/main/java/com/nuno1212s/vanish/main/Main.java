@@ -1,6 +1,7 @@
 package com.nuno1212s.vanish.main;
 
 import com.nuno1212s.main.BukkitMain;
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.modulemanager.ModuleData;
 import com.nuno1212s.vanish.commands.VanishCommand;
@@ -32,6 +33,8 @@ public class Main extends Module {
         playerManager = new PlayerManager();
         redisHandler = new RedisHandler();
         vanishManager = new VanishManager();
+
+        MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));
 
         registerCommand(new String[]{"vanish", "v"}, new VanishCommand());
 
