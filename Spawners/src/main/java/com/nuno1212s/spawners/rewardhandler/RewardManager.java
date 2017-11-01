@@ -32,6 +32,9 @@ public class RewardManager {
     @Setter
     private boolean instantReward;
 
+    @Getter
+    private int spawnerSpacing;
+
     private File configFile, rewardsFile;
 
     public RewardManager(Module m) {
@@ -63,6 +66,7 @@ public class RewardManager {
         }
 
         this.instantReward = (Boolean) config.get("instant-reward");
+        this.spawnerSpacing = ((Long) config.get("spawner-spacing")).intValue();
 
         for (EntityType entityType : EntityType.values()) {
             if (entityRewards.containsKey(entityType.name())) {
@@ -78,6 +82,7 @@ public class RewardManager {
     public void saveConfig() {
         JSONObject object = new JSONObject();
         object.put("instant-reward", this.isInstantReward());
+        object.put("spawner-spacing", this.spawnerSpacing);
 
         try (FileWriter r = new FileWriter(this.configFile)) {
             object.writeJSONString(r);

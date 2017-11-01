@@ -26,7 +26,7 @@ public class MobSpawnListener implements Listener {
     public void mobSpawn(SpawnerSpawnEvent e) {
         MainData.getIns().getScheduler().runTaskLater(() -> {
             e.getSpawner().setDelay(0);
-        }, 10);
+        }, Main.getIns().getRewardManager().getSpawnerSpacing());
 
     }
 

@@ -1,3 +1,4 @@
 {
-  "instant-reward": false
+  "instant-reward": false,
+  "spawner-spacing": 10
 }

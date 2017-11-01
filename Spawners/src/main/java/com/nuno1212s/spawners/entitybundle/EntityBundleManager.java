@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.spawners.entitybundle.timers.EntityBundler;
 import com.nuno1212s.util.SerializableItem;
+import lombok.Getter;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
