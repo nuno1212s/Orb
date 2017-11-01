@@ -2,7 +2,7 @@
   "InventoryName": "&cConfirm the market purchase  ",
   "InventoryID": "confirmInventory",
   "InventorySize": 27,
-  "InventoryItem": [
+  "InventoryItems": [
     {
       "Slot": 11,
       "Item": {

@@ -79,6 +79,7 @@ public class ScoreboardManager {
 
     public void createScoreboard(PlayerData d, Player p) {
         SimpleScoreboard sc;
+        // TODO: 28/10/2017 Maybe move this to async?
 
         if (this.scoreboards.containsKey(d.getPlayerID())) {
             sc = this.scoreboards.get(d.getPlayerID());

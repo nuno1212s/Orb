@@ -16,6 +16,7 @@ public class SpawnerPlaceListener implements Listener {
         NBTCompound nbt = new NBTCompound(e.getItemInHand());
 
         Map<String, Object> values = nbt.getValues();
+
         if (!values.containsKey("MobType")) {
             return;
         }

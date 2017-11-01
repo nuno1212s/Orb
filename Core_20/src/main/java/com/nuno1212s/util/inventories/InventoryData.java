@@ -163,11 +163,13 @@ public class InventoryData {
     }
 
     public InventoryItem getItemWithFlag(String flag) {
+
         for (InventoryItem item : this.items) {
             if (item.hasItemFlag(flag)) {
                 return item;
             }
         }
+
         return null;
     }
 
