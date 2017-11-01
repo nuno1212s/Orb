@@ -92,6 +92,7 @@ public class EntityBundle {
      * Kill the entity and drop all of the items
      */
     public void kill(ItemStack itemInHand) {
+        this.mobCount--;
         Entity entityReference = getEntityReference();
         EntityType type = entityReference.getType();
 
@@ -108,7 +109,7 @@ public class EntityBundle {
         double modifier = Main.getIns().getEntityManager().getModifierForLooting(lootingLevel);
 
         for (ItemStack item : dropsForEntity) {
-            int itemAmount = (int) Math.floor(item.getAmount() * mobCount * modifier);
+            int itemAmount = (int) Math.floor(item.getAmount() * 1 * modifier);
             int stacks;
             stacks = itemAmount / item.getMaxStackSize() + (itemAmount % item.getMaxStackSize() == 0 ? 0 : 1);
 
@@ -133,6 +134,8 @@ public class EntityBundle {
         for (ItemStack multipliedDrop : multipliedDrops) {
             location.getWorld().dropItemNaturally(location, multipliedDrop);
         }
+
+        updateName();
     }
 
     public void updateName() {

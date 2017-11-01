@@ -263,8 +263,9 @@ public class EntityBundleManager {
      * Handle the death of an entity bundle
      *
      * @param bundle The entity bundle
+     * @return True if the entity should die, false if only 1 has been killed
      */
-    public void handleDeath(EntityBundle bundle) {
+    public boolean handleDeath(EntityBundle bundle) {
         Player killer = ((LivingEntity) bundle.getEntityReference()).getKiller();
 
         if (killer != null) {
@@ -273,8 +274,13 @@ public class EntityBundleManager {
             bundle.kill(new ItemStack(Material.AIR));
         }
 
-        synchronized (this.entityBundles) {
-            this.entityBundles.remove(bundle);
+        if (bundle.getMobCount() == 0) {
+            synchronized (this.entityBundles) {
+                this.entityBundles.remove(bundle);
+            }
+            return true;
+        } else {
+            return false;
         }
     }
 
