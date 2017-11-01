@@ -160,7 +160,7 @@ public class Item {
     /**
      * Sell an item to a certain player
      *
-     * Auto removes/adds player money
+     * Auto adds seller money
      */
     public void deliverItem(Player player) {
         this.sold = true;
@@ -169,7 +169,7 @@ public class Item {
         Main.getIns().getMarketManager().sellItem(this);
         player.getInventory().addItem(this.getItem());
 
-        Pair<PlayerData, Boolean> playerData = MainData.getIns().getPlayerManager().getOrLoadPlayer(player.getUniqueId());
+        Pair<PlayerData, Boolean> playerData = MainData.getIns().getPlayerManager().getOrLoadPlayer(getOwner());
         if (!playerData.getValue()) {
             PlayerData playerD = playerData.getKey();
             if (isServerCurrency()) {
@@ -179,6 +179,7 @@ public class Item {
             } else {
                 playerD.setCash(playerD.getCash() + getCost());
             }
+
             MainData.getIns().getMessageManager().getMessage("SOLD_ITEM").format("%item%", getItemID()).sendTo(playerD);
 
         } else {
@@ -193,6 +194,8 @@ public class Item {
             } else {
                 playerD.setCash(playerD.getCash() + getCost());
             }
+
+
         }
 
     }

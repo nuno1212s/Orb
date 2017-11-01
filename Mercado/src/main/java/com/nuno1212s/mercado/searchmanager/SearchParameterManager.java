@@ -81,6 +81,7 @@ public class SearchParameterManager {
         try (Reader r = new FileReader(f)) {
             json = (JSONObject) new JSONParser().parse(r);
         } catch (ParseException | IOException e) {
+            System.out.println("Failed while loading the inventory: " + inventoryName);
             e.printStackTrace();
             return null;
         }
