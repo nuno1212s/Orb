@@ -75,6 +75,7 @@ public class ConfirmInventoryListener extends InventoryListener {
                     PlayerData playerData = MainData.getIns().getPlayerManager().getPlayer(e.getWhoClicked().getUniqueId());
                     ServerCurrencyHandler currencyHandler = MainData.getIns().getServerCurrencyHandler();
                     if (currencyHandler.removeCurrency(playerData, buyItem.getCost())) {
+                        MainData.getIns().getEventCaller().callUpdateInformationEvent(playerData);
                         buyItem.deliverItem((Player) e.getWhoClicked());
                         addCloseException(e.getWhoClicked().getUniqueId());
                         e.getWhoClicked().closeInventory();

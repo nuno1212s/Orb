@@ -175,10 +175,12 @@ public class Item {
             if (isServerCurrency()) {
                 if (MainData.getIns().hasServerCurrency()) {
                     MainData.getIns().getServerCurrencyHandler().addCurrency(playerD, getCost());
+                    MainData.getIns().getEventCaller().callUpdateInformationEvent(playerD);
                 }
             } else {
                 playerD.setCash(playerD.getCash() + getCost());
             }
+
 
             MainData.getIns().getMessageManager().getMessage("SOLD_ITEM").format("%item%", getItemID()).sendTo(playerD);
 

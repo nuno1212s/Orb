@@ -28,11 +28,17 @@ public class SignClickListener implements Listener {
                 Sign s = (Sign) e.getClickedBlock().getState();
 
                 StoreSign sign = Main.getIns().getSignManager().getSign(s.getLocation());
+
                 if (sign == null) {
                     return;
                 }
 
+                if (Main.getIns().getSignManager().isEditing(e.getPlayer().getUniqueId())) {
+                    return;
+                }
+
                 e.setCancelled(true);
+
                 if (e.getAction() == Action.LEFT_CLICK_BLOCK && sign.isCanSell()) {
 
                     int price = sign.getSellPrice();
@@ -110,7 +116,7 @@ public class SignClickListener implements Listener {
                             MainData.getIns().getEventCaller().callUpdateInformationEvent(d);
                             e.getPlayer().getInventory().addItem(sign.getItem().clone());
                             MainData.getIns().getMessageManager().getMessage("BOUGHT_ITEM_S").format("%price%", String.valueOf(price))
-                                    .send(e.getPlayer());
+                                    .sendTo(e.getPlayer());
                         } else {
                             MainData.getIns().getMessageManager().getMessage("NO_COINS").sendTo(e.getPlayer());
                         }

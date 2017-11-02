@@ -45,7 +45,7 @@ public class EntityBundleManager {
         this.lootingConfig = m.getFile("lootingConfig.json", true);
         this.entitiesFile = m.getFile("entityBundles.json", false);
 
-        entityBundler = new EntityBundler();
+        //entityBundler = new EntityBundler();
 
         this.gson = new GsonBuilder().registerTypeAdapter(EntityBundle.class, new EntityBundleTypeAdapter()).create();
 

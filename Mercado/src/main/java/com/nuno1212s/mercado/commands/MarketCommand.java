@@ -19,6 +19,6 @@ public class MarketCommand implements CommandExecutor {
             return true;
         }
         ((Player) commandSender).openInventory(Main.getIns().getMarketManager().getLandingInventory());
-        return false;
+        return true;
     }
 }

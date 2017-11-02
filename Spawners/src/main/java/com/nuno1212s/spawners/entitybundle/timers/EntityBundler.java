@@ -26,7 +26,6 @@ public class EntityBundler implements Runnable {
                         EntityBundle next = iterator.next();
 
                         if (iterator.hasNext()) {
-
                             ListIterator<EntityBundle> checkingAfterTheEntities = entities.listIterator(iterator.nextIndex());
 
                             while (checkingAfterTheEntities.hasNext()) {
