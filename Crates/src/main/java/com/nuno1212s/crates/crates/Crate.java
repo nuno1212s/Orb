@@ -122,14 +122,14 @@ public class Crate {
      *
      * @return
      */
-    public ItemStack getRandomReward() {
+    public List<ItemStack> getRandomReward() {
         Random r = new Random();
 
         double v = r.nextDouble() * 100, currently = 0;
 
         for (Reward reward : this.rewards) {
             if (v > currently && v <= (currently += reward.getProbability())) {
-                return reward.getItem().clone();
+                return reward.getItems();
             }
         }
 
@@ -195,6 +195,11 @@ public class Crate {
 
     }
 
+    /**
+     * Check if a given item is a key
+     * @param item
+     * @return
+     */
     boolean checkIsKey(ItemStack item) {
         if (item == null || !item.hasItemMeta()) {
             return false;
@@ -219,7 +224,7 @@ public class Crate {
 
         int starting = 10;
         for (Reward reward : this.rewards) {
-            displayInventory.setItem(starting++, reward.getItem().clone());
+            displayInventory.setItem(starting++, reward.getDisplayItem());
 
             //Ignore last and first slot of the inventories
             if (starting + 1 % 9 == 0) {
@@ -262,6 +267,22 @@ public class Crate {
         inventory.setItem(show_items.getSlot(), formatKeyItem());
 
         return inventory;
+    }
+
+    /**
+     * Get the reward of the given ID
+     *
+     * @param rewardID The id of the reward
+     * @return
+     */
+    public Reward getReward(int rewardID) {
+        for (Reward reward : this.rewards) {
+            if (reward.getRewardID() == rewardID) {
+                return reward;
+            }
+        }
+
+        return null;
     }
 
 }

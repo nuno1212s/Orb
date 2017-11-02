@@ -5,6 +5,9 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Reward class
  */
@@ -22,13 +25,24 @@ public class Reward {
     transient double originalProbability;
 
     @Getter
-    private ItemStack item;
+    private List<ItemStack> items;
 
-    public Reward(int rewardID, ItemStack item, int probability) {
+    @Getter
+    private ItemStack displayItem;
+
+    public Reward(int rewardID, ItemStack displayItem, ItemStack item, int probability) {
         this.rewardID = rewardID;
-        this.item = item.clone();
+        this.displayItem = displayItem.clone();
+        this.items = new ArrayList<>();
+        this.items.add(item.clone());
         this.probability = probability;
         this.originalProbability = probability;
+    }
+
+    public Reward(int rewardID, ItemStack displayItem, int probability) {
+        this.rewardID = rewardID;
+        this.displayItem = displayItem.clone();
+        this.probability = probability;
     }
 
     /**

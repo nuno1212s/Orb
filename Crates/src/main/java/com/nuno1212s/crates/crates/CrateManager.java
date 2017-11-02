@@ -73,7 +73,6 @@ public class CrateManager {
 
         } catch (IOException e) {
             System.out.println("JSON file could not be read. Maybe it's undefined? ");
-            return;
         } finally {
             if (this.crates == null) {
                 this.crates = new ArrayList<>();
@@ -137,6 +136,11 @@ public class CrateManager {
         return null;
     }
 
+    /**
+     * Is the location given a location of a crate block
+     * @param l
+     * @return
+     */
     public boolean isCrateLocation(Location l) {
         for (Map.Entry<String, LLocation> crateLocation : this.crateBlocks.entrySet()) {
             LLocation locations = crateLocation.getValue();
@@ -177,11 +181,13 @@ public class CrateManager {
         while (iterator.hasNext()) {
             ItemStack itemStack = iterator.next();
             if (crateToOpen.checkIsKey(itemStack)) {
+
                 if (itemStack.getAmount() > 1) {
                     itemStack.setAmount(itemStack.getAmount() - 1);
                 } else {
-                    inventory.removeItem(itemStack);
+                    iterator.set(new ItemStack(Material.AIR));
                 }
+
                 return true;
             }
         }
