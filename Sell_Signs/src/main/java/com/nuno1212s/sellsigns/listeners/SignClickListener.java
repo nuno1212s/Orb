@@ -1,8 +1,6 @@
 package com.nuno1212s.sellsigns.listeners;
 
 import com.nuno1212s.main.MainData;
-import com.nuno1212s.multipliers.main.RankMultiplierMain;
-import com.nuno1212s.multipliers.multipliers.RankMultiplier;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.sellsigns.main.Main;
 import com.nuno1212s.sellsigns.signs.StoreSign;
@@ -33,70 +31,77 @@ public class SignClickListener implements Listener {
                     return;
                 }
 
-                if (Main.getIns().getSignManager().isEditing(e.getPlayer().getUniqueId())) {
-                    return;
-                }
-
                 e.setCancelled(true);
 
-                if (e.getAction() == Action.LEFT_CLICK_BLOCK && sign.isCanSell()) {
+                if (e.getAction() == Action.LEFT_CLICK_BLOCK) {
 
-                    int price = sign.getSellPrice();
+                    if (Main.getIns().getSignManager().isEditing(e.getPlayer().getUniqueId())) {
 
-                    PlayerData d = MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
+                        Main.getIns().getSignManager().removeSign(sign);
+                        MainData.getIns().getMessageManager().getMessage("REMOVED_SIGN").sendTo(e.getPlayer());
 
-                    double rankMultiplier = sign.getRankMultiplier(d);
+                        return;
+                    }
 
-                    int finalPrice = (int) Math.floor((double) price * rankMultiplier),
-                            perItemPrice = (int) Math.floor((double) finalPrice / (double) sign.getItem().getAmount());
+                    if (sign.isCanSell()) {
 
-                    int amount;
+                        int price = sign.getSellPrice();
 
-                    PlayerInventory p = e.getPlayer().getInventory();
+                        PlayerData d = MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
 
-                    if (e.getPlayer().isSneaking()) {
-                        amount = 0;
-                        if (p.containsAtLeast(sign.getItem(), 1)) {
-                            for (ItemStack itemStack : p.getContents()) {
-                                if (itemStack == null || itemStack.getType() == Material.AIR) {
-                                    continue;
-                                }
-                                if (itemStack.isSimilar(sign.getItem())) {
-                                   amount += itemStack.getAmount();
-                                   p.removeItem(itemStack);
+                        double rankMultiplier = sign.getRankMultiplier(d);
+
+                        int finalPrice = (int) Math.floor((double) price * rankMultiplier),
+                                perItemPrice = (int) Math.floor((double) finalPrice / (double) sign.getItem().getAmount());
+
+                        int amount;
+
+                        PlayerInventory p = e.getPlayer().getInventory();
+
+                        if (e.getPlayer().isSneaking()) {
+                            amount = 0;
+                            if (p.containsAtLeast(sign.getItem(), 1)) {
+                                for (ItemStack itemStack : p.getContents()) {
+                                    if (itemStack == null || itemStack.getType() == Material.AIR) {
+                                        continue;
+                                    }
+                                    if (itemStack.isSimilar(sign.getItem())) {
+                                        amount += itemStack.getAmount();
+                                        p.removeItem(itemStack);
+                                    }
                                 }
                             }
-                        }
 
 
-                        int coins = perItemPrice * amount;
+                            int coins = perItemPrice * amount;
 
-                        MainData.getIns().getServerCurrencyHandler().addCurrency(d, coins);
-                        MainData.getIns().getEventCaller().callUpdateInformationEvent(d);
-                        MainData.getIns().getMessageManager().getMessage("SOLD_ITEM_S").format("%price%", String.valueOf(coins))
-                                .format("%amount%", String.valueOf(amount)).format("%multiplier%", String.format("%.2f", rankMultiplier)).sendTo(e.getPlayer());
-
-                    } else {
-                        ItemStack item = sign.getItem();
-
-                        if (p.containsAtLeast(sign.getItem(), item.getAmount())) {
-                            int coinsToAdd = perItemPrice * item.getAmount();
-                            p.removeItem(item);
-                            MainData.getIns().getServerCurrencyHandler().addCurrency(d, coinsToAdd);
+                            MainData.getIns().getServerCurrencyHandler().addCurrency(d, coins);
                             MainData.getIns().getEventCaller().callUpdateInformationEvent(d);
-                            MainData.getIns().getMessageManager().getMessage("SOLD_ITEM_S").format("%price%", String.valueOf(coinsToAdd))
-                                    .format("%amount%", String.valueOf(item.getAmount()))
-                                    .format("%multiplier%", String.format("%.2f", rankMultiplier)).sendTo(e.getPlayer());
-                            return;
+                            MainData.getIns().getMessageManager().getMessage("SOLD_ITEM_S").format("%price%", String.valueOf(coins))
+                                    .format("%amount%", String.valueOf(amount)).format("%multiplier%", String.format("%.2f", rankMultiplier)).sendTo(e.getPlayer());
+
+                        } else {
+                            ItemStack item = sign.getItem();
+
+                            if (p.containsAtLeast(sign.getItem(), item.getAmount())) {
+                                int coinsToAdd = perItemPrice * item.getAmount();
+                                p.removeItem(item);
+                                MainData.getIns().getServerCurrencyHandler().addCurrency(d, coinsToAdd);
+                                MainData.getIns().getEventCaller().callUpdateInformationEvent(d);
+                                MainData.getIns().getMessageManager().getMessage("SOLD_ITEM_S").format("%price%", String.valueOf(coinsToAdd))
+                                        .format("%amount%", String.valueOf(item.getAmount()))
+                                        .format("%multiplier%", String.format("%.2f", rankMultiplier)).sendTo(e.getPlayer());
+                                return;
+                            }
+
                         }
 
                     }
-
                 } else if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
 
                     if (e.getPlayer().isSneaking()) {
                         if (Main.getIns().getSignManager().isEditing(e.getPlayer().getUniqueId())) {
-                            if (sign.getItem() == null) {
+                            if (sign.getItem() == null || sign.getItem().getType() == Material.AIR) {
                                 ItemStack itemInHand = e.getPlayer().getItemInHand();
 
                                 sign.setItem(itemInHand.clone());
@@ -107,7 +112,7 @@ public class SignClickListener implements Listener {
                         }
                     }
 
-                    if (sign.isCanBuy()) {
+                    if (sign.isCanBuy() && sign.getItem() != null) {
                         int price = sign.getPrice();
 
                         PlayerData d = MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
@@ -127,7 +132,6 @@ public class SignClickListener implements Listener {
             }
         }
     }
-
 
 
 }

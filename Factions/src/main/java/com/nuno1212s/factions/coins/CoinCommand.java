@@ -188,7 +188,7 @@ public class CoinCommand implements CommandExecutor {
                             return;
                         }
 
-                        FPlayerData d = getPlayerData(commandSender, args[1]);
+                        FPlayerData d = getPlayerData(commandSender, args[0]);
 
                         if (d == null) {
                             return;

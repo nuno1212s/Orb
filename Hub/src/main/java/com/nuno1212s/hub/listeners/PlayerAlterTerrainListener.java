@@ -24,7 +24,7 @@ public class PlayerAlterTerrainListener implements Listener {
 
     @EventHandler
     public void onPlayerPlaceBlock(BlockPlaceEvent e) {
-        if (!e.getPlayer().hasPermission("edit.world")) {
+        if (!e.getPlayer().hasPermission("editworld")) {
             e.setBuild(false);
             e.setCancelled(true);
         }
