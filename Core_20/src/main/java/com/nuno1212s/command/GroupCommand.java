@@ -22,7 +22,7 @@ public class GroupCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
-        if (commandSender.hasPermission("groupCommand")) {
+        if (!commandSender.hasPermission("groupCommand")) {
             MainData.getIns().getMessageManager().getMessage("NO_PERMISSION").sendTo(commandSender);
             return true;
         }

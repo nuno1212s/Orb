@@ -32,10 +32,12 @@ public class CrateCommandManager extends CommandManager {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
         if (args.length == 0) {
-            commandSender.sendMessage("");
-            this.getCommands().forEach(cmd -> commandSender.sendMessage(cmd.usage()));
-            commandSender.sendMessage("");
-            return true;
+            if (commandSender.hasPermission("crates.commands")) {
+                commandSender.sendMessage("");
+                this.getCommands().forEach(cmd -> commandSender.sendMessage(cmd.usage()));
+                commandSender.sendMessage("");
+                return true;
+            }
         }
 
         com.nuno1212s.util.CommandUtil.Command c = getCommand(args[0]);
@@ -43,9 +45,11 @@ public class CrateCommandManager extends CommandManager {
         if (c != null) {
             c.execute((Player) commandSender, args);
         } else {
-            commandSender.sendMessage("");
-            this.getCommands().forEach(cmd -> commandSender.sendMessage(cmd.usage()));
-            commandSender.sendMessage("");
+            if (commandSender.hasPermission("crates.commands")) {
+                commandSender.sendMessage("");
+                this.getCommands().forEach(cmd -> commandSender.sendMessage(cmd.usage()));
+                commandSender.sendMessage("");
+            }
         }
 
         return true;

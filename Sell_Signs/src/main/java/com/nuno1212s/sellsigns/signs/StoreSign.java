@@ -89,7 +89,17 @@ public class StoreSign {
                 line = MainData.getIns().getMessageManager().getMessage("SIGNS_BUY").toString();
             }
             state.setLine(0, line);
-            state.setLine(1, String.valueOf(this.getItem().getType().getId()) + ":" + String.valueOf(this.getItem().getData().getData()));
+
+            if (this.getItem().getItemMeta().hasDisplayName()) {
+                if (this.getItem().getItemMeta().getDisplayName().length() > 32) {
+                    state.setLine(1, this.getItem().getItemMeta().getDisplayName().substring(0, 32));
+                } else {
+                    state.setLine(1, this.getItem().getItemMeta().getDisplayName());
+                }
+            } else {
+                state.setLine(1, String.valueOf(this.getItem().getType().getId()) + ":" + String.valueOf(this.getItem().getData().getData()));
+            }
+
             state.setLine(2, String.valueOf(this.getItem().getAmount()));
             if (this.isCanBuy() && this.isCanSell()) {
                 state.setLine(3, MainData.getIns().getMessageManager().getMessage("SIGNS_BUY_SELL_PRICE")
