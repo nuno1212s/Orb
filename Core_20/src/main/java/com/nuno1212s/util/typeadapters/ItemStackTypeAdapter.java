@@ -12,7 +12,7 @@ public class ItemStackTypeAdapter extends TypeAdapter<ItemStack> {
 
     @Override
     public ItemStack read(JsonReader jsonReader) throws IOException {
-        jsonReader.beginObject();
+
         String item = jsonReader.nextString();
 
         return ItemUtils.itemFrom64(item);
@@ -20,8 +20,6 @@ public class ItemStackTypeAdapter extends TypeAdapter<ItemStack> {
 
     @Override
     public void write(JsonWriter jsonWriter, ItemStack item) throws IOException {
-        jsonWriter.beginObject();
-        jsonWriter.name("itemdata").value(ItemUtils.itemTo64(item));
-        jsonWriter.endObject();
+        jsonWriter.value(ItemUtils.itemTo64(item));
     }
 }

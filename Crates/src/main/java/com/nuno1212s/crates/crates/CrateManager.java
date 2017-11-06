@@ -2,7 +2,9 @@ package com.nuno1212s.crates.crates;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
 import com.google.gson.reflect.TypeToken;
+import com.nuno1212s.crates.TypeAdapter.ItemStackListAdapter;
 import com.nuno1212s.crates.animations.AnimationManager;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.util.LLocation;
@@ -35,7 +37,7 @@ public class CrateManager {
 
     private File crateFile, crateLocationFile;
 
-    private Map<String, LLocation> crateBlocks;
+    private Map<String, List<LLocation>> crateBlocks;
 
     @Getter
     private Gson gson;
@@ -51,7 +53,9 @@ public class CrateManager {
     public CrateManager(Module mainModule) {
 
         this.gson = new GsonBuilder().registerTypeAdapter(ItemStack.class, new ItemStackTypeAdapter())
-                .registerTypeAdapter(LLocation.class, new LocationTypeAdapter()).create();
+                .registerTypeAdapter(LLocation.class, new LocationTypeAdapter())
+                //.registerTypeAdapter(new TypeToken<List<ItemStack>>(){}.getType(), new ItemStackListAdapter())
+                .create();
 
         this.defaultKeyItem = new ItemStack(Material.TRIPWIRE_HOOK);
 
@@ -62,8 +66,10 @@ public class CrateManager {
         this.crateDisplayInventory = new InventoryData(mainModule.getFile("crateDisplay.json", true));
 
 
-        Type type = new TypeToken<List<Crate>>() {}.getType(),
-                type2 = new TypeToken<Map<String, LLocation>>() {}.getType();
+        Type type = new TypeToken<List<Crate>>() {
+        }.getType(),
+                type2 = new TypeToken<Map<String, LLocation>>() {
+                }.getType();
 
         try (Reader reader = new FileReader(this.crateFile);
              Reader reader2 = new FileReader(this.crateLocationFile)) {
@@ -71,8 +77,9 @@ public class CrateManager {
 
             this.crateBlocks = this.gson.fromJson(reader2, type2);
 
-        } catch (IOException e) {
+        } catch (IOException | JsonParseException e) {
             System.out.println("JSON file could not be read. Maybe it's undefined? ");
+            e.printStackTrace();
         } finally {
             if (this.crates == null) {
                 this.crates = new ArrayList<>();
@@ -107,7 +114,7 @@ public class CrateManager {
         }
 
         try (Writer crateFileWriter = new FileWriter(this.crateFile);
-            Writer crateLocationWriter = new FileWriter(this.crateLocationFile)) {
+             Writer crateLocationWriter = new FileWriter(this.crateLocationFile)) {
             this.gson.toJson(this.crates, crateFileWriter);
 
             this.gson.toJson(this.crateBlocks, crateLocationWriter);
@@ -124,11 +131,13 @@ public class CrateManager {
      * @return
      */
     public Crate getCrateAtLocation(Location l) {
-        for (Map.Entry<String, LLocation> crateLocation : this.crateBlocks.entrySet()) {
-            LLocation locations = crateLocation.getValue();
-            if (locations.getWorld().equalsIgnoreCase(l.getWorld().getName())) {
-                if (locations.getLocation().distanceSquared(l) < 2) {
-                    return getCrate(crateLocation.getKey());
+        for (Map.Entry<String, List<LLocation>> crateLocation : this.crateBlocks.entrySet()) {
+            List<LLocation> locationss = crateLocation.getValue();
+            for (LLocation locations : locationss) {
+                if (locations.getWorld().equalsIgnoreCase(l.getWorld().getName())) {
+                    if (locations.getLocation().distanceSquared(l) < 2) {
+                        return getCrate(crateLocation.getKey());
+                    }
                 }
             }
         }
@@ -138,15 +147,18 @@ public class CrateManager {
 
     /**
      * Is the location given a location of a crate block
+     *
      * @param l
      * @return
      */
     public boolean isCrateLocation(Location l) {
-        for (Map.Entry<String, LLocation> crateLocation : this.crateBlocks.entrySet()) {
-            LLocation locations = crateLocation.getValue();
-            if (locations.getWorld().equalsIgnoreCase(l.getWorld().getName())) {
-                if (locations.getLocation().distanceSquared(l) < 2) {
-                    return true;
+        for (Map.Entry<String, List<LLocation>> crateLocation : this.crateBlocks.entrySet()) {
+            List<LLocation> locationss = crateLocation.getValue();
+            for (LLocation locations : locationss) {
+                if (locations.getWorld().equalsIgnoreCase(l.getWorld().getName())) {
+                    if (locations.getLocation().distanceSquared(l) < 2) {
+                        return true;
+                    }
                 }
             }
         }
@@ -154,7 +166,7 @@ public class CrateManager {
     }
 
     public void handleCrateRemoval(Crate c) {
-        for (Map.Entry<String, LLocation> crateLocation : this.crateBlocks.entrySet()) {
+        for (Map.Entry<String, List<LLocation>> crateLocation : this.crateBlocks.entrySet()) {
             if (crateLocation.getKey().equalsIgnoreCase(c.getCrateName())) {
                 this.crateBlocks.remove(crateLocation.getKey());
             }
@@ -166,7 +178,13 @@ public class CrateManager {
             return;
         }
 
-        this.crateBlocks.put(c.getCrateName(), new LLocation(l));
+        LLocation lLocation = new LLocation(l);
+
+        List<LLocation> orDefault = this.crateBlocks.getOrDefault(c.getCrateName(), new ArrayList<>());
+
+        orDefault.add(lLocation);
+
+        this.crateBlocks.put(c.getCrateName(), orDefault);
     }
 
     public void removeCrateAtLocation(Location l) {

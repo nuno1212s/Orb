@@ -4,6 +4,7 @@ import com.nuno1212s.crates.crates.Crate;
 import com.nuno1212s.crates.crates.CrateManager;
 import com.nuno1212s.crates.animations.AnimationTimer.AnimationTimer;
 import com.nuno1212s.crates.animations.animations.DefaultAnimation;
+import com.nuno1212s.crates.crates.Reward;
 import com.nuno1212s.main.MainData;
 import lombok.Getter;
 import org.bukkit.entity.Player;
@@ -138,7 +139,7 @@ public class AnimationManager {
 
         Crate crate = animation.getCrate();
 
-        ItemStack randomReward;
+        Reward randomReward;
 
         try {
             randomReward = crate.getRandomReward();
@@ -149,7 +150,7 @@ public class AnimationManager {
         }
 
         if (randomReward != null) {
-            p.getInventory().addItem(randomReward);
+            p.getInventory().addItem(randomReward.getItems().toArray(new ItemStack[randomReward.getItems().size()]));
         }
     }
 

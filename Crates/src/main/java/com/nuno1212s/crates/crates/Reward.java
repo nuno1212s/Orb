@@ -1,5 +1,6 @@
 package com.nuno1212s.crates.crates;
 
+import com.nuno1212s.util.NBTDataStorage.NBTCompound;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -19,10 +20,10 @@ public class Reward {
     private int rewardID;
 
     @Getter
-    double probability;
+    transient double probability;
 
     @Getter
-    transient double originalProbability;
+    double originalProbability;
 
     @Getter
     private List<ItemStack> items;
@@ -32,7 +33,7 @@ public class Reward {
 
     public Reward(int rewardID, ItemStack displayItem, ItemStack item, int probability) {
         this.rewardID = rewardID;
-        this.displayItem = displayItem.clone();
+        this.displayItem = createDisplayItem(displayItem);
         this.items = new ArrayList<>();
         this.items.add(item.clone());
         this.probability = probability;
@@ -41,8 +42,20 @@ public class Reward {
 
     public Reward(int rewardID, ItemStack displayItem, int probability) {
         this.rewardID = rewardID;
-        this.displayItem = displayItem.clone();
+        this.displayItem = createDisplayItem(displayItem);
         this.probability = probability;
+        this.originalProbability = probability;
+        this.items = new ArrayList<>();
+    }
+
+    public ItemStack createDisplayItem(ItemStack original) {
+        ItemStack clone = original.clone();
+
+        NBTCompound compound = new NBTCompound(clone);
+
+        compound.add("RewardID", this.rewardID);
+
+        return compound.write(clone);
     }
 
     /**

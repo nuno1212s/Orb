@@ -3,6 +3,7 @@ package com.nuno1212s.crates.animations.animations;
 import com.nuno1212s.crates.crates.Crate;
 import com.nuno1212s.crates.Main;
 import com.nuno1212s.crates.animations.Animation;
+import com.nuno1212s.crates.crates.Reward;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
@@ -58,7 +59,7 @@ public class DefaultAnimation extends Animation {
 
         for (;current>=0; current--) {
             if (current == 0) {
-                toEdit.setItem(displaySlots.get(current), crate.getRandomReward());
+                toEdit.setItem(displaySlots.get(current), crate.getRandomReward().getDisplayItem());
             } else {
                 toEdit.setItem(displaySlots.get(current), toEdit.getItem(displaySlots.get(current - 1)));
             }
@@ -68,8 +69,11 @@ public class DefaultAnimation extends Animation {
             this.finished = true;
             player.playSound(player.getLocation(), Sound.LEVEL_UP, 1, 1);
             player.playSound(player.getLocation(), Sound.FIREWORK_BLAST, 1, 1);
-            ItemStack reward = toEdit.getItem(13);
-            this.player.getInventory().addItem(reward);
+            ItemStack rewardItem = toEdit.getItem(13);
+
+            Reward reward = this.getCrate().getReward(rewardItem);
+
+            this.player.getInventory().addItem(reward.getItems().toArray(new ItemStack[reward.getItems().size()]));
         }
         return iterations >= maxIterations;
     }

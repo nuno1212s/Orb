@@ -1,7 +1,7 @@
 package com.nuno1212s.crates.crates;
 
-import com.nuno1212s.crates.animations.Animation;
 import com.nuno1212s.crates.Main;
+import com.nuno1212s.crates.animations.Animation;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.NBTDataStorage.NBTCompound;
@@ -87,7 +87,7 @@ public class Crate {
 
     /**
      * Get the next applicable reward ID
-     *
+     * <p>
      * Avoids repeated reward IDs
      *
      * @return
@@ -122,14 +122,14 @@ public class Crate {
      *
      * @return
      */
-    public List<ItemStack> getRandomReward() {
+    public Reward getRandomReward() {
         Random r = new Random();
 
         double v = r.nextDouble() * 100, currently = 0;
 
         for (Reward reward : this.rewards) {
             if (v > currently && v <= (currently += reward.getProbability())) {
-                return reward.getItems();
+                return reward;
             }
         }
 
@@ -147,7 +147,7 @@ public class Crate {
         List<String> lore = itemMeta.getLore() == null ? new ArrayList<>() : itemMeta.getLore(), newLore = new ArrayList<>();
 
         lore.forEach(loreLine ->
-            newLore.add(loreLine.replace("%crateName%", getDisplayName()))
+                newLore.add(loreLine.replace("%crateName%", getDisplayName()))
         );
 
         itemMeta.setLore(newLore);
@@ -197,6 +197,7 @@ public class Crate {
 
     /**
      * Check if a given item is a key
+     *
      * @param item
      * @return
      */
@@ -250,6 +251,7 @@ public class Crate {
 
     /**
      * Get the confirm inventory for buying a key
+     *
      * @return
      */
     public Inventory getBuyKeyConfirmInventory() {
@@ -280,6 +282,28 @@ public class Crate {
             if (reward.getRewardID() == rewardID) {
                 return reward;
             }
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the reward by a display item
+     *
+     * @param item The item of the reward
+     * @return
+     */
+    public Reward getReward(ItemStack item) {
+        NBTCompound nbtCompound = new NBTCompound(item);
+        if (nbtCompound.getValues().containsKey("RewardID")) {
+            int rewardID = (Integer) nbtCompound.getValues().get("RewardID");
+
+            for (Reward reward : this.rewards) {
+                if (reward.getRewardID() == rewardID) {
+                    return reward;
+                }
+            }
+
         }
 
         return null;

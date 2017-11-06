@@ -48,7 +48,7 @@ public class StaffChatCommand extends Command {
             }
         }
 
-        BaseComponent[] baseComponents = TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', "&d[SC] " + data.getNameWithPrefix() + " : " + message.toString()));
+        BaseComponent[] baseComponents = TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', "&d[SC] " + data.getNameWithPrefix() + " &f: " + message.toString()));
 
         for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
             PlayerData receivingPlayer = MainData.getIns().getPlayerManager().getPlayer(player.getUniqueId());

@@ -42,7 +42,7 @@ public class PlayerJoinListener implements Listener {
         MainData.getIns().getPlayerManager().addToCache(e.getUniqueId(), finalData);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onLogin(PlayerLoginEvent e) {
         if (e.getResult() == PlayerLoginEvent.Result.KICK_FULL) {
             PlayerData cachedPlayer = MainData.getIns().getPlayerManager().getCachedPlayer(e.getPlayer().getUniqueId());
