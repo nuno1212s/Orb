@@ -36,6 +36,8 @@ public class Crate {
     @Setter
     private long keyCost;
 
+    transient Random r = new Random();
+
     public Crate(String crateName, String displayName, Set<Reward> rewards, boolean cash, long keyCost) {
         this.crateName = crateName;
         this.displayName = displayName;
@@ -123,17 +125,15 @@ public class Crate {
      * @return
      */
     public Reward getRandomReward() {
-        Random r = new Random();
-
         double v = r.nextDouble() * 100, currently = 0;
 
         for (Reward reward : this.rewards) {
-            if (v > currently && v <= (currently += reward.getProbability())) {
+            if (v >= currently && v <= (currently += reward.getProbability())) {
                 return reward;
             }
         }
 
-        return null;
+        return this.rewards.iterator().next();
     }
 
     public ItemStack formatKeyItem() {
@@ -298,11 +298,7 @@ public class Crate {
         if (nbtCompound.getValues().containsKey("RewardID")) {
             int rewardID = (Integer) nbtCompound.getValues().get("RewardID");
 
-            for (Reward reward : this.rewards) {
-                if (reward.getRewardID() == rewardID) {
-                    return reward;
-                }
-            }
+            return getReward(rewardID);
 
         }
 

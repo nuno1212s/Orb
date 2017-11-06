@@ -37,6 +37,7 @@ public class AnimationTimer implements Runnable {
                 }
             }
         }
+
         return null;
     }
 
@@ -59,7 +60,12 @@ public class AnimationTimer implements Runnable {
         }
 
         synchronized (animations) {
-            animations.removeIf(Animation::run);
+            for (Animation animation : animations) {
+                if (animation.isFinished()) {
+                    continue;
+                }
+                animation.run();
+            }
         }
     }
 }

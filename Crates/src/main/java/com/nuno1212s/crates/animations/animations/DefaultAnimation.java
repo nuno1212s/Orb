@@ -69,12 +69,14 @@ public class DefaultAnimation extends Animation {
             this.finished = true;
             player.playSound(player.getLocation(), Sound.LEVEL_UP, 1, 1);
             player.playSound(player.getLocation(), Sound.FIREWORK_BLAST, 1, 1);
+
             ItemStack rewardItem = toEdit.getItem(13);
 
             Reward reward = this.getCrate().getReward(rewardItem);
 
-            this.player.getInventory().addItem(reward.getItems().toArray(new ItemStack[reward.getItems().size()]));
+            reward.getItems().forEach(this.getPlayer().getInventory()::addItem);
         }
+
         return iterations >= maxIterations;
     }
 }

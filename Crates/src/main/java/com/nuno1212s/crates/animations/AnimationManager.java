@@ -31,7 +31,7 @@ public class AnimationManager {
     private List<Constructor<? extends Animation>> animations;
 
     private List<ItemStack> showItems;
-    
+
     private File animationStuff;
 
     private AnimationTimer timer;
@@ -76,7 +76,7 @@ public class AnimationManager {
             }
         }
     }
-    
+
     public void save() {
         if (!animationStuff.exists()) {
             try {
@@ -91,7 +91,7 @@ public class AnimationManager {
         JSONObject obj = new JSONObject();
 
         this.showItems.forEach(displayItem ->
-            displayItems.add(CrateManager.itemTo64(displayItem))
+                displayItems.add(CrateManager.itemTo64(displayItem))
         );
 
         obj.put("DisplayItems", displayItems);

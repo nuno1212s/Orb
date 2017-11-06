@@ -22,7 +22,7 @@ public class ClassCommandManager extends CommandManager {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
-        if (args.length == 0) {
+        if (args.length == 0 && commandSender.hasPermission("classes.seeCommands")) {
             commandSender.sendMessage("");
             this.getCommands().forEach(cmd -> commandSender.sendMessage(cmd.usage()));
             commandSender.sendMessage("");
@@ -34,10 +34,12 @@ public class ClassCommandManager extends CommandManager {
         if (c != null) {
             c.execute((Player) commandSender, args);
         } else {
-            commandSender.sendMessage("");
-            this.getCommands().forEach(cmd -> commandSender.sendMessage(cmd.usage()));
-            commandSender.sendMessage("");
+            if (commandSender.hasPermission("classes.seeCommands")) {
+                commandSender.sendMessage("");
+                this.getCommands().forEach(cmd -> commandSender.sendMessage(cmd.usage()));
+                commandSender.sendMessage("");
+            }
         }
-        return false;
+        return true;
     }
 }

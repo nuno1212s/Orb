@@ -296,6 +296,11 @@ public abstract class PlayerData {
         return playerType.cast(this.playerReference.get());
     }
 
+    /**
+     * Check if the player is currently online on the server (Only this server instance, player can be online on another server of the network
+     *
+     * @return
+     */
     public boolean isPlayerOnServer() {
         return this.playerReference != null && this.playerReference.get() != null;
     }

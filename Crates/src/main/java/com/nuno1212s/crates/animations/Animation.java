@@ -19,7 +19,7 @@ public abstract class Animation {
     protected Crate crate;
 
     @Getter
-    protected boolean finished;
+    protected boolean finished = false;
 
     @Getter
     protected Player player;

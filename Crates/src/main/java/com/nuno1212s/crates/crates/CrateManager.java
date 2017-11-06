@@ -54,7 +54,7 @@ public class CrateManager {
 
         this.gson = new GsonBuilder().registerTypeAdapter(ItemStack.class, new ItemStackTypeAdapter())
                 .registerTypeAdapter(LLocation.class, new LocationTypeAdapter())
-                //.registerTypeAdapter(new TypeToken<List<ItemStack>>(){}.getType(), new ItemStackListAdapter())
+                .registerTypeAdapter(new TypeToken<List<ItemStack>>(){}.getType(), new ItemStackListAdapter())
                 .create();
 
         this.defaultKeyItem = new ItemStack(Material.TRIPWIRE_HOOK);
@@ -68,7 +68,7 @@ public class CrateManager {
 
         Type type = new TypeToken<List<Crate>>() {
         }.getType(),
-                type2 = new TypeToken<Map<String, LLocation>>() {
+                type2 = new TypeToken<Map<String, List<LLocation>>>() {
                 }.getType();
 
         try (Reader reader = new FileReader(this.crateFile);
