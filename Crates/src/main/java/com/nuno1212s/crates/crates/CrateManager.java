@@ -8,6 +8,7 @@ import com.nuno1212s.crates.TypeAdapter.ItemStackListAdapter;
 import com.nuno1212s.crates.animations.AnimationManager;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.util.LLocation;
+import com.nuno1212s.util.SerializableItem;
 import com.nuno1212s.util.inventories.InventoryData;
 import com.nuno1212s.util.typeadapters.ItemStackTypeAdapter;
 import com.nuno1212s.util.typeadapters.LocationTypeAdapter;
@@ -20,6 +21,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -35,7 +39,7 @@ public class CrateManager {
 
     private List<Crate> crates;
 
-    private File crateFile, crateLocationFile;
+    private File crateFile, crateLocationFile, config;
 
     private Map<String, List<LLocation>> crateBlocks;
 
@@ -57,8 +61,8 @@ public class CrateManager {
                 .registerTypeAdapter(new TypeToken<List<ItemStack>>(){}.getType(), new ItemStackListAdapter())
                 .create();
 
-        this.defaultKeyItem = new ItemStack(Material.TRIPWIRE_HOOK);
-
+        this.config = mainModule.getFile("config.json", true);
+        loadDefaultKeyItem();
         this.crateFile = mainModule.getFile("crates.json", false);
         this.crateLocationFile = mainModule.getFile("crateLocations.json", false);
         this.animationManager = new AnimationManager(mainModule.getFile("animationFile.json", false));
@@ -93,6 +97,18 @@ public class CrateManager {
         }
 
 
+    }
+
+    public void loadDefaultKeyItem() {
+        try (FileReader reader = new FileReader(this.config)) {
+
+            JSONObject item = (JSONObject) new JSONParser().parse(reader);
+
+            this.defaultKeyItem = new SerializableItem(item);
+
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

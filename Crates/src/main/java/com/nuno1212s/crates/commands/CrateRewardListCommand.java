@@ -44,8 +44,13 @@ public class CrateRewardListCommand implements Command {
         }
 
         crate.getRewards().forEach(reward -> {
+            System.out.println("ID" + reward.getRewardID());
+            System.out.println("Probability: " + reward.getProbability());
+            System.out.println("Display Item:" + reward.getDisplayItem());
+            System.out.println("Item:" + reward.getItems());
             player.sendMessage("ID:" + reward.getRewardID());
             player.sendMessage("Probability: " + reward.getProbability());
+            player.sendMessage("Display Item:" + reward.getDisplayItem());
             player.sendMessage("Item:" + reward.getItems());
         });
     }

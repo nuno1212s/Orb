@@ -133,7 +133,7 @@ public class Crate {
             }
         }
 
-        return this.rewards.iterator().next();
+        return null;
     }
 
     public ItemStack formatKeyItem() {

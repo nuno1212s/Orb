@@ -21,7 +21,7 @@ public class ClassCreateCommand implements Command {
 
     @Override
     public String usage() {
-        return ChatColor.RED + "/class create <id> <className> <permission> <size> <delay> <kitType>";
+        return ChatColor.RED + "/class create <id> <className> <permission> <size> <delay>";
     }
 
     @Override

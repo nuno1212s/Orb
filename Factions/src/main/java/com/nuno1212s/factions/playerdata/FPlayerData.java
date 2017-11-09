@@ -11,6 +11,7 @@ import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.Callback;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -72,6 +73,12 @@ public class FPlayerData extends PlayerData implements ChatData, KitPlayer, Ende
             Main.getIns().getMysql().savePlayerData(this);
             c.callback(null);
         });
+    }
+
+    @Override
+    public void checkExpiration(Player p) {
+        super.checkExpiration(p);
+        this.groups.checkExpiration(p);
     }
 
     public synchronized long getCoins() {
