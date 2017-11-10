@@ -24,6 +24,11 @@ public class InventoryClickListener implements Listener {
 
             if (inventory.equals(e.getClickedInventory())) {
                 WInventoryItem item = (WInventoryItem) inventory.getItem(e.getSlot());
+
+                if (item == null) {
+                    return;
+                }
+
                 if (item.getConnectingWarp() == null) {
 
                     String connectingInventory = item.getConnectingInventory();

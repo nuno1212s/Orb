@@ -13,12 +13,14 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
 /**
  * Handles authme hooks
  */
-public class AuthMeHook implements Listener{
+public class AuthMeHook implements Listener {
     Map<Object, Object> needLogin = CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.MINUTES).build().asMap();
 
     Main m;
@@ -29,15 +31,17 @@ public class AuthMeHook implements Listener{
 
     /**
      * Will need this
+     *
      * @param e
      */
     @EventHandler
     public void onJoin(LoginEvent e) {
         if (needLogin.containsKey(e.getPlayer().getUniqueId())) {
-            ((Callback)needLogin.get(e.getPlayer().getUniqueId())).onLogin();
+            ((Callback) needLogin.get(e.getPlayer().getUniqueId())).onLogin();
             needLogin.remove(e.getPlayer().getUniqueId());
             return;
         }
+
         BungeeSender.loginNotify(e.getPlayer().getName());
         MainData.getIns().getScheduler().runTaskLater(() -> {
             e.getPlayer().setWalkSpeed(.2f);
@@ -54,14 +58,18 @@ public class AuthMeHook implements Listener{
     }
 
     public void forceRegister(Player p) {
-        NewAPI.getInstance().forceRegister(p, RandomStringUtils.random(8, true, true));
-        MainData.getIns().getScheduler().runTaskLater(() ->
-                p.sendMessage(ChatColor.RED + "Foi logado automaticamente."), 2L);
+        if (!NewAPI.getInstance().isAuthenticated(p)) {
+            NewAPI.getInstance().forceRegister(p, RandomStringUtils.random(8, true, true));
+            MainData.getIns().getScheduler().runTaskLater(() ->
+                    p.sendMessage(ChatColor.RED + "Foi logado automaticamente."), 2L);
+        }
     }
 
     public void forceLogin(Player p) {
-        NewAPI.getInstance().forceLogin(p);
-        MainData.getIns().getScheduler().runTaskLater(() ->
-                p.sendMessage(ChatColor.RED + "Foi logado automaticamente."), 2L);
+        if (!NewAPI.getInstance().isAuthenticated(p)) {
+            NewAPI.getInstance().forceLogin(p);
+            MainData.getIns().getScheduler().runTaskLater(() ->
+                    p.sendMessage(ChatColor.RED + "Foi logado automaticamente."), 2L);
+        }
     }
 }

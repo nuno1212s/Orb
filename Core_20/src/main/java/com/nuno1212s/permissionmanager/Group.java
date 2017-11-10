@@ -62,6 +62,12 @@ public class Group {
                         return true;
                     }
                 }
+            } else if (!contains) {
+
+                if (s.equalsIgnoreCase(permission)) {
+                    return true;
+                }
+
             }
         }
         return false;

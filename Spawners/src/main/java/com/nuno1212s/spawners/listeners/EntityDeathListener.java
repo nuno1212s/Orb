@@ -27,6 +27,7 @@ public class EntityDeathListener implements Listener {
                     if (!Main.getIns().getEntityManager().handleDeath(entityBundle)) {
                         entity.setHealth(entity.getMaxHealth());
                         e.setCancelled(true);
+                        entity.damage(0, e.getEntity());
                     }
                 }
             }

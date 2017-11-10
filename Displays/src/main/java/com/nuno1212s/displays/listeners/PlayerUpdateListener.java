@@ -26,7 +26,7 @@ public class PlayerUpdateListener implements Listener {
         Player player1 = player.getPlayerReference(Player.class);
 
         if (player1 != null) {
-            DisplayMain.getIns().getScoreboardManager().handlePlayerJoin(player, player1);
+            DisplayMain.getIns().getScoreboardManager().handlePlayerGroupUpdate(player, e.getPreviousGroup());
         }
     }
 

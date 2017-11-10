@@ -45,7 +45,7 @@ public class EntityBundleManager {
         this.lootingConfig = m.getFile("lootingConfig.json", true);
         this.entitiesFile = m.getFile("entityBundles.json", false);
 
-        //entityBundler = new EntityBundler();
+        entityBundler = new EntityBundler();
 
         this.gson = new GsonBuilder().registerTypeAdapter(EntityBundle.class, new EntityBundleTypeAdapter()).create();
 
@@ -135,6 +135,8 @@ public class EntityBundleManager {
             }
         }
 
+        this.entityBundles.forEach(EntityBundle::unload);
+
         try (Writer w = new FileWriter(this.entitiesFile)) {
 
             gson.toJson(this.entityBundles, w);
@@ -221,18 +223,30 @@ public class EntityBundleManager {
      * @return
      */
     public Map<String, List<EntityBundle>> getSpawnedEntitiesByWorld() {
-        List<EntityBundle> spawnedEntityBundles = getSpawnedEntityBundles();
 
         Map<String, List<EntityBundle>> entities = new HashMap<>();
 
-        for (EntityBundle spawnedEntityBundle : spawnedEntityBundles) {
-            String WorldName = spawnedEntityBundle.getEntityReference().getWorld().getName();
-            List<EntityBundle> orDefault = entities.getOrDefault(WorldName, new ArrayList<>());
-            orDefault.add(spawnedEntityBundle);
-            entities.put(WorldName, orDefault);
+        synchronized (this.entityBundles) {
+            for (EntityBundle spawnedEntityBundle : entityBundles) {
+                String WorldName = spawnedEntityBundle.getEntityReference().getWorld().getName();
+                List<EntityBundle> orDefault = entities.getOrDefault(WorldName, new ArrayList<>());
+                orDefault.add(spawnedEntityBundle);
+                entities.put(WorldName, orDefault);
+            }
         }
 
         return entities;
+    }
+
+    /**
+     * Accept bundled entities
+     * @param entitiesByWorld
+     */
+    public void acceptNewEntities(Map<String, List<EntityBundle>> entitiesByWorld) {
+        this.entityBundles.clear();
+        for (List<EntityBundle> bundles : entitiesByWorld.values()) {
+            this.entityBundles.addAll(bundles);
+        }
     }
 
     /**

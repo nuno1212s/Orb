@@ -77,6 +77,38 @@ public class ScoreboardManager {
         this.scoreboards.remove(d.getPlayerID());
     }
 
+    public void handlePlayerGroupUpdate(PlayerData d, Group oldGroup) {
+
+        this.setScoreboardPrefixes(d);
+
+        /*
+        this.scoreboards.forEach(((uuid, simpleScoreboard) -> {
+
+            Scoreboard scoreboard = simpleScoreboard.getScoreboard();
+
+            Team team = scoreboard.getTeam(oldGroup.getScoreboardName());
+
+            if (team == null) {
+                return;
+            }
+
+            team.removeEntry(d.getPlayerName());
+
+            Group representingGroup = d.getRepresentingGroup();
+            Team newGroup = scoreboard.getTeam(representingGroup.getScoreboardName());
+
+
+            if (newGroup == null) {
+                newGroup = scoreboard.registerNewTeam(representingGroup.getScoreboardName());
+                newGroup.setPrefix(representingGroup.getGroupPrefix());
+                newGroup.setSuffix(representingGroup.getGroupSuffix());
+            }
+
+            newGroup.addEntry(d.getPlayerName());
+        }));*/
+
+    }
+
     public void createScoreboard(PlayerData d, Player p) {
         SimpleScoreboard sc;
         // TODO: 28/10/2017 Maybe move this to async?

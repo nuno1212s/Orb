@@ -70,6 +70,7 @@ public class Main extends Module {
         ins.getServer().getPluginManager().registerEvents(new PlayerFoodChangeListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new WeatherChangeListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new PlayerAlterTerrainListener(), ins);
+        ins.getServer().getPluginManager().registerEvents(new CommandPreProcessListener(), ins);
 
         MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));
 

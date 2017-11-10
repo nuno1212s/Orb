@@ -1,5 +1,6 @@
 package com.nuno1212s.punishments.listeners;
 
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.punishments.main.Main;
 import com.nuno1212s.punishments.util.PInventoryItem;
 import com.nuno1212s.util.inventories.InventoryData;
@@ -52,6 +53,11 @@ public class InventoryClickListener implements Listener {
                 }
 
                 e.getWhoClicked().openInventory(inventory.buildInventory());
+                return;
+            }
+
+            if (!e.getWhoClicked().hasPermission(item.getPermission())) {
+                MainData.getIns().getMessageManager().getMessage("NO_PERMISSION").sendTo(e.getWhoClicked());
                 return;
             }
 

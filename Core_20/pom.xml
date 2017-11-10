@@ -9,10 +9,10 @@
     <version>1.3.6</version>
 
     <repositories>
-        <repository>
+        <!--<repository>
             <id>stealthyone-repo</id>
             <url>http://repo.stealthyone.com/content/groups/public</url>
-        </repository>
+        </repository>-->
 
         <repository>
             <id>bungeecord-repo</id>

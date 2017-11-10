@@ -82,7 +82,7 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer {
      * @param p
      */
     @Override
-    public void checkExpiration(Player p) {
+    public void checkExpiration(PlayerData p) {
         super.checkExpiration(p);
         this.groupData.checkExpiration(p);
     }

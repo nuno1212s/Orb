@@ -1,5 +1,6 @@
 package com.nuno1212s.events.eventcaller;
 
+import com.nuno1212s.permissionmanager.Group;
 import com.nuno1212s.playermanager.PlayerData;
 
 /**
@@ -12,6 +13,6 @@ public interface EventCaller {
      */
     void callUpdateInformationEvent(PlayerData args);
 
-    void callGroupUpdateEvent(PlayerData data);
+    void callGroupUpdateEvent(PlayerData data, Group previousGroup);
 
 }

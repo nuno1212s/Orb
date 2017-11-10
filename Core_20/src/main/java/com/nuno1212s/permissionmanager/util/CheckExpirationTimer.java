@@ -16,13 +16,7 @@ public class CheckExpirationTimer implements Runnable {
     public void run() {
         List<PlayerData> players = MainData.getIns().getPlayerManager().getPlayers();
         players.forEach(playerData -> {
-            Player player = playerData.getPlayerReference(Player.class);
-
-            if (player == null) {
-                return;
-            }
-
-            playerData.checkExpiration(player);
+            playerData.checkExpiration(playerData);
         });
     }
 }

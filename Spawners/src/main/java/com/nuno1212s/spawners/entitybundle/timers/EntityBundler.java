@@ -20,40 +20,54 @@ public class EntityBundler implements Runnable {
         spawnedEntitiesByWorld.forEach(
                 (world, entities) -> {
 
-                    ListIterator<EntityBundle> iterator = entities.listIterator();
+                    int currentIt = 0;
 
-                    while (iterator.hasNext()) {
-                        EntityBundle next = iterator.next();
+                    EntityBundle currentlyHandling = null;
 
-                        if (iterator.hasNext()) {
-                            ListIterator<EntityBundle> checkingAfterTheEntities = entities.listIterator(iterator.nextIndex());
+                    while (currentIt < entities.size()) {
+                        ListIterator<EntityBundle> entityBundleListIterator = entities.listIterator(currentIt++);
 
-                            while (checkingAfterTheEntities.hasNext()) {
-                                EntityBundle next1 = checkingAfterTheEntities.next();
+                        if (!entityBundleListIterator.hasNext()) {
+                            break;
+                        }
 
-                                if (next1.getType() == next.getType()) {
+                        if (currentlyHandling == null) {
+                            currentlyHandling = entityBundleListIterator.next();
+                            if (!currentlyHandling.isLoaded()) {
+                                continue;
+                            }
+                        }
 
-                                    if (next.getEntityReference().getLocation().distanceSquared(next1.getEntityReference().getLocation()) < 10) {
-                                        iterator.set(merge(next, next1));
-                                        checkingAfterTheEntities.remove();
-                                        break;
+                        while (entityBundleListIterator.hasNext()) {
+                            EntityBundle toCompare = entityBundleListIterator.next();
+
+                            if (toCompare.getType() == currentlyHandling.getType()) {
+                                if (toCompare.isLoaded() && currentlyHandling.isLoaded()) {
+                                    if (toCompare.getEntityReference().getLocation()
+                                            .distanceSquared(currentlyHandling.getEntityReference().getLocation()) < 16) {
+                                        currentlyHandling = merge(currentlyHandling, toCompare);
+                                        //Remove the compared one to avoid repeated comparisons
+                                        entityBundleListIterator.remove();
                                     }
                                 }
                             }
-                        } else {
-                            break;
+
                         }
+
+                        entities.set(currentIt - 1, currentlyHandling);
+                        currentlyHandling = null;
                     }
 
                 }
         );
 
+        Main.getIns().getEntityManager().acceptNewEntities(spawnedEntitiesByWorld);
     }
 
     /**
      * Merge the entities
      *
-     * @param e The first entity
+     * @param e  The first entity
      * @param e2 The second entity
      * @return
      */

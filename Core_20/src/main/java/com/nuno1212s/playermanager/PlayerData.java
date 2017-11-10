@@ -160,7 +160,7 @@ public abstract class PlayerData {
      *
      * @param p The player instance
      */
-    public void checkExpiration(Player p) {
+    public void checkExpiration(PlayerData p) {
         this.groups.checkExpiration(p);
     }
 

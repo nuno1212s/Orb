@@ -10,6 +10,7 @@ import com.nuno1212s.events.listeners.PlayerJoinListener;
 import com.nuno1212s.messagemanager.Messages;
 import com.nuno1212s.modulemanager.ModuleManager;
 import com.nuno1212s.mysql.MySql;
+import com.nuno1212s.permissionmanager.Group;
 import com.nuno1212s.permissionmanager.PermissionManager;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.playermanager.PlayerManager;
@@ -62,8 +63,8 @@ public class BukkitMain extends JavaPlugin {
             }
 
             @Override
-            public void callGroupUpdateEvent(PlayerData data) {
-                Bukkit.getServer().getPluginManager().callEvent(new PlayerGroupUpdateEvent(data));
+            public void callGroupUpdateEvent(PlayerData data, Group previousGroup) {
+                Bukkit.getServer().getPluginManager().callEvent(new PlayerGroupUpdateEvent(data, previousGroup));
             }
         });
 

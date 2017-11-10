@@ -2,11 +2,13 @@ package com.nuno1212s.permissionmanager.util;
 
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.Group;
+import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.TimeUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 import org.bukkit.entity.Player;
+import sun.applet.Main;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -151,7 +153,7 @@ public class PlayerGroupData {
      *
      * @param p
      */
-    public void checkExpiration(Player p) {
+    public void checkExpiration(PlayerData p) {
 
         boolean expired = false;
 
@@ -203,10 +205,10 @@ public class PlayerGroupData {
                         .sendTo(p);
             }
 
+            MainData.getIns().getEventCaller().callGroupUpdateEvent(p, MainData.getIns().getPermissionManager().getGroup(activeGroupIns.getGroupID()));
         }
 
-        MainData.getIns().getEventCaller().callUpdateInformationEvent
-                (MainData.getIns().getPlayerManager().getPlayer(p.getUniqueId()));
+        MainData.getIns().getEventCaller().callUpdateInformationEvent(p);
 
 
     }

@@ -1,20 +1,19 @@
-package com.nuno1212s.events;
+package com.nuno1212s.spawners.events;
 
-import com.nuno1212s.permissionmanager.Group;
-import com.nuno1212s.playermanager.PlayerData;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-@AllArgsConstructor
-public class PlayerGroupUpdateEvent extends Event {
+public class PlayerKillBundledEntityEvent extends Event{
 
-    @Getter
-    private final PlayerData player;
 
     @Getter
-    private final Group previousGroup;
+    private EntityDamageByEntityEvent e;
+
+    public PlayerKillBundledEntityEvent(EntityDamageByEntityEvent e) {
+        this.e = e;
+    }
 
     private static final HandlerList handlers = new HandlerList();
 

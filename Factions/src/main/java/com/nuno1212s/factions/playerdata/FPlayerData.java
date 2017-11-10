@@ -76,7 +76,7 @@ public class FPlayerData extends PlayerData implements ChatData, KitPlayer, Ende
     }
 
     @Override
-    public void checkExpiration(Player p) {
+    public void checkExpiration(PlayerData p) {
         super.checkExpiration(p);
         this.groups.checkExpiration(p);
     }

@@ -105,7 +105,9 @@ public class PermissionManager {
             g.setScoreboardName(variable);
         }
 
-        MainData.getIns().getPlayerManager().getPlayers().forEach(MainData.getIns().getEventCaller()::callGroupUpdateEvent);
+        MainData.getIns().getPlayerManager().getPlayers().forEach(playerData -> {
+            MainData.getIns().getEventCaller().callGroupUpdateEvent(playerData, g);
+        });
         permissionRedisHandler.publishGroupUpdate();
     }
 

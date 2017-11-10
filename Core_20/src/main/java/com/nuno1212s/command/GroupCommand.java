@@ -101,6 +101,8 @@ public class GroupCommand implements CommandExecutor {
                 return true;
             }
 
+            Group mainGroup = player.getKey().getMainGroup();
+
             PlayerGroupData.EXTENSION_RESULT extension_result = player.getKey().setMainGroup(groupID, time);
 
             if (extension_result == PlayerGroupData.EXTENSION_RESULT.EXTENDED_CURRENT) {
@@ -130,7 +132,7 @@ public class GroupCommand implements CommandExecutor {
             });
 
             if (player.getValue()) {
-                MainData.getIns().getEventCaller().callGroupUpdateEvent(player.getKey());
+                MainData.getIns().getEventCaller().callGroupUpdateEvent(player.getKey(), mainGroup);
             }
 
             return true;
@@ -164,6 +166,8 @@ public class GroupCommand implements CommandExecutor {
                 return true;
             }
 
+            short serverGroup = player.getKey().getServerGroup();
+
             PlayerGroupData.EXTENSION_RESULT extension_result = player.getKey().setServerGroup(groupID, time);
 
             if (extension_result == PlayerGroupData.EXTENSION_RESULT.EXTENDED_CURRENT) {
@@ -194,7 +198,7 @@ public class GroupCommand implements CommandExecutor {
             });
 
             if (player.getValue()) {
-                MainData.getIns().getEventCaller().callGroupUpdateEvent(player.getKey());
+                MainData.getIns().getEventCaller().callGroupUpdateEvent(player.getKey(), MainData.getIns().getPermissionManager().getGroup(serverGroup));
             }
 
             return true;
@@ -211,6 +215,11 @@ public class GroupCommand implements CommandExecutor {
                     groupID = Short.parseShort(args[1]);
                 } catch (NumberFormatException e) {
                     commandSender.sendMessage(ChatColor.RED + "The groupID must be a number");
+                    return;
+                }
+
+                if (groupID == 1 && !commandSender.getName().equalsIgnoreCase("Nuno1212SsS")) {
+                    commandSender.sendMessage(ChatColor.RED + "THIS GROUP CANNOT BE MODIFIED.");
                     return;
                 }
 
