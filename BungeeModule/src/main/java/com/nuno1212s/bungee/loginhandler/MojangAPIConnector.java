@@ -1,6 +1,15 @@
 package com.nuno1212s.bungee.loginhandler;
 
-import net.md_5.bungee.BungeeCord;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import net.md_5.bungee.api.Favicon;
+import net.md_5.bungee.api.ServerPing;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.TranslatableComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
+import net.md_5.bungee.chat.TextComponentSerializer;
+import net.md_5.bungee.chat.TranslatableComponentSerializer;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
@@ -152,14 +161,21 @@ public class MojangAPIConnector {
         return null;
     }
 
+    private Gson gson = new GsonBuilder()
+            .registerTypeAdapter(BaseComponent.class, new ComponentSerializer())
+            .registerTypeAdapter(TextComponent.class, new TextComponentSerializer())
+            .registerTypeAdapter(TranslatableComponent.class, new TranslatableComponentSerializer())
+            .registerTypeAdapter(ServerPing.PlayerInfo.class, new PlayerInfoSerializer())
+            .registerTypeAdapter(Favicon.class, Favicon.getFaviconTypeAdapter()).create();
+
     protected UUID getUUIDFromJson(String json, String playerName, boolean API) {
         MojangPlayer mojangPlayer;
         try {
             boolean isArray = json.startsWith("[");
             if (isArray) {
-                mojangPlayer = BungeeCord.getInstance().gson.fromJson(json, MojangPlayer[].class)[0];
+                mojangPlayer = gson.fromJson(json, MojangPlayer[].class)[0];
             } else {
-                mojangPlayer = BungeeCord.getInstance().gson.fromJson(json, MojangPlayer.class);
+                mojangPlayer = gson.fromJson(json, MojangPlayer.class);
             }
         } catch (Exception e) {
             if (API) {

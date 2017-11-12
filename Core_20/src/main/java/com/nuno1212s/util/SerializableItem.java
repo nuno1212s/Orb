@@ -75,6 +75,10 @@ public class SerializableItem extends ItemStack {
             });
         }
 
+        if (getType() == Material.SKULL_ITEM) {
+
+        }
+
         setItemMeta(m);
 
         if (jsonObject.containsKey("NBTData")) {

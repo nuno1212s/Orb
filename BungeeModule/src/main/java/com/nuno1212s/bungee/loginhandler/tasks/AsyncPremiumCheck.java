@@ -55,6 +55,10 @@ public class AsyncPremiumCheck implements Runnable {
 
                 d.setLastLogin(System.currentTimeMillis());
 
+                BungeeCoreLogin coreLogin = new BungeeCoreLogin(d);
+
+                d = coreLogin.getData();
+
                 MainData.getIns().getPlayerManager().addToCache(d.getPlayerID(), d);
 
             } else {
@@ -80,17 +84,17 @@ public class AsyncPremiumCheck implements Runnable {
 
                     d = MainData.getIns().getPlayerManager().buildNewPlayerData(premiumId, connection.getName());
 
-                    BungeeCoreLogin event = new BungeeCoreLogin(d);
-                    Main.getPlugin().getProxy().getPluginManager().callEvent(event);
-
-                    d = event.getData();
-
                     //Check if player did not change name
                     PlayerData nameCheck = MainData.getIns().getMySql().getPlayerData(premiumId, null);
                     if (nameCheck != null) {
                         d = nameCheck;
                         d.setPlayerName(username);
                     }
+
+                    BungeeCoreLogin event = new BungeeCoreLogin(d);
+                    Main.getPlugin().getProxy().getPluginManager().callEvent(event);
+
+                    d = event.getData();
                 }
 
                 MainData.getIns().getPlayerManager().addToCache(d.getPlayerID(), d);

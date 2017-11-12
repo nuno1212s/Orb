@@ -5,7 +5,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-public class PlayerKillBundledEntityEvent extends Event{
+public class PlayerKillBundledEntityEvent extends Event {
 
 
     @Getter

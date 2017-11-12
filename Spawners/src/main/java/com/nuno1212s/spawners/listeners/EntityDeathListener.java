@@ -1,17 +1,19 @@
 package com.nuno1212s.spawners.listeners;
 
 import com.nuno1212s.spawners.entitybundle.EntityBundle;
+import com.nuno1212s.spawners.events.PlayerKillBundledEntityEvent;
 import com.nuno1212s.spawners.main.Main;
-import org.bukkit.entity.Entity;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
 public class EntityDeathListener implements Listener {
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onKill(EntityDamageEvent e) {
         if (e.getEntity() instanceof LivingEntity) {
             LivingEntity entity = (LivingEntity) e.getEntity();
@@ -27,7 +29,11 @@ public class EntityDeathListener implements Listener {
                     if (!Main.getIns().getEntityManager().handleDeath(entityBundle)) {
                         entity.setHealth(entity.getMaxHealth());
                         e.setCancelled(true);
-                        entity.damage(0, e.getEntity());
+                        entity.damage(0);
+
+                        if (e.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
+                            Bukkit.getPluginManager().callEvent(new PlayerKillBundledEntityEvent((EntityDamageByEntityEvent) e));
+                        }
                     }
                 }
             }

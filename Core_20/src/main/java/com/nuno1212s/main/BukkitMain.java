@@ -5,6 +5,7 @@ import com.nuno1212s.config.BukkitConfig;
 import com.nuno1212s.events.PlayerGroupUpdateEvent;
 import com.nuno1212s.events.PlayerInformationUpdateEvent;
 import com.nuno1212s.events.eventcaller.EventCaller;
+import com.nuno1212s.events.listeners.CommandBlockListener;
 import com.nuno1212s.events.listeners.PlayerDisconnectListener;
 import com.nuno1212s.events.listeners.PlayerJoinListener;
 import com.nuno1212s.messagemanager.Messages;
@@ -101,6 +102,7 @@ public class BukkitMain extends JavaPlugin {
 
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerDisconnectListener(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(new CommandBlockListener(), this);
 
         MainData.getIns().getCommandRegister().registerCommand(new String[]{"cash"}, new CashCommand());
         MainData.getIns().getCommandRegister().registerCommand(new String[]{"reloadmessages"}, new ReloadMessages());

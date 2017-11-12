@@ -55,8 +55,7 @@ public class LoginEvent implements Listener {
 
     @EventHandler
     public void onBungeeLogin(BungeeCoreLogin core) {
-        BungeePlayerData p = new BungeePlayerData(core.getData());
-        core.setData(p);
+        core.setData(new BungeePlayerData(core.getData()));
     }
 
 }

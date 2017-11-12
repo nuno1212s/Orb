@@ -8,6 +8,7 @@ public class PlayerDeathListener implements Listener {
 
     @EventHandler
     public void onDeath(PlayerDeathEvent e) {
+        e.setDeathMessage(null);
         if (e.getEntity().hasPermission("exp.keep")) {
             e.setKeepLevel(true);
         }
