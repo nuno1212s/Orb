@@ -3,9 +3,9 @@ package com.nuno1212s.config;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.yaml.snakeyaml.reader.StreamReader;
 
-import java.io.File;
-import java.io.InputStream;
+import java.io.*;
 
 /**
  * Handles bukkit config
@@ -23,7 +23,11 @@ public class BukkitConfig extends Config {
     }
 
     public BukkitConfig(InputStream stream) {
-        this.config = YamlConfiguration.loadConfiguration(stream);
+        try (Reader r = new InputStreamReader(stream)) {
+            this.config = YamlConfiguration.loadConfiguration(r);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

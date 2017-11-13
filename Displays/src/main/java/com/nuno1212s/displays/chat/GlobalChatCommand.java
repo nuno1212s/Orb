@@ -27,38 +27,42 @@ public class GlobalChatCommand implements CommandExecutor {
 
         PlayerData data = MainData.getIns().getPlayerManager().getPlayer(((Player) commandSender).getUniqueId());
 
-        if (data.getPunishment() != null && data.getPunishment().getPunishmentType() == Punishment.PunishmentType.MUTE && !data.getPunishment().hasExpired()) {
-            MainData.getIns().getMessageManager().getMessage("MUTED")
-                    .format("%time%", data.getPunishment().timeToString()).sendTo(commandSender);
-            return true;
-        }
+        if (DisplayMain.getIns().getChatManager().isChatActivated() || commandSender.hasPermission("chat.override")) {
 
-        if (data instanceof ChatData) {
-            long lastUsage = ((ChatData) data).lastGlobalChatUsage(), chatTime =
-                    commandSender.hasPermission("chat.vipcooldown") ? 5000 : DisplayMain.getIns().getChatManager().getChatTimerGlobal();
-
-            if (lastUsage + chatTime > System.currentTimeMillis()
-                    && !commandSender.hasPermission("chat.nocooldown")) {
-                MainData.getIns().getMessageManager().getMessage("GLOBAL_CHAT_COOLDOWN")
-                        .format("%time%", new TimeUtil("SS segundos")
-                                            .toTime(lastUsage - System.currentTimeMillis()))
-                        .sendTo(commandSender);
+            if (data.getPunishment() != null && data.getPunishment().getPunishmentType() == Punishment.PunishmentType.MUTE && !data.getPunishment().hasExpired()) {
+                MainData.getIns().getMessageManager().getMessage("MUTED")
+                        .format("%time%", data.getPunishment().timeToString()).sendTo(commandSender);
                 return true;
             }
-            ((ChatData) data).setLastGlobalChatUsage(System.currentTimeMillis());
+
+            if (data instanceof ChatData) {
+                long lastUsage = ((ChatData) data).lastGlobalChatUsage(), chatTime =
+                        commandSender.hasPermission("chat.vipcooldown") ? 5000 : DisplayMain.getIns().getChatManager().getChatTimerGlobal();
+
+                if (lastUsage + chatTime > System.currentTimeMillis()
+                        && !commandSender.hasPermission("chat.nocooldown")) {
+                    MainData.getIns().getMessageManager().getMessage("GLOBAL_CHAT_COOLDOWN")
+                            .format("%time%", new TimeUtil("SS segundos")
+                                    .toTime(lastUsage - System.currentTimeMillis()))
+                            .sendTo(commandSender);
+                    return true;
+                }
+
+                ((ChatData) data).setLastGlobalChatUsage(System.currentTimeMillis());
+            }
+
+            StringBuilder message = new StringBuilder();
+
+            for (String arg : args) {
+                message.append(arg);
+                message.append(" ");
+            }
+
+            String finalMessage = commandSender.hasPermission("chat.color") ? ChatColor.translateAlternateColorCodes('&', message.toString()) : message.toString();
+
+            DisplayMain.getIns().getChatManager().sendMessage(finalMessage, data, ((Player) commandSender).getLocation(), true);
+
         }
-
-        StringBuilder message = new StringBuilder();
-
-        for (String arg : args) {
-            message.append(arg);
-            message.append(" ");
-        }
-
-        String finalMessage = commandSender.hasPermission("chat.color") ? ChatColor.translateAlternateColorCodes('&', message.toString()) : message.toString();
-
-        DisplayMain.getIns().getChatManager().sendMessage(finalMessage, data, ((Player) commandSender).getLocation(), true);
-
         return true;
     }
 }

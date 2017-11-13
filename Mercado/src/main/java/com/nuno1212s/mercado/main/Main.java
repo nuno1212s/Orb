@@ -39,7 +39,9 @@ public class Main extends Module {
         marketManager = new MarketManager(this);
         MainData.getIns().getRedisHandler().registerRedisListener((redisHandler = new MRedisListener()));
 
-        registerCommand(new String[]{"market", "mercado"}, new MarketCommand());
+        MarketCommand commandEx = new MarketCommand();
+        registerCommand(new String[]{"market"}, commandEx);
+        registerCommand(new String[]{"mercado"}, commandEx);
 
         MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));
 

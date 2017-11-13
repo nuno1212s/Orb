@@ -51,7 +51,7 @@ public class WarpManager {
     public WarpManager(Module m) {
         this.f = m.getFile("warps.json", false);
 
-        this.gson = new GsonBuilder().registerTypeAdapter(Location.class, new LocationTypeAdapter()).create();
+        this.gson = new GsonBuilder().registerTypeAdapter(LLocation.class, new LocationTypeAdapter()).create();
         command = new WarpCommand();
         load(f);
     }
@@ -68,11 +68,12 @@ public class WarpManager {
 
             this.warps = this.gson.fromJson(r, listType);
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
             if (this.warps == null) {
                 this.warps = new ArrayList<>();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
         for (Warp w : this.warps) {

@@ -61,6 +61,7 @@ public class TellCommand extends Command implements TabExecutor {
                     player.sendMessage(TextComponent.fromLegacyText(MainData.getIns().getMessageManager().getMessage("ACTIVATED_TELL").toString()));
                     return;
                 }
+
                 if (args[0].equalsIgnoreCase("off")) {
                     d.setTell(false);
                     player.sendMessage(TextComponent.fromLegacyText(MainData.getIns().getMessageManager().getMessage("DEACTIVATED_TELL").toString()));
@@ -153,8 +154,10 @@ public class TellCommand extends Command implements TabExecutor {
         if (strings.length < 1) {
             return ImmutableSet.of();
         }
+
         List<String> words = new ArrayList<>();
         String text = strings[0];
+
         for (ProxiedPlayer p : ProxyServer.getInstance().getPlayers()) {
             if (p.getName().toUpperCase().startsWith(text.toUpperCase())) {
                 words.add(p.getName());

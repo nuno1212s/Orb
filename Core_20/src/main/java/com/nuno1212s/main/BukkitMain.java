@@ -18,8 +18,8 @@ import com.nuno1212s.playermanager.PlayerManager;
 import com.nuno1212s.rediscommunication.RedisHandler;
 import com.nuno1212s.rewards.bukkit.BukkitRewardManager;
 import com.nuno1212s.scheduler.BukkitScheduler;
-import com.nuno1212s.serverstatus.ServerManager;
 import com.nuno1212s.server_sender.BukkitSender;
+import com.nuno1212s.serverstatus.ServerManager;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
@@ -34,7 +34,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**

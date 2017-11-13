@@ -5,7 +5,6 @@ import com.nuno1212s.bungee.playermanager.BungeePlayerData;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.punishments.Punishment;
-import com.nuno1212s.util.Callback;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
@@ -55,6 +54,7 @@ public class LoginEvent implements Listener {
 
     @EventHandler
     public void onBungeeLogin(BungeeCoreLogin core) {
+        System.out.println(core.getData().getPlayerID().toString());
         core.setData(new BungeePlayerData(core.getData()));
     }
 

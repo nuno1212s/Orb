@@ -43,9 +43,7 @@ public class StaffChatCommand extends Command {
         StringBuilder message = new StringBuilder();
         for (int i = 0; i < args.length; i++) {
             message.append(args[i]);
-            if (i > 0) {
-                message.append(" ");
-            }
+            message.append(" ");
         }
 
         BaseComponent[] baseComponents = TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', "&d[SC] " + data.getNameWithPrefix() + " &f: " + message.toString()));

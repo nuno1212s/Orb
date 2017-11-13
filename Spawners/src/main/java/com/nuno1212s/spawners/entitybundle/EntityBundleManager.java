@@ -228,7 +228,10 @@ public class EntityBundleManager {
 
         synchronized (this.entityBundles) {
             for (EntityBundle spawnedEntityBundle : entityBundles) {
-                String WorldName = spawnedEntityBundle.getEntityReference().getWorld().getName();
+                String WorldName = spawnedEntityBundle.isLoaded() ?
+                        spawnedEntityBundle.getEntityReference().getWorld().getName()
+                        : spawnedEntityBundle.getSpawnLocation().getWorld();
+
                 List<EntityBundle> orDefault = entities.getOrDefault(WorldName, new ArrayList<>());
                 orDefault.add(spawnedEntityBundle);
                 entities.put(WorldName, orDefault);

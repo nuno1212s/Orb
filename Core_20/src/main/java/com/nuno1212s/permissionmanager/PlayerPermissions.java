@@ -6,9 +6,8 @@ import com.nuno1212s.playermanager.PlayerData;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.lang.reflect.Field;
+import java.util.*;
 
 /**
  * Permissions for bukkit version of core
@@ -22,6 +21,8 @@ public class PlayerPermissions {
     }
 
     public void injectPermission(Player p, PlayerData d) {
+
+        long start = System.currentTimeMillis();
         PermissionAttachment pA = p.addAttachment(BukkitMain.getIns());
         this.playerAttachments.put(p.getUniqueId(), pA);
 
@@ -30,10 +31,35 @@ public class PlayerPermissions {
 
         globalGroup.getPermissions().forEach(perm -> pA.setPermission(perm, true));
         if (localGroup != null) {
-            localGroup.getPermissions().forEach(perm -> pA.setPermission(perm, true));
+            List<String> permissions = localGroup.getPermissions();
+            Map<String, Boolean> permissions1 = getDirect(pA);
+            permissions.forEach(perm -> {
+                permissions1.put(perm, true);
+            });
         }
 
         p.recalculatePermissions();
+    }
+
+    private Field f;
+
+    private Map<String, Boolean> getDirect(PermissionAttachment pA) {
+
+        try {
+            if (f == null) {
+                f = pA.getClass().getDeclaredField("permissions");
+                f.setAccessible(true);
+            }
+
+
+            return (Map<String, Boolean>) f.get(pA);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        return new LinkedHashMap<>();
     }
 
     public void unregisterPermissions(Player p) {

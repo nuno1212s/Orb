@@ -17,7 +17,7 @@ public class TPAInstance implements Teleport {
      * Use PlayerData classes to avoid using player classes as this is run async
      */
     @Getter
-    private PlayerData sender, target;
+    private PlayerData toTeleport, target;
 
     @Getter
     private long timeNeeded, originalTime;
@@ -29,7 +29,7 @@ public class TPAInstance implements Teleport {
     private boolean hasAccepted;
 
     public TPAInstance(PlayerData toTeleport, PlayerData target, long timeNeeded, TeleportType teleportType) {
-        this.sender = toTeleport;
+        this.toTeleport = toTeleport;
         this.target = target;
         this.timeNeeded = timeNeeded;
         this.originalTime = System.currentTimeMillis();
@@ -57,7 +57,7 @@ public class TPAInstance implements Teleport {
         if (type == TeleportType.TPA) {
             return target.getPlayerReference(Player.class).getLocation();
         } else if (type == TeleportType.TPHERE) {
-            return sender.getPlayerReference(Player.class).getLocation();
+            return toTeleport.getPlayerReference(Player.class).getLocation();
         }
 
         return null;
@@ -68,7 +68,7 @@ public class TPAInstance implements Teleport {
      */
     public void start() {
         this.hasAccepted = true;
-        Player senderPlayer = this.getSender().getPlayerReference(Player.class),
+        Player senderPlayer = this.getToTeleport().getPlayerReference(Player.class),
                 targetPlayer = this.getTarget().getPlayerReference(Player.class);
 
         if (senderPlayer == null || targetPlayer == null) {
@@ -77,21 +77,21 @@ public class TPAInstance implements Teleport {
 
         if (getTimeNeeded() > 0) {
             MainData.getIns().getMessageManager().getMessage("TPA_ACCEPTED_TELEPORTING_IN")
-                    .format("%time%", String.valueOf(this.getTimeNeeded())).sendTo(targetPlayer);
+                    .format("%time%", String.valueOf(this.getTimeNeeded())).sendTo(senderPlayer);
         } else {
             MainData.getIns().getMessageManager().getMessage("TPA_ACCEPTED_TELEPORTING_INSTANT")
-                    .sendTo(targetPlayer);
+                    .sendTo(senderPlayer);
         }
 
-        MainData.getIns().getMessageManager().getMessage("TPA_ACCEPTED").sendTo(senderPlayer);
-        Main.getIns().getTeleportTimer().registerTeleport(target.getPlayerID(), this);
+        MainData.getIns().getMessageManager().getMessage("TPA_ACCEPTED").sendTo(targetPlayer);
+        Main.getIns().getTeleportTimer().registerTeleport(toTeleport.getPlayerID(), this);
     }
 
     /**
      * Notify the players that the teleport has been cancelled
      */
     public void notifyCancel() {
-        Player senderPlayer = this.getSender().getPlayerReference(Player.class),
+        Player senderPlayer = this.getToTeleport().getPlayerReference(Player.class),
                 targetPlayer = this.getTarget().getPlayerReference(Player.class);
 
         if (senderPlayer == null || targetPlayer == null) {
@@ -108,7 +108,7 @@ public class TPAInstance implements Teleport {
      */
     public void notifyCreation() {
         Player targetPlayer = this.getTarget().getPlayerReference(Player.class),
-                senderPlayer = this.getSender().getPlayerReference(Player.class);
+                senderPlayer = this.getToTeleport().getPlayerReference(Player.class);
 
         if (targetPlayer == null || senderPlayer == null) {
             return;
@@ -118,10 +118,10 @@ public class TPAInstance implements Teleport {
 
         if (this.type == TeleportType.TPA) {
             MainData.getIns().getMessageManager().getMessage("TPA_REQUESTED")
-                    .format("%player%", getSender().getNameWithPrefix()).sendTo(targetPlayer);
+                    .format("%player%", getToTeleport().getNameWithPrefix()).sendTo(targetPlayer);
         } else if (this.type == TeleportType.TPHERE) {
             MainData.getIns().getMessageManager().getMessage("TPHERE_REQUESTED")
-                    .format("%player%", getSender().getNameWithPrefix()).sendTo(targetPlayer);
+                    .format("%player%", getToTeleport().getNameWithPrefix()).sendTo(targetPlayer);
         }
 
     }

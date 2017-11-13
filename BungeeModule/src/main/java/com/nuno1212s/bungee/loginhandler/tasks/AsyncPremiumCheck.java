@@ -50,6 +50,7 @@ public class AsyncPremiumCheck implements Runnable {
                     if (connection.isOnlineMode()) {
                         return;
                     }
+
                     connection.setUniqueId(d.getPlayerID());
                 }
 
@@ -57,6 +58,7 @@ public class AsyncPremiumCheck implements Runnable {
 
                 BungeeCoreLogin coreLogin = new BungeeCoreLogin(d);
 
+                Main.getPlugin().getProxy().getPluginManager().callEvent(coreLogin);
                 d = coreLogin.getData();
 
                 MainData.getIns().getPlayerManager().addToCache(d.getPlayerID(), d);

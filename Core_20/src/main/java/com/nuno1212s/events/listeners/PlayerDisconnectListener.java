@@ -19,6 +19,8 @@ public class PlayerDisconnectListener implements Listener {
     public void onQuit(PlayerQuitEvent e) {
         PlayerData p = MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
 
+        p.setPlayerReference(null);
+
         MainData.getIns().getPermissionManager().getPlayerPermissions().unregisterPermissions(e.getPlayer());
 
         MainData.getIns().getServerManager().savePlayerCount(Bukkit.getOnlinePlayers().size() - 1, Bukkit.getMaxPlayers());

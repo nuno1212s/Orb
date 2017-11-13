@@ -78,7 +78,7 @@ public class HomeManager {
     public int getMaxAmountOfHomes(Player player) {
         String homePermission = "homes.";
 
-        for (int i = 7; i > 0; i++) {
+        for (int i = 7; i > 0; i--) {
             if (player.hasPermission(homePermission + String.valueOf(i))) {
                 return i;
             }

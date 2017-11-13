@@ -60,6 +60,7 @@ public class PlayerJoinListener implements Listener {
 
         d.setPlayerReference(e.getPlayer());
 
+
         MainData.getIns().getPermissionManager().getPlayerPermissions().injectPermission(e.getPlayer(), d);
         MainData.getIns().getServerManager().savePlayerCount(Bukkit.getOnlinePlayers().size(), Bukkit.getMaxPlayers());
     }

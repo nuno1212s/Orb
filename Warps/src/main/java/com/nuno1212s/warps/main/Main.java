@@ -67,7 +67,7 @@ public class Main extends Module {
         registerCommand(new String[]{"delhome"}, new DelHomeCommand());
         registerCommand(new String[]{"home"}, new HomeCommand());
         registerCommand(new String[]{"tpa"}, new TPACommand());
-        registerCommand(new String[]{"tpaaccept"}, new TPAAcceptCommand());
+        registerCommand(new String[]{"tpaaccept", "tpaccept"}, new TPAAcceptCommand());
         registerCommand(new String[]{"tpadeny"}, new TPADenyCommand());
 
         MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));

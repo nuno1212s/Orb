@@ -21,7 +21,7 @@ public class DefaultAnimation extends Animation {
     private final static List<Integer> displaySlots = Arrays.asList(4, 13, 22);
 
     public DefaultAnimation(Crate crate, Player player) {
-        super(Bukkit.getServer().createInventory(null, 27, ChatColor.RED + crate.getCrateName()), crate, false, player);
+        super(Bukkit.getServer().createInventory(null, 27, crate.getDisplayName()), crate, false, player);
     }
 
     private int iterations = 0, maxIterations = 100, tickInterval = 1, currentTick = 0;
