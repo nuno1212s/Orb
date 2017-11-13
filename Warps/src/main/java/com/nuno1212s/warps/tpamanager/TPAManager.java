@@ -89,6 +89,15 @@ public class TPAManager {
         }
     }
 
+    public void removeTeleportFromSender(UUID sender) {
+        for (Map.Entry<UUID, TPAInstance> tpa : this.tpas.entrySet()) {
+            if (tpa.getValue().getToTeleport().getPlayerID().equals(sender)) {
+                this.tpas.remove(tpa.getKey());
+                break;
+            }
+        }
+    }
+
     /**
      * Get the teleport for a player
      *

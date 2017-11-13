@@ -26,6 +26,22 @@ public class VanishManager {
     }
 
     /**
+     * Un-vanish a player
+     * @param p
+     */
+    public void unVanishPlayer(Player p) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (player.getUniqueId().equals(p.getUniqueId())) {
+                continue;
+            }
+
+            if (!player.canSee(p)) {
+                player.showPlayer(p);
+            }
+        }
+    }
+
+    /**
      * Handle a player joining
      * @param p
      */

@@ -29,6 +29,7 @@ public class VanishCommand implements CommandExecutor {
             Main.getIns().getVanishManager().vanishPlayer(player);
         } else {
             MainData.getIns().getMessageManager().getMessage("NOT_VANISHED").sendTo(player);
+            Main.getIns().getVanishManager().unVanishPlayer(player);
         }
 
         return true;

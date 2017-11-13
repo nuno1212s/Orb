@@ -17,7 +17,7 @@ public class ChunkUnloadListener implements Listener {
             EntityBundle entityBundle = Main.getIns().getEntityManager().getEntityBundle(entity);
 
             if (entityBundle == null) {
-                return;
+                continue;
             }
 
             entityBundle.unload();

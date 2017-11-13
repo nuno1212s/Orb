@@ -56,7 +56,7 @@ public class MySql {
 
     public LinkedHashMap<UUID, Long> getCoinTop(int limit) {
         try (Connection c = MainData.getIns().getMySql().getConnection();
-             PreparedStatement st = c.prepareStatement("SELECT UUID, COINS FROM factionsPlayers ORDER BY COINS LIMIT ?")) {
+             PreparedStatement st = c.prepareStatement("SELECT UUID, COINS FROM factionsPlayers ORDER BY COINS DESC LIMIT ?")) {
 
             st.setInt(1, limit);
 

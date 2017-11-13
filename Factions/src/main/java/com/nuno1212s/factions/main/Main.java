@@ -52,6 +52,7 @@ public class Main extends Module {
         ins.getServer().getPluginManager().registerEvents(new PowerChangeListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new PlayerDeathListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new PlayerUpdateListener(), ins);
+        ins.getServer().getPluginManager().registerEvents(new PlayerRespawnListener(), ins);
 
         DisplayMain.getIns().getPlaceHolderManager().registerPlaceHolder("%coins%", (player) ->
                 NumberFormat.getInstance().format(((FPlayerData) player).getCoins())

@@ -164,7 +164,6 @@ public class EntityBundle {
         this.entityReference = new WeakReference<>(e);
         this.entity = e.getUniqueId();
         //When we load the actual entity, we do not need to remember the spawnLocation
-        this.spawnLocation = null;
 
         System.out.println("Loaded entity.");
         updateName();

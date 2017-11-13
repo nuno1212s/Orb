@@ -5,10 +5,8 @@ import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.util.Callback;
 import lombok.Getter;
-import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.bukkit.WorldBorder;
-import org.bukkit.WorldCreator;
+import org.bukkit.*;
+import org.bukkit.block.Biome;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,6 +16,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.*;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class MiningWorld implements Listener {
@@ -174,6 +173,25 @@ public class MiningWorld implements Listener {
     @EventHandler
     public void onWorldLoad(WorldInitEvent e) {
         e.getWorld().setKeepSpawnInMemory(false);
+    }
+
+    Random r = new Random();
+
+    public Location getRandomSpawnLocation() {
+
+        double x = r.nextDouble() * (this.size / 2), z = r.nextDouble() * (this.size / 2);
+
+        int y = this.getCurrentMiningWorld().getHighestBlockYAt((int) x, (int) z) + 2;
+
+        Location l = new Location(this.getCurrentMiningWorld(), x, y, z);
+
+        Biome biome = this.getCurrentMiningWorld().getBiome((int) x, (int) z);
+
+        if (biome == Biome.OCEAN || biome == Biome.DEEP_OCEAN) {
+            return getRandomSpawnLocation();
+        }
+
+        return l;
     }
 
 }

@@ -51,8 +51,8 @@ public class SignClickListener implements Listener {
 
                         double rankMultiplier = sign.getRankMultiplier(d);
 
-                        int finalPrice = (int) Math.floor((double) price * rankMultiplier),
-                                perItemPrice = (int) Math.floor((double) finalPrice / (double) sign.getItem().getAmount());
+                        double finalPrice = (double) price * rankMultiplier,
+                                perItemPrice = (double) finalPrice / (double) sign.getItem().getAmount();
 
                         int amount;
 
@@ -73,7 +73,7 @@ public class SignClickListener implements Listener {
                             }
 
 
-                            int coins = perItemPrice * amount;
+                            int coins = (int) Math.floor(perItemPrice * amount);
 
                             MainData.getIns().getServerCurrencyHandler().addCurrency(d, coins);
                             MainData.getIns().getEventCaller().callUpdateInformationEvent(d);
@@ -84,7 +84,7 @@ public class SignClickListener implements Listener {
                             ItemStack item = sign.getItem();
 
                             if (p.containsAtLeast(sign.getItem(), item.getAmount())) {
-                                int coinsToAdd = perItemPrice * item.getAmount();
+                                int coinsToAdd = (int) Math.floor(perItemPrice * item.getAmount());
                                 p.removeItem(item);
                                 MainData.getIns().getServerCurrencyHandler().addCurrency(d, coinsToAdd);
                                 MainData.getIns().getEventCaller().callUpdateInformationEvent(d);

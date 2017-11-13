@@ -85,6 +85,8 @@ public class TPAInstance implements Teleport {
 
         MainData.getIns().getMessageManager().getMessage("TPA_ACCEPTED").sendTo(targetPlayer);
         Main.getIns().getTeleportTimer().registerTeleport(toTeleport.getPlayerID(), this);
+
+        Main.getIns().getTpaManager().removeTeleportFromSender(getToTeleport().getPlayerID());
     }
 
     /**

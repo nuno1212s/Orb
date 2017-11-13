@@ -43,7 +43,6 @@ class CoinTopCommand {
                 .sorted(Map.Entry.<UUID, Long> comparingByValue().reversed())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 
-
         LinkedHashMap<String, Long> namesSorted = new LinkedHashMap<>();
 
         collect.forEach((id, coins) -> {

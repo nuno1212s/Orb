@@ -18,6 +18,8 @@ public class MarketCommand implements CommandExecutor {
             MainData.getIns().getMessageManager().getMessage("PLAYER_ONLY").sendTo(commandSender);
             return true;
         }
+
+
         ((Player) commandSender).openInventory(Main.getIns().getMarketManager().getLandingInventory());
         return true;
     }

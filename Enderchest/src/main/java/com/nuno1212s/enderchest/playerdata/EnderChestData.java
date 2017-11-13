@@ -17,10 +17,12 @@ public interface EnderChestData {
         if (json.equalsIgnoreCase("")) {
             return new ItemStack[27];
         }
+
         return gson.fromJson(json, ItemStack[].class);
     }
 
     static ItemStack[] expandInventory(ItemStack[] originalItems, int newSize) {
+
         ItemStack[] items = new ItemStack[newSize];
 
         System.arraycopy(originalItems, 0, items, 0, originalItems.length);

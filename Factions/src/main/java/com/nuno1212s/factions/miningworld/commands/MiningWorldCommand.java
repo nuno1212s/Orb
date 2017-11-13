@@ -23,7 +23,9 @@ public class MiningWorldCommand implements CommandExecutor {
         }
 
         MainData.getIns().getMessageManager().getMessage("TELEPORTED_MINING_WORLD").sendTo(commandSender);
-        p.teleport(Main.getIns().getMiningWorld().getCurrentMiningWorld().getSpawnLocation());
+
+        p.teleport(Main.getIns().getMiningWorld().getRandomSpawnLocation());
+        p.setFallDistance(0f);
 
         return true;
     }

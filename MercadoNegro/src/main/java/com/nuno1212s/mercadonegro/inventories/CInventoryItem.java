@@ -98,7 +98,7 @@ public class CInventoryItem extends InventoryItem {
                         .sendTo(p);
             }
         } else {
-            if (playerData.getCash() > getCost()) {
+            if (playerData.getCash() >= getCost()) {
                 playerData.setCash(playerData.getCash() - getCost());
                 MainData.getIns().getMessageManager().getMessage("BOUGHT_ITEM_CASH")
                         .format("%price%", String.valueOf(getCost()))

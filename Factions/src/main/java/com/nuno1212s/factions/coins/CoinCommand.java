@@ -1,5 +1,6 @@
 package com.nuno1212s.factions.coins;
 
+import com.nuno1212s.events.PlayerInformationLoadEvent;
 import com.nuno1212s.events.PlayerInformationUpdateEvent;
 import com.nuno1212s.factions.main.Main;
 import com.nuno1212s.factions.playerdata.FPlayerData;
@@ -181,6 +182,81 @@ public class CoinCommand implements CommandExecutor {
                         coin_top.sendTo(commandSender);
 
                     });
+                } else if (args[0].equalsIgnoreCase("enviar") || args[0].equalsIgnoreCase("send")) {
+                    if (args.length < 3) {
+                        commandSender.sendMessage(ChatColor.RED + "/coins enviar <player> <quantidade>");
+                        return true;
+                    }
+
+                    String playerName = args[1];
+
+                    long coins;
+
+                    try {
+                        coins = Long.parseLong(args[2]);
+
+                        if (coins <= 0) {
+                            throw new NumberFormatException();
+                        }
+
+                    } catch (NumberFormatException e) {
+                        MainData.getIns().getMessageManager().getMessage("COINS_NUMBER_POSITIVE").sendTo(commandSender);
+                        return true;
+                    }
+
+                    FPlayerData player = (FPlayerData) MainData.getIns().getPlayerManager().getPlayer(((Player) commandSender).getUniqueId());
+
+                    if (player.getCoins() < coins) {
+                        MainData.getIns().getMessageManager().getMessage("NOT_ENOUGH_COINS").sendTo(commandSender);
+                        return true;
+                    }
+
+                    Pair<PlayerData, Boolean> playerData = MainData.getIns().getPlayerManager().getOrLoadPlayer(playerName);
+
+                    if (playerData.getKey() == null) {
+                        MainData.getIns().getMessageManager().getMessage("PLAYER_NEVER_JOINED").sendTo(commandSender);
+                        return true;
+                    }
+
+                    if (playerData.value()) {
+                        PlayerInformationLoadEvent event = new PlayerInformationLoadEvent(playerData.key());
+
+                        Bukkit.getServer().getPluginManager().callEvent(event);
+
+                        if (!(event.getPlayerInfo() instanceof FPlayerData)) {
+                            MainData.getIns().getMessageManager().getMessage("PLAYER_LOAD_ERROR").sendTo(commandSender);
+                            return true;
+                        }
+
+                        FPlayerData playerInfo = (FPlayerData) event.getPlayerInfo();
+
+                        playerInfo.setCoins(playerInfo.getCoins() + coins);
+
+                        playerInfo.save((o) -> {});
+
+                        player.setCoins(player.getCoins() - coins);
+
+                        Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(player));
+                    } else {
+                        FPlayerData playerInfo = (FPlayerData) playerData.getKey();
+
+                        playerInfo.setCoins(playerInfo.getCoins() + coins);
+
+                        MainData.getIns().getMessageManager().getMessage("COINS_RECEIVED")
+                                .format("%player%", player.getNameWithPrefix())
+                                .format("%coins%", String.valueOf(coins)).sendTo(playerInfo);
+
+                        player.setCoins(player.getCoins() - coins);
+
+                        Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(player));
+
+                        Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(playerInfo));
+                    }
+
+                    MainData.getIns().getMessageManager().getMessage("COINS_SENT")
+                            .format("%player%", playerData.getKey().getNameWithPrefix())
+                            .format("%coins%", String.valueOf(coins)).sendTo(player);
+
                 } else {
                     MainData.getIns().getScheduler().runTaskAsync(() -> {
 
