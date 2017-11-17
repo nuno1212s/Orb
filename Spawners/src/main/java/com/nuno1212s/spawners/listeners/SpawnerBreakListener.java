@@ -12,7 +12,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class SpawnerBreakListener implements Listener {
 
-    @EventHandler
+    //@EventHandler
     public void onSpawnerBreak(BlockBreakEvent e) {
         if (e.getBlock().getType() == Material.MOB_SPAWNER) {
             CreatureSpawner state = (CreatureSpawner) e.getBlock().getState();

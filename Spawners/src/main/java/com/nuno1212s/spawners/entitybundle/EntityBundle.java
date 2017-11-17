@@ -63,6 +63,7 @@ public class EntityBundle {
 
     public EntityBundle(EntityType type, Location spawnLocation) {
         Entity entity = spawnLocation.getWorld().spawnEntity(spawnLocation, type);
+        this.spawnLocation = new LLocation(spawnLocation);
         this.entity = entity.getUniqueId();
         this.type = type;
         this.mobCount = 0;
