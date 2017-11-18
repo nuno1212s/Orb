@@ -17,6 +17,9 @@ public class MobSpawnListener implements Listener {
 
             EntityBundle nearestEntityBundleTo =
                     Main.getIns().getEntityManager().getNearestEntityBundleTo(e.getEntity(), 5);
+
+            System.out.println(nearestEntityBundleTo);
+
             nearestEntityBundleTo.addToBundle(1);
 
         }

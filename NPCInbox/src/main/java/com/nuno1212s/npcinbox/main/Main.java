@@ -6,10 +6,7 @@ import com.nuno1212s.modulemanager.ModuleData;
 import com.nuno1212s.npcinbox.chat.ChatManager;
 import com.nuno1212s.npcinbox.commands.RewardsCommand;
 import com.nuno1212s.npcinbox.inventories.InventoryManager;
-import com.nuno1212s.npcinbox.listeners.ChatListener;
-import com.nuno1212s.npcinbox.listeners.InventoryListener;
-import com.nuno1212s.npcinbox.listeners.PlayerInteractEntityListener;
-import com.nuno1212s.npcinbox.listeners.PlayerQuitListener;
+import com.nuno1212s.npcinbox.listeners.*;
 import com.nuno1212s.npcinbox.npchandler.NPCManager;
 import lombok.Getter;
 
@@ -50,6 +47,9 @@ public class Main extends Module {
         ins.getServer().getPluginManager().registerEvents(new ChatListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new InventoryListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new PlayerInteractEntityListener(), ins);
+        ins.getServer().getPluginManager().registerEvents(new PlayerRewardUpdateListener(), ins);
+        ins.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), ins);
+
     }
 
     @Override

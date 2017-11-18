@@ -1,6 +1,11 @@
 package com.nuno1212s.npcinbox.npchandler;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
+import com.google.gson.reflect.TypeToken;
 import com.nuno1212s.modulemanager.Module;
+import com.nuno1212s.playermanager.PlayerData;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -11,6 +16,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -21,24 +27,29 @@ import java.util.UUID;
  */
 public class NPCManager {
 
-    private List<UUID> npcIds;
+    private List<NPC> npcs;
 
     private File file;
 
+    private Gson gson;
+
     public NPCManager(Module m) {
 
-        this.npcIds = new ArrayList<>();
+        this.gson = new GsonBuilder().create();
 
         file = m.getFile("npcs.json", false);
 
         try (Reader r = new FileReader(file)) {
-            JSONObject obj = (JSONObject) new JSONParser().parse(r);
-            List<String> npcs = (List<String>) obj.get("NPCS");
 
-            npcs.forEach(id -> this.npcIds.add(UUID.fromString(id)));
+            Type t = new TypeToken<List<NPC>>(){}.getType();
 
-        } catch (IOException | ParseException e) {
+            this.npcs = gson.fromJson(r, t);
+        } catch (IOException | JsonParseException e) {
             System.out.println("Failed to read NPC file. First time running?");
+        } finally {
+            if (this.npcs == null) {
+                this.npcs = new ArrayList<>();
+            }
         }
 
     }
@@ -47,14 +58,8 @@ public class NPCManager {
      * Save the entities
      */
     public void save() {
-        JSONObject json = new JSONObject();
-        JSONArray array = new JSONArray();
-        for (UUID npcId : npcIds) {
-            array.add(npcId.toString());
-        }
-        json.put("NPCS", array);
         try (Writer w = new FileWriter(file)) {
-            json.writeJSONString(w);
+            gson.toJson(this.npcs, w);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -67,7 +72,12 @@ public class NPCManager {
      * @return
      */
     public boolean isNPCRegistered(UUID npcID) {
-        return this.npcIds.contains(npcID);
+        for (NPC npc : this.npcs) {
+            if (npc.getEntityID().equals(npcID)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -76,7 +86,7 @@ public class NPCManager {
      * @param npcID
      */
     public void registerNPC(UUID npcID) {
-        this.npcIds.add(npcID);
+        this.npcs.add(new NPC(npcID));
     }
 
     /**
@@ -85,7 +95,8 @@ public class NPCManager {
      * @param npcID
      */
     public void unregisterNPC(UUID npcID) {
-        this.npcIds.remove(npcID);
+        //We can use the NPC ID on the remove method because of the custom equals on the NPC class
+        this.npcs.remove(npcID);
     }
 
     /**
@@ -111,6 +122,19 @@ public class NPCManager {
         }
 
         return null;
+    }
+
+
+    /**
+     * Display reward notifications for a player
+     * @param data
+     */
+    public void displayNotificationsForPlayer(PlayerData data) {
+        npcs.forEach((npc) -> npc.displayInformation(data));
+    }
+
+    public void removeHologramsForPlayer(PlayerData data) {
+        npcs.forEach((npc) -> npc.removeHologram(data));
     }
 
 }

@@ -5,6 +5,7 @@ import com.nuno1212s.mercado.main.Main;
 import com.nuno1212s.mercado.marketmanager.Item;
 import com.nuno1212s.mercado.util.InventoryListener;
 import com.nuno1212s.mercado.util.ItemIDUtils;
+import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.Callback;
 import com.nuno1212s.util.Pair;
 import com.nuno1212s.util.inventories.InventoryItem;
@@ -132,7 +133,16 @@ public class SellInventoryListener extends InventoryListener {
             @Override
             public void callback(Pair<Boolean, Object> args) {
                 if (args.getKey()) {
-                    long cost = Long.parseLong((String) args.getValue());
+                    long cost;
+                    PlayerData playerData = MainData.getIns().getPlayerManager().getPlayer(player);
+                    try {
+                        cost = Long.parseLong((String) args.getValue());
+                    } catch (NumberFormatException e) {
+                        MainData.getIns().getMessageManager().getMessage("COST_MUST_BE_NUMBER")
+                                .sendTo(playerData);
+                        addCallback(player, item);
+                        return;
+                    }
 
                     if (cost <= 0) {
                         MainData.getIns().getMessageManager().getMessage("COST_MUST_BE_POSITIVE").sendTo(Bukkit.getPlayer(player));
@@ -144,7 +154,8 @@ public class SellInventoryListener extends InventoryListener {
                     Main.getIns().getMarketManager().addItem(item);
                     MainData.getIns().getMessageManager().getMessage("ANNOUNCED_ITEM")
                             .format("%price%", NumberFormat.getInstance().format(cost))
-                            .format("%currency%", item.isServerCurrency() ? ChatColor.YELLOW + "coins" : ChatColor.GREEN + "cash").sendTo(Bukkit.getPlayer(player));
+                            .format("%currency%", item.isServerCurrency() ? ChatColor.YELLOW + "coins" : ChatColor.GREEN + "cash")
+                            .sendTo(playerData);
 
                     return;
 

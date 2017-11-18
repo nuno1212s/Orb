@@ -18,6 +18,11 @@ public class ServerSettingCommand implements CommandExecutor {
         /server setSVType <svtype>
          */
 
+        if (!commandSender.hasPermission("serverSettings")) {
+            MainData.getIns().getMessageManager().getMessage("NO_PERMISSION").sendTo(commandSender);
+            return true;
+        }
+
         if (args.length < 2) {
             commandSender.sendMessage("");
             commandSender.sendMessage("/server setSVName <svname>");

@@ -3,6 +3,7 @@ package com.nuno1212s.spawners.entitybundle;
 import com.nuno1212s.spawners.main.Main;
 import com.nuno1212s.util.LLocation;
 import lombok.Getter;
+import lombok.ToString;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.enchantments.Enchantment;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@ToString
 public class EntityBundle {
 
     @Getter

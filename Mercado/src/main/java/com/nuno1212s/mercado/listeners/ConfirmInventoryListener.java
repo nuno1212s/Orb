@@ -46,6 +46,11 @@ public class ConfirmInventoryListener extends InventoryListener {
             e.setResult(Event.Result.DENY);
 
             InventoryItem item = marketManager.getConfirmInventoryData().getItem(e.getSlot());
+
+            if (item == null) {
+                return;
+            }
+
             if (item.hasItemFlag("CONFIRM")) {
                 InventoryItem show_item = marketManager.getConfirmInventoryData().getItemWithFlag("SHOW_ITEM");
                 ItemStack item1 = e.getInventory().getItem(show_item.getSlot());

@@ -167,7 +167,8 @@ public class Item {
         this.soldTime = System.currentTimeMillis();
         this.buyer = player.getUniqueId();
         Main.getIns().getMarketManager().sellItem(this);
-        player.getInventory().addItem(this.getItem());
+        player.getInventory().addItem(this.getItem()).forEach((i, item) ->
+                player.getWorld().dropItemNaturally(player.getLocation(), item));
 
         Pair<PlayerData, Boolean> playerData = MainData.getIns().getPlayerManager().getOrLoadPlayer(getOwner());
         if (!playerData.getValue()) {

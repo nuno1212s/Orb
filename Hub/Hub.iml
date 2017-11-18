@@ -6,6 +6,7 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -35,7 +36,7 @@
     <orderEntry type="module-library">
       <library name="Maven: com.gmail.filoghost:holographicdisplays.api:2.1.7">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/src/main/libs/HolographicDisplaysAPI_v2.1.7.jar!/" />
+          <root url="jar://$MODULE_DIR$/../NPCInbox/src/main/libs/HolographicDisplaysAPI_v2.1.7.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

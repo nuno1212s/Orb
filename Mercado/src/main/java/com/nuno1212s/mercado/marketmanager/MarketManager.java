@@ -171,7 +171,7 @@ public class MarketManager {
             item.isSold() || !searchManager.fitsSearch(item, parameter)
         );
 
-        if (marketItems.size() < itemsPerPage && page > 1) {
+        if (marketItems.size() < itemsPerPage * page) {
             return new ArrayList<>();
         }
 

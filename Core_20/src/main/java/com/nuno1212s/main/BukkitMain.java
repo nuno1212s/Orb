@@ -4,6 +4,7 @@ import com.nuno1212s.command.*;
 import com.nuno1212s.config.BukkitConfig;
 import com.nuno1212s.events.PlayerGroupUpdateEvent;
 import com.nuno1212s.events.PlayerInformationUpdateEvent;
+import com.nuno1212s.events.eventcaller.DefaultBukkitEventCaller;
 import com.nuno1212s.events.eventcaller.EventCaller;
 import com.nuno1212s.events.listeners.CommandBlockListener;
 import com.nuno1212s.events.listeners.PlayerDisconnectListener;
@@ -56,17 +57,7 @@ public class BukkitMain extends JavaPlugin {
 
         this.saveDefaultConfig();
 
-        data.setEventCaller(new EventCaller() {
-            @Override
-            public void callUpdateInformationEvent(PlayerData data) {
-                Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(data));
-            }
-
-            @Override
-            public void callGroupUpdateEvent(PlayerData data, Group previousGroup) {
-                Bukkit.getServer().getPluginManager().callEvent(new PlayerGroupUpdateEvent(data, previousGroup));
-            }
-        });
+        data.setEventCaller(new DefaultBukkitEventCaller());
 
         data.setDataFolder(this.getDataFolder());
         BukkitConfig config = new BukkitConfig(this.getConfig());

@@ -237,6 +237,7 @@ public abstract class PlayerData {
     public final void claim(int id) {
         if (this.toClaim.contains(id)) {
             toClaim.remove((Integer) id);
+            MainData.getIns().getEventCaller().callRewardsUpdateEvent(this);
         }
     }
 
@@ -247,6 +248,7 @@ public abstract class PlayerData {
      */
     public final void addToClaim(int id) {
         toClaim.add(id);
+        MainData.getIns().getEventCaller().callRewardsUpdateEvent(this);
     }
 
     /**

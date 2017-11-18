@@ -1,5 +1,6 @@
 package com.nuno1212s.spawners.main;
 
+import com.nuno1212s.events.PlayerRewardUpdateEvent;
 import com.nuno1212s.main.BukkitMain;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;

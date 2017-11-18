@@ -1,5 +1,6 @@
 package com.nuno1212s.npcinbox.listeners;
 
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.npcinbox.main.Main;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,6 +14,7 @@ public class PlayerQuitListener implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent e)  {
         Main.getIns().getChatManager().unregisterPlayer(e.getPlayer().getUniqueId());
+        Main.getIns().getNpcManager().removeHologramsForPlayer(MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId()));
     }
 
 }

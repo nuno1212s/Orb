@@ -7,6 +7,7 @@ import com.nuno1212s.permissionmanager.util.PlayerGroupData;
 import com.nuno1212s.playermanager.CorePlayerData;
 import com.nuno1212s.playermanager.PlayerData;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -57,6 +58,11 @@ public class PlayerJoinListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void corePlayerJoin(PlayerJoinEvent e) {
         PlayerData d = MainData.getIns().getPlayerManager().validatePlayerJoin(e.getPlayer().getUniqueId());
+
+        if (d == null) {
+            e.getPlayer().kickPlayer(ChatColor.RED + "An error occurred while connecting you to the server, please try again.");
+            return;
+        }
 
         d.setPlayerReference(e.getPlayer());
 

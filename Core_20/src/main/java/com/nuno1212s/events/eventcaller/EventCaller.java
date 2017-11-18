@@ -15,4 +15,6 @@ public interface EventCaller {
 
     void callGroupUpdateEvent(PlayerData data, Group previousGroup);
 
+    void callRewardsUpdateEvent(PlayerData data);
+
 }

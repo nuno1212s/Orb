@@ -8,14 +8,15 @@ public class CommandBlockListener implements Listener {
 
     @EventHandler
     public void onCommandProcess(PlayerCommandPreprocessEvent e) {
-        if (e.getMessage().startsWith("/minecraft:")
-                || e.getMessage().startsWith("/bukkit:")
-                || e.getMessage().startsWith("/me")
-                || e.getMessage().startsWith("/pl")
-                || e.getMessage().startsWith("/plugins")
-                || e.getMessage().startsWith("/ver")
-                || e.getMessage().startsWith("/version")
-                || e.getMessage().startsWith("/say")) {
+        String message = e.getMessage().toLowerCase();
+        if (message.startsWith("/minecraft:")
+                || message.startsWith("/bukkit:")
+                || message.startsWith("/me")
+                || message.startsWith("/pl")
+                || message.startsWith("/plugins")
+                || message.startsWith("/ver")
+                || message.startsWith("/version")
+                || message.startsWith("/say")) {
             e.setCancelled(true);
         }
     }
