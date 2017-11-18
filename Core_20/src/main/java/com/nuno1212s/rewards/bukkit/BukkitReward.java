@@ -37,11 +37,17 @@ public class BukkitReward extends Reward {
 
     public BukkitReward(int id, RewardType type, boolean isDefault, String serverType, String reward) {
         super(id, type, serverType, isDefault);
+
         String[] split = reward.split(":");
         try {
             this.item = ItemUtils.itemFrom64(split[0]);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+        if (split.length < 2) {
+            this.reward = null;
+            return;
         }
 
         switch (type) {
