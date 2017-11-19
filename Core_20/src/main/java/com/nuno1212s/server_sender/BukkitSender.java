@@ -42,6 +42,8 @@ public class BukkitSender {
                 return;
             }
 
+            player1.setShouldSave(true);
+
             MainData.getIns().getMessageManager().getMessage("FAILED_TO_JOIN")
                     .format("%reason%", reason).sendTo(player1);
         }

@@ -16,7 +16,9 @@ public class CommandBlockListener implements Listener {
                 || message.startsWith("/plugins")
                 || message.startsWith("/ver")
                 || message.startsWith("/version")
-                || message.startsWith("/say")) {
+                || message.startsWith("/say")
+                || message.startsWith("/party")
+                || message.startsWith("/help")) {
             e.setCancelled(true);
         }
     }
