@@ -2,6 +2,8 @@ package com.nuno1212s.npcinbox.commands.entitycommands;
 
 import com.nuno1212s.npcinbox.main.Main;
 import com.nuno1212s.util.CommandUtil.Command;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -24,9 +26,15 @@ public class RegisterEntityCommand implements Command {
     @Override
     public void execute(Player player, String[] args) {
         if (player.hasPermission("reward.registerentity")) {
-            Entity e = Main.getIns().getNpcManager().getEntityInLineOfSight(player, 5);
+            NPC e = CitizensAPI.getDefaultNPCSelector().getSelected(player);
+
             if (e == null) {
                 player.sendMessage(ChatColor.RED + "No entities in your field of view!");
+                return;
+            }
+
+            if (Main.getIns().getNpcManager().isNPCRegistered(e.getUniqueId())) {
+                player.sendMessage(ChatColor.RED + "NPC already registered");
                 return;
             }
 

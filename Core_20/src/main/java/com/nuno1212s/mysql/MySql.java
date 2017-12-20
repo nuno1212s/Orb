@@ -138,7 +138,16 @@ public class MySql {
                         String[] rewards = resultSet.getString("REWARDSTOCLAIM").split(",");
                         for (String reward : rewards) {
                             try {
-                                toClaim.add(Integer.parseInt(reward));
+                                int rewardID = Integer.parseInt(reward);
+
+                                Reward r = MainData.getIns().getRewardManager().getReward(rewardID);
+
+                                if (r == null) {
+                                    continue;
+                                }
+
+                                toClaim.add(rewardID);
+
                             } catch (NumberFormatException e) {
 
                             }
@@ -171,10 +180,18 @@ public class MySql {
                         List<Integer> toClaim = new ArrayList<>();
 
                         String[] rewards = resultSet.getString("REWARDSTOCLAIM").split(",");
-
                         for (String reward : rewards) {
                             try {
-                                toClaim.add(Integer.parseInt(reward));
+                                int rewardID = Integer.parseInt(reward);
+
+                                Reward r = MainData.getIns().getRewardManager().getReward(rewardID);
+
+                                if (r == null) {
+                                    continue;
+                                }
+
+                                toClaim.add(rewardID);
+
                             } catch (NumberFormatException e) {
 
                             }

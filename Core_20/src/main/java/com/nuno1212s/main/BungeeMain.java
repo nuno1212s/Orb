@@ -5,6 +5,7 @@ import com.nuno1212s.events.eventcaller.EventCaller;
 import com.nuno1212s.messagemanager.Messages;
 import com.nuno1212s.modulemanager.ModuleManager;
 import com.nuno1212s.mysql.MySql;
+import com.nuno1212s.permissionmanager.Group;
 import com.nuno1212s.permissionmanager.PermissionManager;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.playermanager.PlayerManager;
@@ -43,7 +44,13 @@ public class BungeeMain extends Plugin {
             }
 
             @Override
-            public void callGroupUpdateEvent(PlayerData data) {
+            public void callGroupUpdateEvent(PlayerData data, Group previousGroup) {
+
+            }
+
+            @Override
+            public void callRewardsUpdateEvent(PlayerData data) {
+
             }
         });
 

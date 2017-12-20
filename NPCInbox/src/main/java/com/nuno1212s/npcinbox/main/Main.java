@@ -1,6 +1,7 @@
 package com.nuno1212s.npcinbox.main;
 
 import com.nuno1212s.main.BukkitMain;
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.modulemanager.ModuleData;
 import com.nuno1212s.npcinbox.chat.ChatManager;
@@ -36,6 +37,8 @@ public class Main extends Module {
         this.chatManager = new ChatManager();
         this.inventoryManager = new InventoryManager(this);
         this.npcManager = new NPCManager(this);
+
+        MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));
 
         RewardsCommand commandExecutor = new RewardsCommand();
         registerCommand(new String[]{"reward"}, commandExecutor);

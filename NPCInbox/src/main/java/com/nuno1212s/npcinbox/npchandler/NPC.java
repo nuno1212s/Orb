@@ -28,7 +28,10 @@ public class NPC {
     public NPC(UUID entityID) {
         this.entityID = entityID;
 
-        this.entityReference = new WeakReference<Entity>(CitizensAPI.getNPCRegistry().getByUniqueId(entityID).getEntity());
+        initialize();
+    }
+
+    public void initialize() {
         this.holograms = new WeakHashMap<>();
     }
 
@@ -40,7 +43,18 @@ public class NPC {
     public Entity getEntity() {
 
         if (entityReference == null || entityReference.get() == null) {
-            return null;
+
+            net.citizensnpcs.api.npc.NPC entity = CitizensAPI.getNPCRegistry().getByUniqueId(entityID);
+
+            if (entity == null) {
+                return null;
+            }
+
+            Entity e = entity.getEntity();
+
+            this.entityReference = new WeakReference<Entity>(e);
+
+            return e;
         }
 
         return entityReference.get();
@@ -70,7 +84,7 @@ public class NPC {
             return;
         }
 
-        Location hologram = entity.getLocation().clone().add(0, 2, 0);
+        Location hologram = entity.getLocation().clone().add(0, 2.5, 0);
 
         Hologram playerHologram = this.holograms.get(data);
 
@@ -83,6 +97,8 @@ public class NPC {
             playerHologram.getVisibilityManager().showTo(data.getPlayerReference(Player.class));
 
             textLine = playerHologram.appendTextLine("");
+
+            this.holograms.put(data, playerHologram);
         } else {
             textLine = (TextLine) playerHologram.getLine(0);
         }

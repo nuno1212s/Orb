@@ -3,6 +3,8 @@ package com.nuno1212s.npcinbox.commands.entitycommands;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.npcinbox.main.Main;
 import com.nuno1212s.util.CommandUtil.Command;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -29,7 +31,7 @@ public class UnregisterEntityCommand implements Command {
             return;
         }
 
-        Entity e = Main.getIns().getNpcManager().getEntityInLineOfSight(player, 5);
+        NPC e = CitizensAPI.getDefaultNPCSelector().getSelected(player);
 
         if (e == null) {
             player.sendMessage(ChatColor.RED + "No entities in sight!");

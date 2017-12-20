@@ -50,6 +50,8 @@ public class NPCManager {
             if (this.npcs == null) {
                 this.npcs = new ArrayList<>();
             }
+
+            this.npcs.forEach(NPC::initialize);
         }
 
     }
