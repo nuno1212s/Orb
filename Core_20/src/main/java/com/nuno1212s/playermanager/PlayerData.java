@@ -11,6 +11,8 @@ import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 
 import java.lang.ref.WeakReference;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -125,6 +127,10 @@ public abstract class PlayerData {
      * All classes that extend Player Data and have their independent server groups
      * should implement this method
      */
+    public List<Short> getServerGroups() {
+        return Collections.singletonList(getServerGroup());
+    }
+
     public abstract short getServerGroup();
 
     /**

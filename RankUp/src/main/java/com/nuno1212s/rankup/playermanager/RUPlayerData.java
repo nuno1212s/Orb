@@ -14,10 +14,7 @@ import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * The Player Data for the full pvp server
@@ -27,6 +24,8 @@ import java.util.Map;
 public class RUPlayerData extends PlayerData implements ChatData, KitPlayer {
 
     PlayerGroupData groupData;
+
+    PlayerGroupData serverGroup;
 
     long lastDatabaseAccess, lastGlobalChat, lastLocalChat;
 
@@ -70,8 +69,19 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer {
     }
 
     @Override
+    public List<Short> getServerGroups() {
+        return Arrays.asList(getServerGroup(), this.serverGroup.getActiveGroup());
+    }
+
+    @Override
     public PlayerGroupData.EXTENSION_RESULT setServerGroup(short groupID, long duration) {
         PlayerGroupData.EXTENSION_RESULT extension_result = this.groupData.setCurrentGroup(groupID, duration);
+        Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(this));
+        return extension_result;
+    }
+
+    public PlayerGroupData.EXTENSION_RESULT setServerRank(short groupID, long duration) {
+        PlayerGroupData.EXTENSION_RESULT extension_result = this.serverGroup.setCurrentGroup(groupID, duration);
         Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(this));
         return extension_result;
     }
