@@ -176,6 +176,11 @@ public class MarketManager {
         }
 
         int startingItem = (page - 1) * itemsPerPage, endItem = startingItem + itemsPerPage;
+
+        if (startingItem > marketItems.size()) {
+            return new ArrayList<>();
+        }
+
         if (endItem > marketItems.size()) {
             return marketItems.subList(startingItem, marketItems.size());
         } else {

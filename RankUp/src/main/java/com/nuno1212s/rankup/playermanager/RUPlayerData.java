@@ -11,7 +11,10 @@ import com.nuno1212s.rankup.main.Main;
 import com.nuno1212s.util.Callback;
 import lombok.Getter;
 import lombok.Setter;
+import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
+import net.sacredlabyrinth.phaed.simpleclans.SimpleClans;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -25,7 +28,7 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer {
 
     PlayerGroupData groupData;
 
-    PlayerGroupData serverGroup;
+    PlayerGroupData rankUpGroup;
 
     long lastDatabaseAccess, lastGlobalChat, lastLocalChat;
 
@@ -37,9 +40,10 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer {
 
     volatile long coins;
 
-    public RUPlayerData(PlayerData d, long coins, PlayerGroupData groupData, Map<Integer, Long> kitUsages, List<Integer> privateKits) {
+    public RUPlayerData(PlayerData d, long coins, PlayerGroupData groupData, PlayerGroupData serverGroup, Map<Integer, Long> kitUsages, List<Integer> privateKits) {
         super(d);
         this.coins = coins;
+        this.rankUpGroup = serverGroup;
         this.groupData = groupData;
         this.kitUsages = kitUsages;
         this.privateKits = privateKits;
@@ -70,7 +74,38 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer {
 
     @Override
     public List<Short> getServerGroups() {
-        return Arrays.asList(getServerGroup(), this.serverGroup.getActiveGroup());
+        return Arrays.asList(getServerGroup(), this.rankUpGroup.getActiveGroup());
+    }
+
+    public short getRankUpGroup() {
+        return this.rankUpGroup.getActiveGroup();
+    }
+
+    public PlayerGroupData getRankUpGroupData() {
+        return this.rankUpGroup;
+    }
+
+    @Override
+    public String getNameWithPrefix() {
+
+        Group representingGroup = this.getRepresentingGroup();
+
+        if (representingGroup.isOverrides()) {
+            return super.getNameWithPrefix();
+        }
+
+        Group rankUpGroup = MainData.getIns().getPermissionManager().getGroup(this.rankUpGroup.getActiveGroup());
+
+        ClanPlayer player = SimpleClans.getInstance().getClanManager().getClanPlayer(this.getPlayerID());
+        String clanTag;
+
+        if (player == null) {
+            clanTag = "";
+        } else {
+            clanTag = ChatColor.DARK_GRAY.toString() + ChatColor.ITALIC + player.getTag() + " " + ChatColor.RESET;
+        }
+
+        return representingGroup.getGroupPrefix() + rankUpGroup.getGroupPrefix() + clanTag + this.getPlayerName();
     }
 
     @Override
@@ -81,7 +116,7 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer {
     }
 
     public PlayerGroupData.EXTENSION_RESULT setServerRank(short groupID, long duration) {
-        PlayerGroupData.EXTENSION_RESULT extension_result = this.serverGroup.setCurrentGroup(groupID, duration);
+        PlayerGroupData.EXTENSION_RESULT extension_result = this.rankUpGroup.setCurrentGroup(groupID, duration);
         Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(this));
         return extension_result;
     }

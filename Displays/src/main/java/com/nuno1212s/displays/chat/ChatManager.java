@@ -122,22 +122,23 @@ public class ChatManager {
      * @return True if someone heard the message, false if not
      */
     public boolean sendMessage(String message, PlayerData data, Location original, boolean global) {
+        String[] split = this.globalChatFormatting.split("%playerName%");
+        String firstMessagePart = split[0];
+        String secondMessagePart = split[1].replace("%message%", message);
+
+        BaseComponent[] messageParts = TextComponent.fromLegacyText(firstMessagePart), messageParts2 = TextComponent.fromLegacyText(secondMessagePart);
+
+        BaseComponent[] baseComponents = new ComponentBuilder(data.getNameWithPrefix())
+                .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(getHoverText(data)))).create();
+
+        List<BaseComponent> components = new ArrayList<>();
+        components.addAll(Arrays.asList(messageParts));
+        components.addAll(Arrays.asList(baseComponents));
+        components.addAll(Arrays.asList(messageParts2));
+
+        BaseComponent[] finalComponents = components.toArray(new BaseComponent[components.size()]);
+
         if (global) {
-            String[] split = this.globalChatFormatting.split("%playerName%");
-            String firstMessagePart = split[0];
-            String secondMessagePart = split[1].replace("%message%", message);
-
-            BaseComponent[] messageParts = TextComponent.fromLegacyText(firstMessagePart), messageParts2 = TextComponent.fromLegacyText(secondMessagePart);
-
-            BaseComponent[] baseComponents = new ComponentBuilder(data.getNameWithPrefix())
-                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(getHoverText(data)))).create();
-
-            List<BaseComponent> components = new ArrayList<>();
-            components.addAll(Arrays.asList(messageParts));
-            components.addAll(Arrays.asList(baseComponents));
-            components.addAll(Arrays.asList(messageParts2));
-
-            BaseComponent[] finalComponents = components.toArray(new BaseComponent[components.size()]);
 
             for (Player p : Bukkit.getOnlinePlayers()) {
 
@@ -159,22 +160,6 @@ public class ChatManager {
 
             return true;
         } else {
-            String[] split = this.localChatFormatting.split("%playerName%");
-            String firstMessagePart = split[0];
-            String secondMessagePart = split[1].replace("%message%", message);
-
-            BaseComponent[] messageParts = TextComponent.fromLegacyText(firstMessagePart), messageParts2 = TextComponent.fromLegacyText(secondMessagePart);
-
-            BaseComponent[] baseComponents = new ComponentBuilder(data.getNameWithPrefix())
-                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(getHoverText(data)))).create();
-
-            List<BaseComponent> components = new ArrayList<>();
-            components.addAll(Arrays.asList(messageParts));
-            components.addAll(Arrays.asList(baseComponents));
-            components.addAll(Arrays.asList(messageParts2));
-
-            BaseComponent[] finalComponents = components.toArray(new BaseComponent[components.size()]);
-
             boolean heard = false;
 
             for (Player p : original.getWorld().getPlayers()) {

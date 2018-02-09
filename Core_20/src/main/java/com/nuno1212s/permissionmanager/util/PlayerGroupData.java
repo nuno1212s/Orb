@@ -27,6 +27,11 @@ public class PlayerGroupData {
         groups.add(new PlayerGroup(groupID, System.currentTimeMillis(), -1/*PERMANENT DURATION*/));
     }
 
+    public PlayerGroupData(short startingGroup) {
+        groups = new ArrayList<>(MainData.getIns().getPermissionManager().getMaxGroupsPerPlayer());
+        groups.add(new PlayerGroup(startingGroup, System.currentTimeMillis(), -1/*PERMANENT DURATION*/));
+    }
+
     public PlayerGroupData(String groups) {
         this.groups = new ArrayList<>();
 

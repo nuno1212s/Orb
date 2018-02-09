@@ -1,6 +1,7 @@
 package com.nuno1212s.displays.placeholders;
 
 import com.nuno1212s.playermanager.PlayerData;
+import org.bukkit.Bukkit;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +20,13 @@ public class PlaceHolderManager {
             @Override
             public String replacePlaceHolder(PlayerData d) {
                 return d.getNameWithPrefix();
+            }
+        });
+
+        placeHolders.put("%online%", new PlaceHolder() {
+            @Override
+            public String replacePlaceHolder(PlayerData d) {
+                return String.valueOf(Bukkit.getOnlinePlayers().size());
             }
         });
     }

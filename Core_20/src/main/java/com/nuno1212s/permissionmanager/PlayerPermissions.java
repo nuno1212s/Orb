@@ -22,7 +22,6 @@ public class PlayerPermissions {
 
     public void injectPermission(Player p, PlayerData d) {
 
-        long start = System.currentTimeMillis();
         PermissionAttachment pA = p.addAttachment(BukkitMain.getIns());
         this.playerAttachments.put(p.getUniqueId(), pA);
 
@@ -30,6 +29,7 @@ public class PlayerPermissions {
         List<Short> localGroups = d.getServerGroups();
 
         globalGroup.getPermissions().forEach(perm -> pA.setPermission(perm, true));
+
         if (!localGroups.isEmpty()) {
             for (short s : localGroups) {
                 Group localGroup = MainData.getIns().getPermissionManager().getGroup(s);

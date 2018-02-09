@@ -59,6 +59,9 @@ public class Messages {
                 messageObject = (JSONObject) new JSONParser().parse(new FileReader(f));
             } catch (IOException | ParseException e) {
                 e.printStackTrace();
+
+                System.out.println("Failed to read file " + f.getAbsolutePath());
+
                 return;
             }
 

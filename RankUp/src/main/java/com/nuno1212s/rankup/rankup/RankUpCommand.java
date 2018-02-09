@@ -26,7 +26,7 @@ public class RankUpCommand implements CommandExecutor {
         if (commandSender instanceof Player) {
             RUPlayerData d = (RUPlayerData) MainData.getIns().getPlayerManager().getPlayer(((Player) commandSender).getUniqueId());
 
-            short groupId = d.getGroupID();
+            short groupId = d.getRankUpGroup();
             short nextGroup = Main.getIns().getRankUpManager().getNextGroup(groupId);
 
             Messages messageManager = MainData.getIns().getMessageManager();
@@ -40,7 +40,7 @@ public class RankUpCommand implements CommandExecutor {
             int groupCost = Main.getIns().getRankUpManager().getGroupCost(group.getGroupID());
 
             if (d.getCoins() >= groupCost) {
-                d.setServerGroup(nextGroup, -1);
+                d.setServerRank(nextGroup, -1);
                 messageManager.getMessage("RANKED_UP")
                         .format("%newRank%", group.getGroupPrefix())
                         .format("%cost%", String.valueOf(groupCost))

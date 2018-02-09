@@ -37,6 +37,10 @@ public class RankUpManager {
 
     }
 
+    public short getFirstGroup() {
+        return rankUp[0];
+    }
+
     public int getGroupCost(short groupID) {
         int currentRank = 0;
         for (short groupId : rankUp) {

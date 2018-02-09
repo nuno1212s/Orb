@@ -37,6 +37,7 @@ public class InventoryClickEventListener implements Listener {
                 if (item == null) {
                     return;
                 }
+
                 if (item.hasItemFlag("CONFIRM")) {
                     Crate c = Main.getIns().getCrateManager()
                             .getCrateForKey(e.getClickedInventory()
@@ -62,7 +63,7 @@ public class InventoryClickEventListener implements Listener {
                     }
                 } else if (item.hasItemFlag("CANCEL")) {
                     e.getWhoClicked().closeInventory();
-                } else if (item.hasItemFlag("SHOW_ITEMS")) {
+                } else if (item.hasItemFlag("SHOW_ITEM")) {
                     e.getWhoClicked().closeInventory();
 
                     Crate c = Main.getIns().getCrateManager()

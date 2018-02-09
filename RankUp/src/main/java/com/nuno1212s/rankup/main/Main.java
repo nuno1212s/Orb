@@ -7,6 +7,7 @@ import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.modulemanager.ModuleData;
 import com.nuno1212s.playermanager.PlayerData;
+import com.nuno1212s.rankup.commands.RGroupCommand;
 import com.nuno1212s.rankup.economy.CoinCommand;
 import com.nuno1212s.rankup.events.*;
 import com.nuno1212s.rankup.mysql.MySql;
@@ -15,6 +16,10 @@ import com.nuno1212s.rankup.rankup.RankUpCommand;
 import com.nuno1212s.rankup.rankup.RankUpManager;
 import com.nuno1212s.util.ServerCurrencyHandler;
 import lombok.Getter;
+import net.sacredlabyrinth.phaed.simpleclans.Clan;
+import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
+import net.sacredlabyrinth.phaed.simpleclans.SimpleClans;
+import org.bukkit.entity.Player;
 
 import java.text.NumberFormat;
 
@@ -69,8 +74,19 @@ public class Main extends Module {
             }
         });
 
+        placeHolderManager.registerPlaceHolder("%clan%", (d) -> {
+
+            ClanPlayer clanPlayer = SimpleClans.getInstance().getClanManager().getClanPlayer(d.getPlayerID());
+            if (clanPlayer == null) {
+                return "None";
+            } else {
+                return clanPlayer.getClan().getName();
+            }
+        });
+
         registerCommand(new String[]{"coins", "coin"}, new CoinCommand());
         registerCommand(new String[]{"rankup"}, new RankUpCommand());
+        registerCommand(new String[]{"serverrank"}, new RGroupCommand());
 
         BukkitMain plugin = BukkitMain.getIns();
 

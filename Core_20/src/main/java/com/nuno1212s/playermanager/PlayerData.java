@@ -123,14 +123,14 @@ public abstract class PlayerData {
         return MainData.getIns().getPermissionManager().getGroup(this.groups.getActiveGroup());
     }
 
-    /**
-     * All classes that extend Player Data and have their independent server groups
-     * should implement this method
-     */
     public List<Short> getServerGroups() {
         return Collections.singletonList(getServerGroup());
     }
 
+    /**
+     * All classes that extend Player Data and have their independent server groups
+     * should implement this method
+     */
     public abstract short getServerGroup();
 
     /**

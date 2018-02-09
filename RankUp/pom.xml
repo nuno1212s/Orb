@@ -8,6 +8,13 @@
     <artifactId>RankUp</artifactId>
     <version>0.1</version>
 
+    <repositories>
+        <repository>
+            <id>Simple-Clans</id>
+            <url>http://104.236.246.108:8081/artifactory/remote-repos</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>com.nuno1212s</groupId>
@@ -66,13 +73,19 @@
         </dependency>
 
         <dependency>
+            <groupId>net.sacredlabyrinth.phaed.simpleclans</groupId>
+            <artifactId>SimpleClans</artifactId>
+            <version>2.6.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>com.gmail.nossr50</groupId>
             <artifactId>mcMMO</artifactId>
             <version>1.1</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/src/main/libs/mcMMO.jar</systemPath>
         </dependency>
-
 
     </dependencies>
 

@@ -129,7 +129,6 @@ public class BukkitMain extends JavaPlugin {
         getCommandMap().register(this.getDescription().getName(), command);
     }
 
-
     private static PluginCommand getCommand(String name, Plugin plugin) {
         PluginCommand command = null;
 

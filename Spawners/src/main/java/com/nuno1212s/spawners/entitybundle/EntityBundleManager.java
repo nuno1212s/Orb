@@ -112,7 +112,13 @@ public class EntityBundleManager {
 
             Type type = new TypeToken<List<EntityBundle>>() {}.getType();
 
-            this.entityBundles = Collections.synchronizedList(gson.fromJson(r, type));
+            List<EntityBundle> list = gson.fromJson(r, type);
+
+            if (list == null) {
+                this.entityBundles = Collections.synchronizedList(new ArrayList<>());
+            } else {
+                this.entityBundles = Collections.synchronizedList(list);
+            }
 
         } catch (IOException | JsonParseException e) {
             e.printStackTrace();

@@ -56,21 +56,18 @@ public class Crate {
         if (this.rewards.isEmpty()) {
             return;
         }
-        int currentFullProbability = 0;
-        for (Reward reward : this.rewards) {
-            currentFullProbability += (int) reward.getOriginalProbability();
-        }
 
-        double multiplier = 0;
+        double currentFullProbability = 0;
+
+        for (Reward reward : this.rewards) {
+            currentFullProbability += reward.getOriginalProbability();
+        }
 
         /*
         currentFullProbability = 1
         100 = multiplier
          */
-
-        if (currentFullProbability != 100) {
-            multiplier = (100D / currentFullProbability);
-        }
+        double multiplier = (100D / currentFullProbability);
 
         for (Reward reward : this.rewards) {
             reward.recalculateProbability(multiplier);
@@ -244,7 +241,11 @@ public class Crate {
 
         ItemStack i = displayInventory.getItem(aReturn.getSlot());
 
-        // TODO: 22/10/2017 Append this crates name to the return item NBT so we can return to this inventory later
+        NBTCompound nbt = new NBTCompound(i);
+
+        nbt.add("Crate", this.getCrateName());
+
+        displayInventory.setItem(aReturn.getSlot(), nbt.write(i));
 
         return displayInventory;
     }
