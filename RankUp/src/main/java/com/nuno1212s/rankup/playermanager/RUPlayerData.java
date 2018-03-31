@@ -2,6 +2,7 @@ package com.nuno1212s.rankup.playermanager;
 
 import com.nuno1212s.classes.player.KitPlayer;
 import com.nuno1212s.displays.player.ChatData;
+import com.nuno1212s.enderchest.playerdata.EnderChestData;
 import com.nuno1212s.events.PlayerInformationUpdateEvent;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.Group;
@@ -16,6 +17,7 @@ import net.sacredlabyrinth.phaed.simpleclans.SimpleClans;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
@@ -24,7 +26,7 @@ import java.util.*;
  */
 @Getter
 @Setter
-public class RUPlayerData extends PlayerData implements ChatData, KitPlayer {
+public class RUPlayerData extends PlayerData implements ChatData, KitPlayer, EnderChestData {
 
     PlayerGroupData groupData;
 
@@ -40,13 +42,16 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer {
 
     volatile long coins;
 
-    public RUPlayerData(PlayerData d, long coins, PlayerGroupData groupData, PlayerGroupData serverGroup, Map<Integer, Long> kitUsages, List<Integer> privateKits) {
+    private ItemStack[] enderChest;
+
+    public RUPlayerData(PlayerData d, long coins, PlayerGroupData groupData, PlayerGroupData serverGroup, Map<Integer, Long> kitUsages, List<Integer> privateKits, String enderChest) {
         super(d);
         this.coins = coins;
         this.rankUpGroup = serverGroup;
         this.groupData = groupData;
         this.kitUsages = kitUsages;
         this.privateKits = privateKits;
+        this.enderChest = EnderChestData.inventoryFromJSON(enderChest);
     }
 
     public synchronized final void setCoins(long coins) {
@@ -211,5 +216,15 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer {
     @Override
     public boolean ownsKit(int kitID) {
         return this.privateKits.contains(kitID);
+    }
+
+    @Override
+    public void updateEnderChestData(ItemStack[] items) {
+        this.enderChest = items;
+    }
+
+    @Override
+    public ItemStack[] getEnderChest() {
+        return enderChest;
     }
 }

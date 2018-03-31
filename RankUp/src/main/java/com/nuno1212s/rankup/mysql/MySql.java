@@ -1,5 +1,6 @@
 package com.nuno1212s.rankup.mysql;
 
+import com.nuno1212s.enderchest.playerdata.EnderChestData;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.util.PlayerGroupData;
 import com.nuno1212s.playermanager.PlayerData;
@@ -60,7 +61,9 @@ public class MySql {
                         kitUsages.put(kitID, lastUsage);
                     });
 
-                    return new RUPlayerData(playerData, coins, groupData, serverData, kitUsages, new ArrayList<>());
+                    String enderChest = resultSet.getString("ENDERCHEST");
+
+                    return new RUPlayerData(playerData, coins, groupData, serverData, kitUsages, new ArrayList<>(), enderChest);
                 }
             }
         } catch (SQLException | ParseException e) {
@@ -69,7 +72,7 @@ public class MySql {
 
         short firstGroup = Main.getIns().getRankUpManager().getFirstGroup();
 
-        return new RUPlayerData(playerData, 0, new PlayerGroupData(), new PlayerGroupData(firstGroup), new HashMap<>(), new ArrayList<>());
+        return new RUPlayerData(playerData, 0, new PlayerGroupData(), new PlayerGroupData(firstGroup), new HashMap<>(), new ArrayList<>(), "");
     }
 
     public LinkedHashMap<UUID, Long> getCoinTop(int limit) {
@@ -98,23 +101,32 @@ public class MySql {
     public void savePlayerData(RUPlayerData playerData) {
 
         try (Connection c = MainData.getIns().getMySql().getConnection();
-             PreparedStatement st = c.prepareStatement("INSERT INTO pvpData(UUID, COINS, GROUPDATA, SERVERGROUP, KITUSAGE) values(?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE COINS=?, GROUPDATA=?, KITUSAGE=?, SERVERGROUP=?")) {
+             PreparedStatement st = c.prepareStatement("INSERT INTO pvpData(UUID, COINS, GROUPDATA, SERVERGROUP, KITUSAGE, ENDERCHEST) values(?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE COINS=?, GROUPDATA=?, KITUSAGE=?, SERVERGROUP=?, ENDERCHEST=?")) {
+
             st.setString(1, playerData.getPlayerID().toString());
             st.setLong(2, playerData.getCoins());
             st.setString(3, playerData.getGroupData().toDatabase());
             st.setString(4, playerData.getRankUpGroupData().toDatabase());
+
             JSONObject jsonObject = new JSONObject();
             playerData.getKitUsages().forEach((kitID, lastUsage) ->
                     jsonObject.put(String.valueOf(kitID), lastUsage)
             );
+
             String kits = jsonObject.toJSONString();
             st.setString(5, kits);
-            st.setLong(6, playerData.getCoins());
-            st.setString(7, playerData.getGroupData().toDatabase());
-            st.setString(8, kits);
-            st.setString(9, playerData.getRankUpGroupData().toDatabase());
-            st.executeUpdate();
 
+            String enderChestData = EnderChestData.inventoryToJSON(playerData.getEnderChest());
+
+            st.setString(6, enderChestData);
+
+            st.setLong(7, playerData.getCoins());
+            st.setString(8, playerData.getGroupData().toDatabase());
+            st.setString(9, kits);
+            st.setString(10, playerData.getRankUpGroupData().toDatabase());
+            st.setString(11, enderChestData);
+
+            st.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -1,5 +1,6 @@
 package com.nuno1212s.rankup.economy;
 
+import com.nuno1212s.events.PlayerInformationLoadEvent;
 import com.nuno1212s.events.PlayerInformationUpdateEvent;
 import com.nuno1212s.rankup.main.Main;
 import com.nuno1212s.rankup.playermanager.RUPlayerData;
@@ -36,155 +37,21 @@ public class CoinCommand implements CommandExecutor {
                     .format("%coinAmount%", NumberFormat.getInstance().format(d.getCoins())).sendTo(commandSender);
             return true;
         } else {
-                if (args[0].equalsIgnoreCase("set")) {
-                    if (commandSender.isOp() || commandSender.hasPermission("command.coins")) {
-                        if (args.length < 3) {
-                            commandSender.sendMessage(ChatColor.RED + "/coins set <player> <cash>");
-                            return true;
-                        }
-
-                        MainData.getIns().getScheduler().runTaskAsync(() -> {
-
-                            long coins;
-
-                            try {
-                                coins = Long.parseLong(args[2]);
-                            } catch (NumberFormatException e) {
-                                commandSender.sendMessage(ChatColor.RED + "Coins must be a number");
-                                return;
-                            }
-
-                            RUPlayerData d = getPlayerData(commandSender, args[1]);
-
-                            if (d == null) {
-                                return;
-                            }
-
-                            d.setCoins(coins);
-                            Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(d));
-
-                            MainData.getIns().getMessageManager().getMessage("COINS_SET_OTHER")
-                                    .format("%coinAmount%", NumberFormat.getInstance().format(coins))
-                                    .format("%playerName%", d.getPlayerName())
-                                    .sendTo(commandSender);
-
-                            MainData.getIns().getMessageManager().getMessage("COINS_SET_SELF")
-                                    .format("%coinAmount%", NumberFormat.getInstance().format(coins))
-                                    .sendTo(d);
-
-                            d.save((o) -> {
-                            });
-
-                        });
+            if (args[0].equalsIgnoreCase("set")) {
+                if (commandSender.isOp() || commandSender.hasPermission("command.coins")) {
+                    if (args.length < 3) {
+                        commandSender.sendMessage(ChatColor.RED + "/coins set <player> <cash>");
+                        return true;
                     }
 
-                } else if (args[0].equalsIgnoreCase("add")) {
-                    if (commandSender.isOp() || commandSender.hasPermission("command.coins")) {
-                        if (args.length < 3) {
-                            commandSender.sendMessage(ChatColor.RED + "/coins add <player> <cash>");
-                            return true;
-                        }
-
-                        MainData.getIns().getScheduler().runTaskAsync(() -> {
-                            long coins;
-
-                            try {
-                                coins = Long.parseLong(args[2]);
-                            } catch (NumberFormatException e) {
-                                commandSender.sendMessage(ChatColor.RED + "Coins must be a number");
-                                return;
-                            }
-
-                            RUPlayerData d = getPlayerData(commandSender, args[1]);
-
-                            if (d == null) {
-                                return;
-                            }
-
-                            d.setCoins(d.getCoins() + coins);
-                            Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(d));
-
-                            MainData.getIns().getMessageManager().getMessage("COINS_ADD_OTHER")
-                                    .format("%coinAmount%", NumberFormat.getInstance().format(coins))
-                                    .format("%playerName%", d.getPlayerName())
-                                    .sendTo(commandSender);
-
-                            MainData.getIns().getMessageManager().getMessage("COINS_ADD_SELF")
-                                    .format("%coinAmount%", NumberFormat.getInstance().format(coins))
-                                    .sendTo(d);
-
-                            d.save((o) -> {
-                            });
-
-                        });
-                    }
-                } else if (args[0].equalsIgnoreCase("remove")) {
-                    if (commandSender.isOp() || commandSender.hasPermission("command.coins")) {
-                        if (args.length < 3) {
-                            commandSender.sendMessage(ChatColor.RED + "/coin remove <cash>");
-                            return true;
-                        }
-
-                        MainData.getIns().getScheduler().runTaskAsync(() -> {
-                            long coins;
-
-                            try {
-                                coins = Long.parseLong(args[2]);
-                            } catch (NumberFormatException e) {
-                                commandSender.sendMessage(ChatColor.RED + "Coins must be a number");
-                                return;
-                            }
-
-                            RUPlayerData d = getPlayerData(commandSender, args[1]);
-
-                            if (d == null) {
-                                return;
-                            }
-
-                            d.setCoins(d.getCoins() - coins);
-                            Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(d));
-
-                            MainData.getIns().getMessageManager().getMessage("COINS_REMOVE_OTHER")
-                                    .format("%coinAmount%", NumberFormat.getInstance().format(coins))
-                                    .format("%playerName%", d.getPlayerName())
-                                    .sendTo(commandSender);
-
-                            MainData.getIns().getMessageManager().getMessage("COINS_REMOVE_SELF")
-                                    .format("%coinAmount%", NumberFormat.getInstance().format(coins))
-                                    .sendTo(d);
-
-                            d.save((o) -> {
-                            });
-
-                        });
-                    }
-                } else if (args[0].equalsIgnoreCase("top")) {
-                    MainData.getIns().getScheduler().runTaskAsync(() -> {
-                        if (!checkDatabase(commandSender)) {
-                            return;
-                        }
-
-                        LinkedHashMap<String, Long> coinTop = CoinTopCommand.getCoinTop();
-
-                        Message coin_top = MainData.getIns().getMessageManager().getMessage("COIN_TOP");
-
-                        coinTop.forEach(new BiConsumer<String, Long>() {
-                            int current = 1;
-                            @Override
-                            public void accept(String playerName, Long coinAmount) {
-                                coin_top.format("%player" + String.valueOf(current) + "%", playerName);
-                                coin_top.format("%coinAmount" + String.valueOf(current) + "%", NumberFormat.getInstance().format(coinAmount));
-                                current++;
-                            }
-                        });
-
-                        coin_top.sendTo(commandSender);
-
-                    });
-                } else {
                     MainData.getIns().getScheduler().runTaskAsync(() -> {
 
-                        if (!checkDatabase(commandSender)) {
+                        long coins;
+
+                        try {
+                            coins = Long.parseLong(args[2]);
+                        } catch (NumberFormatException e) {
+                            commandSender.sendMessage(ChatColor.RED + "Coins must be a number");
                             return;
                         }
 
@@ -194,14 +61,231 @@ public class CoinCommand implements CommandExecutor {
                             return;
                         }
 
-                        MainData.getIns().getMessageManager().getMessage("COINS_OTHERS")
-                                .format("%coinAmount%", NumberFormat.getInstance().format(((RUPlayerData) d).getCoins()))
+                        d.setCoins(coins);
+                        Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(d,
+                                PlayerInformationUpdateEvent.Reason.CURRENCY_UPDATE));
+
+                        MainData.getIns().getMessageManager().getMessage("COINS_SET_OTHER")
+                                .format("%coinAmount%", NumberFormat.getInstance().format(coins))
                                 .format("%playerName%", d.getPlayerName())
                                 .sendTo(commandSender);
 
+                        MainData.getIns().getMessageManager().getMessage("COINS_SET_SELF")
+                                .format("%coinAmount%", NumberFormat.getInstance().format(coins))
+                                .sendTo(d);
+
+                        d.save((o) -> {
+                        });
+
                     });
                 }
+
+            } else if (args[0].equalsIgnoreCase("add")) {
+                if (commandSender.isOp() || commandSender.hasPermission("command.coins")) {
+                    if (args.length < 3) {
+                        commandSender.sendMessage(ChatColor.RED + "/coins add <player> <cash>");
+                        return true;
+                    }
+
+                    MainData.getIns().getScheduler().runTaskAsync(() -> {
+                        long coins;
+
+                        try {
+                            coins = Long.parseLong(args[2]);
+                        } catch (NumberFormatException e) {
+                            commandSender.sendMessage(ChatColor.RED + "Coins must be a number");
+                            return;
+                        }
+
+                        RUPlayerData d = getPlayerData(commandSender, args[1]);
+
+                        if (d == null) {
+                            return;
+                        }
+
+                        d.setCoins(d.getCoins() + coins);
+                        Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(d
+                                , PlayerInformationUpdateEvent.Reason.CURRENCY_UPDATE));
+
+                        MainData.getIns().getMessageManager().getMessage("COINS_ADD_OTHER")
+                                .format("%coinAmount%", NumberFormat.getInstance().format(coins))
+                                .format("%playerName%", d.getPlayerName())
+                                .sendTo(commandSender);
+
+                        MainData.getIns().getMessageManager().getMessage("COINS_ADD_SELF")
+                                .format("%coinAmount%", NumberFormat.getInstance().format(coins))
+                                .sendTo(d);
+
+                        d.save((o) -> {
+                        });
+
+                    });
+                }
+            } else if (args[0].equalsIgnoreCase("remove")) {
+                if (commandSender.isOp() || commandSender.hasPermission("command.coins")) {
+                    if (args.length < 3) {
+                        commandSender.sendMessage(ChatColor.RED + "/coin remove <cash>");
+                        return true;
+                    }
+
+                    MainData.getIns().getScheduler().runTaskAsync(() -> {
+                        long coins;
+
+                        try {
+                            coins = Long.parseLong(args[2]);
+                        } catch (NumberFormatException e) {
+                            commandSender.sendMessage(ChatColor.RED + "Coins must be a number");
+                            return;
+                        }
+
+                        RUPlayerData d = getPlayerData(commandSender, args[1]);
+
+                        if (d == null) {
+                            return;
+                        }
+
+                        d.setCoins(d.getCoins() - coins);
+                        Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(d,
+                                PlayerInformationUpdateEvent.Reason.CURRENCY_UPDATE));
+
+                        MainData.getIns().getMessageManager().getMessage("COINS_REMOVE_OTHER")
+                                .format("%coinAmount%", NumberFormat.getInstance().format(coins))
+                                .format("%playerName%", d.getPlayerName())
+                                .sendTo(commandSender);
+
+                        MainData.getIns().getMessageManager().getMessage("COINS_REMOVE_SELF")
+                                .format("%coinAmount%", NumberFormat.getInstance().format(coins))
+                                .sendTo(d);
+
+                        d.save((o) -> {
+                        });
+
+                    });
+                }
+            } else if (args[0].equalsIgnoreCase("top")) {
+                MainData.getIns().getScheduler().runTaskAsync(() -> {
+                    if (!checkDatabase(commandSender)) {
+                        return;
+                    }
+
+                    LinkedHashMap<String, Long> coinTop = CoinTopCommand.getCoinTop();
+
+                    Message coin_top = MainData.getIns().getMessageManager().getMessage("COIN_TOP");
+
+                    coinTop.forEach(new BiConsumer<String, Long>() {
+                        int current = 1;
+
+                        @Override
+                        public void accept(String playerName, Long coinAmount) {
+                            coin_top.format("%player" + String.valueOf(current) + "%", playerName);
+                            coin_top.format("%coinAmount" + String.valueOf(current) + "%", NumberFormat.getInstance().format(coinAmount));
+                            current++;
+                        }
+                    });
+
+                    coin_top.sendTo(commandSender);
+
+                });
+            } else if (args[0].equalsIgnoreCase("enviar") || args[0].equalsIgnoreCase("send")) {
+                if (args.length < 3) {
+                    commandSender.sendMessage(ChatColor.RED + "/coins enviar <player> <quantidade>");
+                    return true;
+                }
+
+                String playerName = args[1];
+
+                long coins;
+
+                try {
+                    coins = Long.parseLong(args[2]);
+
+                    if (coins <= 0) {
+                        throw new NumberFormatException();
+                    }
+
+                } catch (NumberFormatException e) {
+                    MainData.getIns().getMessageManager().getMessage("COINS_NUMBER_POSITIVE").sendTo(commandSender);
+                    return true;
+                }
+
+                RUPlayerData player = (RUPlayerData) MainData.getIns().getPlayerManager().getPlayer(((Player) commandSender).getUniqueId());
+
+                if (player.getCoins() < coins) {
+                    MainData.getIns().getMessageManager().getMessage("NOT_ENOUGH_COINS").sendTo(commandSender);
+                    return true;
+                }
+
+                Pair<PlayerData, Boolean> playerData = MainData.getIns().getPlayerManager().getOrLoadPlayer(playerName);
+
+                if (playerData.getKey() == null) {
+                    MainData.getIns().getMessageManager().getMessage("PLAYER_NEVER_JOINED").sendTo(commandSender);
+                    return true;
+                }
+
+                if (playerData.value()) {
+                    PlayerInformationLoadEvent event = new PlayerInformationLoadEvent(playerData.key());
+
+                    Bukkit.getServer().getPluginManager().callEvent(event);
+
+                    if (!(event.getPlayerInfo() instanceof RUPlayerData)) {
+                        MainData.getIns().getMessageManager().getMessage("PLAYER_LOAD_ERROR").sendTo(commandSender);
+                        return true;
+                    }
+
+                    RUPlayerData playerInfo = (RUPlayerData) event.getPlayerInfo();
+
+                    playerInfo.setCoins(playerInfo.getCoins() + coins);
+
+                    playerInfo.save((o) -> {
+
+                    });
+
+                    player.setCoins(player.getCoins() - coins);
+
+                    Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(player,
+                            PlayerInformationUpdateEvent.Reason.CURRENCY_UPDATE));
+                } else {
+                    RUPlayerData playerInfo = (RUPlayerData) playerData.getKey();
+
+                    playerInfo.setCoins(playerInfo.getCoins() + coins);
+
+                    MainData.getIns().getMessageManager().getMessage("COINS_RECEIVED")
+                            .format("%player%", player.getNameWithPrefix())
+                            .format("%coins%", String.valueOf(coins)).sendTo(playerInfo);
+
+                    player.setCoins(player.getCoins() - coins);
+
+                    Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(player,
+                            PlayerInformationUpdateEvent.Reason.CURRENCY_UPDATE));
+
+                    Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(playerInfo
+                            , PlayerInformationUpdateEvent.Reason.CURRENCY_UPDATE));
+                }
+
+                MainData.getIns().getMessageManager().getMessage("COINS_SENT")
+                        .format("%player%", playerData.getKey().getNameWithPrefix())
+                        .format("%coins%", String.valueOf(coins)).sendTo(player);
+            } else {
+                MainData.getIns().getScheduler().runTaskAsync(() -> {
+
+                    if (!checkDatabase(commandSender)) {
+                        return;
+                    }
+
+                    RUPlayerData d = getPlayerData(commandSender, args[1]);
+
+                    if (d == null) {
+                        return;
+                    }
+
+                    MainData.getIns().getMessageManager().getMessage("COINS_OTHERS")
+                            .format("%coinAmount%", NumberFormat.getInstance().format(((RUPlayerData) d).getCoins()))
+                            .format("%playerName%", d.getPlayerName())
+                            .sendTo(commandSender);
+
+                });
             }
+        }
         return true;
     }
 

@@ -67,6 +67,12 @@
 
         <dependency>
             <groupId>com.nuno1212s</groupId>
+            <artifactId>Enderchest</artifactId>
+            <version>LATEST</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.nuno1212s</groupId>
             <artifactId>Minas</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>provided</scope>

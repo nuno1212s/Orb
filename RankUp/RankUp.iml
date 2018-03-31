@@ -42,6 +42,7 @@
     </orderEntry>
     <orderEntry type="module" module-name="Boosters" scope="PROVIDED" />
     <orderEntry type="module" module-name="Classes" scope="PROVIDED" />
+    <orderEntry type="module" module-name="Enderchest" />
     <orderEntry type="module" module-name="Minas" scope="PROVIDED" />
     <orderEntry type="module-library">
       <library name="Maven: com.boydti:fawe-api:16.09.11-3a8d54b-284">
