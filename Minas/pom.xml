@@ -38,6 +38,14 @@
             <scope>system</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.sk89q</groupId>
+            <artifactId>world-edit</artifactId>
+            <version>6.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/libs/worldedit-bukkit-6.1.jar</systemPath>
+        </dependency>
+
     </dependencies>
 
     <build>

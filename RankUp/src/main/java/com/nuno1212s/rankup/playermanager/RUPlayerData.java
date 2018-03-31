@@ -51,7 +51,8 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer {
 
     public synchronized final void setCoins(long coins) {
         this.coins = coins;
-        Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(this));
+        Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(this,
+                PlayerInformationUpdateEvent.Reason.CURRENCY_UPDATE));
     }
 
     public synchronized final long getCoins() {
@@ -111,13 +112,15 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer {
     @Override
     public PlayerGroupData.EXTENSION_RESULT setServerGroup(short groupID, long duration) {
         PlayerGroupData.EXTENSION_RESULT extension_result = this.groupData.setCurrentGroup(groupID, duration);
-        Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(this));
+        Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(this,
+                PlayerInformationUpdateEvent.Reason.GROUP_UPDATE));
         return extension_result;
     }
 
     public PlayerGroupData.EXTENSION_RESULT setServerRank(short groupID, long duration) {
         PlayerGroupData.EXTENSION_RESULT extension_result = this.rankUpGroup.setCurrentGroup(groupID, duration);
-        Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(this));
+        Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(this,
+                PlayerInformationUpdateEvent.Reason.GROUP_UPDATE));
         return extension_result;
     }
 

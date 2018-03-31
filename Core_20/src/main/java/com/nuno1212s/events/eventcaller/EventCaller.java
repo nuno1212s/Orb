@@ -11,7 +11,7 @@ public interface EventCaller {
     /**
      * Update the player scoreboard information
      */
-    void callUpdateInformationEvent(PlayerData args);
+    void callUpdateInformationEvent(PlayerData args, Object... extra);
 
     void callGroupUpdateEvent(PlayerData data, Group previousGroup);
 

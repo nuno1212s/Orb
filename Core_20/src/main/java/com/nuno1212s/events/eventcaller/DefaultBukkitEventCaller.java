@@ -15,8 +15,15 @@ public class DefaultBukkitEventCaller implements EventCaller {
     }
 
     @Override
-    public void callUpdateInformationEvent(PlayerData args) {
-        Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(args));
+    public void callUpdateInformationEvent(PlayerData args, Object... other) {
+
+        PlayerInformationUpdateEvent.Reason r = PlayerInformationUpdateEvent.Reason.UNDETERMINED;
+
+        if (other.length > 0 && other[0] instanceof PlayerInformationUpdateEvent.Reason) {
+            r = (PlayerInformationUpdateEvent.Reason) other[0];
+        }
+
+        Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(args, r));
     }
 
     @Override

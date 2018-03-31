@@ -1,7 +1,9 @@
 package com.nuno1212s.playermanager;
 
+import com.nuno1212s.events.PlayerInformationUpdateEvent;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.Group;
+import com.nuno1212s.permissionmanager.PlayerPermissions;
 import com.nuno1212s.permissionmanager.util.PlayerGroupData;
 import com.nuno1212s.punishments.Punishment;
 import com.nuno1212s.rediscommunication.Message;
@@ -81,7 +83,7 @@ public abstract class PlayerData {
     public final PlayerGroupData.EXTENSION_RESULT setMainGroup(short groupID, long duration, boolean shoudUseRedis) {
         PlayerGroupData.EXTENSION_RESULT extension_result = this.groups.setCurrentGroup(groupID, duration);
         if (MainData.getIns().getEventCaller() != null) {
-            MainData.getIns().getEventCaller().callUpdateInformationEvent(this);
+            MainData.getIns().getEventCaller().callUpdateInformationEvent(this, PlayerInformationUpdateEvent.Reason.GROUP_UPDATE);
         }
 
         if (shoudUseRedis) {

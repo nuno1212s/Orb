@@ -17,6 +17,15 @@ public class PlayerInformationUpdateEvent extends Event {
     @Getter
     private final PlayerData player;
 
+    @Getter
+    private Reason eventReason;
+
+    @Deprecated
+    public PlayerInformationUpdateEvent(PlayerData d) {
+        this.player = d;
+        this.eventReason = Reason.UNDETERMINED;
+    }
+
     private static final HandlerList handlers = new HandlerList();
 
     public static HandlerList getHandlerList() {
@@ -26,6 +35,15 @@ public class PlayerInformationUpdateEvent extends Event {
     @Override
     public HandlerList getHandlers() {
         return handlers;
+    }
+
+    public enum Reason {
+
+        GROUP_UPDATE,
+        CURRENCY_UPDATE,
+        OTHER,
+        UNDETERMINED
+
     }
 
 }

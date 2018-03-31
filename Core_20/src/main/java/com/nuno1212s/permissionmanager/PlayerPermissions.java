@@ -46,6 +46,13 @@ public class PlayerPermissions {
 
     private Field f;
 
+    /**
+     * Method to directly update the permissions since the permission attachment
+     * .setPermission {@link PermissionAttachment#setPermission(String, boolean)} always calls recalculate and is very expensive to run
+     *
+     * @param pA
+     * @return
+     */
     private Map<String, Boolean> getDirect(PermissionAttachment pA) {
 
         try {
