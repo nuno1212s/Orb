@@ -69,6 +69,7 @@
             <groupId>com.nuno1212s</groupId>
             <artifactId>Enderchest</artifactId>
             <version>LATEST</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
