@@ -9,6 +9,7 @@ import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 
@@ -99,15 +100,18 @@ public class Mine {
 
     public void resetMine() {
         lastReset = System.currentTimeMillis();
-        FaweQueue queue = FaweAPI.createQueue(FaweAPI.getWorld(corner1.getWorld().getName()), false);
+        World world = corner1.getWorld();
 
-        for (Player p : this.corner1.getWorld().getPlayers()) {
+        FaweQueue queue = FaweAPI.
+                createQueue(FaweAPI.getWorld(world.getName()), false);
+
+        for (Player p : world.getPlayers()) {
             if (isInMine(p.getLocation())) {
                 p.teleport(this.defaultTP);
             }
         }
 
-        Bukkit.getServer().broadcastMessage(MainData.getIns().getMessageManager().getMessage("RESET_MINE").format("%mina%", getDisplayName()).toString());
+        //Bukkit.getServer().broadcastMessage(MainData.getIns().getMessageManager().getMessage("RESET_MINE").format("%mina%", getDisplayName()).toString());
 
         MainData.getIns().getScheduler().runTaskAsync(() -> {
             for (int x = corner1.getBlockX(); x <= corner2.getBlockX(); x++) {

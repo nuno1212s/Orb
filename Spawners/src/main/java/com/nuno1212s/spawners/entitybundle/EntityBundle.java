@@ -168,7 +168,7 @@ public class EntityBundle {
         this.entity = e.getUniqueId();
         //When we load the actual entity, we do not need to remember the spawnLocation
 
-        System.out.println("Loaded entity.");
+        //System.out.println("Loaded entity.");
         updateName();
     }
 
@@ -178,7 +178,7 @@ public class EntityBundle {
     public void unload() {
         if (!isLoaded()) return;
 
-        System.out.println("Unloaded entity.");
+        //System.out.println("Unloaded entity.");
         this.spawnLocation = new LLocation(getEntityReference().getLocation());
 
         forceRemove();

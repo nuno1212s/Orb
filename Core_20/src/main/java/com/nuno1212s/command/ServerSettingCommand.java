@@ -25,8 +25,8 @@ public class ServerSettingCommand implements CommandExecutor {
 
         if (args.length < 2) {
             commandSender.sendMessage("");
-            commandSender.sendMessage("/server setSVName <svname>");
-            commandSender.sendMessage("/server setSVType <svtype>");
+            commandSender.sendMessage("/serversetting setSVName <svname>");
+            commandSender.sendMessage("/serversetting setSVType <svtype>");
             commandSender.sendMessage("");
             return true;
         }
@@ -41,8 +41,8 @@ public class ServerSettingCommand implements CommandExecutor {
             commandSender.sendMessage(ChatColor.RED + "The server type has been set to " + serverType);
         } else {
             commandSender.sendMessage("");
-            commandSender.sendMessage("/server setSVName <svname>");
-            commandSender.sendMessage("/server setSVType <svtype>");
+            commandSender.sendMessage("/serversetting setSVName <svname>");
+            commandSender.sendMessage("/serversetting setSVType <svtype>");
             commandSender.sendMessage("");
         }
 

@@ -116,11 +116,11 @@ public class Messages {
                                 , 20, 50, 20));
                     } else if (message instanceof JSONObject) {
                         JSONObject object = (JSONObject) message;
-                        String title = (String) object.get("Title");
-                        String subTitle = (String) object.get("SubTitle");
-                        int fadeIn = ((Long) object.get("FadeIn")).intValue(),
-                                fadeOut = ((Long) object.get("FadeOut")).intValue(),
-                                stay = ((Long) object.get("Stay")).intValue();
+                        String title = (String) object.getOrDefault("Title", "");
+                        String subTitle = (String) object.getOrDefault("SubTitle", "");
+                        int fadeIn = ((Long) object.getOrDefault("FadeIn", 30)).intValue(),
+                                fadeOut = ((Long) object.getOrDefault("FadeOut", 30)).intValue(),
+                                stay = ((Long) object.getOrDefault("Stay", 30)).intValue();
                         messages.add(new Title(title, subTitle, fadeIn, stay, fadeOut));
                     }
                 } else if (messageType == MessageType.SOUND) {

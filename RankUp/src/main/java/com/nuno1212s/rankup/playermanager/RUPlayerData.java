@@ -2,9 +2,9 @@ package com.nuno1212s.rankup.playermanager;
 
 import com.nuno1212s.classes.player.KitPlayer;
 import com.nuno1212s.displays.player.ChatData;
-import com.nuno1212s.enderchest.playerdata.EnderChestData;
 import com.nuno1212s.events.PlayerInformationUpdateEvent;
 import com.nuno1212s.main.MainData;
+import com.nuno1212s.messagemanager.Message;
 import com.nuno1212s.permissionmanager.Group;
 import com.nuno1212s.permissionmanager.util.PlayerGroupData;
 import com.nuno1212s.playermanager.PlayerData;
@@ -17,9 +17,10 @@ import net.sacredlabyrinth.phaed.simpleclans.SimpleClans;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The Player Data for the full pvp server
@@ -94,9 +95,7 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer, End
     @Override
     public String getNameWithPrefix() {
 
-        Group representingGroup = this.getRepresentingGroup();
-
-        if (representingGroup.isOverrides()) {
+        if (MainData.getIns().getPermissionManager().getGroup(this.groups.getActiveGroup()).isOverrides()) {
             return super.getNameWithPrefix();
         }
 
@@ -111,27 +110,47 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer, End
             clanTag = ChatColor.DARK_GRAY.toString() + ChatColor.ITALIC + player.getTag() + " " + ChatColor.RESET;
         }
 
-        return representingGroup.getGroupPrefix() + rankUpGroup.getGroupPrefix() + clanTag + this.getPlayerName();
+        Group groupData = MainData.getIns().getPermissionManager().getGroup(this.groupData.getActiveGroup());
+
+        return groupData.getGroupPrefix() + rankUpGroup.getGroupPrefix() + clanTag + this.getPlayerName();
     }
 
     @Override
     public PlayerGroupData.EXTENSION_RESULT setServerGroup(short groupID, long duration) {
+        Group previousGroup = MainData.getIns().getPermissionManager().getGroup(this.groupData.getActiveGroup()),
+                newGroup = MainData.getIns().getPermissionManager().getGroup(groupID);
+
         PlayerGroupData.EXTENSION_RESULT extension_result = this.groupData.setCurrentGroup(groupID, duration);
         Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(this,
                 PlayerInformationUpdateEvent.Reason.GROUP_UPDATE));
+        Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(this));
+        Bukkit.getServer().getPluginManager().callEvent(new PlayerGroupUpdateEvent(this, previousGroup));
+
+        Message updated_group = MainData.getIns().getMessageManager().getMessage("UPDATED_GROUP")
+                .format("%playerName%", getPlayerName())
+                .format("%newGroup%", newGroup.getGroupPrefix());
+        for (PlayerData d : MainData.getIns().getPlayerManager().getPlayers()) {
+            updated_group
+                    .sendTo(d);
+        }
+
         return extension_result;
     }
 
     public PlayerGroupData.EXTENSION_RESULT setServerRank(short groupID, long duration) {
+        Group previousGroup = MainData.getIns().getPermissionManager().getGroup(this.rankUpGroup.getActiveGroup());
+
         PlayerGroupData.EXTENSION_RESULT extension_result = this.rankUpGroup.setCurrentGroup(groupID, duration);
         Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(this,
                 PlayerInformationUpdateEvent.Reason.GROUP_UPDATE));
+        Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(this));
+        Bukkit.getServer().getPluginManager().callEvent(new PlayerGroupUpdateEvent(this, previousGroup));
         return extension_result;
     }
 
     /**
      * Use the global check expiration method to also check the expiration for the local groups
-     * 
+     *
      * @param p
      */
     @Override

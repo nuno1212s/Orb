@@ -5,6 +5,7 @@ import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.Group;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.SimpleScoreboard;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
@@ -139,15 +140,17 @@ public class ScoreboardManager {
         Scoreboard b = this.scoreboards.get(d.getPlayerID()).getScoreboard();
 
         for (PlayerData playerData : MainData.getIns().getPlayerManager().getPlayers()) {
+            Group representingGroup = playerData.getRepresentingGroup();
 
-            for (Team team : b.getTeams()) {
-                if (team.getEntries().contains(d.getPlayerName())) {
-                    team.removeEntry(d.getPlayerName());
-                    break;
+            for (Team t : b.getTeams()) {
+                if (t.getEntries().contains(playerData.getPlayerName())) {
+
+                    if (t.getDisplayName().equalsIgnoreCase(representingGroup.getScoreboardName())) break;
+
+                    t.removeEntry(playerData.getPlayerName());
                 }
             }
 
-            Group representingGroup = playerData.getRepresentingGroup();
             Team team = b.getTeam(representingGroup.getScoreboardName());
 
             if (team == null) {
@@ -166,14 +169,19 @@ public class ScoreboardManager {
 
             Scoreboard scoreboard = simpleScoreboard.getScoreboard();
 
+            Group representingGroup = d.getRepresentingGroup();
             for (Team team : scoreboard.getTeams()) {
                 if (team.getEntries().contains(d.getPlayerName())) {
+
+                    if (team.getName().equalsIgnoreCase(d.getRepresentingGroup().getScoreboardName())) {
+                        return;
+                    }
+
                     team.removeEntry(d.getPlayerName());
                     break;
                 }
             }
 
-            Group representingGroup = d.getRepresentingGroup();
             Team team = scoreboard.getTeam(representingGroup.getScoreboardName());
 
             if (team == null) {

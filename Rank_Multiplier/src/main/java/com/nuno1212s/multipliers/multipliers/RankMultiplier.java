@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -46,7 +47,16 @@ public class RankMultiplier {
     }
 
     public double getRankMultiplierForPlayer(PlayerData d) {
-        return 1 + getRankMultiplierForRank(d.getMainGroup().getGroupID()) + getRankMultiplierForRank(d.getServerGroup());
+
+        double currentMultiplier = 1 * getRankMultiplierForRank(d.getGroupID());
+
+        List<Short> serverGroups = d.getServerGroups();
+
+        for (Short serverGroup : serverGroups) {
+            currentMultiplier *= getRankMultiplierForRank(serverGroup);
+        }
+
+        return currentMultiplier;
     }
 
     public double getRankMultiplierForRank(short rank) {

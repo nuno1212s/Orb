@@ -63,7 +63,7 @@ public class InventoryClickEventListener implements Listener {
                     }
                 } else if (item.hasItemFlag("CANCEL")) {
                     e.getWhoClicked().closeInventory();
-                } else if (item.hasItemFlag("SHOW_ITEM")) {
+                } else if (item.hasItemFlag("DISPLAY_ITEMS")) {
                     e.getWhoClicked().closeInventory();
 
                     Crate c = Main.getIns().getCrateManager()

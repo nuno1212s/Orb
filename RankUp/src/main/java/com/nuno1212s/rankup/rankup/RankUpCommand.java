@@ -41,6 +41,7 @@ public class RankUpCommand implements CommandExecutor {
 
             if (d.getCoins() >= groupCost) {
                 d.setServerRank(nextGroup, -1);
+                d.setCoins(d.getCoins() - groupCost);
                 messageManager.getMessage("RANKED_UP")
                         .format("%newRank%", group.getGroupPrefix())
                         .format("%cost%", String.valueOf(groupCost))

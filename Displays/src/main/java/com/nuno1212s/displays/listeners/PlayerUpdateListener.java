@@ -3,6 +3,7 @@ package com.nuno1212s.displays.listeners;
 import com.nuno1212s.displays.DisplayMain;
 import com.nuno1212s.events.PlayerGroupUpdateEvent;
 import com.nuno1212s.events.PlayerInformationUpdateEvent;
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -28,6 +29,8 @@ public class PlayerUpdateListener implements Listener {
         if (player1 != null) {
             DisplayMain.getIns().getScoreboardManager().handlePlayerGroupUpdate(player, e.getPreviousGroup());
         }
+
+
     }
 
 }

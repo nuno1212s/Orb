@@ -24,7 +24,7 @@ public class Main extends Module {
         ins = this;
         enderChestManager = new EnderChestManager(this);
 
-        registerCommand(new String[]{"enderchest"}, new EnderChestCommand());
+        registerCommand(new String[]{"enderchest", "ec"}, new EnderChestCommand());
         registerCommand(new String[]{"craft"}, new CraftingTableCommand());
 
         BukkitMain ins = BukkitMain.getIns();

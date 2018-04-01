@@ -222,15 +222,17 @@ public class Crate {
 
         int starting = 10;
         for (Reward reward : this.rewards) {
-            displayInventory.setItem(starting++, reward.getDisplayItem());
+            for (ItemStack item : reward.getItems()) {
+                displayInventory.setItem(starting++, item);
 
-            //Ignore last and first slot of the inventories
-            if (starting + 1 % 9 == 0) {
-                starting += 2;
-            }
+                //Ignore last and first slot of the inventories
+                if (starting + 1 % 9 == 0) {
+                    starting += 2;
+                }
 
-            if (starting > displayInventory.getSize()) {
-                break;
+                if (starting > displayInventory.getSize()) {
+                    break;
+                }
             }
         }
 

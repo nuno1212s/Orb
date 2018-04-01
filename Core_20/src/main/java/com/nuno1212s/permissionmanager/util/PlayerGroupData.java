@@ -151,6 +151,7 @@ public class PlayerGroupData {
             this.groups.add(0, toActivate);
             return EXTENSION_RESULT.EXTENDED_AND_ACTIVATED;
         }
+
         return EXTENSION_RESULT.NEW_GROUP;
     }
 
@@ -167,6 +168,7 @@ public class PlayerGroupData {
             this.groups.get(0).activate();
             return;
         }
+
         if (activeGroupIns.isActive()) {
             if (activeGroupIns.isPermanent()) {
                 return;
@@ -177,7 +179,9 @@ public class PlayerGroupData {
             if (System.currentTimeMillis() > timeGroupEnd) {
                 //END CURRENT GROUP
 
+                System.out.println(this.groups);
                 this.groups.remove(activeGroupIns);
+                System.out.println(this.groups);
 
                 Group group = MainData.getIns().getPermissionManager().getGroup(activeGroupIns.getGroupID());
 
@@ -189,7 +193,9 @@ public class PlayerGroupData {
         }
 
         if (expired) {
-            PlayerGroup nextGroup = this.getNextGroup();
+            PlayerGroup nextGroup = this.groups.get(0);
+
+            System.out.println(nextGroup);
 
             if (nextGroup == null) {
                 nextGroup = new PlayerGroup(MainData.getIns().getPermissionManager().getDefaultGroup().getGroupID(), -1, -1);
@@ -211,10 +217,8 @@ public class PlayerGroupData {
             }
 
             MainData.getIns().getEventCaller().callGroupUpdateEvent(p, MainData.getIns().getPermissionManager().getGroup(activeGroupIns.getGroupID()));
+            MainData.getIns().getEventCaller().callUpdateInformationEvent(p);
         }
-
-        MainData.getIns().getEventCaller().callUpdateInformationEvent(p);
-
 
     }
 

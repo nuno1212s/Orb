@@ -64,17 +64,17 @@ public class RankUpManager {
     }
 
     public String getProgression(RUPlayerData d) {
-        short nextGroup = getNextGroup(d.getServerGroup());
+        short nextGroup = getNextGroup(d.getRankUpGroup());
 
         if (nextGroup == -1) {
-            return "N/A";
+            return "Progressão: N/A";
         }
 
         long current = d.getCoins(), needed = getGroupCost(nextGroup);
 
         int amountOfSteps = 10, currentProgression = (int) (current * amountOfSteps / needed);
 
-        if (currentProgression >= 10) {
+        if (currentProgression >= amountOfSteps) {
             return ChatColor.YELLOW.toString() + "Já pode evoluir";
         } else {
 

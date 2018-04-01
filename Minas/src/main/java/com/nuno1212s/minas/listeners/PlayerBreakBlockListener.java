@@ -33,8 +33,14 @@ public class PlayerBreakBlockListener implements Listener {
             ItemStack[] drops = getDrops(e.getPlayer().getItemInHand(), e.getBlock());
 
             //28
-            e.getPlayer().getInventory().addItem(drops);
+            if (e.getPlayer().getInventory().addItem(drops).size() > 0) {
+                MainData.getIns().getMessageManager().getMessage("INVENTORY_FULL").sendTo(e.getPlayer());
+            }
+
+            e.getPlayer().giveExp(e.getExpToDrop());
+
             Bukkit.getServer().getPluginManager().callEvent(new PlayerBreakBlockMineEvent(e));
+
             e.getBlock().setType(Material.AIR);
         }
     }

@@ -69,6 +69,7 @@ public class Main extends Module {
         registerCommand(new String[]{"tpa"}, new TPACommand());
         registerCommand(new String[]{"tpaaccept", "tpaccept"}, new TPAAcceptCommand());
         registerCommand(new String[]{"tpadeny"}, new TPADenyCommand());
+        registerCommand(new String[]{"minas", "mina"}, new MinesCommand());
 
         MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));
 

@@ -2,10 +2,12 @@ package com.nuno1212s.util;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.Skull;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -77,6 +79,14 @@ public class SerializableItem extends ItemStack {
 
         if (getType() == Material.SKULL_ITEM) {
 
+            if (jsonObject.containsKey("SkullOwner")) {
+
+                String owner = (String) jsonObject.get("SkullOwner");
+
+                SkullMeta meta = (SkullMeta) m;
+
+                meta.setOwner(owner);
+            }
         }
 
         setItemMeta(m);

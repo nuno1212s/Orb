@@ -122,7 +122,9 @@ public class ChatManager {
      * @return True if someone heard the message, false if not
      */
     public boolean sendMessage(String message, PlayerData data, Location original, boolean global) {
-        String[] split = this.globalChatFormatting.split("%playerName%");
+        String[] split = global ?
+                this.globalChatFormatting.split("%playerName%")
+                : this.localChatFormatting.split("%playerName%");
         String firstMessagePart = split[0];
         String secondMessagePart = split[1].replace("%message%", message);
 

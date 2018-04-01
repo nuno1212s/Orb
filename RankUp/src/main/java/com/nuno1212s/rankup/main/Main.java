@@ -6,6 +6,7 @@ import com.nuno1212s.main.BukkitMain;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.modulemanager.ModuleData;
+import com.nuno1212s.permissionmanager.Group;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.rankup.commands.RGroupCommand;
 import com.nuno1212s.rankup.economy.CoinCommand;
@@ -57,7 +58,7 @@ public class Main extends Module {
         );
 
         placeHolderManager.registerPlaceHolder("%nextRank%", (d) -> {
-            short nextGroup = this.rankUpManager.getNextGroup(d.getServerGroup());
+            short nextGroup = this.rankUpManager.getNextGroup(((RUPlayerData) d).getRankUpGroup());
 
             if (nextGroup == -1) {
                 return "N/A";
@@ -84,9 +85,22 @@ public class Main extends Module {
             }
         });
 
-        registerCommand(new String[]{"coins", "coin"}, new CoinCommand());
+        placeHolderManager.registerPlaceHolder("%rankUpGroup%", (d) -> {
+            if (d instanceof RUPlayerData) {
+                Group representingGroup = d.getRepresentingGroup();
+                if (!representingGroup.isOverrides()) {
+                    return MainData.getIns().getPermissionManager().getGroup(((RUPlayerData) d).getRankUpGroup()).getGroupPrefix();
+                } else {
+                    return representingGroup.getGroupPrefix();
+                }
+            } else {
+                return "N/A";
+            }
+        });
+
+        registerCommand(new String[]{"coins", "coin", "money"}, new CoinCommand());
         registerCommand(new String[]{"rankup"}, new RankUpCommand());
-        registerCommand(new String[]{"serverrank"}, new RGroupCommand());
+        registerCommand(new String[]{"serverrank", "srank"}, new RGroupCommand());
 
         BukkitMain plugin = BukkitMain.getIns();
 
