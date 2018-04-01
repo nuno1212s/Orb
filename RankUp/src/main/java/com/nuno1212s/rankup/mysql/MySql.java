@@ -23,7 +23,7 @@ public class MySql {
 
         try (Connection c = MainData.getIns().getMySql().getConnection();
              Statement s = c.createStatement()) {
-            String pvpData = "CREATE TABLE IF NOT EXISTS pvpData(UUID char(40) PRIMARY KEY, COINS BIGINT, GROUPDATA varchar(100), SERVERGROUP varchar(100), KITUSAGE varchar(200))";
+            String pvpData = "CREATE TABLE IF NOT EXISTS pvpData(UUID char(40) PRIMARY KEY, COINS BIGINT, GROUPDATA varchar(100), SERVERGROUP varchar(100), KITUSAGE varchar(200), ENDERCHEST MEDIUMTEXT NOT NULL DEFAULT '')";
             s.execute(pvpData);
         } catch (SQLException e) {
             e.printStackTrace();

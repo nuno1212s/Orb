@@ -77,8 +77,7 @@
             <groupId>mkremins</groupId>
             <artifactId>fanciful</artifactId>
             <version>0.4.0-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/lib/fanciful-0.4.0-SNAPSHOT.jar</systemPath>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
