@@ -1,5 +1,6 @@
 package com.nuno1212s.playermanager;
 
+import com.nuno1212s.events.PlayerInformationUpdateEvent;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.Group;
 import com.nuno1212s.permissionmanager.util.PlayerGroupData;

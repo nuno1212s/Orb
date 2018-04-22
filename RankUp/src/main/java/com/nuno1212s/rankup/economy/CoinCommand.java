@@ -186,7 +186,7 @@ public class CoinCommand implements CommandExecutor {
                     coin_top.sendTo(commandSender);
 
                 });
-            } else if (args[0].equalsIgnoreCase("enviar") || args[0].equalsIgnoreCase("send")) {
+            } else if (args[0].equalsIgnoreCase("enviar") || args[0].equalsIgnoreCase("send") || args[0].equalsIgnoreCase("pay")) {
                 if (args.length < 3) {
                     commandSender.sendMessage(ChatColor.RED + "/coins enviar <player> <quantidade>");
                     return true;
@@ -269,6 +269,10 @@ public class CoinCommand implements CommandExecutor {
                 MainData.getIns().getScheduler().runTaskAsync(() -> {
 
                     if (!checkDatabase(commandSender)) {
+                        return;
+                    }
+
+                    if (args.length <= 1) {
                         return;
                     }
 

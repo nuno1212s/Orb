@@ -45,6 +45,7 @@ public class EnderChestManager {
     public Inventory getEnderChestFor(Player p, EnderChestData playerData) {
 
         int enderChestSize = getSizeForPlayer(p);
+
         if (enderChestSize > playerData.getEnderChest().length) {
             playerData.updateEnderChestData(EnderChestData.expandInventory(playerData.getEnderChest(), enderChestSize));
         }

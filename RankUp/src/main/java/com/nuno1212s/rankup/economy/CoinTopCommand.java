@@ -48,6 +48,12 @@ class CoinTopCommand {
 
         collect.forEach((id, coins) -> {
             PlayerData playerData = MainData.getIns().getMySql().getPlayerData(id, null);
+
+            if (playerData == null) {
+                System.out.println("Player " + id + " is null");
+                return;
+            }
+
             namesSorted.put(playerData.getNameWithPrefix(), coins);
         });
 

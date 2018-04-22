@@ -2,6 +2,8 @@ package com.nuno1212s.rankup.playermanager;
 
 import com.nuno1212s.classes.player.KitPlayer;
 import com.nuno1212s.displays.player.ChatData;
+import com.nuno1212s.enderchest.playerdata.EnderChestData;
+import com.nuno1212s.events.PlayerGroupUpdateEvent;
 import com.nuno1212s.events.PlayerInformationUpdateEvent;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.messagemanager.Message;
@@ -17,6 +19,7 @@ import net.sacredlabyrinth.phaed.simpleclans.SimpleClans;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
 import java.util.List;
@@ -123,7 +126,7 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer, End
         PlayerGroupData.EXTENSION_RESULT extension_result = this.groupData.setCurrentGroup(groupID, duration);
         Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(this,
                 PlayerInformationUpdateEvent.Reason.GROUP_UPDATE));
-        Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(this));
+
         Bukkit.getServer().getPluginManager().callEvent(new PlayerGroupUpdateEvent(this, previousGroup));
 
         Message updated_group = MainData.getIns().getMessageManager().getMessage("UPDATED_GROUP")
@@ -143,7 +146,6 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer, End
         PlayerGroupData.EXTENSION_RESULT extension_result = this.rankUpGroup.setCurrentGroup(groupID, duration);
         Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(this,
                 PlayerInformationUpdateEvent.Reason.GROUP_UPDATE));
-        Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(this));
         Bukkit.getServer().getPluginManager().callEvent(new PlayerGroupUpdateEvent(this, previousGroup));
         return extension_result;
     }
