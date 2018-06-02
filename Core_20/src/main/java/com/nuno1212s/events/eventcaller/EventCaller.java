@@ -17,4 +17,6 @@ public interface EventCaller {
 
     void callRewardsUpdateEvent(PlayerData data);
 
+    PlayerData callPlayerInformationLoad(PlayerData data);
+
 }

@@ -48,6 +48,7 @@ public class PlayerJoinListener implements Listener {
         if (e.getResult() == PlayerLoginEvent.Result.KICK_FULL) {
             PlayerData cachedPlayer = MainData.getIns().getPlayerManager().getCachedPlayer(e.getPlayer().getUniqueId());
             Group playerMainGroup = cachedPlayer.getMainGroup();
+
             if (playerMainGroup.hasPermission("vip") || playerMainGroup.hasPermission("staff")) {
                 e.setResult(PlayerLoginEvent.Result.ALLOWED);
             }

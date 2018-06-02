@@ -1,6 +1,7 @@
 package com.nuno1212s.events.eventcaller;
 
 import com.nuno1212s.events.PlayerGroupUpdateEvent;
+import com.nuno1212s.events.PlayerInformationLoadEvent;
 import com.nuno1212s.events.PlayerInformationUpdateEvent;
 import com.nuno1212s.events.PlayerRewardUpdateEvent;
 import com.nuno1212s.permissionmanager.Group;
@@ -29,5 +30,15 @@ public class DefaultBukkitEventCaller implements EventCaller {
     @Override
     public void callRewardsUpdateEvent(PlayerData data) {
         Bukkit.getServer().getPluginManager().callEvent(new PlayerRewardUpdateEvent(data));
+    }
+
+    @Override
+    public PlayerData callPlayerInformationLoad(PlayerData data) {
+
+        PlayerInformationLoadEvent loadEvent = new PlayerInformationLoadEvent(data);
+
+        Bukkit.getServer().getPluginManager().callEvent(loadEvent);
+
+        return loadEvent.getPlayerInfo();
     }
 }

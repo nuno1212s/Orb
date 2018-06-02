@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack;
 
 public interface EnderChestData {
 
-    Gson gson = new GsonBuilder().registerTypeAdapter(ItemStack[].class, new ItemStackArrayAdapter()).create();
+    static Gson gson = new GsonBuilder().registerTypeAdapter(ItemStack[].class, new ItemStackArrayAdapter()).create();
 
     static String inventoryToJSON(ItemStack[] items) {
         return gson.toJson(items);

@@ -15,7 +15,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
  */
 public class PlayerInteractListener implements Listener {
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = false)
     public void onPlayerInteract(PlayerInteractEvent e) {
         CrateManager crateManager = Main.getIns().getCrateManager();
 
@@ -25,9 +25,7 @@ public class PlayerInteractListener implements Listener {
 
         if (e.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Crate crateAtLocation = crateManager.getCrateAtLocation(e.getClickedBlock().getLocation());
-            if (crateAtLocation == null) {
-                return;
-            } else {
+            if (crateAtLocation != null) {
                 e.setCancelled(true);
                 if (crateManager.canOpen(e.getPlayer(), crateAtLocation)) {
                     crateAtLocation.openCase(e.getPlayer());
@@ -43,9 +41,7 @@ public class PlayerInteractListener implements Listener {
             }
         } else if (e.getAction() == Action.LEFT_CLICK_BLOCK) {
             Crate crateAtLocation = crateManager.getCrateAtLocation(e.getClickedBlock().getLocation());
-            if (crateAtLocation == null) {
-                return;
-            } else {
+            if (crateAtLocation != null)  {
                 e.setCancelled(true);
                 //e.getPlayer().openInventory(crateAtLocation.get)
             }

@@ -55,6 +55,11 @@ public class Message {
         return this;
     }
 
+    public final Message format(String s1, Object s2) {
+        this.formats.put(s1, s2.toString());
+        return this;
+    }
+
     public void sendTo(CommandSender... players) {
         if (MainData.getIns().isBungee()) {
             return;

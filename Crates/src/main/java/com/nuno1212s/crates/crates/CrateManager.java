@@ -151,7 +151,7 @@ public class CrateManager {
             List<LLocation> locationss = crateLocation.getValue();
             for (LLocation locations : locationss) {
                 if (locations.getWorld().equalsIgnoreCase(l.getWorld().getName())) {
-                    if (locations.getLocation().distanceSquared(l) < 2) {
+                    if (locations.getLocation().distanceSquared(l) <= 1) {
                         return getCrate(crateLocation.getKey());
                     }
                 }
@@ -205,7 +205,14 @@ public class CrateManager {
 
     public void removeCrateAtLocation(Location l) {
         if (isCrateLocation(l)) {
-            this.crateBlocks.remove(new LLocation(l));
+            Crate c = getCrateAtLocation(l);
+
+            List<LLocation> crateLocations = this.crateBlocks.get(c.getCrateName());
+
+            crateLocations.removeIf((crateLocation) -> (l.distanceSquared(crateLocation.getLocation()) < 2));
+
+            this.crateBlocks.put(c.getCrateName(), crateLocations);
+
         }
     }
 
