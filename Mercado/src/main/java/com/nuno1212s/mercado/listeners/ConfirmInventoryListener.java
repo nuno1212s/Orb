@@ -7,8 +7,7 @@ import com.nuno1212s.mercado.marketmanager.MarketManager;
 import com.nuno1212s.mercado.util.InventoryListener;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.NBTDataStorage.NBTCompound;
-import com.nuno1212s.util.ServerCurrencyHandler;
-import com.nuno1212s.util.inventories.InventoryItem;
+import com.nuno1212s.inventories.InventoryItem;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -78,16 +77,21 @@ public class ConfirmInventoryListener extends InventoryListener {
                     }
 
                     PlayerData playerData = MainData.getIns().getPlayerManager().getPlayer(e.getWhoClicked().getUniqueId());
-                    ServerCurrencyHandler currencyHandler = MainData.getIns().getServerCurrencyHandler();
-                    if (currencyHandler.removeCurrency(playerData, buyItem.getCost())) {
-                        MainData.getIns().getEventCaller().callUpdateInformationEvent(playerData);
-                        buyItem.deliverItem((Player) e.getWhoClicked());
-                        addCloseException(e.getWhoClicked().getUniqueId());
-                        e.getWhoClicked().closeInventory();
-                        Main.getIns().getMarketManager().openInventory((Player) e.getWhoClicked(), getPageForPlayer(e.getWhoClicked().getUniqueId()));
-                    } else {
-                        MainData.getIns().getMessageManager().getMessage("NO_SERVER_CURRENCY").sendTo(e.getWhoClicked());
-                    }
+
+                    MainData.getIns().getServerCurrencyHandler().removeCurrency(playerData, buyItem.getCost())
+                            .thenAccept((completed) -> {
+
+                                if (completed) {
+                                    MainData.getIns().getEventCaller().callUpdateInformationEvent(playerData);
+                                    buyItem.deliverItem((Player) e.getWhoClicked());
+                                    addCloseException(e.getWhoClicked().getUniqueId());
+                                    e.getWhoClicked().closeInventory();
+                                    Main.getIns().getMarketManager().openInventory((Player) e.getWhoClicked(), getPageForPlayer(e.getWhoClicked().getUniqueId()));
+                                } else {
+                                    MainData.getIns().getMessageManager().getMessage("NO_SERVER_CURRENCY").sendTo(e.getWhoClicked());
+                                }
+
+                            });
 
                 } else {
                     PlayerData playerData = MainData.getIns().getPlayerManager().getPlayer(e.getWhoClicked().getUniqueId());

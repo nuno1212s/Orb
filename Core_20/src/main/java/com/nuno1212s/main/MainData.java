@@ -1,7 +1,9 @@
 package com.nuno1212s.main;
 
 import com.nuno1212s.command.CommandRegister;
+import com.nuno1212s.economy.CurrencyHandler;
 import com.nuno1212s.events.eventcaller.EventCaller;
+import com.nuno1212s.inventories.InventoryManager;
 import com.nuno1212s.messagemanager.Messages;
 import com.nuno1212s.modulemanager.ModuleManager;
 import com.nuno1212s.mysql.MySql;
@@ -9,10 +11,8 @@ import com.nuno1212s.permissionmanager.PermissionManager;
 import com.nuno1212s.playermanager.PlayerManager;
 import com.nuno1212s.rediscommunication.RedisHandler;
 import com.nuno1212s.rewards.RewardManager;
-import com.nuno1212s.rewards.bukkit.BukkitRewardManager;
 import com.nuno1212s.scheduler.Scheduler;
 import com.nuno1212s.serverstatus.ServerManager;
-import com.nuno1212s.util.ServerCurrencyHandler;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -53,10 +53,12 @@ public class MainData {
 
     private RewardManager rewardManager;
 
+    private InventoryManager inventoryManager;
+
     private boolean isBungee = false;
 
     @Setter
-    private ServerCurrencyHandler serverCurrencyHandler = null;
+    private CurrencyHandler serverCurrencyHandler = null;
 
     public MainData() {
         ins = this;

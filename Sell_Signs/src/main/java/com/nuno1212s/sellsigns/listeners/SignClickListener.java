@@ -76,7 +76,6 @@ public class SignClickListener implements Listener {
                             int coins = (int) Math.floor(perItemPrice * amount);
 
                             MainData.getIns().getServerCurrencyHandler().addCurrency(d, coins);
-                            MainData.getIns().getEventCaller().callUpdateInformationEvent(d);
                             MainData.getIns().getMessageManager().getMessage("SOLD_ITEM_S").format("%price%", String.valueOf(coins))
                                     .format("%amount%", String.valueOf(amount)).format("%multiplier%", String.format("%.2f", rankMultiplier)).sendTo(e.getPlayer());
 
@@ -87,7 +86,6 @@ public class SignClickListener implements Listener {
                                 int coinsToAdd = (int) Math.floor(perItemPrice * item.getAmount());
                                 p.removeItem(item);
                                 MainData.getIns().getServerCurrencyHandler().addCurrency(d, coinsToAdd);
-                                MainData.getIns().getEventCaller().callUpdateInformationEvent(d);
                                 MainData.getIns().getMessageManager().getMessage("SOLD_ITEM_S").format("%price%", String.valueOf(coinsToAdd))
                                         .format("%amount%", String.valueOf(item.getAmount()))
                                         .format("%multiplier%", String.format("%.2f", rankMultiplier)).sendTo(e.getPlayer());
@@ -116,15 +114,16 @@ public class SignClickListener implements Listener {
                         int price = sign.getPrice();
 
                         PlayerData d = MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
+                        MainData.getIns().getServerCurrencyHandler().removeCurrency(d, price).thenAccept((completed) -> {
+                            if (completed) {
+                                e.getPlayer().getInventory().addItem(sign.getItem().clone());
+                                MainData.getIns().getMessageManager().getMessage("BOUGHT_ITEM_S").format("%price%", String.valueOf(price))
+                                        .sendTo(e.getPlayer());
+                            } else {
+                                MainData.getIns().getMessageManager().getMessage("NO_COINS").sendTo(e.getPlayer());
+                            }
 
-                        if (MainData.getIns().getServerCurrencyHandler().removeCurrency(d, price)) {
-                            MainData.getIns().getEventCaller().callUpdateInformationEvent(d);
-                            e.getPlayer().getInventory().addItem(sign.getItem().clone());
-                            MainData.getIns().getMessageManager().getMessage("BOUGHT_ITEM_S").format("%price%", String.valueOf(price))
-                                    .sendTo(e.getPlayer());
-                        } else {
-                            MainData.getIns().getMessageManager().getMessage("NO_COINS").sendTo(e.getPlayer());
-                        }
+                        });
                     }
 
                 }

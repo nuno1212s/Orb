@@ -3,7 +3,7 @@ package com.nuno1212s.hub.hotbar;
 import com.nuno1212s.hub.main.Main;
 import com.nuno1212s.hub.playerdata.HPlayerData;
 import com.nuno1212s.modulemanager.Module;
-import com.nuno1212s.util.inventories.InventoryItem;
+import com.nuno1212s.inventories.InventoryItem;
 import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;

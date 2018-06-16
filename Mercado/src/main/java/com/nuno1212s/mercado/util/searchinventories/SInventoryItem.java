@@ -1,7 +1,7 @@
 package com.nuno1212s.mercado.util.searchinventories;
 
 import com.nuno1212s.mercado.searchmanager.SearchParameter;
-import com.nuno1212s.util.inventories.InventoryItem;
+import com.nuno1212s.inventories.InventoryItem;
 import lombok.Getter;
 import lombok.ToString;
 import org.bukkit.inventory.ItemStack;
@@ -20,6 +20,8 @@ public class SInventoryItem extends InventoryItem {
 
     public SInventoryItem(JSONObject object) {
         super(object);
+
+
     }
 
     public boolean hasConnectingInventory() {

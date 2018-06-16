@@ -4,7 +4,7 @@ import com.nuno1212s.hub.main.Main;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.util.ItemUtils;
 import com.nuno1212s.util.Pair;
-import com.nuno1212s.util.inventories.InventoryItem;
+import com.nuno1212s.inventories.InventoryItem;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

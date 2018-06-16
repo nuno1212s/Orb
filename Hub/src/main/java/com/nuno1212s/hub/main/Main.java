@@ -63,7 +63,6 @@ public class Main extends Module {
         ins.getServer().getPluginManager().registerEvents(new PlayerInteractListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new PlayerInteractEntityListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new ServerInventoryClickListener(), ins);
-        ins.getServer().getPluginManager().registerEvents(new OptionsInventoryClickListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new PlayerDamageListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new PlayerDropItemListener(), ins);

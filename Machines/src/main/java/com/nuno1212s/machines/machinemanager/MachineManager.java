@@ -5,8 +5,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.nuno1212s.machines.main.Main;
 import com.nuno1212s.util.LLocation;
+import com.nuno1212s.util.NBTDataStorage.NBTCompound;
 import com.nuno1212s.util.typeadapters.LocationTypeAdapter;
 import lombok.Getter;
+import org.bukkit.Location;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.FileReader;
@@ -54,6 +57,28 @@ public class MachineManager {
             }
         }
 
+    }
+
+    /**
+     * Get's the machine at the given location
+     * @param l
+     * @return
+     */
+    public Machine getMachineAtLocation(Location l) {
+
+        for (Machine m : this.machines) {
+            if (m.getMachineLocation().equals(l)) {
+                return m;
+            }
+        }
+
+        return null;
+    }
+
+    public boolean isMachine(ItemStack item) {
+        NBTCompound nbt = new NBTCompound(item);
+
+        return nbt.getValues().containsKey("Machine");
     }
 
     public void save() {

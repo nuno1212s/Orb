@@ -1,11 +1,18 @@
-package com.nuno1212s.util.inventories;
+package com.nuno1212s.inventories;
 
+import com.nuno1212s.main.MainData;
+import com.nuno1212s.util.Callback;
 import com.nuno1212s.util.ItemUtils;
 import com.nuno1212s.util.NBTDataStorage.ReflectionManager;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.ToString;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONArray;
@@ -21,14 +28,14 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+import java.util.concurrent.Callable;
 
 /**
  * Handles inventory listeners data
  */
 @SuppressWarnings("unchecked")
 @ToString
-public class InventoryData {
+public class InventoryData<T extends InventoryItem> {
 
     @Getter
     protected String inventoryName;
@@ -40,20 +47,35 @@ public class InventoryData {
     protected int inventorySize;
 
     @Getter
-    protected List<InventoryItem> items;
+    protected List<T> items;
+
+    protected boolean allowsMovement;
+
+    @Getter(value = AccessLevel.PROTECTED)
+    protected boolean directRedirect;
+
+    private Callback<HumanEntity> onTransfer;
 
     /**
-     * Use the {@link #InventoryData(File, Class)} instead, this constructor is just being kept for compatibility reasons
+     * Use the {@link #InventoryData(File, Class, boolean)} instead, this constructor is just being kept for compatibility reasons
      *
      * @param jsonFile
      */
     @Deprecated
     public InventoryData(File jsonFile) {
-        this(jsonFile, InventoryItem.class);
+        this(jsonFile, (Class<T>) InventoryItem.class, true);
     }
 
     public InventoryData(JSONObject obj) {
-        load(obj, false, InventoryItem.class);
+        this.directRedirect = true;
+
+        load(obj, false,(Class<T>) InventoryItem.class);
+    }
+
+    public InventoryData(JSONObject obj, Class<T> itemClass) {
+        this.directRedirect = true;
+
+        load(obj, false, itemClass);
     }
 
     /**
@@ -63,8 +85,10 @@ public class InventoryData {
      * @param itemClass An optional class for the items stored in the inventory (If you want to change the
      *                  items that the inventory stores, there is no longer a need to create a subclass of InventoryData)
      */
-    public InventoryData(File jsonFile, Class<? extends InventoryItem> itemClass) {
+    public InventoryData(File jsonFile, Class<T> itemClass, boolean directRedirect) {
         JSONObject jsOB;
+
+        this.directRedirect = directRedirect;
 
         try (Reader r = new FileReader(jsonFile)) {
             jsOB = (JSONObject) new JSONParser().parse(r);
@@ -73,7 +97,13 @@ public class InventoryData {
             return;
         }
 
-        load(jsOB, true, itemClass == null ? InventoryItem.class : itemClass);
+        load(jsOB, true, itemClass == null ? (Class<T>) InventoryItem.class : itemClass);
+    }
+
+    public InventoryData(File jsonFile, Class<T> itemClass, boolean directRedirect, Callback<HumanEntity> transferFunction) {
+        this(jsonFile, itemClass, directRedirect);
+
+        this.onTransfer = transferFunction;
     }
 
     /**
@@ -83,13 +113,15 @@ public class InventoryData {
      * @param loadItems    Should the items be loaded
      * @param customLoader The loader that should be used for the items
      */
-    protected void load(JSONObject jsOB, boolean loadItems, Class<? extends InventoryItem> customLoader) {
+    protected final void load(JSONObject jsOB, boolean loadItems, Class<T> customLoader) {
         this.inventoryName = ChatColor.translateAlternateColorCodes('&',
                 (String) jsOB.getOrDefault("InventoryName", "&cFailed to load name"));
 
         this.inventoryID = (String) jsOB.getOrDefault("InventoryID", this.inventoryName);
 
         this.inventorySize = ((Long) jsOB.getOrDefault("InventorySize", 27L)).intValue();
+
+        this.allowsMovement = (Boolean) jsOB.getOrDefault("AllowMovement", false);
 
         if (inventorySize % 9 != 0) {
             this.inventorySize = 27;
@@ -102,12 +134,18 @@ public class InventoryData {
             Constructor constructor = ReflectionManager.getIns().getConstructor(customLoader, JSONObject.class);
 
             inventoryItems.forEach((inventoryItem) -> {
-                        InventoryItem e = (InventoryItem) ReflectionManager.getIns()
+                        T e = (T) ReflectionManager.getIns()
                                 .invokeConstructor(constructor, (JSONObject) inventoryItem);
                         this.items.add(e);
                     }
             );
         }
+
+        MainData.getIns().getInventoryManager().registerInventory(this);
+    }
+
+    public Callback<HumanEntity> getTransferFunction() {
+        return this.onTransfer;
     }
 
     /**
@@ -133,6 +171,7 @@ public class InventoryData {
 
     /**
      * Build the inventory and format items with the given placeHolders
+     *
      * @param placeHolders
      * @return
      */
@@ -153,8 +192,12 @@ public class InventoryData {
         return inventory;
     }
 
-    public InventoryItem getItem(int slot) {
-        for (InventoryItem item : this.items) {
+    public Inventory buildInventory(Player p) {
+        return buildInventory();
+    }
+
+    public final T getItem(int slot) {
+        for (T item : this.items) {
             if (item.getSlot() == slot) {
                 return item;
             }
@@ -162,9 +205,9 @@ public class InventoryData {
         return null;
     }
 
-    public InventoryItem getItemWithFlag(String flag) {
+    public final T getItemWithFlag(String flag) {
 
-        for (InventoryItem item : this.items) {
+        for (T item : this.items) {
             if (item.hasItemFlag(flag)) {
                 return item;
             }
@@ -173,8 +216,17 @@ public class InventoryData {
         return null;
     }
 
+    public void handleClick(InventoryClickEvent e) {
+        e.setResult(Event.Result.DENY);
+    }
+
+    public final boolean equals(Inventory inv) {
+        return inv.getSize() == this.getInventorySize()
+                && inv.getName().equals(this.getInventoryName());
+    }
+
     @Override
-    public boolean equals(Object obj) {
+    public final boolean equals(Object obj) {
 
         if (obj == null) {
             return false;
@@ -185,9 +237,6 @@ public class InventoryData {
             // and the size, like the name can't be changed
             return ((InventoryData) obj).getInventorySize() == this.getInventorySize()
                     && ((InventoryData) obj).getInventoryName().equals(this.getInventoryName());
-        } else if (obj instanceof Inventory) {
-            return ((Inventory) obj).getSize() == this.getInventorySize()
-                    && ((Inventory) obj).getName().equals(this.getInventoryName());
         }
 
         return false;

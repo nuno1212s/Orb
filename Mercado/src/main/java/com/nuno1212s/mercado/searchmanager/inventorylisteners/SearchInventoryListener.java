@@ -7,7 +7,7 @@ import com.nuno1212s.mercado.searchmanager.SearchParameterManager;
 import com.nuno1212s.mercado.util.SInventoryListener;
 import com.nuno1212s.mercado.util.searchinventories.SInventoryData;
 import com.nuno1212s.mercado.util.searchinventories.SInventoryItem;
-import com.nuno1212s.util.inventories.InventoryItem;
+import com.nuno1212s.inventories.InventoryItem;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -37,39 +37,32 @@ public class SearchInventoryListener extends SInventoryListener {
 
         if (inventoryByName.equals(e.getClickedInventory())) {
             e.setResult(Event.Result.DENY);
-
             InventoryItem item = inventoryByName.getItem(e.getSlot());
             if (item != null) {
-                if (item instanceof SInventoryItem) {
-                    if (((SInventoryItem) item).hasConnectingInventory()) {
-                        String connectingInventory = ((SInventoryItem) item).getConnectingInventory();
-                        SInventoryData inventory = searchManager.getInventory(connectingInventory);
-                        addCloseException(e.getWhoClicked().getUniqueId());
-                        e.getWhoClicked().closeInventory();
-                        e.getWhoClicked().openInventory(searchManager.getSearchParameterInventory(e.getWhoClicked().getUniqueId(), inventory));
+                if (((SInventoryItem) item).hasConnectingInventory()) {
+                    String connectingInventory = ((SInventoryItem) item).getConnectingInventory();
+                    SInventoryData inventory = searchManager.getInventory(connectingInventory);
+                    addCloseException(e.getWhoClicked().getUniqueId());
+                    e.getWhoClicked().closeInventory();
+                    e.getWhoClicked().openInventory(searchManager.getSearchParameterInventory(e.getWhoClicked().getUniqueId(), inventory));
 
-                    } else if (item.hasItemFlag("SEARCH")) {
-                        addCloseException(e.getWhoClicked().getUniqueId());
-                        e.getWhoClicked().closeInventory();
-                        Main.getIns().getMarketManager().openInventory((Player) e.getWhoClicked(), 1);
+                } else if (item.hasItemFlag("SEARCH")) {
+                    addCloseException(e.getWhoClicked().getUniqueId());
+                    e.getWhoClicked().closeInventory();
+                    Main.getIns().getMarketManager().openInventory((Player) e.getWhoClicked(), 1);
+                } else {
+                    SearchParameter searchParameter = ((SInventoryItem) item).getSearchParameter();
+                    SearchParameterBuilder searchParameterBuilder = searchManager.getSearchParameterBuilder(e.getWhoClicked().getUniqueId());
+
+                    if (searchParameterBuilder.containsParameter(searchParameter)) {
+                        searchParameterBuilder.removeSearchParameter(searchParameter);
                     } else {
-                        SearchParameter searchParameter = ((SInventoryItem) item).getSearchParameter();
-                        SearchParameterBuilder searchParameterBuilder = searchManager.getSearchParameterBuilder(e.getWhoClicked().getUniqueId());
-
-                        if (searchParameterBuilder.containsParameter(searchParameter)) {
-                            searchParameterBuilder.removeSearchParameter(searchParameter);
-                        } else {
-                            searchParameterBuilder.addSearchParameter(searchParameter);
-                        }
-                        e.getClickedInventory().setContents(searchManager.getSearchParameterInventory(e.getWhoClicked().getUniqueId(), inventoryByName).getContents());
-
+                        searchParameterBuilder.addSearchParameter(searchParameter);
                     }
+                    e.getClickedInventory().setContents(searchManager.getSearchParameterInventory(e.getWhoClicked().getUniqueId(), inventoryByName).getContents());
 
                 }
-
-
             }
-
         }
 
     }

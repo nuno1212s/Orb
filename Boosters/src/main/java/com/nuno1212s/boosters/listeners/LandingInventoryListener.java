@@ -1,8 +1,8 @@
 package com.nuno1212s.boosters.listeners;
 
 import com.nuno1212s.boosters.main.Main;
-import com.nuno1212s.util.inventories.InventoryData;
-import com.nuno1212s.util.inventories.InventoryItem;
+import com.nuno1212s.inventories.InventoryData;
+import com.nuno1212s.inventories.InventoryItem;
 import org.bukkit.Material;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;

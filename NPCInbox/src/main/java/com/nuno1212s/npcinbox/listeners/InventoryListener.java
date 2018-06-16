@@ -5,7 +5,7 @@ import com.nuno1212s.npcinbox.inventories.InventoryBuilder;
 import com.nuno1212s.npcinbox.main.Main;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.rewards.bukkit.BukkitReward;
-import com.nuno1212s.util.inventories.InventoryData;
+import com.nuno1212s.inventories.InventoryData;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

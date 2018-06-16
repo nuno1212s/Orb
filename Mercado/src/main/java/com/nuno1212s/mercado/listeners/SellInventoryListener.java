@@ -8,7 +8,7 @@ import com.nuno1212s.mercado.util.ItemIDUtils;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.Callback;
 import com.nuno1212s.util.Pair;
-import com.nuno1212s.util.inventories.InventoryItem;
+import com.nuno1212s.inventories.InventoryItem;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

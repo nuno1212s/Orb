@@ -1,8 +1,8 @@
 package com.nuno1212s.mercado.listeners;
 
 import com.nuno1212s.mercado.main.Main;
-import com.nuno1212s.util.inventories.InventoryData;
-import com.nuno1212s.util.inventories.InventoryItem;
+import com.nuno1212s.inventories.InventoryData;
+import com.nuno1212s.inventories.InventoryItem;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;

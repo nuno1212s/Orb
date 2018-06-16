@@ -1,26 +1,16 @@
 package com.nuno1212s.mercadonegro.inventories;
 
 import com.nuno1212s.modulemanager.Module;
-import com.nuno1212s.util.ItemUtils;
 import com.nuno1212s.util.NBTDataStorage.NBTCompound;
-import com.nuno1212s.util.Pair;
-import com.nuno1212s.util.inventories.InventoryData;
-import com.nuno1212s.util.inventories.InventoryItem;
+import com.nuno1212s.inventories.InventoryData;
+import com.nuno1212s.inventories.InventoryItem;
 import lombok.Getter;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Manages inventories
@@ -42,7 +32,7 @@ public class InventoryManager {
             saveDefaultInventory(m);
         }
 
-        confirmInventory = new InventoryData(m.getFile("confirmInventory.json", true), InventoryItem.class);
+        confirmInventory = new ConfirmInv(m.getFile("confirmInventory.json", true), InventoryItem.class, true);
 
         for (File file : dataFolder.listFiles()) {
             this.inventories.add(new CInventoryData(file));

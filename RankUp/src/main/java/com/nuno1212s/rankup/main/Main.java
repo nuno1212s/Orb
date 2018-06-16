@@ -15,12 +15,9 @@ import com.nuno1212s.rankup.mysql.MySql;
 import com.nuno1212s.rankup.playermanager.RUPlayerData;
 import com.nuno1212s.rankup.rankup.RankUpCommand;
 import com.nuno1212s.rankup.rankup.RankUpManager;
-import com.nuno1212s.util.ServerCurrencyHandler;
 import lombok.Getter;
-import net.sacredlabyrinth.phaed.simpleclans.Clan;
 import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
 import net.sacredlabyrinth.phaed.simpleclans.SimpleClans;
-import org.bukkit.entity.Player;
 
 import java.text.NumberFormat;
 
@@ -48,8 +45,6 @@ public class Main extends Module {
         rankUpManager = new RankUpManager(this);
 
         MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));
-
-        registerServerEconomy();
 
         PlaceHolderManager placeHolderManager = DisplayMain.getIns().getPlaceHolderManager();
 
@@ -114,41 +109,6 @@ public class Main extends Module {
     @Override
     public void onDisable() {
 
-    }
-
-    /**
-     * Set the servers economy handler
-     *
-     * TODO: check if the playerdata is instance of RUPlayerData safely
-     */
-    private void registerServerEconomy() {
-        MainData.getIns().setServerCurrencyHandler(new ServerCurrencyHandler() {
-            @Override
-            public long getCurrencyAmount(PlayerData playerData) {
-                return ((RUPlayerData) playerData).getCoins();
-            }
-
-            @Override
-            public boolean removeCurrency(PlayerData playerData, long amount) {
-                RUPlayerData playerData1 = (RUPlayerData) playerData;
-                if (playerData1.getCoins() > amount) {
-                    playerData1.setCoins(playerData1.getCoins() - amount);
-                    return true;
-                }
-                return false;
-            }
-
-            @Override
-            public void addCurrency(PlayerData playerData, long amount) {
-                ((RUPlayerData) playerData).setCoins(((RUPlayerData) playerData).getCoins() + amount);
-            }
-
-            @Override
-            public boolean hasCurrency(PlayerData playerData, long amount) {
-                RUPlayerData playerData1 = (RUPlayerData) playerData;
-                return playerData1.getCoins() > amount;
-            }
-        });
     }
 
 

@@ -1,10 +1,10 @@
 package com.nuno1212s.rewards.bukkit;
 
+import com.nuno1212s.economy.CurrencyHandler;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.rewards.Reward;
 import com.nuno1212s.util.ItemUtils;
-import com.nuno1212s.util.ServerCurrencyHandler;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;
@@ -138,7 +138,8 @@ public class BukkitReward extends Reward {
             case SV_CRRCY: {
                 long coins = (long) reward;
 
-                ServerCurrencyHandler sCH = MainData.getIns().getServerCurrencyHandler();
+                CurrencyHandler sCH = MainData.getIns().getServerCurrencyHandler();
+
                 if (sCH != null) {
                     sCH.addCurrency(d, coins);
                     MainData.getIns().getMessageManager().getMessage("INBOX_CURRENCY")

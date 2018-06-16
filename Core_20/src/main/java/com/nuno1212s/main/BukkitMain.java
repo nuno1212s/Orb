@@ -2,6 +2,7 @@ package com.nuno1212s.main;
 
 import com.nuno1212s.command.*;
 import com.nuno1212s.config.BukkitConfig;
+import com.nuno1212s.economy.CurrencyHandler;
 import com.nuno1212s.events.PlayerGroupUpdateEvent;
 import com.nuno1212s.events.PlayerInformationUpdateEvent;
 import com.nuno1212s.events.eventcaller.DefaultBukkitEventCaller;
@@ -10,6 +11,7 @@ import com.nuno1212s.events.listeners.CommandBlockListener;
 import com.nuno1212s.events.listeners.InformationUpdateListener;
 import com.nuno1212s.events.listeners.PlayerDisconnectListener;
 import com.nuno1212s.events.listeners.PlayerJoinListener;
+import com.nuno1212s.inventories.InventoryManager;
 import com.nuno1212s.messagemanager.Messages;
 import com.nuno1212s.modulemanager.ModuleManager;
 import com.nuno1212s.mysql.MySql;
@@ -68,6 +70,7 @@ public class BukkitMain extends JavaPlugin {
         data.setServerManager(new ServerManager(this.getDataFolder()));
         data.setPermissionManager(new PermissionManager(true));
         data.setPlayerManager(new PlayerManager());
+        data.setServerCurrencyHandler(new CurrencyHandler());
 
         data.setCommandRegister(new CommandRegister() {
             @Override
@@ -85,6 +88,9 @@ public class BukkitMain extends JavaPlugin {
         data.setMessageManager(new Messages(j));
         data.setRewardManager(new BukkitRewardManager());
         new BukkitSender(this);
+        data.setInventoryManager(new InventoryManager());
+
+
         //Module manager has to be the last thing that is initialized
         data.setModuleManager(new ModuleManager(this.getDataFolder(), this.getClassLoader()));
         data.getMessageManager().reloadMessages();

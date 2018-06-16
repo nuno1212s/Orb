@@ -1,16 +1,19 @@
 package com.nuno1212s.mercado.util.searchinventories;
 
 import com.nuno1212s.main.MainData;
+import com.nuno1212s.mercado.main.Main;
 import com.nuno1212s.mercado.searchmanager.SearchParameter;
 import com.nuno1212s.mercado.searchmanager.SearchParameterBuilder;
+import com.nuno1212s.mercado.searchmanager.SearchParameterManager;
 import com.nuno1212s.mercado.searchmanager.searchparameters.SearchParameters;
 import com.nuno1212s.util.SerializableItem;
-import com.nuno1212s.util.inventories.InventoryData;
-import com.nuno1212s.util.inventories.InventoryItem;
+import com.nuno1212s.inventories.InventoryData;
+import com.nuno1212s.inventories.InventoryItem;
 import lombok.Getter;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -18,25 +21,24 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Search inventorylisteners data
  */
-public class SInventoryData extends InventoryData {
+public class SInventoryData extends InventoryData<SInventoryItem> {
 
-    @Getter
-    private String inventoryID;
+    public SInventoryData(JSONObject f) {
+        super(f, SInventoryItem.class);
 
-    public SInventoryData(JSONObject e) {
-        super(e);
+        this.directRedirect = false;
 
         //Clear the previous items, because we want to load our own items
         this.items = new ArrayList<>();
-        this.inventoryID = (String) e.get("InventoryID");
 
-        JSONArray items = (JSONArray) e.get("InventoryItems");
+        JSONArray items = (JSONArray) f.get("InventoryItems");
 
         for (JSONObject item : (List<JSONObject>) items) {
             this.items.addAll(loadItemData(item));
@@ -87,8 +89,8 @@ public class SInventoryData extends InventoryData {
         return inv;
     }
 
-    private List<InventoryItem> loadItemData(JSONObject itemData) {
-        ArrayList<InventoryItem> items = new ArrayList<>();
+    private List<SInventoryItem> loadItemData(JSONObject itemData) {
+        ArrayList<SInventoryItem> items = new ArrayList<>();
         int startingSlot, endingSlot;
 
         Object slot = itemData.get("Slot");

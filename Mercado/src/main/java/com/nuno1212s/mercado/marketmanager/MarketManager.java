@@ -1,14 +1,15 @@
 package com.nuno1212s.mercado.marketmanager;
 
 import com.nuno1212s.main.MainData;
+import com.nuno1212s.mercado.inventories.MInventoryData;
 import com.nuno1212s.mercado.main.Main;
 import com.nuno1212s.mercado.searchmanager.SearchParameter;
 import com.nuno1212s.mercado.searchmanager.SearchParameterManager;
 import com.nuno1212s.mercado.util.chathandlers.ChatHandlerManager;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.util.SerializableItem;
-import com.nuno1212s.util.inventories.InventoryData;
-import com.nuno1212s.util.inventories.InventoryItem;
+import com.nuno1212s.inventories.InventoryData;
+import com.nuno1212s.inventories.InventoryItem;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -58,15 +59,15 @@ public class MarketManager {
             file.mkdirs();
         }
 
-        this.landingInventoryData = new InventoryData(
+        this.landingInventoryData = new MInventoryData(
                 module.getFile("inventories" + File.separator + "landinginventory.json", true));
-        this.mainInventoryData = new InventoryData(
+        this.mainInventoryData = new MInventoryData(
                 module.getFile("inventories" + File.separator + "maininventory.json", true));
-        this.confirmInventoryData = new InventoryData(
+        this.confirmInventoryData = new MInventoryData(
                 module.getFile("inventories" + File.separator + "confirminventory.json", true));
-        this.ownInventory = new InventoryData(
+        this.ownInventory = new MInventoryData(
                 module.getFile("inventories" + File.separator + "owninventory.json", true));
-        this.sellInventory = new InventoryData(
+        this.sellInventory = new MInventoryData(
                 module.getFile("inventories" + File.separator + "sellInventory.json", true));
 
         JSONObject json;

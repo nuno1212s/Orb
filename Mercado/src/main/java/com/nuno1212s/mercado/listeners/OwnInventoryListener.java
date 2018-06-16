@@ -5,7 +5,7 @@ import com.nuno1212s.mercado.main.Main;
 import com.nuno1212s.mercado.marketmanager.Item;
 import com.nuno1212s.mercado.util.InventoryListener;
 import com.nuno1212s.util.NBTDataStorage.NBTCompound;
-import com.nuno1212s.util.inventories.InventoryItem;
+import com.nuno1212s.inventories.InventoryItem;
 import org.bukkit.Material;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;

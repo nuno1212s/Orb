@@ -7,7 +7,6 @@ import com.nuno1212s.modulemanager.ModuleData;
 import com.nuno1212s.warps.commands.*;
 import com.nuno1212s.warps.filesystem.FileManager;
 import com.nuno1212s.warps.homemanager.HomeManager;
-import com.nuno1212s.warps.inventories.InventoryClickListener;
 import com.nuno1212s.warps.inventories.InventoryManager;
 import com.nuno1212s.warps.listeners.PlayerJoinListener;
 import com.nuno1212s.warps.listeners.PlayerMoveListener;
@@ -75,7 +74,6 @@ public class Main extends Module {
 
         BukkitMain ins = BukkitMain.getIns();
 
-        ins.getServer().getPluginManager().registerEvents(new InventoryClickListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new PlayerMoveListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new PlayerJoinListener(), ins);
         ins.getServer().getPluginManager().registerEvents(new PlayerQuitListener(), ins);

@@ -1,4 +1,4 @@
-package com.nuno1212s.util.inventories;
+package com.nuno1212s.inventories;
 
 import com.nuno1212s.util.SerializableItem;
 import lombok.AllArgsConstructor;

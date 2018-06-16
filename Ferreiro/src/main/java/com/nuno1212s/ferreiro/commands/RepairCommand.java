@@ -60,27 +60,55 @@ public class RepairCommand implements CommandExecutor {
                 }
 
                 if (repairCost.getValue()) {
-                    d.setCash(d.getCash() - repairCost.getKey());
+                    if (d.getCash() >= repairCost.getKey()) {
+
+                        d.setCash(d.getCash() - repairCost.getKey());
+
+                        repair(itemInHand, p, repairTimes, repairCost);
+
+                    } else {
+
+                        MainData.getIns().getMessageManager().getMessage("NO_CASH")
+                                .format("%cash%", repairCost.getKey())
+                                .sendTo(d);
+
+                    }
+
                 } else {
-                    MainData.getIns().getServerCurrencyHandler().removeCurrency(d, repairCost.getKey());
+
+                    MainData.getIns().getServerCurrencyHandler().removeCurrency(d, repairCost.getKey())
+                            .thenAccept((completed) -> {
+
+                                if (completed) {
+                                    repair(itemInHand, p, repairTimes, repairCost);
+                                } else {
+                                    MainData.getIns().getMessageManager().getMessage("NO_COINS")
+                                            .format("%coins%", repairCost.getKey())
+                                            .sendTo(d);
+                                }
+
+                            });
                 }
 
-                itemInHand.setDurability((short) 0);
-                int repairtimes = repairTimes;
-                repairtimes++;
-                NBTCompound nbtCompound = new NBTCompound(itemInHand);
-                nbtCompound.add("RepairTimes", repairtimes);
-                ItemStack write = nbtCompound.write(itemInHand);
-                p.setItemInHand(write);
-                MainData.getIns().getMessageManager()
-                        .getMessage("REPAIRED_ITEM" + (repairCost.getValue() ? "_CASH" : "_COINS"))
-                        .format("%price%", String.valueOf(repairCost.getKey())).sendTo(p);
             });
+
             Main.getIns().addInventory(p.getUniqueId(), c);
             p.openInventory(c.getInv());
 
         }
         return true;
+    }
+
+    void repair(ItemStack itemInHand, Player p, int repairTimes, Pair<Integer, Boolean> repairCost) {
+        itemInHand.setDurability((short) 0);
+        repairTimes++;
+        NBTCompound nbtCompound = new NBTCompound(itemInHand);
+        nbtCompound.add("RepairTimes", repairTimes);
+        ItemStack write = nbtCompound.write(itemInHand);
+        p.setItemInHand(write);
+        MainData.getIns().getMessageManager()
+                .getMessage("REPAIRED_ITEM" + (repairCost.getValue() ? "_CASH" : "_COINS"))
+                .format("%price%", String.valueOf(repairCost.getKey())).sendTo(p);
     }
 
     boolean isTool(Material m) {

@@ -3,8 +3,8 @@ package com.nuno1212s.hub.player_options;
 import com.nuno1212s.hub.playerdata.HPlayerData;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.util.SerializableItem;
-import com.nuno1212s.util.inventories.InventoryData;
-import com.nuno1212s.util.inventories.InventoryItem;
+import com.nuno1212s.inventories.InventoryData;
+import com.nuno1212s.inventories.InventoryItem;
 import lombok.Getter;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -29,7 +29,7 @@ public class PlayerOptionsManager {
 
     public PlayerOptionsManager(Module m) {
 
-        this.optionsInventory = new InventoryData(m.getFile("optionsInv.json", true), null);
+        this.optionsInventory = new PlayerOptionsInv(m.getFile("optionsInv.json", true), null, true);
         File file = m.getFile("optionItems.json", true);
 
         JSONObject items;

@@ -57,13 +57,4 @@ public class InventoryManager {
         return null;
     }
 
-    public WInventoryData getInventory(Inventory i) {
-        for (WInventoryData inventory : this.inventories) {
-            if (inventory.equals(i)) {
-                return inventory;
-            }
-        }
-        return null;
-    }
-
 }

@@ -3,7 +3,7 @@ package com.nuno1212s.boosters.inventories;
 import com.nuno1212s.boosters.boosters.BoosterData;
 import com.nuno1212s.boosters.boosters.BoosterType;
 import com.nuno1212s.main.MainData;
-import com.nuno1212s.util.inventories.InventoryItem;
+import com.nuno1212s.inventories.InventoryItem;
 import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.json.simple.JSONObject;
@@ -21,6 +21,7 @@ public class BInventoryItem extends InventoryItem {
 
     public BInventoryItem(JSONObject ob) {
         super(ob);
+        
         float multiplier = ((Double) ob.getOrDefault("Multiplier", 1D)).floatValue();
 
         int quantity = ((Long) ob.getOrDefault("Quantity", 1L)).intValue();

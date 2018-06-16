@@ -1,13 +1,12 @@
-package com.nuno1212s.punishments.util;
+package com.nuno1212s.punishments.inventories;
 
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.punishments.Punishment;
 import com.nuno1212s.rediscommunication.Message;
 import com.nuno1212s.util.Pair;
-import com.nuno1212s.util.inventories.InventoryItem;
+import com.nuno1212s.inventories.InventoryItem;
 import lombok.Getter;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;

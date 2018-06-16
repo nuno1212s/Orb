@@ -1,6 +1,8 @@
 package com.nuno1212s.classes.classmanager;
 
 import com.nuno1212s.classes.inventories.KInventoryData;
+import com.nuno1212s.inventories.InventoryData;
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
 import lombok.Getter;
 import org.bukkit.entity.Player;
@@ -22,12 +24,10 @@ public class KitManager {
     @Getter
     private File dataFile;
 
-    private List<KInventoryData> inventories;
 
     public KitManager(Module m) {
         kits = new ArrayList<>();
         dataFile = m.getFile("classes.json", false);
-        inventories = new ArrayList<>();
 
         File dataFolder = new File(m.getDataFolder() + File.separator + "inventories" + File.separator);
 
@@ -35,16 +35,8 @@ public class KitManager {
             dataFolder.mkdirs();
         }
 
-        JSONParser jsonParser = new JSONParser();
-
         for (File file : dataFolder.listFiles()) {
-
-            try (Reader r = new FileReader(file)) {
-                inventories.add(new KInventoryData((JSONObject) jsonParser.parse(r)));
-            } catch (IOException | ParseException e) {
-                e.printStackTrace();
-            }
-
+            new KInventoryData(file);
         }
 
         load();
@@ -156,39 +148,12 @@ public class KitManager {
     }
 
     /**
-     * Get a kit inventory by the id of the said inventory
-     *
-     * @param inventoryID The ID of the kit
-     * @return
-     */
-    public KInventoryData getInventoryByID(String inventoryID) {
-
-        for (KInventoryData inventory : this.inventories) {
-            if (inventory.getInventoryID().equalsIgnoreCase(inventoryID)) {
-                return inventory;
-            }
-        }
-
-        return null;
-    }
-
-    public KInventoryData getByInventory(Inventory i) {
-        for (KInventoryData inventory : this.inventories) {
-            if (inventory.equals(i)) {
-                return inventory;
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * Builds the inventorylisteners
      *
      * @return
      */
     public Inventory buildInventory(Player player) {
-        KInventoryData mainInventory = getInventoryByID("mainInventory");
+        InventoryData mainInventory = MainData.getIns().getInventoryManager().getInventory("KitMainInventory");
         if (mainInventory == null) {
             throw new IllegalArgumentException("There is no mainInventory for the /kits command");
         }

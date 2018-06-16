@@ -5,7 +5,7 @@ import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.rewards.bukkit.BukkitReward;
 import com.nuno1212s.util.NBTDataStorage.NBTCompound;
-import com.nuno1212s.util.inventories.InventoryData;
+import com.nuno1212s.inventories.InventoryData;
 import lombok.Getter;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -27,7 +27,7 @@ public class InventoryManager {
 
     public InventoryManager(Module m) {
         inventories = new HashMap<>();
-        this.mainInventory = new InventoryData(m.getFile("mainInventory.json", true), null);
+        this.mainInventory = new InventoryData(m.getFile("mainInventory.json", true));
     }
 
     public Inventory buildRewardInventoryForPlayer(PlayerData data) {

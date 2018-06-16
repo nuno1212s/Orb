@@ -40,7 +40,8 @@ public class BungeeMain extends Plugin {
 
         main.setEventCaller(new EventCaller() {
             @Override
-            public void callUpdateInformationEvent(PlayerData args) {
+            public void callUpdateInformationEvent(PlayerData args, Object... extra) {
+
             }
 
             @Override
@@ -52,6 +53,12 @@ public class BungeeMain extends Plugin {
             public void callRewardsUpdateEvent(PlayerData data) {
 
             }
+
+            @Override
+            public PlayerData callPlayerInformationLoad(PlayerData data) {
+                return null;
+            }
+
         });
 
         main.setDataFolder(this.getDataFolder());

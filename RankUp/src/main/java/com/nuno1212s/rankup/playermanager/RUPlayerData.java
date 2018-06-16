@@ -2,6 +2,7 @@ package com.nuno1212s.rankup.playermanager;
 
 import com.nuno1212s.classes.player.KitPlayer;
 import com.nuno1212s.displays.player.ChatData;
+import com.nuno1212s.economy.ServerCurrency;
 import com.nuno1212s.enderchest.playerdata.EnderChestData;
 import com.nuno1212s.events.PlayerGroupUpdateEvent;
 import com.nuno1212s.events.PlayerInformationUpdateEvent;
@@ -24,13 +25,14 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * The Player Data for the full pvp server
  */
 @Getter
 @Setter
-public class RUPlayerData extends PlayerData implements ChatData, KitPlayer, EnderChestData {
+public class RUPlayerData extends PlayerData implements ChatData, KitPlayer, EnderChestData, ServerCurrency {
 
     PlayerGroupData groupData;
 
@@ -44,13 +46,13 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer, End
     @Getter
     private List<Integer> privateKits;
 
-    volatile long coins;
+    AtomicLong coins;
 
     private ItemStack[] enderChest;
 
     public RUPlayerData(PlayerData d, long coins, PlayerGroupData groupData, PlayerGroupData serverGroup, Map<Integer, Long> kitUsages, List<Integer> privateKits, String enderChest) {
         super(d);
-        this.coins = coins;
+        this.coins = new AtomicLong(coins);
         this.rankUpGroup = serverGroup;
         this.groupData = groupData;
         this.kitUsages = kitUsages;
@@ -59,13 +61,13 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer, End
     }
 
     public synchronized final void setCoins(long coins) {
-        this.coins = coins;
+        this.coins.set(coins);
         Bukkit.getServer().getPluginManager().callEvent(new PlayerInformationUpdateEvent(this,
                 PlayerInformationUpdateEvent.Reason.CURRENCY_UPDATE));
     }
 
     public synchronized final long getCoins() {
-        return this.coins;
+        return this.coins.get();
     }
 
     @Override
@@ -250,5 +252,31 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer, End
     @Override
     public ItemStack[] getEnderChest() {
         return enderChest;
+    }
+
+    @Override
+    public long getCurrency() {
+        return getCoins();
+    }
+
+    @Override
+    public void addCurrency(long currency) {
+        this.coins.addAndGet(currency);
+    }
+
+    @Override
+    public void setCurrency(long currency) {
+        this.coins.set(currency);
+    }
+
+    @Override
+    public boolean removeCurrency(long currency) {
+        if (this.coins.get() < currency) {
+            return false;
+        }
+
+        this.coins.addAndGet(-currency);
+
+        return true;
     }
 }

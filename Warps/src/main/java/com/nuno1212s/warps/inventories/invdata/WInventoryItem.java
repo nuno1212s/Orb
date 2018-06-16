@@ -1,6 +1,6 @@
 package com.nuno1212s.warps.inventories.invdata;
 
-import com.nuno1212s.util.inventories.InventoryItem;
+import com.nuno1212s.inventories.InventoryItem;
 import lombok.Getter;
 import org.json.simple.JSONObject;
 

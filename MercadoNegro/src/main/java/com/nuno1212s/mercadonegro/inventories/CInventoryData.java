@@ -1,16 +1,19 @@
 package com.nuno1212s.mercadonegro.inventories;
 
-import com.nuno1212s.util.inventories.InventoryData;
-import com.nuno1212s.util.inventories.InventoryItem;
+import com.nuno1212s.inventories.InventoryData;
+import com.nuno1212s.inventories.InventoryItem;
+import com.nuno1212s.mercadonegro.main.Main;
 import org.bukkit.Bukkit;
+import org.bukkit.event.Event;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 
 import java.io.File;
 
-public class CInventoryData extends InventoryData {
+public class CInventoryData extends InventoryData<CInventoryItem> {
 
     public CInventoryData(File inventoryFile) {
-        super(inventoryFile, CInventoryItem.class);
+        super(inventoryFile, CInventoryItem.class, true);
     }
 
     @Override
@@ -26,5 +29,23 @@ public class CInventoryData extends InventoryData {
         }
 
         return i;
+    }
+
+    @Override
+    public void handleClick(InventoryClickEvent e) {
+        if (e.getCurrentItem() == null) {
+            return;
+        }
+
+        e.setResult(Event.Result.DENY);
+
+        CInventoryItem item = getItem(e.getSlot());
+
+        if (item == null) {
+            return;
+        }
+
+        e.getWhoClicked().closeInventory();
+        e.getWhoClicked().openInventory(Main.getIns().getInventoryManager().buildConfirmInventory(this, item));
     }
 }

@@ -9,7 +9,7 @@ import com.nuno1212s.crates.animations.AnimationManager;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.util.LLocation;
 import com.nuno1212s.util.SerializableItem;
-import com.nuno1212s.util.inventories.InventoryData;
+import com.nuno1212s.inventories.InventoryData;
 import com.nuno1212s.util.typeadapters.ItemStackTypeAdapter;
 import com.nuno1212s.util.typeadapters.LocationTypeAdapter;
 import lombok.Getter;

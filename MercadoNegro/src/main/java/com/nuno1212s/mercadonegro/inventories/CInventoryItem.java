@@ -1,11 +1,11 @@
 package com.nuno1212s.mercadonegro.inventories;
 
+import com.nuno1212s.economy.CurrencyHandler;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.messagemanager.Message;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.SerializableItem;
-import com.nuno1212s.util.ServerCurrencyHandler;
-import com.nuno1212s.util.inventories.InventoryItem;
+import com.nuno1212s.inventories.InventoryItem;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -15,6 +15,7 @@ import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static com.nuno1212s.mercadonegro.inventories.CInventoryItem.RewardType.COMMAND;
 import static com.nuno1212s.mercadonegro.inventories.CInventoryItem.RewardType.ITEM;
@@ -81,22 +82,25 @@ public class CInventoryItem extends InventoryItem {
         Player p = playerData.getPlayerReference(Player.class);
 
         if (isServerCurrency()) {
-            ServerCurrencyHandler economyHandler = MainData.getIns().getServerCurrencyHandler();
+            CurrencyHandler economyHandler = MainData.getIns().getServerCurrencyHandler();
 
             if (economyHandler == null) {
                 MainData.getIns().getMessageManager().getMessage("NO_SUPPORT").sendTo(p);
                 return;
             }
 
-            if (economyHandler.removeCurrency(playerData, getCost())) {
-                MainData.getIns().getMessageManager().getMessage("BOUGHT_ITEM_SERVER_CURRENCY")
-                        .format("%price%", String.valueOf(getCost()))
-                        .sendTo(p);
-                giveItem(p);
-            } else {
-                MainData.getIns().getMessageManager().getMessage("NO_SERVER_CURRENCY")
-                        .sendTo(p);
-            }
+            economyHandler.removeCurrency(playerData, getCost())
+                    .thenAccept((completed) -> {
+                        if (completed) {
+                            MainData.getIns().getMessageManager().getMessage("BOUGHT_ITEM_SERVER_CURRENCY")
+                                    .format("%price%", String.valueOf(getCost()))
+                                    .sendTo(p);
+                            giveItem(p);
+                        } else {
+                            MainData.getIns().getMessageManager().getMessage("NO_SERVER_CURRENCY")
+                                    .sendTo(p);
+                        }
+                    });
         } else {
             if (playerData.getCash() >= getCost()) {
                 playerData.setCash(playerData.getCash() - getCost());

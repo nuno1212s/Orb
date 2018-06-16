@@ -2,13 +2,13 @@ package com.nuno1212s.crates.crates;
 
 import com.nuno1212s.crates.Main;
 import com.nuno1212s.crates.animations.Animation;
+import com.nuno1212s.economy.CurrencyHandler;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.NBTDataStorage.NBTCompound;
 import com.nuno1212s.util.Pair;
-import com.nuno1212s.util.ServerCurrencyHandler;
-import com.nuno1212s.util.inventories.InventoryData;
-import com.nuno1212s.util.inventories.InventoryItem;
+import com.nuno1212s.inventories.InventoryData;
+import com.nuno1212s.inventories.InventoryItem;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * The crate information
@@ -176,18 +177,20 @@ public class Crate {
                 System.out.println("Server does not support coin purchases");
                 return;
             }
-            ServerCurrencyHandler serverEconomyInterface = MainData.getIns().getServerCurrencyHandler();
 
-            if (serverEconomyInterface.removeCurrency(playerData, this.getKeyCost())) {
-                p.getInventory().addItem(formatKeyItem());
-                MainData.getIns().getMessageManager().getMessage("BOUGHT_KEY_COINS")
-                        .format("%crateName%", getDisplayName())
-                        .format("%price%", String.valueOf(getKeyCost()))
-                        .sendTo(p);
-            } else {
-                MainData.getIns().getMessageManager().getMessage("NO_COINS")
-                        .sendTo(p);
-            }
+            MainData.getIns().getServerCurrencyHandler().removeCurrency(playerData, this.getKeyCost())
+                    .thenAccept((completed) -> {
+                        if (completed) {
+                            p.getInventory().addItem(formatKeyItem());
+                            MainData.getIns().getMessageManager().getMessage("BOUGHT_KEY_COINS")
+                                    .format("%crateName%", getDisplayName())
+                                    .format("%price%", String.valueOf(getKeyCost()))
+                                    .sendTo(p);
+                        } else {
+                            MainData.getIns().getMessageManager().getMessage("NO_COINS")
+                                    .sendTo(p);
+                        }
+                    });
         }
 
     }

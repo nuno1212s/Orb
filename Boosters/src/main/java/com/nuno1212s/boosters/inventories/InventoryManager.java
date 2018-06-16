@@ -9,8 +9,8 @@ import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.ItemUtils;
 import com.nuno1212s.util.NBTDataStorage.NBTCompound;
 import com.nuno1212s.util.SerializableItem;
-import com.nuno1212s.util.inventories.InventoryData;
-import com.nuno1212s.util.inventories.InventoryItem;
+import com.nuno1212s.inventories.InventoryData;
+import com.nuno1212s.inventories.InventoryItem;
 import lombok.Getter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -41,11 +41,11 @@ public class InventoryManager {
     public InventoryManager(Module m) {
         this.pages = new HashMap<>();
 
-        this.myBoostersInventory = new InventoryData(m.getFile("myBoostersInventory.json", true), null);
-        this.confirmInventory = new InventoryData(m.getFile("confirmInventory.json", true), null);
-        this.confirmSellInventory = new InventoryData(m.getFile("confirmSellInventory.json", true), null);
-        this.landingInventory = new InventoryData(m.getFile("landingInventory.json", true), null);
-        this.sellInventory = new InventoryData(m.getFile("sellInventory.json", true), BInventoryItem.class);
+        this.myBoostersInventory = new InventoryData(m.getFile("myBoostersInventory.json", true));
+        this.confirmInventory = new InventoryData(m.getFile("confirmInventory.json", true));
+        this.confirmSellInventory = new InventoryData(m.getFile("confirmSellInventory.json", true));
+        this.landingInventory = new InventoryData(m.getFile("landingInventory.json", true));
+        this.sellInventory = new BInventoryData(m.getFile("sellInventory.json", true));
 
         File file = m.getFile("boosterItems.json", true);
 
@@ -228,28 +228,32 @@ public class InventoryManager {
             }
         } else {
 
-            if (MainData.getIns().getServerCurrencyHandler().removeCurrency(d, boosterData.getPrice())) {
-                //Need to call information update because the server currency handler does not do this automatically
-                MainData.getIns().getEventCaller().callUpdateInformationEvent(d);
-                List<Booster> boosters = Main.getIns().getBoosterManager().createBooster(owner.getUniqueId(), boosterData);
+            MainData.getIns().getServerCurrencyHandler().removeCurrency(d, boosterData.getPrice())
+                    .thenAccept((completed) -> {
+                                if (completed) {
+                                    //Need to call information update because the server currency handler does not do this automatically
+                                    MainData.getIns().getEventCaller().callUpdateInformationEvent(d);
+                                    List<Booster> boosters = Main.getIns().getBoosterManager().createBooster(owner.getUniqueId(), boosterData);
 
-                MainData.getIns().getMessageManager().getMessage("BOUGHT_BOOSTER_COINS")
-                        .format("%name%", boosterData.getCustomName())
-                        .format("%price%", String.valueOf(boosterData.getPrice()))
-                        .format("%quantity%", String.valueOf(boosterData.getQuantity())).sendTo(owner);
+                                    MainData.getIns().getMessageManager().getMessage("BOUGHT_BOOSTER_COINS")
+                                            .format("%name%", boosterData.getCustomName())
+                                            .format("%price%", String.valueOf(boosterData.getPrice()))
+                                            .format("%quantity%", String.valueOf(boosterData.getQuantity())).sendTo(owner);
 
-                for (Booster booster : boosters) {
-                    Main.getIns().getBoosterManager().addBooster(booster);
-                }
+                                    for (Booster booster : boosters) {
+                                        Main.getIns().getBoosterManager().addBooster(booster);
+                                    }
 
-                MainData.getIns().getScheduler().runTaskAsync(() -> {
-                    for (Booster booster : boosters) {
-                        Main.getIns().getMysqlHandler().saveBooster(booster);
-                    }
-                });
-            } else {
-                MainData.getIns().getMessageManager().getMessage("NO_COINS").sendTo(owner);
-            }
+                                    MainData.getIns().getScheduler().runTaskAsync(() -> {
+                                        for (Booster booster : boosters) {
+                                            Main.getIns().getMysqlHandler().saveBooster(booster);
+                                        }
+                                    });
+                                } else {
+                                    MainData.getIns().getMessageManager().getMessage("NO_COINS").sendTo(owner);
+                                }
+                            }
+                    );
         }
 
     }

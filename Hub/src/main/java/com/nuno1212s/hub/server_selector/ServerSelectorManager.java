@@ -8,7 +8,7 @@ import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.server_sender.BukkitSender;
 import com.nuno1212s.util.Pair;
-import com.nuno1212s.util.inventories.InventoryData;
+import com.nuno1212s.inventories.InventoryData;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -22,16 +22,13 @@ import java.util.*;
  */
 public class ServerSelectorManager {
 
-    private List<HInventoryData> inventories;
-
     @Getter
-    private List<UUID> openInventories;
+    private Map<UUID, String> openInventories;
 
     private Map<String, List<UUID>> waitingList;
 
     public ServerSelectorManager(Module m) {
-        inventories = new ArrayList<>();
-        openInventories = new ArrayList<>();
+        openInventories = new HashMap<>();
         waitingList = new HashMap<>();
 
         File dataFolder = new File(m.getDataFolder() + File.separator + "Inventories" + File.separator);
@@ -43,7 +40,7 @@ public class ServerSelectorManager {
         File[] files = dataFolder.listFiles();
 
         for (File file : files) {
-            inventories.add(new HInventoryData(file.getName().replace(".json", ""), file));
+            new HInventoryData(file);
         }
 
         MainData.getIns().getScheduler().runTaskTimer(() -> {
@@ -63,96 +60,35 @@ public class ServerSelectorManager {
     }
 
     /**
-     * Get the inventory data for an inventory
-     *
-     * @param inventoryID
-     * @return
-     */
-    public InventoryData getInventoryData(String inventoryID) {
-        for (HInventoryData inventory : inventories) {
-            if (inventory.getInventoryID().equalsIgnoreCase(inventoryID)) {
-                return inventory;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Get the inventory data with the inventory name
-     *
-     * @param inventoryName
-     * @return
-     */
-    public InventoryData getInventoryDataByName(String inventoryName) {
-        for (HInventoryData inventory : inventories) {
-            if (inventory.getInventoryName().equalsIgnoreCase(inventoryName)) {
-                return inventory;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Get the inventory data
-     *
-     * @param inventoryID
-     * @return
-     */
-    public Inventory getInventory(String inventoryID) {
-        InventoryData inventoryData = getInventoryData(inventoryID);
-
-        if (inventoryData == null) {
-            return null;
-        }
-
-        return inventoryData.buildInventory();
-    }
-
-    /**
      * Get the main inventory
      *
      * @return
      */
     public Inventory getMainInventory() {
-        return getInventory("landingInventory");
-    }
-
-    /**
-     * @param inventoryName
-     * @return
-     */
-    public Inventory getInventoryByName(String inventoryName) {
-        InventoryData inventoryDataByName = getInventoryDataByName(inventoryName);
-
-        if (inventoryDataByName == null) {
-            return null;
-        }
-
-        return inventoryDataByName.buildInventory();
+        return MainData.getIns().getInventoryManager().getInventory("HubLandingInventory").buildInventory();
     }
 
     /**
      * Update all the open inventories
      */
     public void updateInventories() {
-        Iterator<UUID> iterator = openInventories.iterator();
 
-        while (iterator.hasNext()) {
-            UUID openInventory = iterator.next();
-            Player p = Bukkit.getPlayer(openInventory);
+        this.openInventories.forEach((player, inventory) -> {
+            Player p = Bukkit.getPlayer(player);
 
             if (p == null || !p.isOnline()) {
-                iterator.remove();
+                this.openInventories.remove(player);
                 return;
             }
 
-            Inventory inventoryByName = getInventoryByName(p.getOpenInventory().getTopInventory().getName());
+            Inventory inventoryByName = MainData.getIns().getInventoryManager().getInventory(inventory)
+                    .buildInventory();
 
             if (inventoryByName != null) {
                 p.getOpenInventory().getTopInventory().setContents(inventoryByName.getContents());
             }
-        }
+        });
+
     }
 
     /**

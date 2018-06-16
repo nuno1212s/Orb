@@ -1,10 +1,10 @@
 package com.nuno1212s.spawners.commands;
 
+import com.nuno1212s.economy.CurrencyHandler;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.multipliers.main.RankMultiplierMain;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.spawners.main.Main;
-import com.nuno1212s.util.ServerCurrencyHandler;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -60,10 +60,10 @@ public class SellCommand implements CommandExecutor {
                 return true;
             }
 
-            ServerCurrencyHandler sCH = MainData.getIns().getServerCurrencyHandler();
+            CurrencyHandler sCH = MainData.getIns().getServerCurrencyHandler();
             if (sCH != null) {
                 sCH.addCurrency(d, finalPrice);
-                MainData.getIns().getEventCaller().callUpdateInformationEvent(d);
+
                 MainData.getIns().getMessageManager().getMessage("SOLD_ITEMS")
                         .format("%amount%", NumberFormat.getInstance().format(amount))
                         .format("%coins%", NumberFormat.getInstance().format(finalPrice))

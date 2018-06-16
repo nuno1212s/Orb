@@ -82,7 +82,7 @@ public abstract class Module {
      * @param target
      * @param path
      */
-    protected final void saveResource(File target, String path) {
+    public final void saveResource(File target, String path) {
 
         if (!target.exists()) {
             try {

@@ -55,9 +55,7 @@ public class PlayerKillMobListener implements Listener {
                         player.addKill(price);
 
                         MainData.getIns().getServerCurrencyHandler().addCurrency(d, price);
-                        MainData.getIns().getEventCaller().callUpdateInformationEvent(d);
                     }
-
 
                 }
 
