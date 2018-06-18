@@ -1,49 +1,128 @@
 package com.nuno1212s.machines.machinemanager;
 
+import com.gmail.filoghost.holographicdisplays.api.Hologram;
+import com.gmail.filoghost.holographicdisplays.api.HologramsAPI;
+import com.gmail.filoghost.holographicdisplays.api.line.TextLine;
+import com.nuno1212s.machines.main.Main;
 import com.nuno1212s.machines.players.MachinePlayer;
+import com.nuno1212s.main.BukkitMain;
 import com.nuno1212s.main.MainData;
+import com.nuno1212s.messagemanager.Message;
 import com.nuno1212s.playermanager.PlayerData;
+import com.nuno1212s.util.ItemUtils;
 import com.nuno1212s.util.LLocation;
+import com.nuno1212s.util.NBTDataStorage.NBTCompound;
 import com.nuno1212s.util.Pair;
 import lombok.Getter;
+import org.apache.commons.lang.time.DurationFormatUtils;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class Machine {
 
     @Getter
-    private UUID owner;
+    private UUID owner, machineID;
+
+    private int configuration;
 
     @Getter
-    private MachineType type;
-
-    @Getter
-    private long baseValue;
-
-    @Getter
-    private long amount;
+    private int amount;
 
     @Getter
     private LLocation machineLocation;
 
-    /**
-     * Spacing for the machine to tick.
-     * <p>
-     * In server ticks (20 = 1 sec)
-     */
-    @Getter
-    private long spacing;
 
     private transient long currentSpacing;
 
-    public Machine(UUID owner, MachineType type, long baseValue, long amount, LLocation machineLocation, long spacing) {
+    private transient Hologram hologram;
+
+    public Machine(UUID owner, MachineConfiguration machineConfiguration, LLocation location) {
+        this.machineID = UUID.randomUUID();
         this.owner = owner;
-        this.type = type;
-        this.baseValue = baseValue;
-        this.spacing = spacing;
-        this.currentSpacing = spacing;
-        this.amount = amount;
-        this.machineLocation = machineLocation;
+        this.configuration = machineConfiguration.getId();
+        this.machineLocation = location;
+    }
+
+    public MachineConfiguration getConfiguration() {
+        return Main.getIns().getMachineManager().getConfiguration(this.configuration);
+    }
+
+    /**
+     * Updates the holograms above the machine
+     */
+    public void updateName() {
+
+        Message machine_name = MainData.getIns().getMessageManager().getMessage("MACHINE_NAME");
+        MachineConfiguration configuration = this.getConfiguration();
+
+        machine_name.format("%amount%", this.amount);
+        machine_name.format("%baseAmount%", configuration.getBaseAmount());
+        machine_name.format("%currentAmount%", configuration.getBaseAmount() * this.amount);
+        machine_name.format("%timeDifferent%", DurationFormatUtils.formatDuration(configuration.getSpacing(), "mm:ss"));
+
+        if (hologram == null) {
+            hologram = HologramsAPI.createHologram(BukkitMain.getIns(), this.getMachineLocation().getLocation());
+
+
+            hologram.appendTextLine(machine_name.toString());
+        } else {
+
+            TextLine line = (TextLine) hologram.getLine(0);
+
+            line.setText(machine_name.toString());
+
+        }
+
+    }
+
+    /**
+     * Deletes the machine hologram
+     */
+    public void deleteHologram() {
+
+        hologram.delete();
+
+    }
+
+    public void incrementAmount() {
+        this.amount++;
+
+        this.updateName();
+    }
+
+    public boolean decrementAmount() {
+
+        this.amount--;
+
+        this.updateName();
+
+        return this.amount <= 0;
+    }
+
+    public void destroy(Player p) {
+
+        deleteHologram();
+
+        this.getMachineLocation().getLocation().getBlock().setType(Material.AIR);
+
+        p.getInventory().addItem(getItem());
+
+    }
+
+    public ItemStack getItem() {
+        Map<String, String> formats = new HashMap<>();
+
+        MachineConfiguration configuration = this.getConfiguration();
+        formats.put("%baseAmount%", String.valueOf(configuration.getBaseAmount()));
+        formats.put("%price%", String.valueOf(configuration.getPrice()));
+        formats.put("%spacing%", DurationFormatUtils.formatDuration(configuration.getSpacing(), "mm:ss"));
+
+        return ItemUtils.formatItem(Main.getIns().getMachineManager().getStatsItem(), formats);
     }
 
     /**
@@ -53,7 +132,7 @@ public class Machine {
      */
     public void checkTick() {
 
-        switch (type) {
+        switch (this.getConfiguration().getType()) {
 
             case ALWAYS_RUNNING: {
                 tick();
@@ -76,7 +155,8 @@ public class Machine {
 
                 break;
             }
-            default: break;
+            default:
+                break;
         }
 
     }
@@ -87,7 +167,7 @@ public class Machine {
 
         if (currentSpacing == 0) {
             giveReward();
-            this.currentSpacing = spacing;
+            this.currentSpacing = this.getConfiguration().getSpacing();
         }
 
     }
@@ -108,27 +188,57 @@ public class Machine {
             player = data.getKey();
         }
 
-        MainData.getIns().getServerCurrencyHandler().addCurrency(data.getKey(), this.baseValue * this.amount);
+        MainData.getIns().getServerCurrencyHandler().addCurrency(data.getKey(), this.getConfiguration().getBaseAmount() * this.amount);
 
         if (player instanceof MachinePlayer && data.getValue()) {
 
             MachinePlayer machinePlayer = (MachinePlayer) player;
 
-            machinePlayer.setAmountMadeWhileAway(machinePlayer.getAmountMadeWhileAway() + (baseValue * amount));
+            machinePlayer.setAmountMadeWhileAway(machinePlayer.getAmountMadeWhileAway() + (getConfiguration().getBaseAmount() * amount));
 
         } else if (!data.getValue()) {
 
             //Player is online, send message
             MainData.getIns().getMessageManager().getMessage("MACHINE_MONEY")
-                    .format("%amount%", baseValue * amount)
+                    .format("%amount%", getConfiguration().getBaseAmount() * amount)
                     .sendTo(player);
         } else if (data.getValue()) {
 
-            player.save((c) -> {});
+            player.save((c) -> {
+            });
 
         }
     }
 
+    /**
+     * Get the machine from the information stored in the NBT
+     *
+     * @param item
+     * @return
+     */
+    public static Machine getMachineFromItem(ItemStack item) {
+
+        NBTCompound compound = new NBTCompound(item);
+
+        if (compound.getValues().containsKey("MachineID")) {
+            return Main.getIns().getMachineManager().getMachineWithID(UUID.fromString((String) compound.getValues().get("MachineID")));
+        }
+
+        return null;
+    }
+
+    /**
+     * Write the item
+     * @param item
+     * @return
+     */
+    public ItemStack writeToItem(ItemStack item) {
+        NBTCompound compound = new NBTCompound(item);
+
+        compound.add("MachineID", getMachineID().toString());
+
+        return compound.write(item);
+    }
 
     public enum MachineType {
 

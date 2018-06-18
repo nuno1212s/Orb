@@ -178,7 +178,7 @@ public class Item {
                     MainData.getIns().getServerCurrencyHandler().addCurrency(playerD, getCost());
                 }
             } else {
-                playerD.setCash(playerD.getCash() + getCost());
+                playerD.addCash(getCost());
             }
 
 
@@ -194,7 +194,7 @@ public class Item {
                     MainData.getIns().getServerCurrencyHandler().addCurrency(playerD, getCost());
                 }
             } else {
-                playerD.setCash(playerD.getCash() + getCost());
+                playerD.addCash(getCost());
             }
 
 

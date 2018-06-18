@@ -5,7 +5,8 @@
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
-      <excludeFolder url="file://$MODULE_DIR$/target" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -23,5 +24,14 @@
     <orderEntry type="module" module-name="Rank_Multipliers" />
     <orderEntry type="module" module-name="Boosters" />
     <orderEntry type="library" name="Maven: org.projectlombok:lombok:1.18.0" level="project" />
+    <orderEntry type="module-library">
+      <library name="Maven: com.gmail.filoghost:holographicdisplays.api:2.1.7">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/src/main/libs/HolographicDisplaysAPI_v2.1.7.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

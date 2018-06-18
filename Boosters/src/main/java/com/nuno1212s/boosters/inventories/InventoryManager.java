@@ -204,8 +204,7 @@ public class InventoryManager {
         PlayerData d = MainData.getIns().getPlayerManager().getPlayer(owner.getUniqueId());
 
         if (boosterData.isCash()) {
-            if (d.getCash() >= boosterData.getPrice()) {
-                d.setCash(d.getCash() - boosterData.getPrice());
+            if (d.removeCash(boosterData.getPrice())) {
                 List<Booster> boosters = Main.getIns().getBoosterManager().createBooster(owner.getUniqueId(), boosterData);
 
                 MainData.getIns().getMessageManager().getMessage("BOUGHT_BOOSTER_CASH")

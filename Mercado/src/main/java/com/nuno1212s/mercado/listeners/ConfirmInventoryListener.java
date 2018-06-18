@@ -96,10 +96,11 @@ public class ConfirmInventoryListener extends InventoryListener {
                 } else {
                     PlayerData playerData = MainData.getIns().getPlayerManager().getPlayer(e.getWhoClicked().getUniqueId());
 
-                    if (playerData.getCash() > buyItem.getCost()) {
-                        playerData.setCash(playerData.getCash() - buyItem.getCost());
+                    if (playerData.removeCash(buyItem.getCost())) {
                         buyItem.deliverItem((Player) e.getWhoClicked());
+
                         addCloseException(e.getWhoClicked().getUniqueId());
+
                         e.getWhoClicked().closeInventory();
                         Main.getIns().getMarketManager().openInventory((Player) e.getWhoClicked(), getPageForPlayer(e.getWhoClicked().getUniqueId()));
                     } else {

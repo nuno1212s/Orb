@@ -47,9 +47,8 @@ public class InventoryClickEventListener implements Listener {
 
                     if (c.isCash()) {
 
-                        if (d.getCash() >= c.getKeyCost()) {
+                        if (d.removeCash(c.getKeyCost())) {
 
-                            d.setCash(d.getCash() - c.getKeyCost());
                             e.getWhoClicked().closeInventory();
 
                             c.openCase((Player) e.getWhoClicked());

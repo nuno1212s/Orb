@@ -116,7 +116,7 @@ public class CashCommand implements CommandExecutor {
                             return;
                         }
 
-                        d.setCash(d.getCash() + cash);
+                        d.setCash(cash);
 
                         MainData.getIns().getMessageManager().getMessage("CASH_ADD_OTHER")
                                 .format("%cashAmount%", String.valueOf(cash))
@@ -155,7 +155,7 @@ public class CashCommand implements CommandExecutor {
                             return;
                         }
 
-                        d.setCash(d.getCash() - cash);
+                        d.removeCash(cash);
 
                         MainData.getIns().getMessageManager().getMessage("CASH_REMOVE_OTHER")
                                 .format("%cashAmount%", String.valueOf(cash))

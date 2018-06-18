@@ -1,20 +1,7 @@
 package com.nuno1212s.factions.coins;
 
-import com.nuno1212s.events.PlayerInformationLoadEvent;
-import com.nuno1212s.events.PlayerInformationUpdateEvent;
-import com.nuno1212s.factions.main.Main;
+
 import com.nuno1212s.factions.playerdata.FPlayerData;
-import com.nuno1212s.main.MainData;
-import com.nuno1212s.messagemanager.Message;
-import com.nuno1212s.playermanager.PlayerData;
-import com.nuno1212s.util.Pair;
-import com.nuno1212s.util.TimeUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.text.NumberFormat;
 import java.util.LinkedHashMap;

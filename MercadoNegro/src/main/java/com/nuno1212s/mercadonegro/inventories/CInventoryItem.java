@@ -102,11 +102,11 @@ public class CInventoryItem extends InventoryItem {
                         }
                     });
         } else {
-            if (playerData.getCash() >= getCost()) {
-                playerData.setCash(playerData.getCash() - getCost());
+            if (playerData.removeCash(getCost())) {
                 MainData.getIns().getMessageManager().getMessage("BOUGHT_ITEM_CASH")
                         .format("%price%", String.valueOf(getCost()))
                         .sendTo(p);
+
                 giveItem(p);
             } else {
                 MainData.getIns().getMessageManager().getMessage("NO_CASH")

@@ -128,7 +128,7 @@ public class BukkitReward extends Reward {
             case CASH: {
                 long cash = (long) reward;
 
-                d.setCash(d.getCash() + cash);
+                d.addCash(cash);
                 MainData.getIns().getMessageManager().getMessage("INBOX_CASH")
                         .format("%cash%", String.valueOf(cash)).sendTo(p);
 

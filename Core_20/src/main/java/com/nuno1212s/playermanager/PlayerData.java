@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Player data
@@ -31,7 +32,7 @@ public abstract class PlayerData {
 
     protected String playerName;
 
-    protected long cash;
+    protected AtomicLong cash;
 
     protected long lastLogin;
 
@@ -54,7 +55,7 @@ public abstract class PlayerData {
         this.playerID = playerID;
         this.groups = groups;
         this.playerName = playerName;
-        this.cash = cash;
+        this.cash = new AtomicLong(cash);
         this.lastLogin = lastLogin;
         this.premium = premium;
         this.toClaim = toClaim;
@@ -65,7 +66,7 @@ public abstract class PlayerData {
         this.playerID = coreData.getPlayerID();
         this.groups = coreData.getGroups();
         this.playerName = coreData.getPlayerName();
-        this.cash = coreData.getCash();
+        this.cash = new AtomicLong(coreData.getCash());
         this.lastLogin = coreData.getLastLogin();
         this.premium = coreData.isPremium();
         this.tell = coreData.isTell();
@@ -187,8 +188,8 @@ public abstract class PlayerData {
      *
      * @return The players cash balance
      */
-    public synchronized final long getCash() {
-        return this.cash;
+    public final long getCash() {
+        return this.cash.get();
     }
 
     /**
@@ -198,8 +199,8 @@ public abstract class PlayerData {
      *
      * @param cash
      */
-    public synchronized final void setCash(long cash, boolean shouldUseRedis) {
-        this.cash = cash;
+    public final void setCash(long cash, boolean shouldUseRedis) {
+        this.cash.set(cash);
 
         if (shouldUseRedis) {
             MainData.getIns().getPlayerManager().getEconomyRedisHandler().sendCashUpdate(getPlayerID(), cash);
@@ -210,7 +211,36 @@ public abstract class PlayerData {
         }
     }
 
-    public synchronized final void setCash(long cash) {
+    /**
+     * Thread safe addCash command
+     *
+     * @param cash
+     */
+    public final void addCash(long cash) {
+        this.cash.addAndGet(cash);
+    }
+
+    /**
+     * Thread safe remove cash command
+     * @param cash
+     * @return
+     */
+    public final boolean removeCash(long cash) {
+
+        while (true) {
+
+            long currentCash = this.cash.get();
+
+            if (currentCash >= cash) {
+                if (this.cash.compareAndSet(currentCash, currentCash - cash)) return true;
+            } else {
+                return false;
+            }
+        }
+
+    }
+
+    public final void setCash(long cash) {
         this.setCash(cash, true);
     }
 

@@ -1,5 +1,6 @@
 package com.nuno1212s.machines.main;
 
+import com.nuno1212s.machines.inventories.InventoryManager;
 import com.nuno1212s.machines.listeners.MPlayerJoinListener;
 import com.nuno1212s.machines.machinemanager.MachineManager;
 import com.nuno1212s.machines.timers.MachineTimer;
@@ -17,11 +18,15 @@ public class Main extends Module {
     @Getter
     MachineManager machineManager;
 
+    @Getter
+    InventoryManager inventoryManager;
+
     @Override
     public void onEnable() {
         ins = this;
 
         machineManager = new MachineManager();
+        inventoryManager = new InventoryManager();
 
         MainData.getIns().getScheduler().runTaskTimerAsync(new MachineTimer(), 10, 1);
 
@@ -31,6 +36,6 @@ public class Main extends Module {
 
     @Override
     public void onDisable() {
-        
+        machineManager.save();
     }
 }

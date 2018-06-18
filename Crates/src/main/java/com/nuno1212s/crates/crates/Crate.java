@@ -160,8 +160,7 @@ public class Crate {
         PlayerData playerData = MainData.getIns().getPlayerManager().getPlayer(p.getUniqueId());
 
         if (cash) {
-            if (playerData.getCash() >= this.getKeyCost()) {
-                playerData.setCash(playerData.getCash() - getKeyCost());
+            if (playerData.removeCash(getKeyCost())) {
                 p.getInventory().addItem(formatKeyItem());
                 MainData.getIns().getMessageManager().getMessage("BOUGHT_KEY_CASH")
                         .format("%crateName%", getDisplayName())

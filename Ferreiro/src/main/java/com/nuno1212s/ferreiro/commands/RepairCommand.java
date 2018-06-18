@@ -60,9 +60,7 @@ public class RepairCommand implements CommandExecutor {
                 }
 
                 if (repairCost.getValue()) {
-                    if (d.getCash() >= repairCost.getKey()) {
-
-                        d.setCash(d.getCash() - repairCost.getKey());
+                    if (d.removeCash(repairCost.getKey())) {
 
                         repair(itemInHand, p, repairTimes, repairCost);
 
