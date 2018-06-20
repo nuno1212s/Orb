@@ -3,8 +3,10 @@ package com.nuno1212s.machines.inventories;
 import com.nuno1212s.inventories.InventoryData;
 import com.nuno1212s.machines.machinemanager.Machine;
 import com.nuno1212s.machines.main.Main;
+import com.nuno1212s.main.BukkitMain;
 import com.nuno1212s.main.MainData;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.inventory.Inventory;
 
 import java.io.File;
@@ -12,7 +14,7 @@ import java.io.File;
 public class InventoryManager {
 
     @Getter
-    private InventoryData mainInventory;
+    private MachineInventory mainInventory;
 
     @Getter
     private ConfirmInventory confirmInventory;
@@ -48,6 +50,8 @@ public class InventoryManager {
 
         this.mainInventory = new MachineInventory(jsonFile);
         this.confirmInventory = new ConfirmInventory(confirmFile);
+
+        Bukkit.getServer().getPluginManager().registerEvents(this.confirmInventory, BukkitMain.getIns());
     }
 
     public Inventory getInventoryForMachine(Machine m) {

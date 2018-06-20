@@ -232,7 +232,11 @@ public abstract class PlayerData {
             long currentCash = this.cash.get();
 
             if (currentCash >= cash) {
-                if (this.cash.compareAndSet(currentCash, currentCash - cash)) return true;
+                if (this.cash.compareAndSet(currentCash, currentCash - cash)) {
+                    MainData.getIns().getEventCaller().callUpdateInformationEvent(this, PlayerInformationUpdateEvent.Reason.CURRENCY_UPDATE);
+
+                    return true;
+                }
             } else {
                 return false;
             }

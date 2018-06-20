@@ -19,18 +19,18 @@ public class MachineDestroyListener implements Listener {
 
         if (!machineAtLocation.getOwner().equals(e.getPlayer().getUniqueId())) {
             e.setCancelled(true);
-            MainData.getIns().getMessageManager().getMessage("MACHINE_NOT_OWNER")
+            MainData.getIns().getMessageManager().getMessage("NOT_MACHINE_OWNER")
                     .sendTo(e.getPlayer());
             return;
         }
 
         e.setCancelled(true);
 
-        if (machineAtLocation.decrementAmount()) {
-            machineAtLocation.destroy(e.getPlayer());
-        } else {
-            e.getPlayer().getInventory().addItem(machineAtLocation.getItem());
-        }
+        MainData.getIns().getMessageManager().getMessage("DESTROYED_MACHINE")
+                .sendTo(e.getPlayer());
+
+        machineAtLocation.destroy(e.getPlayer());
+        Main.getIns().getMachineManager().unregisterMachine(machineAtLocation);
     }
 
 }

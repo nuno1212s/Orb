@@ -11,6 +11,7 @@ import com.nuno1212s.util.ItemUtils;
 import lombok.Getter;
 import org.apache.commons.lang.time.DurationFormatUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -40,7 +41,7 @@ public class MachineInventory extends InventoryData<MachineItem> {
 
         if (item.getItemFlags().contains("BUY")) {
 
-            MachineConfiguration configuration = MachineConfiguration.fromItem(e.getCurrentItem());
+            MachineConfiguration configuration = Main.getIns().getMachineManager().getConfiguration(item.getConfiguration());
 
             if (configuration == null) {
                 return;
@@ -61,14 +62,15 @@ public class MachineInventory extends InventoryData<MachineItem> {
 
                                 e.getWhoClicked().getInventory().addItem(itemStack);
 
-                                MainData.getIns().getMessageManager().getMessage("MACHINE_PURCHASED")
-                                        .format("%machineName%", "")
+                                MainData.getIns().getMessageManager().getMessage("MACHINE_PURCHASED_CASH")
+                                        .format("%machineName%", configuration.getName())
+                                        .format("%cost%", configuration.getPrice())
                                         .sendTo(e.getWhoClicked());
 
                             } else {
 
-                                MainData.getIns().getMessageManager().getMessage("NO_COINS")
-                                        .format("%coins%", configuration.getPrice())
+                                MainData.getIns().getMessageManager().getMessage("NO_CASH")
+                                        .format("%cash%", configuration.getPrice())
                                         .sendTo(e.getWhoClicked());
 
                             }
@@ -84,8 +86,9 @@ public class MachineInventory extends InventoryData<MachineItem> {
 
                                             e.getWhoClicked().getInventory().addItem(itemStack);
 
-                                            MainData.getIns().getMessageManager().getMessage("MACHINE_PURCHASED")
-                                                    .format("%machineName%", "")
+                                            MainData.getIns().getMessageManager().getMessage("MACHINE_PURCHASED_COINS")
+                                                    .format("%machineName%", configuration.getName())
+                                                    .format("%cost%", configuration.getPrice())
                                                     .sendTo(e.getWhoClicked());
 
                                         } else {
@@ -98,10 +101,8 @@ public class MachineInventory extends InventoryData<MachineItem> {
                                     });
 
                         }
-                        ev.getWhoClicked().getInventory().addItem(configuration.getItem());
-
-                        MainData.getIns().getMessageManager().getMessage("BOUGHT_MACHINE").sendTo(ev.getWhoClicked());
-                    }, (ev) -> {
+                    }
+                    , (ev) -> {
 
                         ev.getWhoClicked().closeInventory();
 
@@ -118,6 +119,8 @@ public class MachineInventory extends InventoryData<MachineItem> {
             e.getWhoClicked().closeInventory();
             e.getWhoClicked().openInventory(Main.getIns().getInventoryManager().getConfirmInventory().buildInventory((Player) e.getWhoClicked(), m,
                     (ev) -> {
+                        ev.getWhoClicked().closeInventory();
+
                         Machine m1 = Machine.getMachineFromItem(ev.getCurrentItem());
 
                         if (m1 == null) {
@@ -185,9 +188,13 @@ public class MachineInventory extends InventoryData<MachineItem> {
         Map<String, String> formats = new HashMap<>();
 
         formats.put("%amount%", String.valueOf(m.getAmount()));
-        formats.put("%baseAmount%", String.valueOf(m.getConfiguration().getBaseAmount()));
-        formats.put("%currentAmount%", String.valueOf(m.getAmount() * m.getConfiguration().getBaseAmount()));
-        formats.put("%timeDiference%", DurationFormatUtils.formatDuration(m.getConfiguration().getSpacing(), "mm:ss"));
+        MachineConfiguration configuration = m.getConfiguration();
+        formats.put("%baseAmount%", String.valueOf(configuration.getBaseAmount()));
+        formats.put("%currentAmount%", String.valueOf(m.getAmount() * configuration.getBaseAmount()));
+        formats.put("%timeDiference%", DurationFormatUtils.formatDuration(configuration.getSpacing(), "mm:ss"));
+        formats.put("%cost%", ChatColor.translateAlternateColorCodes('&', configuration.isCash() ?
+                "&a" + configuration.getPrice() + " cash" :
+                "&e" + configuration.getPrice() + " coins"));
 
         for (MachineItem machineItem : this.getItems()) {
             i.setItem(machineItem.getSlot(), ItemUtils.formatItem(machineItem.getItem(m), formats));
@@ -195,6 +202,7 @@ public class MachineInventory extends InventoryData<MachineItem> {
 
         return i;
     }
+
 }
 
 class MachineItem extends InventoryItem {
@@ -205,24 +213,25 @@ class MachineItem extends InventoryItem {
     public MachineItem(JSONObject data) {
         super(data);
 
-        configuration = (Integer) data.getOrDefault("MachineConfiguration", 0);
+        configuration = ((Long) data.getOrDefault("Configuration", 0L)).intValue();
     }
 
     public ItemStack getItem(Machine m) {
 
-        if (this.getItemFlags().isEmpty()) {
-            return getItem();
+        if (this.itemFlags.contains("STATS")) {
+            return m.getItem();
+        } else if (!this.itemFlags.isEmpty()) {
+            return m.writeToItem(super.getItem());
+        } else {
+            return super.getItem();
         }
-
-        return m.writeToItem(getItem());
     }
 
+    @Override
     public ItemStack getItem() {
-
         MachineConfiguration m = Main.getIns().getMachineManager().getConfiguration(getConfiguration());
 
-        return m.getItem();
-
+        return m.getDisplayItem();
     }
 
 }

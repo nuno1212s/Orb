@@ -1,0 +1,22 @@
+[
+  {
+    "ID": 1,
+    "Name": "&cMáquina de madeira",
+    "BaseAmount": 100,
+    "Spacing": 100,
+    "Type": "WHEN_ONLINE",
+    "Cash": true,
+    "Price": 1000,
+    "Item": {
+      "Material": "WOOD",
+      "DisplayName": "%name%",
+      "Lore": [
+        "&cQuantia Base: &7%baseAmount%",
+        "&cTempo de espera: &7%spacing%",
+        "&cTipo: &7%type%",
+        "&cPreço: &a%price% cash"
+      ]
+    }
+  }
+
+]

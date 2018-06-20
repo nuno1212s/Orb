@@ -15,30 +15,35 @@
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot</artifactId>
             <version>1.8.8-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.nuno1212s</groupId>
             <artifactId>Core</artifactId>
             <version>LATEST</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.nuno1212s</groupId>
             <artifactId>Rank_Multipliers</artifactId>
             <version>LATEST</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.nuno1212s</groupId>
             <artifactId>Boosters</artifactId>
             <version>LATEST</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>LATEST</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -73,7 +78,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <finalName>Core</finalName>
+                    <finalName>Machines</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>

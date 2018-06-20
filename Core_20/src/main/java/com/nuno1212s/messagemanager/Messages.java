@@ -28,8 +28,10 @@ public class Messages {
     private ActionBarAPI actionBarAPI;
 
     public Messages(File j) {
+        this.messages = new HashMap<>();
         this.registeredFiles = new ArrayList<>();
         this.registeredFiles.add(j);
+
         if (!MainData.getIns().isBungee()) {
             this.actionBarAPI = new ActionBarAPI();
         }
@@ -39,6 +41,7 @@ public class Messages {
 
     public Messages() {
         this.registeredFiles = new ArrayList<>();
+        this.messages = new HashMap<>();
 
         if (!MainData.getIns().isBungee()) {
             this.actionBarAPI = new ActionBarAPI();
@@ -49,27 +52,36 @@ public class Messages {
         this.registeredFiles.add(messageFile);
     }
 
+    public void addAndLoad(File messageFile) {
+
+        this.registeredFiles.add(messageFile);
+        this.loadFile(messageFile);
+
+    }
+
     public void reloadMessages() {
 
         this.messages = new HashMap<>();
 
-        registeredFiles.forEach(f -> {
-            JSONObject messageObject;
-            try {
-                messageObject = (JSONObject) new JSONParser().parse(new FileReader(f));
-            } catch (IOException | ParseException e) {
-                e.printStackTrace();
+        registeredFiles.forEach(this::loadFile);
 
-                System.out.println("Failed to read file " + f.getAbsolutePath());
+    }
 
-                return;
-            }
+    private void loadFile(File f) {
+        JSONObject messageObject;
+        try {
+            messageObject = (JSONObject) new JSONParser().parse(new FileReader(f));
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
 
-            messageObject.keySet().forEach(messageName -> {
-                messages.put((String) messageName, new Message(readFromValue(messageObject.get(messageName))));
-            });
+            System.out.println("Failed to read file " + f.getAbsolutePath());
+
+            return;
+        }
+
+        messageObject.keySet().forEach(messageName -> {
+            messages.put((String) messageName, new Message(readFromValue(messageObject.get(messageName))));
         });
-
     }
 
     @SuppressWarnings("unchecked")

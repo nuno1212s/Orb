@@ -1,0 +1,24 @@
+{
+
+  "InventoryID": "machineInventory",
+  "InventoryName": "&aConfigurações da maquina",
+  "InventorySize": 27,
+  "Items": [
+    {
+      "Slot": 11,
+      "Item": {
+        "Material": "DIAMOND_BLOCK",
+        "DisplayName": "&7Faz upgrade à máquina",
+        "Lore": [
+          "&7Compra mais uma máquina para fazer ter mais dinheiro"
+        ]
+      },
+      "Flags": ["UPGRADE"]
+    },
+    {
+      "Slot": 13,
+      "Flags": ["STATS"]
+    }
+  ]
+
+}

@@ -57,7 +57,6 @@ public class LLocation {
         }
 
         return false;
-
     }
 
     @Override

@@ -79,6 +79,7 @@ public class InventoryManager implements Listener {
             if (inventoryByName.isDirectRedirect()) {
 
                 InventoryItem item = inventoryByName.getItem(e.getSlot());
+
                 if (item != null) {
                     if (item.getConnectingInv() != null) {
 
@@ -89,6 +90,7 @@ public class InventoryManager implements Listener {
                         if (transferFunction != null) {
 
                             transferFunction.callback(e.getWhoClicked());
+
                         }
 
                         e.getWhoClicked().closeInventory();

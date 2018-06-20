@@ -45,7 +45,7 @@ public class InventoryManager {
     }
 
     public Inventory getDefaultInventory() {
-        return getInventory("mainInventory");
+        return getInventory("WarpsmainInventory");
     }
 
     public Inventory getInventory(String inventoryID) {

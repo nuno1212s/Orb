@@ -55,7 +55,7 @@ public class InventoryManager {
      * @return
      */
     public Inventory getMainInventory() {
-        return buildInventory("mainInventory");
+        return buildInventory("MNmainInventory");
     }
 
     /**

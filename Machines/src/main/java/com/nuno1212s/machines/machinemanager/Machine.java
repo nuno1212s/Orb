@@ -36,16 +36,19 @@ public class Machine {
     @Getter
     private LLocation machineLocation;
 
-
     private transient long currentSpacing;
 
     private transient Hologram hologram;
 
-    public Machine(UUID owner, MachineConfiguration machineConfiguration, LLocation location) {
+    public Machine(UUID owner, MachineConfiguration machineConfiguration, LLocation location, int amount) {
         this.machineID = UUID.randomUUID();
+        this.amount = amount;
         this.owner = owner;
         this.configuration = machineConfiguration.getId();
         this.machineLocation = location;
+        this.currentSpacing = machineConfiguration.getSpacing() / 50L;
+
+        updateName();
     }
 
     public MachineConfiguration getConfiguration() {
@@ -60,21 +63,36 @@ public class Machine {
         Message machine_name = MainData.getIns().getMessageManager().getMessage("MACHINE_NAME");
         MachineConfiguration configuration = this.getConfiguration();
 
+        if (configuration == null) {
+            return;
+        }
+
+        machine_name.format("%name%", configuration.getName());
         machine_name.format("%amount%", this.amount);
         machine_name.format("%baseAmount%", configuration.getBaseAmount());
         machine_name.format("%currentAmount%", configuration.getBaseAmount() * this.amount);
-        machine_name.format("%timeDifferent%", DurationFormatUtils.formatDuration(configuration.getSpacing(), "mm:ss"));
+        machine_name.format("%timeDifference%", DurationFormatUtils.formatDuration(configuration.getSpacing(), "mm:ss"));
+        machine_name.format("%untilNextTime%", DurationFormatUtils.formatDuration(currentSpacing * 50, "mm:ss"));
+
+        String s = machine_name.toString();
+
+        String[] lines = s.split("\n");
 
         if (hologram == null) {
-            hologram = HologramsAPI.createHologram(BukkitMain.getIns(), this.getMachineLocation().getLocation());
+            hologram = HologramsAPI.createHologram(BukkitMain.getIns(), this.getMachineLocation().getLocation().add(0.5, 1.1f
+                    + (lines.length * (.3f)), 0.5));
 
-
-            hologram.appendTextLine(machine_name.toString());
+            for (String line : lines) {
+                hologram.appendTextLine(line);
+            }
         } else {
 
-            TextLine line = (TextLine) hologram.getLine(0);
+            for (int i = 0; i < lines.length; i++) {
 
-            line.setText(machine_name.toString());
+                TextLine line = (TextLine) hologram.getLine(i);
+
+                line.setText(lines[i]);
+            }
 
         }
 
@@ -90,19 +108,17 @@ public class Machine {
     }
 
     public void incrementAmount() {
-        this.amount++;
-
-        this.updateName();
+        incrementAmount(1);
     }
 
-    public boolean decrementAmount() {
+    public void incrementAmount(int amount) {
 
-        this.amount--;
+        this.amount += amount;
 
         this.updateName();
 
-        return this.amount <= 0;
     }
+
 
     public void destroy(Player p) {
 
@@ -110,8 +126,12 @@ public class Machine {
 
         this.getMachineLocation().getLocation().getBlock().setType(Material.AIR);
 
-        p.getInventory().addItem(getItem());
+        p.getInventory().addItem(getItemToDrop());
 
+    }
+
+    public ItemStack getItemToDrop() {
+        return getConfiguration().getItem(this.amount);
     }
 
     public ItemStack getItem() {
@@ -120,7 +140,9 @@ public class Machine {
         MachineConfiguration configuration = this.getConfiguration();
         formats.put("%baseAmount%", String.valueOf(configuration.getBaseAmount()));
         formats.put("%price%", String.valueOf(configuration.getPrice()));
+        formats.put("%currentAmount%", String.valueOf(configuration.getBaseAmount() * this.amount));
         formats.put("%spacing%", DurationFormatUtils.formatDuration(configuration.getSpacing(), "mm:ss"));
+        formats.put("%name%", configuration.getName());
 
         return ItemUtils.formatItem(Main.getIns().getMachineManager().getStatsItem(), formats);
     }
@@ -139,10 +161,12 @@ public class Machine {
 
                 break;
             }
+
             case WHEN_LOADED: {
                 if (this.getMachineLocation().getLocation().getChunk().isLoaded()) {
                     tick();
                 }
+
                 break;
             }
             case WHEN_ONLINE: {
@@ -165,9 +189,13 @@ public class Machine {
 
         currentSpacing--;
 
-        if (currentSpacing == 0) {
+        if ((currentSpacing) % 20 == 0) {
+            this.updateName();
+        }
+
+        if (currentSpacing <= 0) {
             giveReward();
-            this.currentSpacing = this.getConfiguration().getSpacing();
+            this.currentSpacing = this.getConfiguration().getSpacing() / 50;
         }
 
     }
@@ -188,20 +216,24 @@ public class Machine {
             player = data.getKey();
         }
 
-        MainData.getIns().getServerCurrencyHandler().addCurrency(data.getKey(), this.getConfiguration().getBaseAmount() * this.amount);
+        MachineConfiguration configuration = this.getConfiguration();
+
+        MainData.getIns().getServerCurrencyHandler().addCurrency(data.getKey(), configuration.getBaseAmount() * this.amount);
 
         if (player instanceof MachinePlayer && data.getValue()) {
 
             MachinePlayer machinePlayer = (MachinePlayer) player;
 
-            machinePlayer.setAmountMadeWhileAway(machinePlayer.getAmountMadeWhileAway() + (getConfiguration().getBaseAmount() * amount));
+            machinePlayer.setAmountMadeWhileAway(machinePlayer.getAmountMadeWhileAway() + (configuration.getBaseAmount() * amount));
 
         } else if (!data.getValue()) {
 
             //Player is online, send message
             MainData.getIns().getMessageManager().getMessage("MACHINE_MONEY")
-                    .format("%amount%", getConfiguration().getBaseAmount() * amount)
+                    .format("%amount%", configuration.getBaseAmount() * amount)
+                    .format("%name%", configuration.getName())
                     .sendTo(player);
+
         } else if (data.getValue()) {
 
             player.save((c) -> {

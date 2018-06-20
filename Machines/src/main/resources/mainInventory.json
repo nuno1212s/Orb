@@ -1,0 +1,14 @@
+{
+  "InventoryID": "MachinesMainInventory",
+  "InventoryName": "&cMaquinas",
+  "InventorySize": 27,
+  "Items": [
+
+    {
+      "Slot": 11,
+      "Flags": ["BUY"],
+      "Configuration": 1
+    }
+
+  ]
+}

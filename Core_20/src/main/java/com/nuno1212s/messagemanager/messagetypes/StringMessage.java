@@ -40,6 +40,19 @@ public class StringMessage implements IMessage {
 
     public String toString(Map<String, String> formatting) {
 
+        if (messages.length > 1) {
+
+            StringBuilder builder = new StringBuilder();
+
+            for (String message : this.messages) {
+                    builder.append(IMessage.formatMessage(message, formatting));
+                    builder.append("\n");
+
+            }
+
+            return builder.toString();
+        }
+
         if (messages.length < 1) {
             return "";
         }

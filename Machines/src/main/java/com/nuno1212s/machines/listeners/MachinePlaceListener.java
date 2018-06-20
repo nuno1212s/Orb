@@ -4,6 +4,7 @@ import com.nuno1212s.machines.machinemanager.Machine;
 import com.nuno1212s.machines.machinemanager.MachineConfiguration;
 import com.nuno1212s.machines.main.Main;
 import com.nuno1212s.main.MainData;
+import com.nuno1212s.util.Pair;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,14 +18,14 @@ public class MachinePlaceListener implements Listener {
 
         ItemStack itemInHand = e.getItemInHand();
 
-        if (Main.getIns().getMachineManager().isMachine(itemInHand)) {
-
-            MachineConfiguration configuration = MachineConfiguration.fromItem(e.getItemInHand());
+        Pair<MachineConfiguration, Integer> configuration = MachineConfiguration.fromItemWithAmount(itemInHand);
+        if (configuration.getKey() != null) {
 
             Machine machineAtLocation = Main.getIns().getMachineManager().getMachineAtLocation(e.getBlockAgainst().getLocation());
 
             if (machineAtLocation != null) {
-                if (machineAtLocation.getConfiguration().isEquivalent(configuration)) {
+                if (machineAtLocation.getConfiguration().isEquivalent(configuration.getKey())
+                        && machineAtLocation.getOwner().equals(e.getPlayer().getUniqueId())) {
                     e.setCancelled(true);
 
                     if (itemInHand.getAmount() > 1) {
@@ -39,7 +40,7 @@ public class MachinePlaceListener implements Listener {
 
                     e.getPlayer().setItemInHand(itemInHand);
 
-                    machineAtLocation.incrementAmount();
+                    machineAtLocation.incrementAmount(configuration.getValue());
 
                     return;
                 }
@@ -47,9 +48,14 @@ public class MachinePlaceListener implements Listener {
 
             Machine machineFromItem = Main.getIns().getMachineManager().getMachineFromItem(e.getPlayer(), e.getBlock(), e.getItemInHand());
 
+            if (machineFromItem == null) {
+                return;
+            }
+
             Main.getIns().getMachineManager().registerMachine(machineFromItem);
 
-            MainData.getIns().getMessageManager().getMessage("PLACED_MACHINE").sendTo(e.getPlayer());
+            MainData.getIns().getMessageManager().getMessage("PLACED_MACHINE")
+                    .format("%name%", configuration.getKey().getName()).sendTo(e.getPlayer());
         }
 
     }

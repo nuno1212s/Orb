@@ -4,9 +4,6 @@ import com.nuno1212s.inventories.InventoryData;
 import com.nuno1212s.inventories.InventoryItem;
 import com.nuno1212s.machines.machinemanager.Machine;
 import com.nuno1212s.machines.machinemanager.MachineConfiguration;
-import com.nuno1212s.machines.main.Main;
-import com.nuno1212s.main.MainData;
-import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.Callback;
 import com.nuno1212s.util.Pair;
 import org.bukkit.Bukkit;
@@ -14,6 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
@@ -23,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class ConfirmInventory extends InventoryData<InventoryItem> {
+public class ConfirmInventory extends InventoryData<InventoryItem> implements Listener {
 
     private Map<UUID, Pair<Callback<InventoryClickEvent>, Callback<InventoryClickEvent>>> callbacks;
 
@@ -63,7 +61,7 @@ public class ConfirmInventory extends InventoryData<InventoryItem> {
                 continue;
             }
 
-            i.setItem(item.getSlot(), m.intoItem(item.getItem()));
+            i.setItem(item.getSlot(), m.intoItem(item.getItem(), 1));
         }
 
         callbacks.put(p.getUniqueId(), new Pair<>(onAccept, onCancel));

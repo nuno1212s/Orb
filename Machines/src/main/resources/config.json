@@ -1,0 +1,14 @@
+{
+  "StatsItem": {
+
+    "Material": "PAPER",
+    "DisplayName": "%name%",
+    "Lore": [
+      "&cQuantia Base: &e%baseAmount%",
+      "&cQuantia Atual: &e%currentAmount%",
+      "&cTempo: &e%spacing%",
+      "&cQuantidade: &e%amount%"
+    ]
+
+  }
+}

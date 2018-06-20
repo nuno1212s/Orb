@@ -1,0 +1,13 @@
+{
+  "WHEN_ONLINE": "&cQuando online",
+  "ALWAYS_RUNNING": "&cSempre ligada",
+  "WHEN_LOADED": "&cQuando está algum jogador perto da máquina",
+  "MACHINE_NAME": ["%name%", "Produzindo: %currentAmount%", "%amount% máquina(s)"],
+  "MACHINE_MONEY": {"ACTION_BAR": "&7Recebeste &a%coins% &7da máquina %name%!"},
+  "MACHINE_PURCHASED_CASH": "&7Compraste a máquina por &a%cost% &7cash!",
+  "MACHINE_PURCHASED_COINS": "&7Compraste a máquina por &e%cost% &7coins!",
+  "PLACED_MACHINE": {"ACTION_BAR": "&7Colocaste a %name% &7no chão!"},
+  "UPGRADED_MACHINE_CASH": "&7Compraste a máquina por &a%cost% &7cash!",
+  "UPGRADED_MACHINE_COINS": "&7Compraste a máquina por &e%cost% &7coins!",
+  "DESTROYED_MACHINE": "&7Destruiste a tua máquina!"
+}

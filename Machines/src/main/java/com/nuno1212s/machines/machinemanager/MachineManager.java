@@ -4,8 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.nuno1212s.machines.main.Main;
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.util.LLocation;
-import com.nuno1212s.util.NBTDataStorage.NBTCompound;
+import com.nuno1212s.util.Pair;
 import com.nuno1212s.util.SerializableItem;
 import com.nuno1212s.util.typeadapters.ItemStackTypeAdapter;
 import com.nuno1212s.util.typeadapters.LocationTypeAdapter;
@@ -42,7 +43,7 @@ public class MachineManager {
 
     public MachineManager() {
         storageFile = new File(Main.getIns().getDataFolder(), "machines.json");
-        configFile = new File(Main.getIns().getDataFolder(), "configFile.json");
+        configFile = new File(Main.getIns().getDataFolder(), "config.json");
 
         storage = new GsonBuilder()
                 .registerTypeAdapter(LLocation.class, new LocationTypeAdapter())
@@ -57,6 +58,9 @@ public class MachineManager {
     }
 
     private void loadConfig() {
+        if (!configFile.exists()) {
+            Main.getIns().saveResource(configFile, "config.json");
+        }
 
         try (FileReader f = new FileReader(this.configFile)) {
 
@@ -100,6 +104,14 @@ public class MachineManager {
     }
 
     private void loadMachines() {
+        if (!storageFile.exists()) {
+            try {
+                storageFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         try (FileReader r = new FileReader(storageFile)) {
 
             Type type = new TypeToken<List<Machine>>() {
@@ -120,6 +132,9 @@ public class MachineManager {
                 this.machines = Collections.synchronizedList(new ArrayList<>());
             }
         }
+
+        MainData.getIns().getScheduler().runTaskLater(() ->
+                this.machines.forEach(Machine::updateName), 1L);
     }
 
     public MachineConfiguration getConfiguration(int id) {
@@ -172,19 +187,17 @@ public class MachineManager {
      * @return
      */
     public Machine getMachineFromItem(Player placingPlayer, Block placedBlock, ItemStack item) {
-        MachineConfiguration mC = MachineConfiguration.fromItem(item);
+        Pair<MachineConfiguration, Integer> mC = MachineConfiguration.fromItemWithAmount(item);
 
-        if (mC == null) {
+        if (mC.getKey() == null) {
             return null;
         }
 
-        return new Machine(placingPlayer.getUniqueId(), mC, new LLocation(placedBlock.getLocation()));
+        return new Machine(placingPlayer.getUniqueId(), mC.getKey(), new LLocation(placedBlock.getLocation()), mC.getValue());
     }
 
-    public boolean isMachine(ItemStack item) {
-        NBTCompound nbt = new NBTCompound(item);
-
-        return nbt.getValues().containsKey("Machine");
+    public MachineConfiguration getMachine(ItemStack item) {
+        return MachineConfiguration.fromItem(item);
     }
 
     /**
@@ -202,6 +215,15 @@ public class MachineManager {
             e.printStackTrace();
         }
 
+    }
+
+    public void shutDown() {
+
+        synchronized (machines) {
+            machines.forEach(Machine::deleteHologram);
+        }
+
+        save();
     }
 
     public void registerMachine(Machine machineFromItem) {

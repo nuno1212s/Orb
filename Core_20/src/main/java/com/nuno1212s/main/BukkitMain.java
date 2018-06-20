@@ -32,6 +32,7 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import sun.applet.Main;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -101,6 +102,7 @@ public class BukkitMain extends JavaPlugin {
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerDisconnectListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new CommandBlockListener(), this);
         Bukkit.getServer().getPluginManager().registerEvents(new InformationUpdateListener(), this);
+        Bukkit.getServer().getPluginManager().registerEvents(MainData.getIns().getInventoryManager(), this);
 
         MainData.getIns().getCommandRegister().registerCommand(new String[]{"cash"}, new CashCommand());
         MainData.getIns().getCommandRegister().registerCommand(new String[]{"reloadmessages"}, new ReloadMessages());
