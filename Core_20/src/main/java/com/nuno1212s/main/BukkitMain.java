@@ -3,10 +3,7 @@ package com.nuno1212s.main;
 import com.nuno1212s.command.*;
 import com.nuno1212s.config.BukkitConfig;
 import com.nuno1212s.economy.CurrencyHandler;
-import com.nuno1212s.events.PlayerGroupUpdateEvent;
-import com.nuno1212s.events.PlayerInformationUpdateEvent;
 import com.nuno1212s.events.eventcaller.DefaultBukkitEventCaller;
-import com.nuno1212s.events.eventcaller.EventCaller;
 import com.nuno1212s.events.listeners.CommandBlockListener;
 import com.nuno1212s.events.listeners.InformationUpdateListener;
 import com.nuno1212s.events.listeners.PlayerDisconnectListener;
@@ -15,9 +12,7 @@ import com.nuno1212s.inventories.InventoryManager;
 import com.nuno1212s.messagemanager.Messages;
 import com.nuno1212s.modulemanager.ModuleManager;
 import com.nuno1212s.mysql.MySql;
-import com.nuno1212s.permissionmanager.Group;
 import com.nuno1212s.permissionmanager.PermissionManager;
-import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.playermanager.PlayerManager;
 import com.nuno1212s.rediscommunication.RedisHandler;
 import com.nuno1212s.rewards.bukkit.BukkitRewardManager;
@@ -32,7 +27,6 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import sun.applet.Main;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -48,6 +42,9 @@ public class BukkitMain extends JavaPlugin {
 
     @Getter
     static BukkitMain ins;
+
+    @Getter
+    static boolean ready = false;
 
     static {
         //PRESTART
@@ -111,6 +108,8 @@ public class BukkitMain extends JavaPlugin {
         MainData.getIns().getCommandRegister().registerCommand(new String[]{"server"}, new ServerCommand());
 
         data.getServerManager().savePlayerCount(0, getServer().getMaxPlayers());
+
+        ready = true;
     }
 
     @Override

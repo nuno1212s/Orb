@@ -27,8 +27,8 @@ public class PlayerManager {
     private EconomyRedisHandler economyRedisHandler;
 
     public PlayerManager() {
-        players = new ConcurrentHashMap<>();
-        cache = CacheBuilder.newBuilder().expireAfterWrite(5, TimeUnit.SECONDS).build().asMap();
+        this.players = new ConcurrentHashMap<>();
+        this.cache = CacheBuilder.newBuilder().expireAfterWrite(5, TimeUnit.SECONDS).build().asMap();
         economyRedisHandler = new EconomyRedisHandler();
     }
 
@@ -84,8 +84,11 @@ public class PlayerManager {
      */
     public PlayerData validatePlayerJoin(UUID player) {
         PlayerData playerInfo = (PlayerData) this.cache.get(player);
+
         this.cache.remove(player);
+
         this.players.put(player, playerInfo);
+
         return playerInfo;
     }
 
@@ -104,7 +107,7 @@ public class PlayerManager {
      * @param d
      */
     public void removePlayer(PlayerData d) {
-        this.players.remove(d);
+        this.players.remove(d.getPlayerID());
     }
 
     /**

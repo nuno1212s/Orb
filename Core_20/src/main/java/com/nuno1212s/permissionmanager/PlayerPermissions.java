@@ -26,6 +26,7 @@ public class PlayerPermissions {
         this.playerAttachments.put(p.getUniqueId(), pA);
 
         Group globalGroup = MainData.getIns().getPermissionManager().getGroup(d.getGroupID());
+
         List<Short> localGroups = d.getServerGroups();
 
         globalGroup.getPermissions().forEach(perm -> pA.setPermission(perm, true));
@@ -33,7 +34,9 @@ public class PlayerPermissions {
         if (!localGroups.isEmpty()) {
             for (short s : localGroups) {
                 Group localGroup = MainData.getIns().getPermissionManager().getGroup(s);
+
                 List<String> permissions = localGroup.getPermissions();
+
                 Map<String, Boolean> permissions1 = getDirect(pA);
                 permissions.forEach(perm ->
                     permissions1.put(perm, true)

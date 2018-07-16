@@ -22,17 +22,22 @@ public class PlayerJoinListener implements Listener {
     @EventHandler
     public void onCoreLogin(CoreLoginEvent e) {
         PlayerData playerInfo = e.getPlayerInfo();
-        e.setPlayerInfo(Main.getIns().getMySqlManager().getPlayerData(playerInfo));
+
+        HPlayerData playerData = Main.getIns().getMySqlManager().getPlayerData(playerInfo);
+
+        e.setPlayerInfo(playerData);
     }
 
     @EventHandler
     public void onHubJoin(PlayerJoinEvent e) {
         e.setJoinMessage(null);
+
         HPlayerData player = (HPlayerData) MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
         Map<Integer, ItemStack> items = Main.getIns().getHotbarManager().getItems(player);
 
         PlayerInventory inventory = e.getPlayer().getInventory();
         inventory.clear();
+
         items.forEach((slot, item) ->
             inventory.setItem(slot, item.clone())
         );

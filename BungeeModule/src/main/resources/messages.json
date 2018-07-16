@@ -4,5 +4,12 @@
   "MINUTES": " &cminutes",
   "HOURS": " &chours",
   "DAYS": " &cdays",
-  "PERMANENT": " &cpermanent"
+  "PERMANENT": " &cpermanent",
+  "ALERT": [
+    "",
+    "",
+    "&cALERT: &f%message%",
+    "",
+    ""
+  ]
 }

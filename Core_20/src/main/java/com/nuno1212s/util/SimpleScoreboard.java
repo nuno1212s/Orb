@@ -253,8 +253,13 @@ public class SimpleScoreboard {
     }
 
     public void send(Player... players) {
-        for (Player p : players)
+        for (Player p : players) {
+            if (p == null) {
+                continue;
+            }
+
             p.setScoreboard(scoreboard);
+        }
     }
 
 }

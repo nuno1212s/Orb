@@ -22,7 +22,9 @@ public class PermissionCheckListener implements Listener {
 
             Group mainGroup = player.getMainGroup();
 
-            e.setHasPermission(mainGroup.hasPermission(e.getPermission()));
+            if (mainGroup != null)
+
+                e.setHasPermission(mainGroup.hasPermission(e.getPermission()));
 
         }
     }

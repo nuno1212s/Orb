@@ -29,7 +29,7 @@ public class CorePlayerData extends PlayerData {
 
     @Override
     public short getServerGroup() {
-        return -1;
+        return this.getRepresentingGroup().getGroupID();
     }
 
     @Override

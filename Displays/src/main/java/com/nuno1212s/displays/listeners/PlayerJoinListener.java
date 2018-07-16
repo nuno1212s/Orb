@@ -14,7 +14,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
  */
 public class PlayerJoinListener implements Listener {
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onJoin(PlayerJoinEvent e) {
         e.setJoinMessage(null);
         PlayerData player = MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId());

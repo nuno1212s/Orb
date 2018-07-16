@@ -1,6 +1,7 @@
 package com.nuno1212s.events.listeners;
 
 import com.nuno1212s.events.CoreLoginEvent;
+import com.nuno1212s.main.BukkitMain;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.Group;
 import com.nuno1212s.permissionmanager.util.PlayerGroupData;
@@ -27,6 +28,10 @@ public class PlayerJoinListener implements Listener {
      */
     @EventHandler
     public void onPlayerLogin(AsyncPlayerPreLoginEvent e) {
+        if (!BukkitMain.isReady()) {
+            e.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
+            return;
+        }
 
         PlayerData coreData = MainData.getIns().getMySql().getPlayerData(e.getUniqueId(), e.getName());
 
@@ -41,6 +46,7 @@ public class PlayerJoinListener implements Listener {
         //After the event being called, all the modules had the opportunity to modify the player data class
         PlayerData finalData = event.getPlayerInfo();
         MainData.getIns().getPlayerManager().addToCache(e.getUniqueId(), finalData);
+
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

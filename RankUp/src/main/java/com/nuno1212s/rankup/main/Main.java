@@ -74,7 +74,7 @@ public class Main extends Module {
 
             ClanPlayer clanPlayer = SimpleClans.getInstance().getClanManager().getClanPlayer(d.getPlayerID());
             if (clanPlayer == null) {
-                return "None";
+                return MainData.getIns().getMessageManager().getMessage("NO_CLAN").toString();
             } else {
                 return clanPlayer.getClan().getName();
             }
