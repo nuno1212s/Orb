@@ -34,9 +34,9 @@ public class PlayerInteractListener implements Listener {
                 } else {
                     //OPEN INVENTORY
                     e.getPlayer().openInventory(crateAtLocation.getBuyKeyConfirmInventory());
-
-                    MainData.getIns().getMessageManager().getMessage("NO_KEY_FOR_CRATE")
-                            .format("%crateName%", crateAtLocation.getCrateName()).sendTo(e.getPlayer());
+//
+//                    MainData.getIns().getMessageManager().getMessage("NO_KEY_FOR_CRATE")
+//                            .format("%crateName%", crateAtLocation.getCrateName()).sendTo(e.getPlayer());
                 }
             }
         } else if (e.getAction() == Action.LEFT_CLICK_BLOCK) {

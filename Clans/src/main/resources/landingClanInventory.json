@@ -1,0 +1,58 @@
+{
+
+  "InventoryID": "landingClanInventory",
+  "InventoryName": "&cClans ",
+  "InventorySize": 27,
+  "InventoryItems": [
+
+    {
+      "Slot": 11,
+      "Item": {
+        "Material": "SKULL_ITEM",
+        "Data": 3,
+        "DisplayName": "%playerName%",
+        "Lore": [
+          "&7Kills: &e%kills%",
+          "&7Deaths: &e%deaths%",
+          "&7KDR: &e%KDR%",
+          "&7KDD: &e%KDD%"
+        ]
+      }
+    },
+    {
+      "Slot": 15,
+      "Item": {
+        "Material": "WOOL",
+        "Data": 14,
+        "DisplayName": "&cMembros"
+      },
+      "Flags": ["MEMBROS"]
+    },
+    {
+      "Slot": 16,
+      "Item": {
+        "Material": "WOOL",
+        "Data": 15,
+        "DisplayName": "&cClan stats",
+        "Lore":[
+          "&7Clan Name: &e%clan%",
+          "&7Clan kills: &e%clanKills%",
+          "&7Clan Deaths: &e%clanDeaths%",
+          "&7Clan KDR: &e%clanKDR%",
+          "&7Clan KDD: &e%clanKDD%"
+        ]
+      },
+      "Flags": []
+    },
+    {
+      "Slot": 17,
+      "Item": {
+        "Material": "WOOL",
+        "Data": 4,
+        "DisplayName": "&eLeave the clan"
+      },
+      "Flags": ["LEAVE"]
+    }
+  ]
+
+}

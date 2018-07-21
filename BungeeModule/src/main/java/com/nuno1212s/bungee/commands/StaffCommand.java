@@ -42,7 +42,7 @@ public class StaffCommand extends Command {
             return;
         }
 
-        sender.sendMessage(new ComponentBuilder("Staff online:").color(ChatColor.GOLD).create());
+        sender.sendMessage(new ComponentBuilder("Equipe online:").color(ChatColor.GREEN).create());
 
         for (PlayerData pd : MainData.getIns().getPlayerManager().getPlayers()) {
 
@@ -57,7 +57,7 @@ public class StaffCommand extends Command {
                 message.setColor(ChatColor.WHITE);
                 TextComponent p1 = new TextComponent(pd.getNameWithPrefix());
                 message.addExtra(p1);
-                TextComponent a1 = new TextComponent(" on server ");
+                TextComponent a1 = new TextComponent(" está no servidor ");
                 a1.setColor(ChatColor.WHITE);
                 message.addExtra(a1);
                 TextComponent s = new TextComponent(pp.getServer().getInfo().getName());

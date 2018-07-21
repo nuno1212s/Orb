@@ -1,0 +1,31 @@
+{
+  "InventoryID": "changeRankInventory",
+  "InventoryName": "&eChange rank",
+  "InventorySize": 27,
+  "InventoryItems": [
+    {
+      "Slot": 11,
+      "Item": {
+        "Material": "WOOD",
+        "DisplayName": "&cAdmin"
+      },
+      "Rank": "ADMIN"
+    },
+    {
+      "Slot": 13,
+      "Item": {
+        "Material": "WOOD",
+        "DisplayName": "&cMod"
+      },
+      "Rank": "MOD"
+    },
+    {
+      "Slot": 15,
+      "Item": {
+        "Material": "WOOD",
+        "DisplayName": "&cMember"
+      },
+      "Rank": "MEMBER"
+    }
+  ]
+}

@@ -3,6 +3,9 @@ package com.nuno1212s.messagemanager.messagetypes;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.util.ActionBarAPI;
 import lombok.AllArgsConstructor;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -32,6 +35,14 @@ public class ActionBarMessage implements IMessage {
                     actionBarAPI.sendActionBar((Player) commandSender, message);
                 }
             }
+        } else {
+
+            for (ProxiedPlayer player : (ProxiedPlayer[]) sender) {
+
+                player.sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+
+            }
+
         }
 
     }

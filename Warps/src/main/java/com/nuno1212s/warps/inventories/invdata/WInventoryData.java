@@ -1,5 +1,6 @@
 package com.nuno1212s.warps.inventories.invdata;
 
+import com.google.common.collect.ImmutableList;
 import com.nuno1212s.inventories.InventoryData;
 import com.nuno1212s.warps.main.Main;
 import com.nuno1212s.warps.warpmanager.Warp;
@@ -25,13 +26,15 @@ public class WInventoryData extends InventoryData<WInventoryItem> {
         super(object);
         this.inventoryID = (String) object.get("InventoryID");
 
-        JSONArray items = (JSONArray) object.get("InventoryItems");
+        JSONArray itemsJSON = (JSONArray) object.get("InventoryItems");
 
-        this.items = new ArrayList<>();
+        ArrayList<WInventoryItem> items = new ArrayList<>();
 
-        items.forEach((inventoryItem) ->
-                this.items.add(new WInventoryItem((JSONObject) inventoryItem))
+        itemsJSON.forEach((inventoryItem) ->
+                items.add(new WInventoryItem((JSONObject) inventoryItem))
         );
+
+        this.items = ImmutableList.copyOf(items);
     }
 
     @Override

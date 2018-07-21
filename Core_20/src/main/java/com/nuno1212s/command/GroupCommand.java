@@ -342,6 +342,11 @@ public class GroupCommand implements CommandExecutor {
             short groupID;
             boolean isDefault, overrides;
             String groupName = args[2], applicableServer = args[3];
+
+            if (applicableServer.equalsIgnoreCase("CURRENT")) {
+                applicableServer = MainData.getIns().getServerManager().getServerType();
+            }
+
             GroupType groupType;
 
             try {
@@ -387,10 +392,16 @@ public class GroupCommand implements CommandExecutor {
 
             Group representingGroup = d.getRepresentingGroup();
 
-            Group serverGroup = MainData.getIns().getPermissionManager().getGroup(d.getServerGroup());
 
             commandSender.sendMessage("Main Group: " + mainGroup.getGroupPrefix() + "(" + mainGroup.getGroupName() + ")");
-            commandSender.sendMessage("Server group: " + serverGroup.getGroupPrefix() + "(" + serverGroup.getGroupName() + ")");
+            List<Short> serverGroups = d.getServerGroups();
+
+            for (short sG : serverGroups) {
+                Group serverGroup = MainData.getIns().getPermissionManager().getGroup(sG);
+
+                commandSender.sendMessage("Server group: " + serverGroup.getGroupPrefix() + "(" + serverGroup.getGroupName() + ")");
+            }
+
             commandSender.sendMessage("Representing group: " + representingGroup.getGroupPrefix() + "(" + representingGroup.getGroupName() + ")");
 
         }

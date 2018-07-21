@@ -1,12 +1,12 @@
 package com.nuno1212s.mercado.listeners;
 
+import com.nuno1212s.inventories.InventoryData;
+import com.nuno1212s.inventories.InventoryItem;
 import com.nuno1212s.mercado.main.Main;
 import com.nuno1212s.mercado.marketmanager.Item;
 import com.nuno1212s.mercado.marketmanager.MarketManager;
 import com.nuno1212s.mercado.util.InventoryListener;
 import com.nuno1212s.util.NBTDataStorage.NBTCompound;
-import com.nuno1212s.inventories.InventoryData;
-import com.nuno1212s.inventories.InventoryItem;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -68,10 +68,13 @@ public class BuyingInventoryListener extends InventoryListener {
 
 
                     InventoryData confirmInventoryData = marketManager.getConfirmInventoryData();
+
                     Inventory confirmInventory = confirmInventoryData.buildInventory();
+
                     InventoryItem show_item = confirmInventoryData.getItemWithFlag("SHOW_ITEM");
 
-                    confirmInventory.setItem(show_item.getSlot(), e.getCurrentItem());
+                    if (show_item != null)
+                        confirmInventory.setItem(show_item.getSlot(), e.getCurrentItem());
 
                     addCloseException(e.getWhoClicked().getUniqueId());
                     e.getWhoClicked().closeInventory();

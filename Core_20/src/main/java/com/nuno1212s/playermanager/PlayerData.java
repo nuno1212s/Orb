@@ -7,12 +7,12 @@ import com.nuno1212s.permissionmanager.util.PlayerGroupData;
 import com.nuno1212s.punishments.Punishment;
 import com.nuno1212s.rediscommunication.Message;
 import com.nuno1212s.util.Callback;
-import lombok.*;
-import org.bukkit.entity.Player;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.json.simple.JSONObject;
 
 import java.lang.ref.WeakReference;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -77,7 +77,7 @@ public abstract class PlayerData {
     /**
      * Set the main player group
      *
-     * @param groupID The ID of the group to set
+     * @param groupID  The ID of the group to set
      * @param duration The duration of the group (-1 = Permanent)
      */
     public final PlayerGroupData.EXTENSION_RESULT setMainGroup(short groupID, long duration, boolean shoudUseRedis) {
@@ -106,7 +106,7 @@ public abstract class PlayerData {
 
     /**
      * Get the ID of the main player group
-     *
+     * <p>
      * {@link #getMainGroup()} Has a similar outcome, except it auto fetches the group from the group lists,
      * If you only need the group ID, this method is less expensive
      *
@@ -118,7 +118,7 @@ public abstract class PlayerData {
 
     /**
      * Get the main player group
-     *
+     * <p>
      * If you only need the ID of the group {@link #getGroupID()} should be used
      *
      * @return The main player group
@@ -137,10 +137,30 @@ public abstract class PlayerData {
      */
     public abstract short getServerGroup();
 
+    public boolean hasPermission(String permission) {
+
+        if (getRepresentingGroup().hasPermission(permission)) {
+            return true;
+        }
+
+        for (Short groupID : getServerGroups()) {
+            Group g = MainData.getIns().getPermissionManager().getGroup(groupID);
+
+            if (g == null) {
+                continue;
+            }
+
+            if (g.hasPermission(permission)) return true;
+
+        }
+
+        return false;
+    }
+
     /**
      * All classes that extend Player Data should override this method and do their own
      * form of saving player data
-     *
+     * <p>
      * The {@link Callback#callback(Object)} should be called when the player data is finished saving
      *
      * @param c The callback for when it is done saving
@@ -163,7 +183,7 @@ public abstract class PlayerData {
 
     /**
      * Check if the player's global group has expired.
-     *
+     * <p>
      * THIS DOES NOT AUTO CHECK SERVER GROUPS!
      * You can however Override this method to also check the server groups at the same time
      * and avoid creating another timer
@@ -194,7 +214,7 @@ public abstract class PlayerData {
 
     /**
      * Set the players cash
-     *
+     * <p>
      * AUTO CALLS PLAYER INFORMATION EVENT
      *
      * @param cash
@@ -202,12 +222,11 @@ public abstract class PlayerData {
     public final void setCash(long cash, boolean shouldUseRedis) {
         this.cash.set(cash);
 
-        if (shouldUseRedis) {
-            MainData.getIns().getPlayerManager().getEconomyRedisHandler().sendCashUpdate(getPlayerID(), cash);
-        }
 
         if (MainData.getIns().getEventCaller() != null && isPlayerOnServer()) {
             MainData.getIns().getEventCaller().callUpdateInformationEvent(this);
+        } else if (!isPlayerOnServer() && shouldUseRedis) {
+            MainData.getIns().getPlayerManager().getEconomyRedisHandler().sendCashUpdate(getPlayerID(), cash);
         }
     }
 
@@ -218,10 +237,18 @@ public abstract class PlayerData {
      */
     public final void addCash(long cash) {
         this.cash.addAndGet(cash);
+
+
+        if (this.isPlayerOnServer())
+            MainData.getIns().getEventCaller().callUpdateInformationEvent(this, PlayerInformationUpdateEvent.Reason.CURRENCY_UPDATE);
+        else
+            MainData.getIns().getPlayerManager().getEconomyRedisHandler().sendCashUpdate(getPlayerID(), cash);
+
     }
 
     /**
      * Thread safe remove cash command
+     *
      * @param cash
      * @return
      */
@@ -233,7 +260,11 @@ public abstract class PlayerData {
 
             if (currentCash >= cash) {
                 if (this.cash.compareAndSet(currentCash, currentCash - cash)) {
-                    MainData.getIns().getEventCaller().callUpdateInformationEvent(this, PlayerInformationUpdateEvent.Reason.CURRENCY_UPDATE);
+
+                    if (this.isPlayerOnServer())
+                        MainData.getIns().getEventCaller().callUpdateInformationEvent(this, PlayerInformationUpdateEvent.Reason.CURRENCY_UPDATE);
+                    else
+                        MainData.getIns().getPlayerManager().getEconomyRedisHandler().sendCashUpdate(getPlayerID(), cash);
 
                     return true;
                 }
@@ -260,7 +291,7 @@ public abstract class PlayerData {
 
     /**
      * Has the player claimed a reward
-     *
+     * <p>
      * {@link com.nuno1212s.rewards.Reward}
      *
      * @param id The ID of the reward
@@ -272,7 +303,7 @@ public abstract class PlayerData {
 
     /**
      * Claim a reward for the player
-     *
+     * <p>
      * {@link com.nuno1212s.rewards.Reward}
      *
      * @param id The ID of the reward
@@ -316,6 +347,7 @@ public abstract class PlayerData {
 
     /**
      * Set the player reference
+     *
      * @param playerReference
      */
     public void setPlayerReference(Object playerReference) {

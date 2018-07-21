@@ -17,6 +17,11 @@ public interface EventCaller {
 
     void callRewardsUpdateEvent(PlayerData data);
 
+    /**
+     * Request the full load of the player information
+     * @param data
+     * @return
+     */
     PlayerData callPlayerInformationLoad(PlayerData data);
 
 }

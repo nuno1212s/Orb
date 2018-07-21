@@ -2,6 +2,7 @@ package com.nuno1212s.inventories;
 
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.util.Callback;
+import com.nuno1212s.util.Pair;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -101,7 +102,11 @@ public class InventoryManager implements Listener {
                             return;
                         }
 
-                        e.getWhoClicked().openInventory(inventory.buildInventory());
+                        if (inventoryByName.getOpenFuction() != null) {
+                            inventoryByName.getOpenFuction().callback(new Pair<>(e.getWhoClicked(), inventory));
+                        } else {
+                            e.getWhoClicked().openInventory(inventory.buildInventory());
+                        }
 
                         return;
                     }

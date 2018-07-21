@@ -22,7 +22,7 @@ import java.io.File;
 /**
  * MainM class
  */
-@Getter
+
 @Setter(value = AccessLevel.PROTECTED)
 public class MainData {
 
@@ -68,5 +68,63 @@ public class MainData {
         return serverCurrencyHandler != null;
     }
 
+    public ModuleManager getModuleManager() {
+        return moduleManager;
+    }
 
+    public PermissionManager getPermissionManager() {
+        return permissionManager;
+    }
+
+    public PlayerManager getPlayerManager() {
+        return playerManager;
+    }
+
+    public ServerManager getServerManager() {
+        return serverManager;
+    }
+
+    public MySql getMySql() {
+        return mySql;
+    }
+
+    public Scheduler getScheduler() {
+        return scheduler;
+    }
+
+    public File getDataFolder() {
+        return dataFolder;
+    }
+
+    public Messages getMessageManager() {
+        return messageManager;
+    }
+
+    public CommandRegister getCommandRegister() {
+        return commandRegister;
+    }
+
+    public EventCaller getEventCaller() {
+        return eventCaller;
+    }
+
+    public RedisHandler getRedisHandler() {
+        return redisHandler;
+    }
+
+    public RewardManager getRewardManager() {
+        return rewardManager;
+    }
+
+    public InventoryManager getInventoryManager() {
+        return inventoryManager;
+    }
+
+    public boolean isBungee() {
+        return isBungee;
+    }
+
+    public CurrencyHandler getServerCurrencyHandler() {
+        return serverCurrencyHandler;
+    }
 }

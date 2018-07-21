@@ -5,6 +5,7 @@ import com.nuno1212s.messagemanager.messagetypes.IMessage;
 import com.nuno1212s.messagemanager.messagetypes.StringMessage;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.Pair;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -60,13 +61,22 @@ public class Message {
         return this;
     }
 
+ /*   public void sendTo(ProxiedPlayer... players) {
+
+        this.messages.forEach((message) -> {
+            message.sendTo(formats, players);
+        });
+
+    }*/
+
     public void sendTo(CommandSender... players) {
         if (MainData.getIns().isBungee()) {
             return;
         }
+
         if (!Bukkit.isPrimaryThread()) {
             MainData.getIns().getScheduler().runTask(() ->
-                sendTo(players)
+                    sendTo(players)
             );
             return;
         }
@@ -83,10 +93,15 @@ public class Message {
 
     public void sendTo(PlayerData d) {
         if (MainData.getIns().isBungee()) {
+
+            /*if (d.getPlayerReference() != null)
+
+                sendTo(d.getPlayerReference(ProxiedPlayer.class));
+*/
             return;
         }
 
-        if(!Bukkit.isPrimaryThread()) {
+        if (!Bukkit.isPrimaryThread()) {
             MainData.getIns().getScheduler().runTask(() -> {
                 Player p = d.getPlayerReference(Player.class);
 

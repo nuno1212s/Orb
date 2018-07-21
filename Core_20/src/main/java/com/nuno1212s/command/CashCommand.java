@@ -116,7 +116,7 @@ public class CashCommand implements CommandExecutor {
                             return;
                         }
 
-                        d.setCash(cash);
+                        d.addCash(cash);
 
                         MainData.getIns().getMessageManager().getMessage("CASH_ADD_OTHER")
                                 .format("%cashAmount%", String.valueOf(cash))

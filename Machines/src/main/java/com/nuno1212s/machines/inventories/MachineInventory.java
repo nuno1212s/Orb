@@ -229,6 +229,10 @@ class MachineItem extends InventoryItem {
 
     @Override
     public ItemStack getItem() {
+        if (getConfiguration() == 0) {
+            return super.getItem();
+        }
+
         MachineConfiguration m = Main.getIns().getMachineManager().getConfiguration(getConfiguration());
 
         return m.getDisplayItem();

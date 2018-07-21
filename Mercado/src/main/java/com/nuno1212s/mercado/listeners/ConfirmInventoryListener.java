@@ -8,6 +8,7 @@ import com.nuno1212s.mercado.util.InventoryListener;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.NBTDataStorage.NBTCompound;
 import com.nuno1212s.inventories.InventoryItem;
+import com.nuno1212s.util.Pair;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -103,15 +104,23 @@ public class ConfirmInventoryListener extends InventoryListener {
 
                         e.getWhoClicked().closeInventory();
                         Main.getIns().getMarketManager().openInventory((Player) e.getWhoClicked(), getPageForPlayer(e.getWhoClicked().getUniqueId()));
+
                     } else {
                         MainData.getIns().getMessageManager().getMessage("NO_CASH").sendTo(e.getWhoClicked());
                     }
                 }
 
             } else if (item.hasItemFlag("CANCEL")) {
+                int page = marketManager.getPage(e.getWhoClicked().getUniqueId());
+
+                if (page == -1) {
+                    e.getWhoClicked().closeInventory();
+                    return;
+                }
+
                 addCloseException(e.getWhoClicked().getUniqueId());
                 e.getWhoClicked().closeInventory();
-                marketManager.openInventory((Player) e.getWhoClicked(), marketManager.getPage(e.getWhoClicked().getUniqueId()));
+                marketManager.openInventory((Player) e.getWhoClicked(), page);
             }
         }
     }

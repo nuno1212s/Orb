@@ -16,7 +16,6 @@ public class MachineInteractListener implements Listener {
     public void onClick(PlayerInteractEvent e) {
         if (e.getAction() != Action.RIGHT_CLICK_BLOCK) return;
 
-
         if (e.getItem() != null && e.getItem().getType() != Material.AIR) return;
 
         Machine m = Main.getIns().getMachineManager().getMachineAtLocation(e.getClickedBlock().getLocation());

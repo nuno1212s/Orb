@@ -1,5 +1,6 @@
 package com.nuno1212s.mercado.util.searchinventories;
 
+import com.google.common.collect.ImmutableList;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.mercado.main.Main;
 import com.nuno1212s.mercado.searchmanager.SearchParameter;
@@ -36,13 +37,15 @@ public class SInventoryData extends InventoryData<SInventoryItem> {
         this.directRedirect = false;
 
         //Clear the previous items, because we want to load our own items
-        this.items = new ArrayList<>();
+        ArrayList<SInventoryItem> items = new ArrayList<>();
 
-        JSONArray items = (JSONArray) f.get("InventoryItems");
+        JSONArray itemsJSON = (JSONArray) f.get("InventoryItems");
 
-        for (JSONObject item : (List<JSONObject>) items) {
-            this.items.addAll(loadItemData(item));
+        for (JSONObject item : (List<JSONObject>) itemsJSON) {
+            items.addAll(loadItemData(item));
         }
+
+        this.items = ImmutableList.copyOf(items);
 
 
     }

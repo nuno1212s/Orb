@@ -1,5 +1,9 @@
 package com.nuno1212s.rankup.playermanager;
 
+import com.google.common.collect.ImmutableSet;
+import com.nuno1212s.clans.ClanMain;
+import com.nuno1212s.clans.clanmanager.Clan;
+import com.nuno1212s.clans.clanplayer.ClanPlayer;
 import com.nuno1212s.classes.player.KitPlayer;
 import com.nuno1212s.displays.player.ChatData;
 import com.nuno1212s.economy.ServerCurrency;
@@ -15,16 +19,14 @@ import com.nuno1212s.rankup.main.Main;
 import com.nuno1212s.util.Callback;
 import lombok.Getter;
 import lombok.Setter;
-import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
-import net.sacredlabyrinth.phaed.simpleclans.SimpleClans;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -32,7 +34,7 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 @Getter
 @Setter
-public class RUPlayerData extends PlayerData implements ChatData, KitPlayer, EnderChestData, ServerCurrency {
+public class RUPlayerData extends PlayerData implements ChatData, KitPlayer, EnderChestData, ServerCurrency, ClanPlayer {
 
     PlayerGroupData groupData;
 
@@ -50,7 +52,13 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer, End
 
     private ItemStack[] enderChest;
 
-    public RUPlayerData(PlayerData d, long coins, PlayerGroupData groupData, PlayerGroupData serverGroup, Map<Integer, Long> kitUsages, List<Integer> privateKits, String enderChest) {
+    private int kills, deaths;
+
+    private String clan;
+
+    private Set<String> invites;
+
+    public RUPlayerData(PlayerData d, long coins, PlayerGroupData groupData, PlayerGroupData serverGroup, Map<Integer, Long> kitUsages, List<Integer> privateKits, String enderChest, int kills, int deaths, Set<String> invites) {
         super(d);
         this.coins = new AtomicLong(coins);
         this.rankUpGroup = serverGroup;
@@ -58,6 +66,9 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer, End
         this.kitUsages = kitUsages;
         this.privateKits = privateKits;
         this.enderChest = EnderChestData.inventoryFromJSON(enderChest);
+        this.kills = kills;
+        this.deaths = deaths;
+        this.invites = invites;
     }
 
     public synchronized final void setCoins(long coins) {
@@ -106,13 +117,14 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer, End
 
         Group rankUpGroup = MainData.getIns().getPermissionManager().getGroup(this.rankUpGroup.getActiveGroup());
 
-        ClanPlayer player = SimpleClans.getInstance().getClanManager().getClanPlayer(this.getPlayerID());
-        String clanTag;
+        String clanTag = "";
 
-        if (player == null) {
-            clanTag = "";
-        } else {
-            clanTag = ChatColor.DARK_GRAY.toString() + ChatColor.ITALIC + player.getTag() + " " + ChatColor.RESET;
+        if (hasClan()) {
+
+            Clan c = ClanMain.getIns().getClanManager().getClan(getClan());
+
+            clanTag = ChatColor.DARK_GRAY.toString() + ChatColor.ITALIC + c.getClanTag() + " " + ChatColor.RESET;
+
         }
 
         Group groupData = MainData.getIns().getPermissionManager().getGroup(this.groupData.getActiveGroup());
@@ -278,5 +290,67 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer, End
         this.coins.addAndGet(-currency);
 
         return true;
+    }
+
+    @Override
+    public boolean hasClan() {
+        return this.clan != null;
+    }
+
+    public String getClan() {
+        return clan;
+    }
+
+    public int getKills() {
+        return kills;
+    }
+
+    public int getDeaths() {
+        return deaths;
+    }
+
+    public void setKills(int kills) {
+        this.kills = kills;
+    }
+
+    public void setDeaths(int deaths) {
+        this.deaths = deaths;
+    }
+
+    public ImmutableSet<String> getInvites() {
+        return ImmutableSet.copyOf(this.invites);
+    }
+
+    @Override
+    public boolean addInvite(String clanID) {
+        if (this.invites.size() >= 40) {
+            return false;
+        }
+
+        return this.invites.add(clanID);
+    }
+
+    @Override
+    public boolean removeInvite(String clanID) {
+        return this.invites.remove(clanID);
+    }
+
+    public String invitesToString() {
+
+        StringBuilder builder = new StringBuilder();
+
+        boolean first = true;
+
+        for (String invite : this.invites) {
+            if (first) {
+                builder.append(invite);
+                first = false;
+            } else {
+                builder.append(",");
+                builder.append(invite);
+            }
+        }
+
+        return builder.toString();
     }
 }

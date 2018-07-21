@@ -127,7 +127,7 @@ public class ScoreboardManager {
                 return;
             }
 
-            sc.add(format(message, d), scoreboardKey);
+            sc.add(format(message, d).substring(0, 31), scoreboardKey);
 
         });
 

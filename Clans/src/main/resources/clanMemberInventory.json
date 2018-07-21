@@ -1,0 +1,15 @@
+{
+  "InventoryID": "clanMemberInventory",
+  "InventoryName": "&cClan Members",
+  "InventorySize": 54,
+  "InventoryItems": [
+    {
+      "Slot": 47,
+      "Item": {
+        "Material": "ARROW",
+        "DisplayName": "&eMenu anterior"
+      },
+      "Flags": ["CONNECTING_INV:landingClanInventory"]
+    }
+  ]
+}

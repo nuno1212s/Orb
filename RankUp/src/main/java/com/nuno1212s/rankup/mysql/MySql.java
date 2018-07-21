@@ -1,12 +1,13 @@
 package com.nuno1212s.rankup.mysql;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.nuno1212s.enderchest.playerdata.EnderChestData;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.util.PlayerGroupData;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.rankup.main.Main;
 import com.nuno1212s.rankup.playermanager.RUPlayerData;
-import com.nuno1212s.rankup.rankup.RankUpManager;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -23,7 +24,11 @@ public class MySql {
 
         try (Connection c = MainData.getIns().getMySql().getConnection();
              Statement s = c.createStatement()) {
-            String pvpData = "CREATE TABLE IF NOT EXISTS pvpData(UUID char(40) PRIMARY KEY, COINS BIGINT, GROUPDATA varchar(100), SERVERGROUP varchar(100), KITUSAGE varchar(200), ENDERCHEST MEDIUMTEXT NOT NULL DEFAULT '')";
+
+            String pvpData = "CREATE TABLE IF NOT EXISTS pvpData(UUID CHAR(40) PRIMARY KEY, COINS BIGINT, GROUPDATA VARCHAR(100)" +
+                    ", SERVERGROUP VARCHAR(100), KITUSAGE VARCHAR(200), ENDERCHEST MEDIUMTEXT NOT NULL DEFAULT ''," +
+                    "KILLS INTEGER, DEATHS INTEGER, INVITES varchar(1000))";
+
             s.execute(pvpData);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -63,7 +68,19 @@ public class MySql {
 
                     String enderChest = resultSet.getString("ENDERCHEST");
 
-                    return new RUPlayerData(playerData, coins, groupData, serverData, kitUsages, new ArrayList<>(), enderChest);
+                    int kills = resultSet.getInt("KILLS"),
+                            deaths = resultSet.getInt("DEATHS");
+
+                    String invites = resultSet.getString("INVITES");
+                    Set<String> inv;
+
+                    if (invites.equalsIgnoreCase("")) {
+                        inv = new HashSet<>();
+                    } else {
+                        inv = Sets.newHashSet(invites.split(","));
+                    }
+
+                    return new RUPlayerData(playerData, coins, groupData, serverData, kitUsages, new ArrayList<>(), enderChest, kills, deaths, inv);
                 }
             }
         } catch (SQLException | ParseException e) {
@@ -72,7 +89,7 @@ public class MySql {
 
         short firstGroup = Main.getIns().getRankUpManager().getFirstGroup();
 
-        return new RUPlayerData(playerData, 0, new PlayerGroupData(), new PlayerGroupData(firstGroup), new HashMap<>(), new ArrayList<>(), "");
+        return new RUPlayerData(playerData, 0, new PlayerGroupData(), new PlayerGroupData(firstGroup), new HashMap<>(), new ArrayList<>(), "", 0, 0, new HashSet<>());
     }
 
     public LinkedHashMap<UUID, Long> getCoinTop(int limit) {
@@ -101,7 +118,7 @@ public class MySql {
     public void savePlayerData(RUPlayerData playerData) {
 
         try (Connection c = MainData.getIns().getMySql().getConnection();
-             PreparedStatement st = c.prepareStatement("INSERT INTO pvpData(UUID, COINS, GROUPDATA, SERVERGROUP, KITUSAGE, ENDERCHEST) values(?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE COINS=?, GROUPDATA=?, KITUSAGE=?, SERVERGROUP=?, ENDERCHEST=?")) {
+             PreparedStatement st = c.prepareStatement("INSERT INTO pvpData(UUID, COINS, GROUPDATA, SERVERGROUP, KITUSAGE, ENDERCHEST, KILLS, DEATHS, INVITES) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE COINS=?, GROUPDATA=?, KITUSAGE=?, SERVERGROUP=?, ENDERCHEST=?, KILLS=?, DEATHS=?, INVITES=?")) {
 
             st.setString(1, playerData.getPlayerID().toString());
             st.setLong(2, playerData.getCoins());
@@ -119,12 +136,18 @@ public class MySql {
             String enderChestData = EnderChestData.inventoryToJSON(playerData.getEnderChest());
 
             st.setString(6, enderChestData);
+            st.setInt(7, playerData.getKills());
+            st.setInt(8, playerData.getDeaths());
+            st.setString(9, playerData.invitesToString());
 
-            st.setLong(7, playerData.getCoins());
-            st.setString(8, playerData.getGroupData().toDatabase());
-            st.setString(9, kits);
-            st.setString(10, playerData.getRankUpGroupData().toDatabase());
-            st.setString(11, enderChestData);
+            st.setLong(10, playerData.getCoins());
+            st.setString(11, playerData.getGroupData().toDatabase());
+            st.setString(12, kits);
+            st.setString(13, playerData.getRankUpGroupData().toDatabase());
+            st.setString(14, enderChestData);
+            st.setInt(15, playerData.getKills());
+            st.setInt(16, playerData.getDeaths());
+            st.setString(17, playerData.invitesToString());
 
             st.executeUpdate();
         } catch (SQLException e) {

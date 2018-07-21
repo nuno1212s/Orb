@@ -2,8 +2,6 @@ package com.nuno1212s.events.listeners;
 
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
-import com.nuno1212s.util.Callback;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 import org.bukkit.entity.Player;
-import sun.applet.Main;
 
 import java.util.ArrayList;
 import java.util.Iterator;

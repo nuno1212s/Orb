@@ -7,7 +7,6 @@ import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.modulemanager.ModuleData;
 import com.nuno1212s.permissionmanager.Group;
-import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.rankup.commands.RGroupCommand;
 import com.nuno1212s.rankup.economy.CoinCommand;
 import com.nuno1212s.rankup.events.*;
@@ -16,8 +15,6 @@ import com.nuno1212s.rankup.playermanager.RUPlayerData;
 import com.nuno1212s.rankup.rankup.RankUpCommand;
 import com.nuno1212s.rankup.rankup.RankUpManager;
 import lombok.Getter;
-import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
-import net.sacredlabyrinth.phaed.simpleclans.SimpleClans;
 
 import java.text.NumberFormat;
 
@@ -25,7 +22,7 @@ import java.text.NumberFormat;
 /**
  * Main Class
  */
-@ModuleData(name = "RankUp", version = "1.1-SNAPSHOT", dependencies = {"Crates", "Displays", "Classes", "Boosters", "Minas"})
+@ModuleData(name = "RankUp", version = "1.1-SNAPSHOT", dependencies = {"Crates", "Displays", "Classes", "Boosters", "Minas", "Clans"})
 public class Main extends Module {
 
     @Getter
@@ -67,16 +64,6 @@ public class Main extends Module {
                 return rankUpManager.getProgression((RUPlayerData) d);
             } else {
                 return "N/A";
-            }
-        });
-
-        placeHolderManager.registerPlaceHolder("%clan%", (d) -> {
-
-            ClanPlayer clanPlayer = SimpleClans.getInstance().getClanManager().getClanPlayer(d.getPlayerID());
-            if (clanPlayer == null) {
-                return MainData.getIns().getMessageManager().getMessage("NO_CLAN").toString();
-            } else {
-                return clanPlayer.getClan().getName();
             }
         });
 

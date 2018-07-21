@@ -55,8 +55,7 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" scope="PROVIDED" name="Maven: net.sacredlabyrinth.phaed.simpleclans:SimpleClans:2.6.1" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.getspout:spoutplugin:dev-SNAPSHOT" level="project" />
+    <orderEntry type="module" module-name="Clans" scope="PROVIDED" />
     <orderEntry type="module-library">
       <library name="Maven: com.gmail.nossr50:mcMMO:1.1">
         <CLASSES>

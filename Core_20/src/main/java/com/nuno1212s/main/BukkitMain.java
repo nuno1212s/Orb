@@ -20,6 +20,7 @@ import com.nuno1212s.scheduler.BukkitScheduler;
 import com.nuno1212s.server_sender.BukkitSender;
 import com.nuno1212s.serverstatus.ServerManager;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandMap;
@@ -44,6 +45,7 @@ public class BukkitMain extends JavaPlugin {
     static BukkitMain ins;
 
     @Getter
+    @Setter
     static boolean ready = false;
 
     static {
@@ -106,6 +108,7 @@ public class BukkitMain extends JavaPlugin {
         MainData.getIns().getCommandRegister().registerCommand(new String[]{"serversetting"}, new ServerSettingCommand());
         MainData.getIns().getCommandRegister().registerCommand(new String[]{"group"}, new GroupCommand());
         MainData.getIns().getCommandRegister().registerCommand(new String[]{"server"}, new ServerCommand());
+        MainData.getIns().getCommandRegister().registerCommand(new String[]{"stop"}, new StopCommand());
 
         data.getServerManager().savePlayerCount(0, getServer().getMaxPlayers());
 

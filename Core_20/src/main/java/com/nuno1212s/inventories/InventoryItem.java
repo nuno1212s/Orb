@@ -1,5 +1,6 @@
 package com.nuno1212s.inventories;
 
+import com.google.common.collect.ImmutableList;
 import com.nuno1212s.util.SerializableItem;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,7 +21,7 @@ public class InventoryItem {
 
     protected ItemStack item;
 
-    protected List<String> itemFlags;
+    protected ImmutableList<String> itemFlags;
 
     protected int slot;
 
@@ -33,7 +34,7 @@ public class InventoryItem {
             this.item = new SerializableItem((JSONObject) data.get("Item"));
         }
         this.slot = ((Long) data.get("Slot")).intValue();
-        this.itemFlags = data.containsKey("Flags") ? (List<String>) data.get("Flags") : new ArrayList<>();
+        this.itemFlags = data.containsKey("Flags") ? ImmutableList.copyOf((List<String>) data.get("Flags")) : ImmutableList.<String>builder().build();
 
         for (String s : this.getItemFlags()) {
             if (s.startsWith("CONNECTING_INV")) {

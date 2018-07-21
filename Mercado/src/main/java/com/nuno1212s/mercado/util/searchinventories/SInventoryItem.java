@@ -1,5 +1,6 @@
 package com.nuno1212s.mercado.util.searchinventories;
 
+import com.google.common.collect.ImmutableList;
 import com.nuno1212s.mercado.searchmanager.SearchParameter;
 import com.nuno1212s.inventories.InventoryItem;
 import lombok.Getter;
@@ -29,7 +30,7 @@ public class SInventoryItem extends InventoryItem {
     }
 
     public SInventoryItem(ItemStack item, int slot, List<String> itemFlags, SearchParameter parameter) {
-        super(item, itemFlags, slot, null);
+        super(item, ImmutableList.copyOf(itemFlags), slot, null);
         this.searchParameter = parameter;
 
         for (String s : this.getItemFlags()) {

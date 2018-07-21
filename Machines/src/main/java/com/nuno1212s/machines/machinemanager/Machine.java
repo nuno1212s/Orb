@@ -73,6 +73,7 @@ public class Machine {
         machine_name.format("%currentAmount%", configuration.getBaseAmount() * this.amount);
         machine_name.format("%timeDifference%", DurationFormatUtils.formatDuration(configuration.getSpacing(), "mm:ss"));
         machine_name.format("%untilNextTime%", DurationFormatUtils.formatDuration(currentSpacing * 50, "mm:ss"));
+        machine_name.format("%machineID%", this.machineID.toString());
 
         String s = machine_name.toString();
 
@@ -143,8 +144,9 @@ public class Machine {
         formats.put("%currentAmount%", String.valueOf(configuration.getBaseAmount() * this.amount));
         formats.put("%spacing%", DurationFormatUtils.formatDuration(configuration.getSpacing(), "mm:ss"));
         formats.put("%name%", configuration.getName());
+        formats.put("%amount%", String.valueOf(this.amount));
 
-        return ItemUtils.formatItem(Main.getIns().getMachineManager().getStatsItem(), formats);
+        return ItemUtils.formatItem(Main.getIns().getMachineManager().getStatsItem().clone(), formats);
     }
 
     /**

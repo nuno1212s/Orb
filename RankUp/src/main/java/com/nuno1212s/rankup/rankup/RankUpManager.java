@@ -27,9 +27,12 @@ public class RankUpManager {
         int i = 0;
         for (String s : ranks) {
             Group group = MainData.getIns().getPermissionManager().getGroup(Short.parseShort(s));
+
             if (group == null) {
-                throw new NullPointerException("Group not found");
+                System.out.println("Group not found: " + s);
+                continue;
             }
+
             this.rankUp[i] = group.getGroupID();
             this.cost[i] = rankUps.getInt(s);
             i++;

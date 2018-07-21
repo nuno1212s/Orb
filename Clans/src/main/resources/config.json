@@ -1,0 +1,26 @@
+{
+  "InviteItem": {
+    "Material": "WOOL",
+    "Data": 3,
+    "DisplayName": "%clanName%",
+    "Lore": [
+      "&7Clan Kills: &e%clanKills%",
+      "&7Clan Deaths: &e%clanDeaths%",
+      "&7Clan KDR: &e%clanKDR%",
+      "&7Clan KDD: &e%clanKDD%"
+    ]
+  },
+  "MemberItem": {
+    "Material": "SKULL_ITEM",
+    "Data": 3,
+    "DisplayName": "%playerName%",
+    "Lore": [
+      "&7Kills: &e%kills%",
+      "&7Deaths: &e%deaths%",
+      "&7Clan Rank: &e%clanRank%",
+      "&7Clan KDR: &e%KDR%",
+      "&7Clan KDD: &e%KDD%"
+    ]
+  }
+
+}

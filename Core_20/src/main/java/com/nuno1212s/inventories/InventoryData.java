@@ -1,11 +1,14 @@
 package com.nuno1212s.inventories;
 
+import com.google.common.collect.ImmutableList;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.util.Callback;
 import com.nuno1212s.util.ItemUtils;
 import com.nuno1212s.util.NBTDataStorage.ReflectionManager;
+import com.nuno1212s.util.Pair;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -47,14 +50,26 @@ public class InventoryData<T extends InventoryItem> {
     protected int inventorySize;
 
     @Getter
-    protected List<T> items;
+    protected ImmutableList<T> items;
 
     protected boolean allowsMovement;
 
     @Getter(value = AccessLevel.PROTECTED)
     protected boolean directRedirect;
 
+    /**
+     * A function that get's called before the inventory is closed, as a preparation for the transfer of inventories
+     */
+    @Setter(value = AccessLevel.PROTECTED)
     private Callback<HumanEntity> onTransfer;
+
+    /**
+     * A function that get's called to open the next inventory, after the current inventory is closed
+     *
+     *
+     */
+    @Setter(value = AccessLevel.PROTECTED)
+    private Callback<Pair<HumanEntity, InventoryData>> openFuction;
 
     /**
      * Use the {@link #InventoryData(File, Class, boolean)} instead, this constructor is just being kept for compatibility reasons
@@ -130,15 +145,17 @@ public class InventoryData<T extends InventoryItem> {
         if (loadItems) {
             JSONArray inventoryItems = (JSONArray) jsOB.getOrDefault("InventoryItems", new JSONArray());
 
-            this.items = new ArrayList<>(inventoryItems.size());
+            ArrayList<T> items = new ArrayList<>(inventoryItems.size());
             Constructor constructor = ReflectionManager.getIns().getConstructor(customLoader, JSONObject.class);
 
             inventoryItems.forEach((inventoryItem) -> {
                         T e = (T) ReflectionManager.getIns()
                                 .invokeConstructor(constructor, (JSONObject) inventoryItem);
-                        this.items.add(e);
+                        items.add(e);
                     }
             );
+
+            this.items = ImmutableList.copyOf(items);
         }
 
         MainData.getIns().getInventoryManager().registerInventory(this);
@@ -146,6 +163,14 @@ public class InventoryData<T extends InventoryItem> {
 
     public Callback<HumanEntity> getTransferFunction() {
         return this.onTransfer;
+    }
+
+    /**
+     * Get the function to open the connection inventory
+     * @return
+     */
+    public Callback<Pair<HumanEntity, InventoryData>> getOpenFuction() {
+        return openFuction;
     }
 
     /**

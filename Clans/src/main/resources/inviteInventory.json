@@ -1,0 +1,15 @@
+{
+  "InventoryID": "clanInviteInventory",
+  "InventoryName": "&cConvites",
+  "InventorySize": 54,
+  "InventoryItems": [
+    {
+      "Slot": 47,
+      "Item": {
+        "Material": "WOOL",
+        "DisplayName": "&aPrevious menu"
+      },
+      "Flags": ["CONNECTING_INV:landingNoClanInventory"]
+    }
+  ]
+}

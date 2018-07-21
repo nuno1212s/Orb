@@ -1,19 +1,27 @@
 package com.nuno1212s.mercado.marketmanager;
 
+import com.nuno1212s.inventories.InventoryData;
+import com.nuno1212s.inventories.InventoryItem;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.mercado.inventories.MInventoryData;
 import com.nuno1212s.mercado.main.Main;
 import com.nuno1212s.mercado.searchmanager.SearchParameter;
 import com.nuno1212s.mercado.searchmanager.SearchParameterManager;
+import com.nuno1212s.mercado.util.ReflectionUtil;
 import com.nuno1212s.mercado.util.chathandlers.ChatHandlerManager;
 import com.nuno1212s.modulemanager.Module;
+import com.nuno1212s.playermanager.PlayerData;
+import com.nuno1212s.util.Pair;
 import com.nuno1212s.util.SerializableItem;
-import com.nuno1212s.inventories.InventoryData;
-import com.nuno1212s.inventories.InventoryItem;
 import lombok.Getter;
+import net.md_5.bungee.api.chat.*;
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -22,7 +30,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.lang.reflect.Method;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 /**
@@ -90,12 +100,74 @@ public class MarketManager {
      * @param item item to add
      */
     public void addItem(Item item) {
-        marketItems.add(item);
+        addDirectItem(item);
 
         Main.getIns().getRedisHandler().addItem(item);
         MainData.getIns().getScheduler().runTaskAsync(() -> {
             Main.getIns().getMySql().addItem(item);
         });
+    }
+
+    public void addDirectItem(Item item) {
+        marketItems.add(item);
+
+        MainData.getIns().getScheduler().runTaskAsync(() -> {
+
+            Pair<PlayerData, Boolean> data = MainData.getIns().getPlayerManager().getOrLoadPlayer(item.getOwner());
+
+            if (data.getKey() == null) {
+                return;
+            }
+
+            if (!data.getKey().hasPermission("market.broadcast")) {
+                return;
+            }
+
+            String post_market_items = MainData.getIns().getMessageManager().getMessage("POST_MARKET_ITEM")
+                    .format("%playerName%", data.getKey().getPlayerName())
+                    .format("%quantity%", item.getItem().getAmount())
+                    .format("%price%", item.getPriceString())
+                    .toString();
+
+            String[] split = post_market_items.split("%item%");
+
+            BaseComponent[] item1 = getItem(item.getDisplayItem());
+
+            BaseComponent[] baseComponents = TextComponent.fromLegacyText(split[0]);
+
+            ArrayList<BaseComponent> components = new ArrayList<>();
+
+            components.addAll(Arrays.asList(baseComponents));
+            components.addAll(Arrays.asList(item1));
+
+            if (split.length > 1) {
+
+                for (int i = 1; i < split.length; i ++) {
+
+                    components.addAll(Arrays.asList(TextComponent.fromLegacyText(split[i])));
+
+                    if (i == split.length - 1)
+                        continue;
+
+                    components.addAll(Arrays.asList(item1));
+
+                }
+
+            }
+
+            components.forEach((component) -> {
+                component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/opendirectbuy " + item.getItemID()));
+            });
+
+            BaseComponent[] finalMessage = new BaseComponent[components.size()];
+
+            components.toArray(finalMessage);
+
+            for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                player.spigot().sendMessage(finalMessage);
+            }
+        });
+
     }
 
     /**
@@ -104,8 +176,10 @@ public class MarketManager {
      * @param itemID The ID of the Item
      */
     public void removeItem(String itemID) {
+
+        removeItemDirect(itemID);
+
         Item item = getItem(itemID);
-        marketItems.remove(item);
 
         Main.getIns().getRedisHandler().removeItem(item);
         MainData.getIns().getScheduler().runTaskAsync(() -> {
@@ -113,11 +187,17 @@ public class MarketManager {
         });
     }
 
+    public void removeItemDirect(String itemID) {
+        Item item = getItem(itemID);
+        marketItems.remove(item);
+    }
+
     /**
      *
      */
     public void sellItem(Item item) {
         Main.getIns().getRedisHandler().sellItem(item);
+
         MainData.getIns().getScheduler().runTaskAsync(() -> {
             Main.getIns().getMySql().updateItem(item);
         });
@@ -169,10 +249,10 @@ public class MarketManager {
         SearchParameter[] parameter = this.searchManager.getSearchParameters(player);
 
         marketItems.removeIf(item ->
-            item.isSold() || !searchManager.fitsSearch(item, parameter)
+                item.isSold() || !searchManager.fitsSearch(item, parameter)
         );
 
-        if (marketItems.size() < itemsPerPage * page) {
+        if (marketItems.size() < itemsPerPage * (page - 1)) {
             return new ArrayList<>();
         }
 
@@ -245,6 +325,7 @@ public class MarketManager {
         List<Item> itemsForPage = getItemsForPage(player, page, this.mainInventoryData.getInventorySize() - 18);
 
         int currentSlot = 0;
+
         for (Item item : itemsForPage) {
             inventory.setItem(currentSlot++, item.getDisplayItem().clone());
         }
@@ -267,19 +348,19 @@ public class MarketManager {
         List<Item> ownItemsForPage = getOwnItemsForPage(player, page, this.ownInventory.getInventorySize() - 9);
 
         ownItemsForPage.sort(new Comparator<Item>() {
-                              @Override
-                              public int compare(Item o1, Item o2) {
-                                  int compare = Boolean.compare(o1.isSold(), o2.isSold());
-                                  if (compare == 0) {
-                                      if (o1.isSold()) {
-                                          compare = Long.compare(o1.getSoldTime(), o2.getSoldTime());
-                                      } else {
-                                          compare = Long.compare(o1.getPlaceTime(), o2.getPlaceTime());
-                                      }
-                                  }
-                                  return compare;
-                              }
-                          }
+                                 @Override
+                                 public int compare(Item o1, Item o2) {
+                                     int compare = Boolean.compare(o1.isSold(), o2.isSold());
+                                     if (compare == 0) {
+                                         if (o1.isSold()) {
+                                             compare = Long.compare(o1.getSoldTime(), o2.getSoldTime());
+                                         } else {
+                                             compare = Long.compare(o1.getPlaceTime(), o2.getPlaceTime());
+                                         }
+                                     }
+                                     return compare;
+                                 }
+                             }
         );
 
         Inventory inventory = this.ownInventory.buildInventory();
@@ -299,7 +380,7 @@ public class MarketManager {
      * @param player The player
      */
     public int getPage(UUID player) {
-        return this.pages.get(player);
+        return this.pages.getOrDefault(player, -1);
     }
 
     /**
@@ -312,6 +393,64 @@ public class MarketManager {
         if (this.searchManager.hasSearchParameters(player)) {
             this.searchManager.removeSearchParameters(player);
         }
+    }
+
+    private static BaseComponent[] getItem(ItemStack item) {
+
+        if (item.getItemMeta().hasDisplayName()) {
+
+            BaseComponent[] baseComponents = TextComponent.fromLegacyText(item.getItemMeta().getDisplayName());
+
+            for (BaseComponent baseComponent : baseComponents) {
+                baseComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new BaseComponent[]{
+                        new TextComponent(convertItemStackToJson(item))
+                }));
+            }
+
+            return baseComponents;
+        }
+
+        TranslatableComponent components = new TranslatableComponent(Main.getIns().getTranslations().getTranslation(item.getType()));
+
+        components.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new BaseComponent[]{
+                new TextComponent(convertItemStackToJson(item))
+        }));
+
+        return new BaseComponent[]{components};
+    }
+
+    /**
+     * Converts an {@link org.bukkit.inventory.ItemStack} to a Json string
+     * for sending with {@link net.md_5.bungee.api.chat.BaseComponent}'s.
+     *
+     * @param itemStack the item to convert
+     * @return the Json string representation of the item
+     */
+    private static String convertItemStackToJson(ItemStack itemStack) {
+        // ItemStack methods to get a net.minecraft.server.ItemStack object for serialization
+        Class<?> craftItemStackClazz = ReflectionUtil.getOBCClass("inventory.CraftItemStack");
+        Method asNMSCopyMethod = ReflectionUtil.getMethod(craftItemStackClazz, "asNMSCopy", ItemStack.class);
+
+        // NMS Method to serialize a net.minecraft.server.ItemStack to a valid Json string
+        Class<?> nmsItemStackClazz = ReflectionUtil.getNMSClass("ItemStack");
+        Class<?> nbtTagCompoundClazz = ReflectionUtil.getNMSClass("NBTTagCompound");
+        Method saveNmsItemStackMethod = ReflectionUtil.getMethod(nmsItemStackClazz, "save", nbtTagCompoundClazz);
+
+        Object nmsNbtTagCompoundObj; // This will just be an empty NBTTagCompound instance to invoke the saveNms method
+        Object nmsItemStackObj; // This is the net.minecraft.server.ItemStack object received from the asNMSCopy method
+        Object itemAsJsonObject; // This is the net.minecraft.server.ItemStack after being put through saveNmsItem method
+
+        try {
+            nmsNbtTagCompoundObj = nbtTagCompoundClazz.newInstance();
+            nmsItemStackObj = asNMSCopyMethod.invoke(null, itemStack);
+            itemAsJsonObject = saveNmsItemStackMethod.invoke(nmsItemStackObj, nmsNbtTagCompoundObj);
+        } catch (Throwable t) {
+            Bukkit.getLogger().log(Level.SEVERE, "failed to serialize itemstack to nms item", t);
+            return null;
+        }
+
+        // Return a string representation of the serialized object
+        return itemAsJsonObject.toString();
     }
 
 }

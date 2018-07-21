@@ -104,15 +104,22 @@ public class Item {
         }
 
         lore.add("");
-        lore.add(isServerCurrency() ? msgManager.getMessage("COST_COINS")
-                .format("%price%", String.valueOf(this.cost)).toString()
-                : msgManager.getMessage("COST_CASH")
-                .format("%price%", String.valueOf(this.cost)).toString());
+        lore.add(getPriceString());
 
         itemMeta.setLore(lore);
         clone.setItemMeta(itemMeta);
 
         return clone;
+    }
+
+    public String getPriceString() {
+
+        Messages msgManager = MainData.getIns().getMessageManager();
+
+        return isServerCurrency() ? msgManager.getMessage("COST_COINS")
+                .format("%price%", String.valueOf(this.cost)).toString()
+                : msgManager.getMessage("COST_CASH")
+                .format("%price%", String.valueOf(this.cost)).toString();
     }
 
     /**
@@ -166,11 +173,14 @@ public class Item {
         this.sold = true;
         this.soldTime = System.currentTimeMillis();
         this.buyer = player.getUniqueId();
+
         Main.getIns().getMarketManager().sellItem(this);
+
         player.getInventory().addItem(this.getItem()).forEach((i, item) ->
                 player.getWorld().dropItemNaturally(player.getLocation(), item));
 
         Pair<PlayerData, Boolean> playerData = MainData.getIns().getPlayerManager().getOrLoadPlayer(getOwner());
+
         if (!playerData.getValue()) {
             PlayerData playerD = playerData.getKey();
             if (isServerCurrency()) {

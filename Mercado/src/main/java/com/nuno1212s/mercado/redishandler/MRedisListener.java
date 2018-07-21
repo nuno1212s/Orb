@@ -99,7 +99,7 @@ public class MRedisListener implements RedisReceiver {
                     if (item == null) {
                         return;
                     }
-                    Main.getIns().getMarketManager().removeItem(itemID);
+                    Main.getIns().getMarketManager().removeItemDirect(itemID);
                 }
             } else if (message.getReason().equalsIgnoreCase("ADD")) {
                 JSONObject data = message.getData();
@@ -128,7 +128,7 @@ public class MRedisListener implements RedisReceiver {
                         sold = (Boolean) data.get("SOLD");
                 Item i = new Item(itemID, owner, buyer, item, cost, placeTime,
                         soldTime, serverCurrency, sold, applicableServer);
-                Main.getIns().getMarketManager().addItem(i);
+                Main.getIns().getMarketManager().addDirectItem(i);
             }
         }
     }
