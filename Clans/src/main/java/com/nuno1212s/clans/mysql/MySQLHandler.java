@@ -17,11 +17,11 @@ public class MySQLHandler {
     private void createTables() {
 
         try (Connection c = MainData.getIns().getMySql().getConnection();
-             Statement s  = c.createStatement()) {
+             Statement s = c.createStatement()) {
 
-            s.execute("CREATE TABLE IF NOT EXISTS clans(CLANID char(15), OWNER char(40), MEMBERS varchar(3000)," +
-                    " CLANTAG varchar(25), CLANNAME varchar(50), CLANDESC varchar(250), APPLICABLESERVER varchar(40)," +
-                    "KILLS INTEGER, DEATHS INTEGER)");
+            s.execute("CREATE TABLE IF NOT EXISTS clans(CLANID CHAR(15) PRIMARY KEY NOT NULL, OWNER CHAR(40), MEMBERS VARCHAR(3000)," +
+                    " CLANTAG VARCHAR(25), CLANNAME VARCHAR(50), CLANDESC VARCHAR(250), APPLICABLESERVER VARCHAR(40)," +
+                    "KILLS INTEGER, DEATHS INTEGER, UNIQUE(CLANID))");
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -76,15 +76,13 @@ public class MySQLHandler {
     }
 
     /**
-     *
-     *
      * @param clan
      */
     public void createClan(Clan clan) {
 
         try (Connection c = MainData.getIns().getMySql().getConnection();
-            PreparedStatement s = c.prepareStatement("INSERT INTO clans(CLANID, OWNER, MEMBERS, CLANTAG, CLANNAME, CLANDESC, APPLICABLESERVER, KILLS, DEATHS) " +
-                    "values(?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE MEMBERS=?, CLANTAG=?, CLANDESC =?, CLANNAME=?, KILLS=?, DEATHS=?")) {
+             PreparedStatement s = c.prepareStatement("INSERT INTO clans(CLANID, OWNER, MEMBERS, CLANTAG, CLANNAME, CLANDESC, APPLICABLESERVER, KILLS, DEATHS) " +
+                     "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE MEMBERS=?, CLANTAG=?, CLANDESC =?, CLANNAME=?, KILLS=?, DEATHS=?")) {
 
             s.setString(1, clan.getClanID());
             s.setString(2, clan.getCreator().toString());
@@ -114,7 +112,7 @@ public class MySQLHandler {
     public void removeClan(String clanID) {
 
         try (Connection c = MainData.getIns().getMySql().getConnection();
-            PreparedStatement s = c.prepareStatement("DELETE FROM clans WHERE CLANID=?")) {
+             PreparedStatement s = c.prepareStatement("DELETE FROM clans WHERE CLANID=?")) {
 
             s.setString(1, clanID);
 
@@ -129,12 +127,20 @@ public class MySQLHandler {
     private Clan readClan(ResultSet resultSet) throws SQLException {
         String clanID = resultSet.getString("CLANID");
         UUID owner = UUID.fromString(resultSet.getString("OWNER"));
-        String[] membros = resultSet.getString("MEMBERS").split(",");
+        String members1 = resultSet.getString("MEMBERS");
 
-        Map<UUID, Clan.Rank> members = new HashMap<>(membros.length);
+        Map<UUID, Clan.Rank> members;
 
-        for (String membro : membros) {
-            members.put(UUID.fromString(membro.split(":")[0]), Clan.Rank.valueOf(membro.split(":")[1]));
+        if (members1.equalsIgnoreCase("")) {
+            members = new HashMap<>();
+        } else {
+            String[] membros = members1.split(",");
+
+            members = new HashMap<>(membros.length);
+
+            for (String membro : membros) {
+                members.put(UUID.fromString(membro.split(":")[0]), Clan.Rank.valueOf(membro.split(":")[1]));
+            }
         }
 
         String clanTag = resultSet.getString("CLANTAG");

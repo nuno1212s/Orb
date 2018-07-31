@@ -1,6 +1,7 @@
 package com.nuno1212s.clans.clanmanager;
 
 import com.google.common.collect.ImmutableMap;
+import com.nuno1212s.clans.ClanMain;
 import com.nuno1212s.clans.clanplayer.ClanPlayer;
 import com.nuno1212s.events.PlayerInformationUpdateEvent;
 import com.nuno1212s.main.MainData;
@@ -103,6 +104,7 @@ public class Clan {
 
     /**
      * Set the rank of a player in the clan
+     *
      * @param player
      * @param rank
      */

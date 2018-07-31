@@ -8,7 +8,6 @@ public class Main extends Module {
 
     @Override
     public void onEnable() {
-
     }
 
     @Override

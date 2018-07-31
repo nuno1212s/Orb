@@ -1,6 +1,7 @@
 package com.nuno1212s.clans.chathandler;
 
 import com.nuno1212s.clans.ClanMain;
+import com.nuno1212s.clans.clanmanager.Clan;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.util.Callback;
 import org.bukkit.entity.Player;
@@ -40,6 +41,17 @@ public class ChatRequests implements Listener {
                 return;
             }
 
+            Clan clanByName = ClanMain.getIns().getClanManager().getClanByName(name);
+
+            if (clanByName != null) {
+                MainData.getIns().getMessageManager().getMessage("CLAN_WITH_NAME_ALREADY_EXISTS")
+                        .sendTo(creator);
+
+                createClan(creator);
+
+                return;
+            }
+
             getTag(creator, name);
         });
 
@@ -51,6 +63,17 @@ public class ChatRequests implements Listener {
             if (tag.length() >= 25) {
 
                 MainData.getIns().getMessageManager().getMessage("NAME_TOO_BIG").sendTo(creator);
+
+                getTag(creator, name);
+
+                return;
+            }
+
+            Clan clanByName = ClanMain.getIns().getClanManager().getClanByTag(name);
+
+            if (clanByName != null) {
+                MainData.getIns().getMessageManager().getMessage("CLAN_WITH_TAG_ALREADY_EXISTS")
+                        .sendTo(creator);
 
                 getTag(creator, name);
 

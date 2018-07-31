@@ -5,4 +5,4 @@ author: Nuno1212SsS
 #Force this plugin to be the last plugin to load,
 #On the first try to load the plugin it will fail to find a plugin name LOADLAST,
 #so it will only try to load this plugin on the 2nd attempt
-softdepend: [Citizens, HolographicDisplays]
+softdepend: [Citizens, HolographicDisplays, mcMmo]

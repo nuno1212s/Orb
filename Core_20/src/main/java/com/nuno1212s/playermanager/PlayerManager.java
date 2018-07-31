@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -40,7 +41,7 @@ public class PlayerManager {
      * @return
      */
     public PlayerData buildNewPlayerData(UUID playerID, String playerName) {
-        return new CorePlayerData(playerID, new PlayerGroupData(), playerName, 0, System.currentTimeMillis(), true, MainData.getIns().getRewardManager().getDefaultRewards(), null);
+        return new CorePlayerData(playerID, new PlayerGroupData(), playerName, 0, System.currentTimeMillis(), true, false, MainData.getIns().getRewardManager().getDefaultRewards(), null);
     }
 
     /**
@@ -53,7 +54,7 @@ public class PlayerManager {
      * @return
      */
     public PlayerData buildNewPiratePlayerData(UUID playerID, String playerName) {
-        return new CorePlayerData(playerID, new PlayerGroupData(), playerName, 0, System.currentTimeMillis(), false, MainData.getIns().getRewardManager().getDefaultRewards(), null);
+        return new CorePlayerData(playerID, new PlayerGroupData(), playerName, 0, System.currentTimeMillis(), false, false, MainData.getIns().getRewardManager().getDefaultRewards(), null);
     }
 
     /**
@@ -173,11 +174,34 @@ public class PlayerManager {
         return new Pair<>(MainData.getIns().getMySql().getPlayerData(playerID, null), true);
     }
 
+    public CompletableFuture<PlayerData> loadPlayer(UUID playerID) {
+
+        if (players.containsKey(playerID)) {
+            return CompletableFuture.completedFuture(getPlayer(playerID));
+        }
+
+        return CompletableFuture.supplyAsync(() -> MainData.getIns().getMySql().getPlayerData(playerID, null));
+    }
+
+    public CompletableFuture<PlayerData> loadPlayer(String playerName) {
+
+        PlayerData player = getPlayer(playerName);
+
+        if (player != null) {
+
+            return CompletableFuture.completedFuture(player);
+
+        }
+
+        return CompletableFuture.supplyAsync(() -> MainData.getIns().getMySql().getPlayerData(null, playerName));
+    }
+
     public PlayerData requestAditionalServerData(PlayerData player) {
 
         return MainData.getIns().getEventCaller().callPlayerInformationLoad(player);
 
     }
+
     /**
      * Returns a safe to iterate player list
      * <p>

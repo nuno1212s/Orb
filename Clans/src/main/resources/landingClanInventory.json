@@ -26,7 +26,7 @@
         "Data": 14,
         "DisplayName": "&cMembros"
       },
-      "Flags": ["MEMBROS"]
+      "Flags": ["MEMBERS"]
     },
     {
       "Slot": 16,

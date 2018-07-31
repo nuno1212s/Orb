@@ -1,0 +1,33 @@
+{
+  "InventoryID": "skillVisualizer",
+  "InventoryName": "&cSkills",
+  "InventorySize": 27,
+  "InventoryItems": [
+    {
+      "Slot": 11,
+      "Item": {
+        "Material": "SKULL_ITEM",
+        "Data": 3,
+        "DisplayName": "%playerName%",
+        "Lore": [
+          "&7Level: &e%level%",
+          "&7Rank: &e%rank%"
+        ]
+      }
+    },
+    {
+      "Slot": 13,
+      "Item": {
+        "Material": "DIAMOND_PICKAXE",
+        "DisplayName": "&cMining",
+        "Lore": [
+          "&7Level: &e%skillLevel%",
+          "&7XP: &e%skillXP%/%skillXPNeeded%",
+          "&7Xp needed: &e%skillXPToNextLevel%",
+          "&7Skill Rank: &e%skillRank%"
+        ]
+      },
+      "Skill": "MINING"
+    }
+  ]
+}

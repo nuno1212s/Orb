@@ -83,6 +83,7 @@ public class MySql {
                     "GROUPDATA VARCHAR(100), " +
                     "PLAYERNAME VARCHAR(16) NOT NULL, " +
                     "PREMIUM BOOL," +
+                    "AUTOLOGIN BOOL," +
                     "LASTLOGIN TIMESTAMP," +
                     "TELL BOOL," +
                     "CASH BIGINT," +
@@ -121,8 +122,8 @@ public class MySql {
         try (Connection c = getConnection();
              PreparedStatement select =
                      (playerName == null ?
-                             c.prepareStatement("SELECT GROUPDATA, PLAYERNAME, CASH, PREMIUM, LASTLOGIN, REWARDSTOCLAIM, TELL, PUNISHMENT FROM playerData WHERE UUID=? LIMIT 1") :
-                             c.prepareStatement("SELECT GROUPDATA, CASH, PREMIUM, LASTLOGIN, REWARDSTOCLAIM, TELL, PUNISHMENT FROM playerData WHERE UUID=? LIMIT 1"))
+                             c.prepareStatement("SELECT GROUPDATA, PLAYERNAME, CASH, PREMIUM, AUTOLOGIN, LASTLOGIN, REWARDSTOCLAIM, TELL, PUNISHMENT FROM playerData WHERE UUID=? LIMIT 1") :
+                             c.prepareStatement("SELECT GROUPDATA, CASH, PREMIUM, AUTOLOGIN, LASTLOGIN, REWARDSTOCLAIM, TELL, PUNISHMENT FROM playerData WHERE UUID=? LIMIT 1"))
         ) {
             if (playerName == null) {
                 select.setString(1, playerID.toString());
@@ -132,6 +133,7 @@ public class MySql {
                         long cash = resultSet.getLong("CASH");
                         playerName = resultSet.getString("PLAYERNAME");
                         boolean premium = resultSet.getBoolean("PREMIUM");
+                        boolean autoLogin = resultSet.getBoolean("AUTOLOGIN");
                         long lastLogin = resultSet.getDate("LASTLOGIN").getTime();
                         boolean tell = resultSet.getBoolean("TELL");
                         List<Integer> toClaim = new ArrayList<>();
@@ -162,7 +164,7 @@ public class MySql {
                             punishmentInstance = new Punishment(punishment);
                         }
 
-                        PlayerData playerData = new CorePlayerData(playerID, new PlayerGroupData(groupid), playerName, cash, lastLogin, premium, toClaim, punishmentInstance);
+                        PlayerData playerData = new CorePlayerData(playerID, new PlayerGroupData(groupid), playerName, cash, lastLogin, premium, autoLogin, toClaim, punishmentInstance);
                         playerData.setTell(tell);
                         return playerData;
                     }
@@ -175,6 +177,7 @@ public class MySql {
                         String groupid = resultSet.getString("GROUPDATA");
                         long cash = resultSet.getLong("CASH");
                         boolean premium = resultSet.getBoolean("PREMIUM");
+                        boolean autoLogin = resultSet.getBoolean("AUTOLOGIN");
                         long lastLogin = resultSet.getDate("LASTLOGIN").getTime();
                         boolean tell = resultSet.getBoolean("TELL");
                         List<Integer> toClaim = new ArrayList<>();
@@ -206,7 +209,7 @@ public class MySql {
                             punishmentInstance = new Punishment(punishment);
                         }
 
-                        PlayerData playerData = new CorePlayerData(playerID, new PlayerGroupData(groupid), playerName, cash, lastLogin, premium, toClaim, punishmentInstance);
+                        PlayerData playerData = new CorePlayerData(playerID, new PlayerGroupData(groupid), playerName, cash, lastLogin, premium, autoLogin, toClaim, punishmentInstance);
                         playerData.setTell(tell);
                         return playerData;
                     }
@@ -225,7 +228,7 @@ public class MySql {
 
         try (Connection c = getConnection();
              PreparedStatement select =
-                     c.prepareStatement("SELECT UUID, GROUPDATA, PLAYERNAME, CASH, PREMIUM, LASTLOGIN, REWARDSTOCLAIM, TELL, PUNISHMENT FROM playerData WHERE LOWER(playerName)=LOWER(?) LIMIT 1")
+                     c.prepareStatement("SELECT UUID, GROUPDATA, PLAYERNAME, CASH, PREMIUM, AUTOLOGIN, LASTLOGIN, REWARDSTOCLAIM, TELL, PUNISHMENT FROM playerData WHERE LOWER(playerName)=LOWER(?) LIMIT 1")
         ) {
             select.setString(1, playerName);
             try (ResultSet resultSet = select.executeQuery()) {
@@ -235,6 +238,7 @@ public class MySql {
                     String groupid = resultSet.getString("GROUPDATA");
                     long cash = resultSet.getLong("CASH");
                     boolean premium = resultSet.getBoolean("PREMIUM");
+                    boolean autoLogin = resultSet.getBoolean("AUTOLOGIN");
                     long lastLogin = resultSet.getDate("LASTLOGIN").getTime();
                     boolean tell = resultSet.getBoolean("TELL");
                     List<Integer> toClaim = new ArrayList<>();
@@ -258,7 +262,7 @@ public class MySql {
                         punishmentInstance = new Punishment(punishment);
                     }
 
-                    PlayerData playerData = new CorePlayerData(playerID, new PlayerGroupData(groupid), playerName, cash, lastLogin, premium, toClaim, punishmentInstance);
+                    PlayerData playerData = new CorePlayerData(playerID, new PlayerGroupData(groupid), playerName, cash, lastLogin, premium, autoLogin, toClaim, punishmentInstance);
                     playerData.setTell(tell);
                     return playerData;
                 }
@@ -274,16 +278,17 @@ public class MySql {
     public void savePlayer(PlayerData d) {
 
         try (Connection c = getConnection();
-             PreparedStatement st = c.prepareStatement("INSERT INTO playerData (UUID, GROUPDATA, PLAYERNAME, CASH, PREMIUM, LASTLOGIN, TELL, REWARDSTOCLAIM, PUNISHMENT) VALUES(?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?, ?) " +
-                     "ON DUPLICATE KEY UPDATE GROUPDATA=?, CASH=?, PLAYERNAME=?, LASTLOGIN=CURRENT_TIMESTAMP, PREMIUM=?, TELL=?, REWARDSTOCLAIM=?, PUNISHMENT=?")) {
+             PreparedStatement st = c.prepareStatement("INSERT INTO playerData (UUID, GROUPDATA, PLAYERNAME, CASH, PREMIUM, AUTOLOGIN, LASTLOGIN, TELL, REWARDSTOCLAIM, PUNISHMENT) VALUES(?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?, ?) " +
+                     "ON DUPLICATE KEY UPDATE GROUPDATA=?, CASH=?, PLAYERNAME=?, LASTLOGIN=CURRENT_TIMESTAMP, PREMIUM=?, AUTOLOGIN=?, TELL=?, REWARDSTOCLAIM=?, PUNISHMENT=?")) {
 
             st.setString(1, d.getPlayerID().toString());
             st.setString(2, d.getGroups().toDatabase());
             st.setString(3, d.getPlayerName());
             st.setLong(4, d.getCash());
             st.setBoolean(5, d.isPremium());
-            st.setBoolean(6, d.isTell());
-            st.setString(7, d.getToClaimToString());
+            st.setBoolean(6, d.isAutoLogin());
+            st.setBoolean(7, d.isTell());
+            st.setString(8, d.getToClaimToString());
 
             String punishments;
             if (d.getPunishment() == null) {
@@ -292,14 +297,15 @@ public class MySql {
                 punishments = d.getPunishment().toString();
             }
 
-            st.setString(8, punishments);
-            st.setString(9, d.getGroups().toDatabase());
-            st.setLong(10, d.getCash());
-            st.setString(11, d.getPlayerName());
-            st.setBoolean(12, d.isPremium());
-            st.setBoolean(13, d.isTell());
-            st.setString(14, d.getToClaimToString());
-            st.setString(15, punishments);
+            st.setString(9, punishments);
+            st.setString(10, d.getGroups().toDatabase());
+            st.setLong(11, d.getCash());
+            st.setString(12, d.getPlayerName());
+            st.setBoolean(13, d.isPremium());
+            st.setBoolean(14, d.isAutoLogin());
+            st.setBoolean(15, d.isTell());
+            st.setString(16, d.getToClaimToString());
+            st.setString(17, punishments);
 
             st.executeUpdate();
 

@@ -46,6 +46,11 @@ public class ClanManager {
 
         clans.put(c.getClanID(), c);
 
+        MainData.getIns().getMessageManager().getMessage("CREATED_CLAN")
+                .format("%clanName%", c.getClanName())
+                .format("%clanTag%", c.getClanTag())
+                .sendTo(creator);
+
         MainData.getIns().getScheduler().runTaskAsync(() -> {
 
             ClanMain.getIns().getMySQLHandler().createClan(c);
@@ -60,8 +65,41 @@ public class ClanManager {
 
     }
 
+    /**
+     * Get clan by ID
+     *
+     * @param clanID
+     * @return
+     */
     public Clan getClan(String clanID) {
         return clans.get(clanID);
+    }
+
+    /**
+     * Get clan by name
+     * @param clanName
+     * @return
+     */
+    public Clan getClanByName(String clanName) {
+
+        for (Clan clan : clans.values()) {
+            if (clan.getClanName().equalsIgnoreCase(clanName)) {
+                return clan;
+            }
+        }
+
+        return null;
+    }
+
+    public Clan getClanByTag(String clanTag) {
+
+        for (Clan clan : clans.values()) {
+            if (clan.getClanTag().equalsIgnoreCase(clanTag)) {
+                return clan;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -97,8 +135,15 @@ public class ClanManager {
         });
     }
 
+    public void save() {
+
+        for (Clan clan : this.clans.values()) {
+            ClanMain.getIns().getMySQLHandler().createClan(clan);
+        }
+
+    }
+
     /**
-     *
      * @param playerData
      */
     public void sendClanRanking(PlayerData playerData) {

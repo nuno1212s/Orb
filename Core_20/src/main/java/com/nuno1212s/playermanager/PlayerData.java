@@ -38,6 +38,8 @@ public abstract class PlayerData {
 
     protected boolean premium;
 
+    protected boolean autoLogin;
+
     protected boolean tell;
 
     protected List<Integer> toClaim;
@@ -51,11 +53,12 @@ public abstract class PlayerData {
      */
     private WeakReference<Object> playerReference;
 
-    public PlayerData(UUID playerID, PlayerGroupData groups, String playerName, long cash, long lastLogin, boolean premium, List<Integer> toClaim, Punishment punishment) {
+    public PlayerData(UUID playerID, PlayerGroupData groups, String playerName, long cash, long lastLogin, boolean premium, boolean autoLogin, List<Integer> toClaim, Punishment punishment) {
         this.playerID = playerID;
         this.groups = groups;
         this.playerName = playerName;
         this.cash = new AtomicLong(cash);
+        this.autoLogin = autoLogin;
         this.lastLogin = lastLogin;
         this.premium = premium;
         this.toClaim = toClaim;
@@ -72,6 +75,7 @@ public abstract class PlayerData {
         this.tell = coreData.isTell();
         this.toClaim = coreData.getToClaim();
         this.punishment = coreData.getPunishment();
+        this.autoLogin = coreData.isAutoLogin();
     }
 
     /**

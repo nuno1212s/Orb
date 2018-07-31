@@ -58,7 +58,7 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer, End
 
     private Set<String> invites;
 
-    public RUPlayerData(PlayerData d, long coins, PlayerGroupData groupData, PlayerGroupData serverGroup, Map<Integer, Long> kitUsages, List<Integer> privateKits, String enderChest, int kills, int deaths, Set<String> invites) {
+    public RUPlayerData(PlayerData d, long coins, PlayerGroupData groupData, PlayerGroupData serverGroup, Map<Integer, Long> kitUsages, List<Integer> privateKits, String enderChest, int kills, int deaths, Set<String> invites, String clan) {
         super(d);
         this.coins = new AtomicLong(coins);
         this.rankUpGroup = serverGroup;
@@ -69,6 +69,7 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer, End
         this.kills = kills;
         this.deaths = deaths;
         this.invites = invites;
+        this.clan = clan;
     }
 
     public synchronized final void setCoins(long coins) {

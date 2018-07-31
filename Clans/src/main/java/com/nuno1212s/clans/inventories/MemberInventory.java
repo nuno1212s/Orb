@@ -13,12 +13,14 @@ import com.nuno1212s.util.ItemUtils;
 import com.nuno1212s.util.NBTDataStorage.NBTCompound;
 import com.nuno1212s.util.Pair;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.Event;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.json.simple.JSONObject;
 
 import java.io.File;
@@ -60,6 +62,7 @@ public class MemberInventory extends InventoryData<MemberItem> {
             int slot = 0;
 
             ImmutableMap<UUID, Clan.Rank> members = c.getMembersSorted();
+
             for (UUID uuid : members.keySet()) {
                 Pair<PlayerData, Boolean> orLoadPlayer = MainData.getIns().getPlayerManager().getOrLoadPlayer(uuid);
 
@@ -87,11 +90,23 @@ public class MemberInventory extends InventoryData<MemberItem> {
 
                 ItemStack memberItem = ClanMain.getIns().getInventoryManager().getMemberItem().clone();
 
+                if (memberItem.getType() == Material.SKULL_ITEM) {
+                    SkullMeta meta = (SkullMeta) memberItem.getItemMeta();
+
+                    meta.setOwner(player.getPlayerName());
+
+                    memberItem.setItemMeta(meta);
+                }
+
                 NBTCompound nbt = new NBTCompound(memberItem);
 
                 nbt.add("PlayerID", uuid.toString());
 
                 i.setItem(slot++, ItemUtils.formatItem(nbt.write(memberItem), formats));
+            }
+
+            for (MemberItem item : items) {
+                i.setItem(item.getSlot(), item.getItem());
             }
 
             return i;
@@ -188,5 +203,6 @@ class MemberItem extends InventoryItem {
     public MemberItem(JSONObject data) {
         super(data);
     }
+
 
 }

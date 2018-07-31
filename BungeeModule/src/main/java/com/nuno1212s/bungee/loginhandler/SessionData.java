@@ -13,6 +13,7 @@ import java.util.UUID;
 public class SessionData {
 
     UUID playerID;
+
     boolean authenticated;
 
 }

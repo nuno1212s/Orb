@@ -14,6 +14,8 @@ import com.nuno1212s.rankup.mysql.MySql;
 import com.nuno1212s.rankup.playermanager.RUPlayerData;
 import com.nuno1212s.rankup.rankup.RankUpCommand;
 import com.nuno1212s.rankup.rankup.RankUpManager;
+import com.nuno1212s.rankup.skillvisualizer.SkillCommand;
+import com.nuno1212s.rankup.skillvisualizer.SkillVisualizer;
 import lombok.Getter;
 
 import java.text.NumberFormat;
@@ -34,12 +36,16 @@ public class Main extends Module {
     @Getter
     RankUpManager rankUpManager;
 
+    @Getter
+    SkillVisualizer skillVisualizer;
+
     @Override
     public void onEnable() {
         ins = this;
         mysql = new MySql();
         mysql.createTables();
         rankUpManager = new RankUpManager(this);
+        this.skillVisualizer = new SkillVisualizer(this);
 
         MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));
 
@@ -83,6 +89,7 @@ public class Main extends Module {
         registerCommand(new String[]{"coins", "coin", "money"}, new CoinCommand());
         registerCommand(new String[]{"rankup"}, new RankUpCommand());
         registerCommand(new String[]{"serverrank", "srank"}, new RGroupCommand());
+        registerCommand(new String[]{"skills"}, new SkillCommand());
 
         BukkitMain plugin = BukkitMain.getIns();
 

@@ -15,6 +15,8 @@ public class Trade {
     @Setter
     private boolean player1Accepted, player2Accepted;
 
+    private long player1coins, player2Coins;
+
     @Getter
     private Inventory tradeInventory;
 
@@ -25,5 +27,31 @@ public class Trade {
         this.player1Accepted = false;
         this.player2Accepted = false;
     }
+
+    public void playerChangedTrade() {
+        this.player2Accepted = false;
+        this.player1Accepted = false;
+    }
+
+    public boolean player1ToggleAccept(UUID player) {
+        if (player != player1) {
+            return false;
+        }
+
+        this.player1Accepted = !this.player1Accepted;
+
+        return true;
+    }
+
+    public boolean player2ToggleAccept(UUID player) {
+        if (player != player2) {
+            return false;
+        }
+
+        this.player2Accepted = !this.player2Accepted;
+
+        return true;
+    }
+
 
 }

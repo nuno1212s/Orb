@@ -29,6 +29,7 @@ public class PlayerLoginEvent implements Listener {
             return;
         }
         e.registerIntent(Main.getPlugin());
+
         ProxyServer.getInstance().getScheduler().runAsync(Main.getPlugin(), new AsyncPremiumCheck(m, e));
     }
 

@@ -241,6 +241,19 @@ public class InventoryData<T extends InventoryItem> {
         return null;
     }
 
+    public final List<T> getItemsWithFlag(String flag) {
+
+        List<T> items = new ArrayList<>();
+
+        for (T item : this.items) {
+            if (item.hasItemFlag(flag)) {
+                items.add(item);
+            }
+        }
+
+        return items;
+    }
+
     public void handleClick(InventoryClickEvent e) {
         e.setResult(Event.Result.DENY);
     }

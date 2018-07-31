@@ -38,21 +38,10 @@ public class AsyncPremiumCheck implements Runnable {
             if (d != null) {
 
                 //UUID u = m.getConnector().getPremiumUUID(username);
-                connection.setOnlineMode(d.isPremium());
+                connection.setOnlineMode(d.isAutoLogin());
 
-                if (d.isPremium()) {
-                    if (!connection.isOnlineMode()) {
-                        event.setCancelled(true);
-                        event.setCancelReason(ChatColor.RED + "You can't join with a premium username while using a cracked account!");
-                        return;
-                    }
-                } else {
-                    if (connection.isOnlineMode()) {
-                        return;
-                    }
-
+                if (!d.isAutoLogin())
                     connection.setUniqueId(d.getPlayerID());
-                }
 
                 d.setLastLogin(System.currentTimeMillis());
 
@@ -66,28 +55,25 @@ public class AsyncPremiumCheck implements Runnable {
             } else {
                 UUID premiumId = m.getConnector().getPremiumUUID(username);
 
-                connection.setOnlineMode(premiumId != null);
+                connection.setOnlineMode(false);
 
                 if (premiumId == null) {
                     //Cracked account
                     UUID uuidForPlayer = UUID.randomUUID();
-                    connection.setUniqueId(uuidForPlayer);
+
                     d = MainData.getIns().getPlayerManager().buildNewPiratePlayerData(uuidForPlayer, username);
 
                     BungeeCoreLogin event = new BungeeCoreLogin(d);
                     Main.getPlugin().getProxy().getPluginManager().callEvent(event);
 
                     d = event.getData();
-                } else if (!connection.isOnlineMode()) {
-                    event.setCancelled(true);
-                    event.setCancelReason(ChatColor.RED + "You can't join with a premium username while using a cracked account!");
-                    return;
-                } else {
+                }  else {
 
                     d = MainData.getIns().getPlayerManager().buildNewPlayerData(premiumId, connection.getName());
 
                     //Check if player did not change name
                     PlayerData nameCheck = MainData.getIns().getMySql().getPlayerData(premiumId, null);
+
                     if (nameCheck != null) {
                         d = nameCheck;
                         d.setPlayerName(username);
@@ -98,6 +84,8 @@ public class AsyncPremiumCheck implements Runnable {
 
                     d = event.getData();
                 }
+
+                connection.setUniqueId(d.getPlayerID());
 
                 MainData.getIns().getPlayerManager().addToCache(d.getPlayerID(), d);
             }

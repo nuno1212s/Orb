@@ -4,6 +4,7 @@ import com.nuno1212s.clans.chathandler.ChatRequests;
 import com.nuno1212s.clans.clanmanager.ClanManager;
 import com.nuno1212s.clans.clanplayer.ClanPlayer;
 import com.nuno1212s.clans.commands.ClanCommand;
+import com.nuno1212s.clans.commands.ResetKDRCommand;
 import com.nuno1212s.clans.inventories.InventoryManager;
 import com.nuno1212s.clans.listeners.PlayerDeathListener;
 import com.nuno1212s.clans.mysql.MySQLHandler;
@@ -43,9 +44,12 @@ public class ClanMain extends Module {
         this.inventoryManager = new InventoryManager(this);
 
         registerCommand(new String[]{"clan"}, new ClanCommand());
+        registerCommand(new String[]{"resetKDR"}, new ResetKDRCommand());
 
         Bukkit.getServer().getPluginManager().registerEvents(chatRequests, BukkitMain.getIns());
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerDeathListener(), BukkitMain.getIns());
+
+        MainData.getIns().getScheduler().runTaskTimerAsync(clanManager::save, 6000, 6000);
 
         PlaceHolderManager placeHolderManager = DisplayMain.getIns().getPlaceHolderManager();
 
@@ -108,6 +112,6 @@ public class ClanMain extends Module {
     }
 
     public void onDisable() {
-
+        this.clanManager.save();
     }
 }
