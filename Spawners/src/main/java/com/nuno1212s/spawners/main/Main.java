@@ -42,11 +42,13 @@ public class Main extends Module {
 
         MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));
 
-        registerCommand(new String[]{"vender"}, new SellCommand());
+        SellCommand sellCommand = new SellCommand();
+        registerCommand(new String[]{"vender"}, sellCommand);
         registerCommand(new String[]{"instantreward"}, new InstantRewardCommand());
         registerCommand(new String[]{"reloadspawner"}, new ReloadConfigCommand());
         registerCommand(new String[]{"spawnerset"}, new SpawnerSetCommand());
         registerCommand(new String[]{"spawnerget"}, new SpawnerGetCommand());
+        registerCommand(new String[]{"tpplayers"}, sellCommand);
 
         BukkitMain ins = BukkitMain.getIns();
 

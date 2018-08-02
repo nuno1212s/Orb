@@ -23,6 +23,7 @@ public class InstantRewardCommand implements CommandExecutor {
         } else {
             MainData.getIns().getMessageManager().getMessage("NO_PERMISSION").sendTo(commandSender);
         }
+
         return true;
     }
 }

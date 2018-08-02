@@ -1,0 +1,30 @@
+{
+  "InventoryID": "invFerreiro",
+  "InventoryName": "&cFerreiro",
+  "InventorySize": 27,
+  "InventoryItems": [
+    {
+      "Slot": 11,
+      "Item": {
+        "Material": "WOOL",
+        "Data": 14,
+        "DisplayName": "&aConfirma",
+        "Lore": ["&7Custo: %cost%"]
+      },
+      "Flags": ["CONFIRM"]
+    },
+    {
+      "Slot": 13,
+      "Flags": ["DISPLAYITEM"]
+    },
+    {
+      "Slot": 15,
+      "Item": {
+        "Material": "WOOL",
+        "Data": 4,
+        "DisplayName": "&cCancela"
+      },
+      "Flags": ["CANCEL"]
+    }
+  ]
+}

@@ -1,6 +1,5 @@
 package com.nuno1212s.ferreiro.commands;
 
-import com.nuno1212s.ferreiro.inventories.ConfirmInventory;
 import com.nuno1212s.ferreiro.main.Main;
 import com.nuno1212s.ferreiro.util.RepairCost;
 import com.nuno1212s.main.MainData;
@@ -53,7 +52,7 @@ public class RepairCommand implements CommandExecutor {
 
             PlayerData d = MainData.getIns().getPlayerManager().getPlayer(p.getUniqueId());
 
-            ConfirmInventory c = new ConfirmInventory(repairCost, itemInHand, (o) -> {
+            p.openInventory(Main.getIns().getConfirmInv().buildInventory((Player) p, repairCost, itemInHand, (o) -> {
                 if (p.getItemInHand() == null || p.getItemInHand().getType() == Material.AIR || !p.getItemInHand().isSimilar(itemInHand)) {
                     MainData.getIns().getMessageManager().getMessage("REPAIR_ERROR").sendTo(p);
                     return;
@@ -88,10 +87,7 @@ public class RepairCommand implements CommandExecutor {
                             });
                 }
 
-            });
-
-            Main.getIns().addInventory(p.getUniqueId(), c);
-            p.openInventory(c.getInv());
+            }));
 
         }
         return true;

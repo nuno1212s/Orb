@@ -23,10 +23,11 @@ public class SellCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] args) {
         if (commandSender instanceof Player) {
-            if (!commandSender.hasPermission("vender")) {
+            if (!commandSender.hasPermission("vender") && command.getName().equalsIgnoreCase("vender")) {
                 MainData.getIns().getMessageManager().getMessage("NO_PERMISSION").sendTo(commandSender);
                 return true;
             }
+
             Player p = (Player) commandSender;
 
             PlayerData d = MainData.getIns().getPlayerManager().getPlayer(p.getUniqueId());
