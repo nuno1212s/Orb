@@ -16,19 +16,11 @@ public class PlaceHolderManager {
     public PlaceHolderManager() {
         placeHolders = new HashMap<>();
 
-        placeHolders.put("%playerName%", new PlaceHolder() {
-            @Override
-            public String replacePlaceHolder(PlayerData d) {
-                return d.getNameWithPrefix();
-            }
-        });
+        placeHolders.put("%playerName%", PlayerData::getNameWithPrefix);
 
-        placeHolders.put("%online%", new PlaceHolder() {
-            @Override
-            public String replacePlaceHolder(PlayerData d) {
-                return String.valueOf(Bukkit.getOnlinePlayers().size());
-            }
-        });
+        placeHolders.put("%playerNameDefault%", PlayerData::getPlayerName);
+
+        placeHolders.put("%online%", d -> String.valueOf(Bukkit.getOnlinePlayers().size()));
     }
 
     public void registerPlaceHolder(String placeHolder, PlaceHolder holder) {

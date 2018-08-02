@@ -57,8 +57,6 @@ public class KInventoryData extends InventoryData<KInventoryItem> {
 
         KInventoryItem item = getItem(e.getSlot());
 
-        System.out.println(e.getSlot());
-
         if (item == null) {
             return;
         }
@@ -129,8 +127,13 @@ class KInventoryItem extends InventoryItem {
 
         if (playerData instanceof KitPlayer) {
             kitPlayer = (KitPlayer) playerData;
-            placeHolders.put("%time%", new TimeUtil("DD dias: HH horas: MM minutos: SS segundos")
-                    .toTime(kitPlayer.timeUntilUsage(k.getId(), k.getDelay())));
+
+            if (kitPlayer.timeUntilUsage(k.getId(), k.getDelay()) > 0) {
+                placeHolders.put("%time%", new TimeUtil("DD dias: HH horas: MM minutos: SS segundos")
+                        .toTime(kitPlayer.timeUntilUsage(k.getId(), k.getDelay())));
+            } else {
+                placeHolders.put("%KIT_CAN_USE%", MainData.getIns().getMessageManager().getMessage("KIT_CAN_USE").toString());
+            }
         }
 
         if (!k.canUseKit(p, playerData)) {

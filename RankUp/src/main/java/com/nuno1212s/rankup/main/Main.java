@@ -7,6 +7,7 @@ import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.modulemanager.ModuleData;
 import com.nuno1212s.permissionmanager.Group;
+import com.nuno1212s.rankup.commands.KDDPlayerTop;
 import com.nuno1212s.rankup.commands.RGroupCommand;
 import com.nuno1212s.rankup.economy.CoinCommand;
 import com.nuno1212s.rankup.events.*;
@@ -90,6 +91,7 @@ public class Main extends Module {
         registerCommand(new String[]{"rankup"}, new RankUpCommand());
         registerCommand(new String[]{"serverrank", "srank"}, new RGroupCommand());
         registerCommand(new String[]{"skills"}, new SkillCommand());
+        registerCommand(new String[]{"kddtop"}, new KDDPlayerTop());
 
         BukkitMain plugin = BukkitMain.getIns();
 

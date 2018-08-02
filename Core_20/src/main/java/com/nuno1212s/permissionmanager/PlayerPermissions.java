@@ -29,22 +29,40 @@ public class PlayerPermissions {
 
         List<Short> localGroups = d.getServerGroups();
 
-        globalGroup.getPermissions().forEach(perm -> pA.setPermission(perm, true));
+        Map<String, Boolean> permissions1 = getDirect(pA);
+
+        insertPermission(globalGroup, permissions1);
 
         if (!localGroups.isEmpty()) {
             for (short s : localGroups) {
                 Group localGroup = MainData.getIns().getPermissionManager().getGroup(s);
 
-                List<String> permissions = localGroup.getPermissions();
-
-                Map<String, Boolean> permissions1 = getDirect(pA);
-                permissions.forEach(perm ->
-                    permissions1.put(perm, true)
-                );
+                insertPermission(localGroup, permissions1);
             }
         }
 
         p.recalculatePermissions();
+    }
+
+    public void unregisterPermissions(Player p) {
+        if (this.playerAttachments.containsKey(p.getUniqueId())) {
+            p.removeAttachment(this.playerAttachments.get(p.getUniqueId()));
+
+            this.playerAttachments.remove(p.getUniqueId());
+
+            p.recalculatePermissions();
+        }
+
+    }
+
+    private void insertPermission(Group group, Map<String, Boolean> permissions) {
+
+        for (String permission : group.getTruePermissions()) {
+
+            permissions.put(permission, true);
+
+        }
+
     }
 
     private Field f;
@@ -73,17 +91,6 @@ public class PlayerPermissions {
         }
 
         return new LinkedHashMap<>();
-    }
-
-    public void unregisterPermissions(Player p) {
-        if (this.playerAttachments.containsKey(p.getUniqueId())) {
-            p.removeAttachment(this.playerAttachments.get(p.getUniqueId()));
-
-            this.playerAttachments.remove(p.getUniqueId());
-
-            p.recalculatePermissions();
-        }
-
     }
 
 }

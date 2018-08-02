@@ -86,9 +86,18 @@ public abstract class PlayerData {
      */
     public final PlayerGroupData.EXTENSION_RESULT setMainGroup(short groupID, long duration, boolean shoudUseRedis) {
         Group previous = MainData.getIns().getPermissionManager().getGroup(this.groups.getActiveGroup());
+
         PlayerGroupData.EXTENSION_RESULT extension_result = this.groups.setCurrentGroup(groupID, duration);
+
         if (MainData.getIns().getEventCaller() != null) {
             MainData.getIns().getEventCaller().callGroupUpdateEvent(this, previous);
+
+            /**
+             * Calling the update information event causes the player permissions to be updated by
+             *
+             * {@link com.nuno1212s.events.listeners.InformationUpdateListener#onUpdate(PlayerInformationUpdateEvent)}
+             */
+
             MainData.getIns().getEventCaller().callUpdateInformationEvent(this, PlayerInformationUpdateEvent.Reason.GROUP_UPDATE);
         }
 

@@ -82,7 +82,7 @@ public class MemberInventory extends InventoryData<MemberItem> {
 
                     formats.put("%kills%", String.valueOf(cP.getKills()));
                     formats.put("%deaths%", String.valueOf(cP.getDeaths()));
-                    formats.put("%clanRank%", members.get(uuid).name());
+                    formats.put("%clanRank%", members.get(uuid).getName());
                     formats.put("%KDR%", String.format(".%2f", ((float) cP.getKills()) / cP.getDeaths()));
                     formats.put("%KDD%", String.valueOf(cP.getKills() - cP.getDeaths()));
 
@@ -110,7 +110,7 @@ public class MemberInventory extends InventoryData<MemberItem> {
             }
 
             return i;
-        });
+        }, MainData.getIns().getAsyncExecutor());
 
     }
 
@@ -121,18 +121,23 @@ public class MemberInventory extends InventoryData<MemberItem> {
 
         ItemStack item = e.getCurrentItem();
 
+        if (e.getCurrentItem() == null) {
+            return;
+        }
+
         NBTCompound nbt = new NBTCompound(item);
 
         UUID playerID = UUID.fromString((String) nbt.getValues().get("PlayerID"));
 
-        if (playerID.equals(e.getWhoClicked().getUniqueId())) {
-
-            MainData.getIns().getMessageManager().getMessage("CANNOT_CHANGE_OWN_RANK").sendTo(e.getWhoClicked());
-
-            return;
-        }
 
         if (e.getClick() == ClickType.SHIFT_LEFT) {
+
+            if (playerID.equals(e.getWhoClicked().getUniqueId())) {
+
+                MainData.getIns().getMessageManager().getMessage("CANNOT_CHANGE_OWN_RANK").sendTo(e.getWhoClicked());
+
+                return;
+            }
 
             PlayerData player1 = MainData.getIns().getPlayerManager().getPlayer(e.getWhoClicked().getUniqueId());
 
@@ -156,6 +161,13 @@ public class MemberInventory extends InventoryData<MemberItem> {
 
             }
         } else if (e.getClick() == ClickType.SHIFT_RIGHT) {
+
+            if (playerID.equals(e.getWhoClicked().getUniqueId())) {
+
+                MainData.getIns().getMessageManager().getMessage("CANNOT_KICK_SELF").sendTo(e.getWhoClicked());
+
+                return;
+            }
 
             PlayerData player1 = MainData.getIns().getPlayerManager().getPlayer(e.getWhoClicked().getUniqueId());
 

@@ -62,7 +62,6 @@ public class RedisHandler {
 
         this.redisPool = new JedisPool(poolConfig, host, port, 3000, password);
 
-
         //Must have 2 redis connections, 1 for SUB, 1 for PUB
         Jedis subConnection = this.redisPool.getResource();
 

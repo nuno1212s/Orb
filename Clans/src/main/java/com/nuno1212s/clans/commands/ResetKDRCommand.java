@@ -1,12 +1,14 @@
 package com.nuno1212s.clans.commands;
 
 import com.nuno1212s.clans.clanplayer.ClanPlayer;
+import com.nuno1212s.events.PlayerInformationUpdateEvent;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.Pair;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import sun.applet.Main;
 
 public class ResetKDRCommand implements CommandExecutor {
 
@@ -36,13 +38,19 @@ public class ResetKDRCommand implements CommandExecutor {
                     orLoadPlayer.setKey(MainData.getIns().getPlayerManager().requestAditionalServerData(orLoadPlayer.getKey()));
                 }
 
-                if (orLoadPlayer instanceof ClanPlayer) {
-                    ((ClanPlayer) orLoadPlayer).setDeaths(0);
+                if (orLoadPlayer.getKey() instanceof ClanPlayer) {
+                    ((ClanPlayer) orLoadPlayer.getKey()).setDeaths(0);
+
+                    MainData.getIns().getMessageManager().getMessage("RESET_KDR_SUCCESS").sendTo(commandSender);
+                    MainData.getIns().getMessageManager().getMessage("KDR_RESET").sendTo(orLoadPlayer.getKey());
+
+                    if (orLoadPlayer.getValue()) {
+                        orLoadPlayer.getKey().save((o) -> {});
+                    } else {
+                        MainData.getIns().getEventCaller().callUpdateInformationEvent(orLoadPlayer.getKey(), PlayerInformationUpdateEvent.Reason.OTHER);
+                    }
                 }
 
-                if (orLoadPlayer.getValue()) {
-                    orLoadPlayer.getKey().save((o) -> {});
-                }
             });
 
             return true;

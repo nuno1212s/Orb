@@ -5,6 +5,7 @@ import com.nuno1212s.clans.ClanMain;
 import com.nuno1212s.clans.clanplayer.ClanPlayer;
 import com.nuno1212s.events.PlayerInformationUpdateEvent;
 import com.nuno1212s.main.MainData;
+import com.nuno1212s.messagemanager.Message;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.Pair;
 import lombok.AllArgsConstructor;
@@ -12,11 +13,14 @@ import lombok.Getter;
 import org.apache.commons.lang.RandomStringUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 public class Clan {
 
     private static int ID_LENGTH = 15;
+
+    public static int MAX_CLAN_MEMBERS = 25;
 
     @Getter
     private String clanID;
@@ -68,15 +72,92 @@ public class Clan {
     }
 
     public void addMember(UUID player) {
-        if (this.members.size() > 39) {
+        if (this.members.size() >= MAX_CLAN_MEMBERS) {
             return;
         }
 
-        this.members.put(player, Rank.MEMBER);
+        addMember(player, true);
     }
 
+    public void addMember(UUID member, boolean useRedis) {
+        this.members.put(member, Rank.MEMBER);
+
+        //We load the player because we always want to show that someone joined
+        MainData.getIns().getPlayerManager().loadPlayer(member).thenAccept((d) -> {
+            if (d != null) {
+                if (d.isPlayerOnServer()) {
+                    MainData.getIns().getEventCaller().callUpdateInformationEvent(d, PlayerInformationUpdateEvent.Reason.OTHER);
+                }
+
+                Message player_joined_clan = MainData.getIns().getMessageManager().getMessage("PLAYER_JOINED_CLAN")
+                        .format("%playerName%", d.getPlayerName());
+
+                for (UUID uuid : getOnlineMembers()) {
+
+                    player_joined_clan.sendTo(MainData.getIns().getPlayerManager().getPlayer(uuid));
+
+                }
+            }
+        });
+
+        if (useRedis) {
+            MainData.getIns().getScheduler().runTaskAsync(() -> {
+                ClanMain.getIns().getRedisHandler().addMember(this, member);
+            });
+        }
+
+    }
+
+    public List<UUID> getOnlineMembers() {
+
+        Set<UUID> uuids = new HashSet<>(this.members.keySet());
+
+        uuids.add(this.creator);
+
+        return uuids.stream().filter((uuid) -> {
+
+            PlayerData player = MainData.getIns().getPlayerManager().getPlayer(uuid);
+
+            return player != null && player.isPlayerOnServer();
+
+        }).collect(Collectors.toList());
+
+    }
+
+    /**
+     * Remove a member from a clan
+     *
+     * @param player The player to remove from the clan
+     */
     public void removeMember(UUID player) {
+        removeMember(player, true);
+    }
+
+    public void removeMember(UUID player, boolean useRedis) {
         this.members.remove(player);
+
+        //We load the player because we always want to show that someone left
+        MainData.getIns().getPlayerManager().loadPlayer(player).thenAccept((d) -> {
+            if (d != null) {
+                if (d.isPlayerOnServer())
+                    MainData.getIns().getEventCaller().callUpdateInformationEvent(d, PlayerInformationUpdateEvent.Reason.OTHER);
+
+                Message player_joined_clan = MainData.getIns().getMessageManager().getMessage("PLAYER_LEFT_CLAN")
+                        .format("%playerName%", d.getPlayerName());
+
+                for (UUID uuid : getOnlineMembers()) {
+
+                    player_joined_clan.sendTo(MainData.getIns().getPlayerManager().getPlayer(uuid));
+
+                }
+            }
+        });
+
+        if (useRedis) {
+            MainData.getIns().getScheduler().runTaskAsync(() ->
+                    ClanMain.getIns().getRedisHandler().removeMember(this, player)
+            );
+        }
     }
 
     public String membersToString() {
@@ -109,8 +190,25 @@ public class Clan {
      * @param rank
      */
     public void setClanRank(UUID player, Rank rank) {
-        if (this.members.containsKey(player))
+        setClanRank(player, rank, true);
+    }
+
+    public void setClanRank(UUID player, Rank rank, boolean useRedis) {
+        if (this.members.containsKey(player)) {
             this.members.put(player, rank);
+
+            PlayerData d = MainData.getIns().getPlayerManager().getPlayer(player);
+
+            if (d != null && d.isPlayerOnServer()) {
+                MainData.getIns().getMessageManager().getMessage("CLAN_RANK_CHANGED")
+                        .format("%newRank%", rank.getName())
+                        .sendTo(d);
+            }
+
+            if (useRedis) {
+                ClanMain.getIns().getRedisHandler().setRank(this, player, rank);
+            }
+        }
     }
 
     public Map<UUID, Rank> getMembers() {
@@ -130,6 +228,8 @@ public class Clan {
 
         entries.sort(Map.Entry.comparingByValue());
 
+        Collections.reverse(entries);
+
         ImmutableMap.Builder<UUID, Rank> builder = ImmutableMap.<UUID, Rank>builder();
 
         entries.forEach(builder::put);
@@ -138,7 +238,7 @@ public class Clan {
     }
 
     public Rank getRank(UUID player) {
-        if (player == this.creator) {
+        if (player.equals(this.creator)) {
             return Rank.OWNER;
         }
 
@@ -150,34 +250,46 @@ public class Clan {
 
     }
 
-    public void delete() {
-
+    public void delete(boolean useDatabase) {
         MainData.getIns().getScheduler().runTaskAsync(() -> {
-            Pair<PlayerData, Boolean> player = null;
+            PlayerData player;
 
             this.members.put(this.creator, Rank.OWNER);
 
             Iterator<UUID> iterator = this.members.keySet().iterator();
 
             do {
-                player = MainData.getIns().getPlayerManager().getOrLoadPlayer(iterator.next());
+                UUID playerID = iterator.next();
 
-                PlayerData p = player.getKey();
+                if (useDatabase) {
+                    Pair<PlayerData, Boolean> p = MainData.getIns().getPlayerManager().getOrLoadPlayer(playerID);
 
-                if (player.getValue()) {
-                    p = MainData.getIns().getPlayerManager().requestAditionalServerData(p);
+                    if (p.getValue()) {
+                        player = MainData.getIns().getPlayerManager().requestAditionalServerData(p.getKey());
+                    } else {
+                        player = p.getKey();
+                    }
+
+                } else {
+                    player = MainData.getIns().getPlayerManager().getPlayer(playerID);
+
+                    if (player == null)
+                        continue;
                 }
 
-                if (p != null) {
+                if (player != null) {
 
-                    if (p instanceof ClanPlayer) {
-                        ((ClanPlayer) p).setClan(null);
+                    if (player instanceof ClanPlayer) {
+                        ((ClanPlayer) player).setClan(null);
 
-                        if (player.getValue()) {
-                            p.save((o) -> {
+                        if (!player.isPlayerOnServer()) {
+                            player.save((o) -> {
                             });
                         } else {
-                            MainData.getIns().getEventCaller().callUpdateInformationEvent(p, PlayerInformationUpdateEvent.Reason.OTHER);
+                            MainData.getIns().getMessageManager().getMessage("CLAN_DISBANDED")
+                                    .sendTo(player);
+
+                            MainData.getIns().getEventCaller().callUpdateInformationEvent(player, PlayerInformationUpdateEvent.Reason.OTHER);
                         }
                     }
 
@@ -186,15 +298,24 @@ public class Clan {
             } while (iterator.hasNext());
 
         });
+    }
 
+    public void delete() {
+        delete(true);
     }
 
     public enum Rank {
 
-        OWNER,
-        ADMIN,
+        MEMBER,
         MOD,
-        MEMBER
+        ADMIN,
+        OWNER;
+
+        public String getName() {
+
+            return MainData.getIns().getMessageManager().getMessage(name()).toString();
+
+        }
 
     }
 

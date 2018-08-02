@@ -19,7 +19,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.json.simple.JSONObject;
-import sun.applet.Main;
 
 import java.io.File;
 import java.util.HashMap;
@@ -108,6 +107,12 @@ public class ClanInventory extends InventoryData<ClanItem> {
             for (String invite : invites) {
                 Clan c = ClanMain.getIns().getClanManager().getClan(invite);
 
+                if (c == null) {
+                    cP.removeInvite(invite);
+
+                    continue;
+                }
+
                 Map<String, String> formats = new HashMap<>();
 
                 formats.put("%clanName%", c.getClanName());
@@ -121,6 +126,7 @@ public class ClanInventory extends InventoryData<ClanItem> {
                 NBTCompound compound = new NBTCompound(inviteItem);
 
                 compound.add("Clan", c.getClanID());
+                compound.add("INVITE_ITEM", 1);
 
                 i.setItem(j++, ItemUtils.formatItem(compound.write(inviteItem), formats));
             }
@@ -138,6 +144,51 @@ public class ClanInventory extends InventoryData<ClanItem> {
         ClanItem item = getItem(e.getSlot());
 
         if (item == null) {
+
+            if (e.getCurrentItem() == null) {
+                return;
+            }
+
+            NBTCompound nbt = new NBTCompound(e.getCurrentItem());
+
+            if (!nbt.getValues().containsKey("INVITE_ITEM")) {
+                return;
+            }
+
+            PlayerData playerData = MainData.getIns().getPlayerManager().getPlayer(e.getWhoClicked().getUniqueId());
+
+            if (playerData instanceof ClanPlayer) {
+
+                String clan = (String) nbt.getValues().get("Clan");
+
+                if (e.getClick() == ClickType.SHIFT_RIGHT) {
+
+                    ((ClanPlayer) playerData).removeInvite(clan);
+
+                    Clan c = ClanMain.getIns().getClanManager().getClan(clan);
+
+                    if (c == null) {
+                        return;
+                    }
+
+                    ((ClanPlayer) playerData).setClan(c.getClanID());
+
+                    c.addMember(playerData.getPlayerID());
+
+                    ((ClanPlayer) playerData).removeInvite(c.getClanID());
+
+                    e.getWhoClicked().closeInventory();
+                    e.getWhoClicked().openInventory(ClanMain.getIns().getInventoryManager().getMainInventory(playerData).buildClanInventory(playerData));
+
+                } else if (e.getClick() == ClickType.SHIFT_LEFT) {
+
+                    ((ClanPlayer) playerData).removeInvite(clan);
+
+                    e.getInventory().setContents(ClanMain.getIns().getInventoryManager().getInviteInventory().buildInviteInventory(playerData).getContents());
+
+                }
+            }
+
             return;
         }
 
@@ -155,42 +206,6 @@ public class ClanInventory extends InventoryData<ClanItem> {
 
             e.getWhoClicked().openInventory(ClanMain.getIns().getInventoryManager().getInviteInventory().buildInviteInventory(playerData));
 
-        } else if (item.hasItemFlag("INVITE_ITEM")) {
-
-            PlayerData playerData = MainData.getIns().getPlayerManager().getPlayer(e.getWhoClicked().getUniqueId());
-
-            if (playerData instanceof ClanPlayer) {
-
-                NBTCompound nbt = new NBTCompound(e.getCurrentItem());
-
-                String clan = (String) nbt.getValues().get("Clan");
-
-                if (e.getClick() == ClickType.SHIFT_RIGHT) {
-
-                    ((ClanPlayer) playerData).removeInvite(clan);
-
-                    Clan c = ClanMain.getIns().getClanManager().getClan(clan);
-
-                    if (c == null) {
-                        return;
-                    }
-
-                    c.addMember(playerData.getPlayerID());
-
-                    ((ClanPlayer) playerData).setClan(c.getClanID());
-
-                    e.getWhoClicked().closeInventory();
-                    e.getWhoClicked().openInventory(ClanMain.getIns().getInventoryManager().getMainInventory(playerData).buildClanInventory(playerData));
-
-                } else if (e.getClick() == ClickType.SHIFT_LEFT) {
-
-                    ((ClanPlayer) playerData).removeInvite(clan);
-
-                    e.getInventory().setContents(ClanMain.getIns().getInventoryManager().getInviteInventory().buildInviteInventory(playerData).getContents());
-
-                }
-            }
-
         } else if (item.hasItemFlag("INVITE_PLAYERS")) {
 
             PlayerData playerData = MainData.getIns().getPlayerManager().getPlayer(e.getWhoClicked().getUniqueId());
@@ -205,6 +220,8 @@ public class ClanInventory extends InventoryData<ClanItem> {
 
                     return;
                 }
+
+                e.getWhoClicked().closeInventory();
 
                 ClanMain.getIns().getChatRequests().requestChatInformation((Player) e.getWhoClicked(), "SELECT_INVITED_PLAYER", (response) -> {
 
@@ -236,6 +253,8 @@ public class ClanInventory extends InventoryData<ClanItem> {
                         MainData.getIns().getMessageManager().getMessage("INVITED_PLAYER")
                                 .format("%playerName%", pD.getPlayerName())
                                 .sendTo(e.getWhoClicked());
+
+                        e.getWhoClicked().openInventory(buildClanInventory(playerData));
                     }
 
                 });
@@ -303,8 +322,8 @@ public class ClanInventory extends InventoryData<ClanItem> {
                             (response) -> {
                                 if (response.equalsIgnoreCase("SIM")) {
 
-                                    c.removeMember(player.getPlayerID());
                                     ((ClanPlayer) player).setClan(null);
+                                    c.removeMember(player.getPlayerID());
 
                                     MainData.getIns().getMessageManager().getMessage("LEFT_CLAN")
                                             .sendTo(e.getWhoClicked());
@@ -361,6 +380,9 @@ class ClanItem extends InventoryItem {
                 Clan c = ClanMain.getIns().getClanManager().getClan(cP.getClan());
 
                 formats.put("%clan%", c.getClanName());
+                formats.put("%clanMembers%", String.valueOf(c.getMembers().size()));
+                formats.put("%clanMaxMembers%", String.valueOf(Clan.MAX_CLAN_MEMBERS));
+                formats.put("%clanMembersOn%", String.valueOf(c.getOnlineMembers().size()));
                 formats.put("%clanKills%", String.valueOf(c.getKills()));
                 formats.put("%clanDeaths%", String.valueOf(c.getDeaths()));
                 formats.put("%clanKDR%", String.format(".%2f", ((float) c.getKills()) / c.getDeaths()));

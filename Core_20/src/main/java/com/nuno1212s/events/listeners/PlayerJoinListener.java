@@ -37,7 +37,7 @@ public class PlayerJoinListener implements Listener {
 
         if (coreData == null) {
             coreData = new CorePlayerData(e.getUniqueId(), new PlayerGroupData(), e.getName(),
-                    0, System.currentTimeMillis(), true,
+                    0, System.currentTimeMillis(), true, false,
                     MainData.getIns().getRewardManager().getDefaultRewards(), null);
         }
 

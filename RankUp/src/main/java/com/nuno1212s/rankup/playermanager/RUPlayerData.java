@@ -124,7 +124,7 @@ public class RUPlayerData extends PlayerData implements ChatData, KitPlayer, End
 
             Clan c = ClanMain.getIns().getClanManager().getClan(getClan());
 
-            clanTag = ChatColor.DARK_GRAY.toString() + ChatColor.ITALIC + c.getClanTag() + " " + ChatColor.RESET;
+            clanTag = ChatColor.GRAY.toString() + ChatColor.ITALIC + c.getClanTag() + " " + ChatColor.RESET;
 
         }
 

@@ -33,10 +33,18 @@ public class ChatRequests implements Listener {
 
         requestChatInformation(creator, "CHOOSE_NAME", (name) -> {
 
-            if (name.length() >= 50) {
+            if (name.length() > 20 || name.length() < 5) {
                 MainData.getIns().getMessageManager().getMessage("NAME_TOO_BIG").sendTo(creator);
 
                 createClan(creator);
+
+                return;
+            }
+
+
+            if (name.equalsIgnoreCase("cancelar")) {
+
+                MainData.getIns().getMessageManager().getMessage("CLAN_CREATION_CANCELED").sendTo(creator);
 
                 return;
             }
@@ -60,11 +68,18 @@ public class ChatRequests implements Listener {
     private void getTag(Player creator, String name) {
         requestChatInformation(creator, "CHOOSE_TAG", (tag) -> {
 
-            if (tag.length() >= 25) {
+            if (tag.length() != 3) {
 
-                MainData.getIns().getMessageManager().getMessage("NAME_TOO_BIG").sendTo(creator);
+                MainData.getIns().getMessageManager().getMessage("TAG_TOO_BIG").sendTo(creator);
 
                 getTag(creator, name);
+
+                return;
+            }
+
+            if (name.equalsIgnoreCase("cancelar")) {
+
+                MainData.getIns().getMessageManager().getMessage("CLAN_CREATION_CANCELED").sendTo(creator);
 
                 return;
             }
@@ -93,6 +108,13 @@ public class ChatRequests implements Listener {
                 MainData.getIns().getMessageManager().getMessage("DESCRIPTION_TOO_BIG").sendTo(creator);
 
                 getDescription(creator, name, tag);
+
+                return;
+            }
+
+            if (name.equalsIgnoreCase("cancelar")) {
+
+                MainData.getIns().getMessageManager().getMessage("CLAN_CREATION_CANCELED").sendTo(creator);
 
                 return;
             }

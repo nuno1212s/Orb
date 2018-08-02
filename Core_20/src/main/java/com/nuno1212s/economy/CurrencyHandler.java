@@ -21,7 +21,7 @@ public class CurrencyHandler {
             return CompletableFuture.completedFuture(((ServerCurrency) playerData).getCurrency());
         }
 
-        return CompletableFuture.supplyAsync(() -> loadAndGetCurrency(playerData));
+        return CompletableFuture.supplyAsync(() -> loadAndGetCurrency(playerData), MainData.getIns().getAsyncExecutor());
     }
 
     private long loadAndGetCurrency(PlayerData playerData) {
@@ -49,7 +49,7 @@ public class CurrencyHandler {
             }
 
             return 0L;
-        });
+        }, MainData.getIns().getAsyncExecutor());
     }
 
     /**
@@ -128,7 +128,7 @@ public class CurrencyHandler {
 
         return CompletableFuture.supplyAsync(() -> {
             return loadAndRemoveCurrency(data, coins);
-        });
+        }, MainData.getIns().getAsyncExecutor());
     }
 
     public CompletableFuture<Boolean> removeCurrency(UUID player, long coins) {
@@ -157,7 +157,7 @@ public class CurrencyHandler {
             }
 
             return false;
-        });
+        }, MainData.getIns().getAsyncExecutor());
 
     }
 

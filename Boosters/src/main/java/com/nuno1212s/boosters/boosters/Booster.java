@@ -38,16 +38,25 @@ public class Booster {
     String customName;
 
     public void activate() {
-        this.activated = true;
-        this.activationTime = System.currentTimeMillis();
 
-        Main.getIns().getRedisHandler().handleBoosterActivation(this);
+        activate(System.currentTimeMillis(), true);
 
-        MainData.getIns().getScheduler().runTaskAsync(() -> {
-            Main.getIns().getMysqlHandler().updateBooster(this);
-        });
     }
 
+    public void activate(long time, boolean useC) {
+
+        this.activated = true;
+        this.activationTime = time;
+
+        if (useC) {
+            MainData.getIns().getScheduler().runTaskAsync(() -> {
+                Main.getIns().getRedisHandler().handleBoosterActivation(this);
+
+                Main.getIns().getMysqlHandler().updateBooster(this);
+            });
+        }
+
+    }
     public boolean isExpired() {
         return (activated && this.activationTime + this.durationInMillis <= System.currentTimeMillis());
     }

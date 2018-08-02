@@ -18,12 +18,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.File;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * MainM class
  */
 
 @Setter(value = AccessLevel.PROTECTED)
+@Getter
 public class MainData {
 
     @Getter
@@ -55,6 +58,8 @@ public class MainData {
 
     private InventoryManager inventoryManager;
 
+    private ExecutorService asyncExecutor = Executors.newFixedThreadPool(10);
+
     private boolean isBungee = false;
 
     @Setter
@@ -65,66 +70,6 @@ public class MainData {
     }
 
     public boolean hasServerCurrency() {
-        return serverCurrencyHandler != null;
-    }
-
-    public ModuleManager getModuleManager() {
-        return moduleManager;
-    }
-
-    public PermissionManager getPermissionManager() {
-        return permissionManager;
-    }
-
-    public PlayerManager getPlayerManager() {
-        return playerManager;
-    }
-
-    public ServerManager getServerManager() {
-        return serverManager;
-    }
-
-    public MySql getMySql() {
-        return mySql;
-    }
-
-    public Scheduler getScheduler() {
-        return scheduler;
-    }
-
-    public File getDataFolder() {
-        return dataFolder;
-    }
-
-    public Messages getMessageManager() {
-        return messageManager;
-    }
-
-    public CommandRegister getCommandRegister() {
-        return commandRegister;
-    }
-
-    public EventCaller getEventCaller() {
-        return eventCaller;
-    }
-
-    public RedisHandler getRedisHandler() {
-        return redisHandler;
-    }
-
-    public RewardManager getRewardManager() {
-        return rewardManager;
-    }
-
-    public InventoryManager getInventoryManager() {
-        return inventoryManager;
-    }
-
-    public boolean isBungee() {
-        return isBungee;
-    }
-
-    public CurrencyHandler getServerCurrencyHandler() {
-        return serverCurrencyHandler;
+        return this.serverCurrencyHandler != null;
     }
 }

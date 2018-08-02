@@ -1,5 +1,7 @@
 package com.nuno1212s.rediscommunication;
 
+import com.nuno1212s.main.MainData;
+
 /**
  * Handles redis receiving
  */

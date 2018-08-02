@@ -7,6 +7,7 @@ import com.nuno1212s.main.MainData;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
@@ -52,7 +53,33 @@ public class Message {
         this.OGServer = MainData.getIns().getServerManager().getServerName();
     }
 
+    public Message(String channel) {
+        this.channel = channel;
+        this.data = new JSONObject();
+    }
+
+    public Message setReason(String reason) {
+        this.reason = reason;
+        return this;
+    }
+
+    public Message add(String key, JSONObject value) {
+        this.data.put(key, value);
+
+        return this;
+    }
+
+    public Message add(String key, Object value) {
+        this.data.put(key, value);
+
+        return this;
+    }
+
     public byte[] toByteArray() {
+        if (reason == null) {
+            throw new IllegalArgumentException("Reason needs to be given");
+        }
+
         ByteArrayDataOutput dataOutput = ByteStreams.newDataOutput();
 
         dataOutput.writeUTF(channel);

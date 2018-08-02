@@ -33,6 +33,10 @@ public class LandingInventoryListener implements Listener {
             return;
         }
 
+        if (e.getClickedInventory() == null) {
+            return;
+        }
+
         if (lI.equals(e.getClickedInventory())) {
             e.setResult(Event.Result.DENY);
 

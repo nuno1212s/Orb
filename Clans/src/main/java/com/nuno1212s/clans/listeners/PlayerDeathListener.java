@@ -3,6 +3,7 @@ package com.nuno1212s.clans.listeners;
 import com.nuno1212s.clans.ClanMain;
 import com.nuno1212s.clans.clanmanager.Clan;
 import com.nuno1212s.clans.clanplayer.ClanPlayer;
+import com.nuno1212s.events.PlayerInformationUpdateEvent;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
 import org.bukkit.event.EventHandler;
@@ -26,6 +27,8 @@ public class PlayerDeathListener implements Listener {
 
             ((ClanPlayer) playerData).setDeaths(((ClanPlayer) playerData).getDeaths() + 1);
 
+            MainData.getIns().getEventCaller().callUpdateInformationEvent(playerData, PlayerInformationUpdateEvent.Reason.OTHER);
+
         }
 
         if (e.getEntity().getKiller() != null) {
@@ -45,6 +48,9 @@ public class PlayerDeathListener implements Listener {
                 }
 
                 ((ClanPlayer) killer).setKills(((ClanPlayer) killer).getKills() + 1);
+
+                MainData.getIns().getEventCaller().callUpdateInformationEvent(killer, PlayerInformationUpdateEvent.Reason.OTHER);
+
             }
 
         }

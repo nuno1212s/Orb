@@ -127,7 +127,13 @@ public class ScoreboardManager {
                 return;
             }
 
-            sc.add(format(message, d).substring(0, 31), scoreboardKey);
+            String substring = format(message, d);
+
+            if (substring.length() >= 31) {
+                substring = substring.substring(0, 31);
+            }
+
+            sc.add(substring, scoreboardKey);
 
         });
 

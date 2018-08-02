@@ -98,6 +98,13 @@ public class GroupCommand implements CommandExecutor {
 
             if (group == null) {
                 commandSender.sendMessage(ChatColor.RED + "The group does not exist.");
+
+                return true;
+            }
+
+            if (player.getKey() == null) {
+                commandSender.sendMessage(ChatColor.RED + "Player never joined the server");
+
                 return true;
             }
 

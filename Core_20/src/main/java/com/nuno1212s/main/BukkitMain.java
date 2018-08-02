@@ -109,6 +109,7 @@ public class BukkitMain extends JavaPlugin {
         MainData.getIns().getCommandRegister().registerCommand(new String[]{"group"}, new GroupCommand());
         MainData.getIns().getCommandRegister().registerCommand(new String[]{"server"}, new ServerCommand());
         MainData.getIns().getCommandRegister().registerCommand(new String[]{"stop"}, new StopCommand());
+        MainData.getIns().getCommandRegister().registerCommand(new String[]{"add"}, new HelpCommand());
 
         data.getServerManager().savePlayerCount(0, getServer().getMaxPlayers());
 
@@ -137,8 +138,7 @@ public class BukkitMain extends JavaPlugin {
             alias.add(aliases[i]);
         }
 
-        command.setAliases(alias);
-        getCommandMap().register(this.getDescription().getName(), command);
+        getCommandMap().register(this.getDescription().getName(), command.setAliases(alias));
     }
 
     private static PluginCommand getCommand(String name, Plugin plugin) {
@@ -167,6 +167,7 @@ public class BukkitMain extends JavaPlugin {
 
                 commandMap = (CommandMap) f.get(Bukkit.getPluginManager());
             }
+
         } catch (NoSuchFieldException | SecurityException
                 | IllegalArgumentException | IllegalAccessException e) {
             e.printStackTrace();

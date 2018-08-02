@@ -19,8 +19,8 @@ public class MySQLHandler {
         try (Connection c = MainData.getIns().getMySql().getConnection();
              Statement s = c.createStatement()) {
 
-            s.execute("CREATE TABLE IF NOT EXISTS clans(CLANID CHAR(15) PRIMARY KEY NOT NULL, OWNER CHAR(40), MEMBERS VARCHAR(3000)," +
-                    " CLANTAG VARCHAR(25), CLANNAME VARCHAR(50), CLANDESC VARCHAR(250), APPLICABLESERVER VARCHAR(40)," +
+            s.execute("CREATE TABLE IF NOT EXISTS clans(CLANID CHAR(15) PRIMARY KEY NOT NULL, CLANOWNER CHAR(40), MEMBERS VARCHAR(3000)," +
+                    " CLANTAG CHAR(3), CLANNAME VARCHAR(20), CLANDESC VARCHAR(250), APPLICABLESERVER VARCHAR(40)," +
                     "KILLS INTEGER, DEATHS INTEGER, UNIQUE(CLANID))");
 
         } catch (SQLException e) {
@@ -81,7 +81,7 @@ public class MySQLHandler {
     public void createClan(Clan clan) {
 
         try (Connection c = MainData.getIns().getMySql().getConnection();
-             PreparedStatement s = c.prepareStatement("INSERT INTO clans(CLANID, OWNER, MEMBERS, CLANTAG, CLANNAME, CLANDESC, APPLICABLESERVER, KILLS, DEATHS) " +
+             PreparedStatement s = c.prepareStatement("INSERT INTO clans(CLANID, CLANOWNER, MEMBERS, CLANTAG, CLANNAME, CLANDESC, APPLICABLESERVER, KILLS, DEATHS) " +
                      "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE MEMBERS=?, CLANTAG=?, CLANDESC =?, CLANNAME=?, KILLS=?, DEATHS=?")) {
 
             s.setString(1, clan.getClanID());
@@ -126,7 +126,7 @@ public class MySQLHandler {
 
     private Clan readClan(ResultSet resultSet) throws SQLException {
         String clanID = resultSet.getString("CLANID");
-        UUID owner = UUID.fromString(resultSet.getString("OWNER"));
+        UUID owner = UUID.fromString(resultSet.getString("CLANOWNER"));
         String members1 = resultSet.getString("MEMBERS");
 
         Map<UUID, Clan.Rank> members;

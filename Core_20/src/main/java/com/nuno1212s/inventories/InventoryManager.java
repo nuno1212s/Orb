@@ -4,6 +4,7 @@ import com.nuno1212s.main.MainData;
 import com.nuno1212s.util.Callback;
 import com.nuno1212s.util.Pair;
 import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -107,6 +108,15 @@ public class InventoryManager implements Listener {
                         } else {
                             e.getWhoClicked().openInventory(inventory.buildInventory());
                         }
+
+                        return;
+                    } else if (!item.getCommands().isEmpty()) {
+
+                        e.setResult(Event.Result.DENY);
+
+                        e.getWhoClicked().closeInventory();
+
+                        item.getCommands().forEach(((Player) e.getWhoClicked())::performCommand);
 
                         return;
                     }

@@ -17,7 +17,13 @@ public class PlayerInteractEntityListener implements Listener {
     @EventHandler
     public void onInteractEvent(PlayerInteractEntityEvent e) {
         NPC npc = CitizensAPI.getNPCRegistry().getNPC(e.getRightClicked());
+
+        if (npc == null) {
+            return;
+        }
+
         if (Main.getIns().getNpcManager().isNPCRegistered(npc.getUniqueId())) {
+
             e.setCancelled(true);
             PlayerData data = MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
             e.getPlayer().openInventory(Main.getIns().getInventoryManager().buildRewardInventoryForPlayer(data));

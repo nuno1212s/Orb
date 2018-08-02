@@ -30,7 +30,7 @@ public class BoosterManager {
 
     /**
      * Sorts through the boosters and saves the ones that are applicable to the server
-     *
+     * <p>
      * (Boosters which the owner is not on the server for example do not apply to this instance and therefore should not be stored in the RAM)
      *
      * @param boosters
@@ -65,13 +65,14 @@ public class BoosterManager {
 
     /**
      * Remove the boosters that are only activated when the owner is on the server, to save RAM
+     *
      * @param player
      */
     public void removeBoostersForPlayer(UUID player) {
         this.boosters.removeIf(booster ->
                 booster.getOwner() != null
-                && booster.getOwner().equals(player)
-                && (booster.getType() == BoosterType.PLAYER_GLOBAL || booster.getType() == BoosterType.PLAYER_SERVER));
+                        && booster.getOwner().equals(player)
+                        && (booster.getType() == BoosterType.PLAYER_GLOBAL || booster.getType() == BoosterType.PLAYER_SERVER));
     }
 
     /**
@@ -81,19 +82,21 @@ public class BoosterManager {
      */
     private String getRandomID() {
         String random = RandomStringUtils.random(5, true, true);
+
         if (getBooster(random) != null) {
             return getRandomID();
         }
+
         return random;
     }
 
     /**
      * Create a booster with the given parameters
      *
-     * @param owner The owner of the booster
-     * @param multiplier The multiplier of the booster
+     * @param owner            The owner of the booster
+     * @param multiplier       The multiplier of the booster
      * @param durationInMillis The duration of the booster in millis
-     * @param type The type of the booster
+     * @param type             The type of the booster
      * @param applicableServer The server where the booster can be applied
      * @param customName
      * @return
@@ -103,7 +106,6 @@ public class BoosterManager {
     }
 
     /**
-     *
      * @param owner
      * @param data
      * @return
@@ -119,15 +121,29 @@ public class BoosterManager {
         return boosters;
     }
 
+    public void handleBoosterExpiration(Booster b) {
+        handleBoosterExpiration(b, true);
+    }
+
     /**
      * Handles the expiration of a booster
+     *
      * @param b
      */
-    public void handleBoosterExpiration(Booster b) {
+    public void handleBoosterExpiration(Booster b, boolean useDatabase) {
         //TODO: Announce booster expiration
 
         notifyPlayer(b, b.getOwner());
-        Main.getIns().getRedisHandler().handleBoosterDeletion(b);
+
+        removeBooster(b);
+
+        if (useDatabase) {
+            MainData.getIns().getScheduler().runTaskAsync(() -> {
+                Main.getIns().getMysqlHandler().removeBooster(b.getBoosterID());
+
+                Main.getIns().getRedisHandler().handleBoosterDeletion(b);
+            });
+        }
     }
 
     /**
@@ -138,17 +154,18 @@ public class BoosterManager {
      * @param player
      */
     public void notifyPlayer(Booster b, UUID player) {
+        if (player == null) {
+            return;
+        }
+
         Player p = Bukkit.getPlayer(player);
+
         if (p == null) {
             return;
         }
 
         MainData.getIns().getMessageManager().getMessage("BOOSTER_FINISHED")
                 .format("%boosterName%", b.getCustomName()).sendTo(p);
-
-        MainData.getIns().getScheduler().runTaskAsync(() -> {
-            removeBooster(b);
-        });
 
     }
 
@@ -172,26 +189,34 @@ public class BoosterManager {
 
     /**
      * Adds a booster to the booster list
-     *
+     * <p>
      * USES REDIS TO UPDATE ALL OTHER SERVERS
      *
      * @param b
      */
     public void addBooster(Booster b) {
-        this.boosters.add(b);
-        Main.getIns().getRedisHandler().addBooster(b);
+        addBooster(b, true);
+    }
+
+    public void addBooster(Booster b, boolean useRedis) {
+        if (b.isApplicable(b.getOwner())) {
+            this.boosters.add(b);
+        }
+
+        if (useRedis) {
+            Main.getIns().getRedisHandler().addBooster(b);
+        }
     }
 
     /**
      * Removes a booster from the booster list
-     *
+     * <p>
      * USES REDIS TO UPDATE ALL OTHER SERVERS
      *
      * @param b
      */
     public void removeBooster(Booster b) {
         this.boosters.remove(b);
-        Main.getIns().getMysqlHandler().removeBooster(b.getBoosterID());
     }
 
     /**
@@ -282,7 +307,7 @@ public class BoosterManager {
 
     /**
      * Check if the player can activate a booster
-     *
+     * <p>
      * If the player has a booster currently active (A booster that is applicable on the server and that is owned by him),
      * he cannot activate a second one
      */

@@ -2,6 +2,7 @@ package com.nuno1212s.clans.clanmanager;
 
 import com.nuno1212s.clans.ClanMain;
 import com.nuno1212s.clans.clanplayer.ClanPlayer;
+import com.nuno1212s.events.PlayerInformationUpdateEvent;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.messagemanager.Message;
 import com.nuno1212s.playermanager.PlayerData;
@@ -34,6 +35,11 @@ public class ClanManager {
 
     public void createClan(Player creator, String name, String tag, String desc) {
 
+        createClan(creator, name, tag, desc, true);
+
+    }
+
+    public void createClan(Player creator, String name, String tag, String desc, boolean useDatabase) {
         PlayerData d = MainData.getIns().getPlayerManager().getPlayer(creator.getUniqueId());
 
         Clan c = new Clan(creator.getUniqueId(), name, tag, desc);
@@ -46,16 +52,20 @@ public class ClanManager {
 
         clans.put(c.getClanID(), c);
 
+        MainData.getIns().getEventCaller().callUpdateInformationEvent(d, PlayerInformationUpdateEvent.Reason.OTHER);
+
         MainData.getIns().getMessageManager().getMessage("CREATED_CLAN")
                 .format("%clanName%", c.getClanName())
                 .format("%clanTag%", c.getClanTag())
                 .sendTo(creator);
 
-        MainData.getIns().getScheduler().runTaskAsync(() -> {
+        if (useDatabase) {
+            MainData.getIns().getScheduler().runTaskAsync(() -> {
+                ClanMain.getIns().getMySQLHandler().createClan(c);
 
-            ClanMain.getIns().getMySQLHandler().createClan(c);
-
-        });
+                ClanMain.getIns().getRedisHandler().createClan(c);
+            });
+        }
 
     }
 
@@ -77,6 +87,7 @@ public class ClanManager {
 
     /**
      * Get clan by name
+     *
      * @param clanName
      * @return
      */
@@ -116,7 +127,7 @@ public class ClanManager {
 
         return CompletableFuture.supplyAsync(() -> {
             return ClanMain.getIns().getMySQLHandler().getClanByID(clanID);
-        });
+        }, MainData.getIns().getAsyncExecutor());
     }
 
     /**
@@ -125,14 +136,22 @@ public class ClanManager {
      * @param clan
      */
     public void deleteClan(Clan clan) {
+        deleteClan(clan, true);
+    }
 
-        clan.delete();
-
+    public void deleteClan(Clan clan, boolean useDatabase) {
         this.clans.remove(clan.getClanID());
 
-        MainData.getIns().getScheduler().runTaskAsync(() -> {
-            ClanMain.getIns().getMySQLHandler().removeClan(clan.getClanID());
-        });
+        clan.delete(useDatabase);
+
+        if (useDatabase) {
+            MainData.getIns().getScheduler().runTaskAsync(() -> {
+                ClanMain.getIns().getMySQLHandler().removeClan(clan.getClanID());
+
+                ClanMain.getIns().getRedisHandler().deleteClan(clan);
+            });
+        }
+
     }
 
     public void save() {
@@ -152,13 +171,15 @@ public class ClanManager {
 
         values.sort(Comparator.comparingInt(Clan::getKDD));
 
+        System.out.println(values.size());
+
         Collections.reverse(values);
 
         Message clan_ranking = MainData.getIns().getMessageManager().getMessage("CLAN_RANKING");
 
-        for (int i = 1; i <= 10 && i < values.size(); i++) {
-            clan_ranking.format("%clanRank_" + String.valueOf(i) + "%", values.get(i).getClanName())
-                    .format("%clanPoint_" + String.valueOf(i) + "%", values.get(i).getKDD());
+        for (int i = 1; i <= 10 && i <= values.size(); i++) {
+            clan_ranking.format("%clanRank_" + i + "%", values.get(i - 1).getClanName())
+                    .format("%clanPoint_" + i + "%", values.get(i - 1).getKDD());
         }
 
         clan_ranking.sendTo(playerData);

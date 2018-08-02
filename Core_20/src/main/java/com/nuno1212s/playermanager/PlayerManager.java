@@ -180,7 +180,7 @@ public class PlayerManager {
             return CompletableFuture.completedFuture(getPlayer(playerID));
         }
 
-        return CompletableFuture.supplyAsync(() -> MainData.getIns().getMySql().getPlayerData(playerID, null));
+        return CompletableFuture.supplyAsync(() -> MainData.getIns().getMySql().getPlayerData(playerID, null), MainData.getIns().getAsyncExecutor());
     }
 
     public CompletableFuture<PlayerData> loadPlayer(String playerName) {
@@ -193,7 +193,7 @@ public class PlayerManager {
 
         }
 
-        return CompletableFuture.supplyAsync(() -> MainData.getIns().getMySql().getPlayerData(null, playerName));
+        return CompletableFuture.supplyAsync(() -> MainData.getIns().getMySql().getPlayerData(null, playerName), MainData.getIns().getAsyncExecutor());
     }
 
     public PlayerData requestAditionalServerData(PlayerData player) {

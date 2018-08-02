@@ -13,6 +13,7 @@ import org.json.simple.parser.ParseException;
 
 import java.sql.*;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * mysql data class
@@ -26,7 +27,7 @@ public class MySql {
 
             String pvpData = "CREATE TABLE IF NOT EXISTS pvpData(UUID CHAR(40) PRIMARY KEY, COINS BIGINT, GROUPDATA VARCHAR(100)" +
                     ", SERVERGROUP VARCHAR(100), KITUSAGE VARCHAR(200), ENDERCHEST MEDIUMTEXT NOT NULL DEFAULT ''," +
-                    "KILLS INTEGER, DEATHS INTEGER, INVITES varchar(1000), CLANID char(15))";
+                    "KILLS INTEGER, DEATHS INTEGER, INVITES VARCHAR(1000), CLANID CHAR(15))";
 
             s.execute(pvpData);
         } catch (SQLException e) {
@@ -115,6 +116,37 @@ public class MySql {
         }
 
         return null;
+    }
+
+    public CompletableFuture<LinkedHashMap<UUID, Integer>> getKDDTop(int limit) {
+
+        return CompletableFuture.supplyAsync(() -> {
+            try (Connection c = MainData.getIns().getMySql().getConnection();
+                 PreparedStatement st = c.prepareStatement("SELECT UUID, KILLS, DEATHS FROM pvpData ORDER BY (KILLS - DEATHS) LIMIT ?")) {
+
+                st.setInt(1, limit);
+
+                ResultSet resultSet = st.executeQuery();
+
+                LinkedHashMap<UUID, Integer> top = new LinkedHashMap<>();
+
+                while (resultSet.next()) {
+                    UUID playerID = UUID.fromString(resultSet.getString("UUID"));
+
+                    int KDD = resultSet.getInt("KILLS") - resultSet.getInt("DEATHS");
+
+                    top.put(playerID, KDD);
+                }
+
+                resultSet.close();
+
+                return top;
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            return new LinkedHashMap<>();
+        }, MainData.getIns().getAsyncExecutor());
     }
 
     public void savePlayerData(RUPlayerData playerData) {

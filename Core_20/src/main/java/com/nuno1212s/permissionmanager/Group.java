@@ -1,8 +1,10 @@
 package com.nuno1212s.permissionmanager;
 
+import com.nuno1212s.main.MainData;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,11 +22,12 @@ public class Group {
 
     private GroupType groupType;
 
-    private List<String> permissions;
+    private List<String> permissions, truePermissions;
 
     public Group(short groupID, String groupName, String groupPrefix, String groupSuffix
             , String scoreboardName, String applicableServer, boolean defaultGroup
             , GroupType groupType, List<String> permissions, boolean overrides) {
+
         this.groupID = groupID;
         this.groupName = groupName;
         this.groupPrefix = groupPrefix;
@@ -38,9 +41,40 @@ public class Group {
 
     }
 
+    public List<Group> getGroupDependencies() {
+
+        List<Group> groups = new ArrayList<>();
+
+        for (String permission : permissions) {
+            if (permission.startsWith("permissions.")) {
+                groups.add(MainData.getIns().getPermissionManager().getGroup(Short.parseShort(permission.split(".")[1])));
+            }
+        }
+
+        return groups;
+    }
+
+    public void compilePermissions() {
+
+        this.truePermissions = new ArrayList<>();
+
+        for (String permission : this.permissions) {
+            if (permission.startsWith("permissions.")) {
+                Group g = MainData.getIns().getPermissionManager().getGroup(Short.parseShort(permission.split(".")[1]));
+
+                this.truePermissions.addAll(g.getTruePermissions());
+            } else {
+
+                this.truePermissions.add(permission);
+
+            }
+        }
+
+    }
+
     public boolean hasPermission(String permission) {
 
-        if (permissions.contains("*")) {
+        if (truePermissions.contains("*")) {
             return true;
         }
 
@@ -48,7 +82,9 @@ public class Group {
         String[] splitString = permission.split("\\.");
         String mainPermissionBody = contains ? splitString[0] : permission;
         String secondaryPermissionBody = contains ? splitString[1] : null;
-        for (String s : this.permissions) {
+
+        for (String s : this.truePermissions) {
+
             if (s.contains(".")) {
                 String s1 = s.split("\\.")[0];
                 if (s1.equalsIgnoreCase(mainPermissionBody)) {
@@ -70,15 +106,20 @@ public class Group {
 
             }
         }
+
         return false;
     }
 
     public void addPermission(String permission) {
         this.permissions.add(permission);
+
+        MainData.getIns().getPermissionManager().figureOutDependencies();
     }
 
     public void removePermission(String permission) {
         this.permissions.remove(permission);
+
+        MainData.getIns().getPermissionManager().figureOutDependencies();
     }
 
     public String permissionsToDB() {

@@ -144,6 +144,7 @@ public class ModuleManager {
     private void dep_resolve(Module a, List<Module> resolved, List<Module> unresolved) {
         unresolved.add(a);
         System.out.println("RESOLVING " + a.getModuleName());
+
         for (Module m : a.getDependencies(this)) {
             System.out.println("DEPENDENCY " + m.getModuleName());
             if (resolved.contains(m)) {

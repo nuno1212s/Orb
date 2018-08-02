@@ -154,9 +154,11 @@ public class KitManager {
      */
     public Inventory buildInventory(Player player) {
         InventoryData mainInventory = MainData.getIns().getInventoryManager().getInventory("KitMainInventory");
+
         if (mainInventory == null) {
             throw new IllegalArgumentException("There is no mainInventory for the /kits command");
         }
+
         return mainInventory.buildInventory(player);
     }
 

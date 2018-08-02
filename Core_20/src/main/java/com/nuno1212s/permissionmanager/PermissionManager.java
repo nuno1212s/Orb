@@ -26,6 +26,8 @@ public class PermissionManager {
     public PermissionManager(boolean bukkit) {
         groups = MainData.getIns().getMySql().getGroups();
 
+        figureOutDependencies();
+
         if (bukkit) {
             this.playerPermissions = new PlayerPermissions();
             MainData.getIns().getScheduler().runTaskTimer(new CheckExpirationTimer(), 0, 20);
@@ -33,6 +35,57 @@ public class PermissionManager {
 
         this.permissionRedisHandler = new PermissionRedisHandler();
         this.maxGroupsPerPlayer = 6;
+
+    }
+
+    /**
+     * Executes a depth first search and initializes all the permissions by their due order
+     */
+    public void figureOutDependencies() {
+
+        List<Group> clonedList = new ArrayList<>(this.groups);
+
+        while (!clonedList.isEmpty()) {
+            List<Group> sortedDependencies = new ArrayList<>();
+
+            depthFirst(clonedList.get(0), clonedList, sortedDependencies);
+
+            for (Group g : sortedDependencies) {
+
+                try {
+
+                    g.compilePermissions();
+
+                } finally {
+
+                    clonedList.remove(g);
+
+                }
+
+            }
+
+        }
+
+    }
+
+    private void depthFirst(Group group, List<Group> unAnalysed, List<Group> analysed) {
+
+        for (Group g : group.getGroupDependencies()) {
+
+            if (analysed.contains(g)) {
+                continue;
+            }
+
+            if (unAnalysed.contains(g)) {
+                throw new IllegalArgumentException("Circular group permissions " + g.getGroupID() + " " + group.getGroupID());
+            }
+
+            depthFirst(g, unAnalysed, analysed);
+
+        }
+
+        unAnalysed.remove(group);
+        analysed.add(group);
 
     }
 

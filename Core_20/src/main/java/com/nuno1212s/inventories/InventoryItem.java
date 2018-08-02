@@ -10,6 +10,7 @@ import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Inventory items
@@ -27,6 +28,8 @@ public class InventoryItem {
 
     protected String connectingInv = null;
 
+    protected List<String> commands = new ArrayList<>();
+
     public InventoryItem(JSONObject data) {
         if (!data.containsKey("Item")) {
             this.item = null;
@@ -41,6 +44,8 @@ public class InventoryItem {
                 this.connectingInv = s.split(":")[1];
             }
         }
+
+        this.commands = buildCommand();
     }
 
     /**
@@ -54,6 +59,19 @@ public class InventoryItem {
                 return true;
         }
         return false;
+    }
+
+    private final List<String> buildCommand() {
+
+        ArrayList<String> commands = new ArrayList<>();
+
+        for (String itemFlag : this.itemFlags) {
+            if (itemFlag.startsWith("COMMAND:")){
+                commands.add(itemFlag.replace("COMMAND:", ""));
+            }
+        }
+
+        return commands;
     }
 
     /**

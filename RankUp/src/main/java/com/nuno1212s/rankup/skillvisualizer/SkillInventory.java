@@ -6,6 +6,7 @@ import com.gmail.nossr50.datatypes.skills.SkillType;
 import com.gmail.nossr50.mcMMO;
 import com.nuno1212s.inventories.InventoryData;
 import com.nuno1212s.inventories.InventoryItem;
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.util.ItemUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -63,7 +64,7 @@ public class SkillInventory extends InventoryData<SkillItem> {
             }
 
             return i;
-        });
+        }, MainData.getIns().getAsyncExecutor());
     }
 
 }

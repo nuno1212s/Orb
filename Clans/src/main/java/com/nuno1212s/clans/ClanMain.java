@@ -6,8 +6,10 @@ import com.nuno1212s.clans.clanplayer.ClanPlayer;
 import com.nuno1212s.clans.commands.ClanCommand;
 import com.nuno1212s.clans.commands.ResetKDRCommand;
 import com.nuno1212s.clans.inventories.InventoryManager;
+import com.nuno1212s.clans.listeners.PlayerDamageListener;
 import com.nuno1212s.clans.listeners.PlayerDeathListener;
 import com.nuno1212s.clans.mysql.MySQLHandler;
+import com.nuno1212s.clans.redishandler.ClanRedisHandler;
 import com.nuno1212s.displays.DisplayMain;
 import com.nuno1212s.displays.placeholders.PlaceHolderManager;
 import com.nuno1212s.main.BukkitMain;
@@ -16,6 +18,8 @@ import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.modulemanager.ModuleData;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+
+import java.io.File;
 
 @ModuleData(name = "Clans", version = "1.0-SNAPSHOT", dependencies = {"Displays"})
 public class ClanMain extends Module {
@@ -35,6 +39,9 @@ public class ClanMain extends Module {
     @Getter
     private InventoryManager inventoryManager;
 
+    @Getter
+    private ClanRedisHandler redisHandler;
+
     public void onEnable() {
         ins = this;
 
@@ -42,12 +49,22 @@ public class ClanMain extends Module {
         this.chatRequests = new ChatRequests();
         this.clanManager = new ClanManager();
         this.inventoryManager = new InventoryManager(this);
+        this.redisHandler = new ClanRedisHandler();
 
         registerCommand(new String[]{"clan"}, new ClanCommand());
         registerCommand(new String[]{"resetKDR"}, new ResetKDRCommand());
 
         Bukkit.getServer().getPluginManager().registerEvents(chatRequests, BukkitMain.getIns());
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerDeathListener(), BukkitMain.getIns());
+        Bukkit.getServer().getPluginManager().registerEvents(new PlayerDamageListener(), BukkitMain.getIns());
+
+        File messageFile = new File(getDataFolder(), "messages.json");
+
+        if (!messageFile.exists()) {
+            saveResource(messageFile, "messages.json");
+        }
+
+        MainData.getIns().getMessageManager().addMessageFile(messageFile);
 
         MainData.getIns().getScheduler().runTaskTimerAsync(clanManager::save, 6000, 6000);
 

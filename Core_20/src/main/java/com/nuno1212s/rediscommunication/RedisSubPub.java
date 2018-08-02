@@ -51,10 +51,7 @@ public class RedisSubPub extends JedisPubSub implements Runnable {
             return;
         }
 
-        if (!originalServer.equalsIgnoreCase(MainData.getIns().getServerManager().getServerName())) {
-            MainData.getIns().getRedisHandler().getRedisReceivers().forEach(redisReceiver -> redisReceiver.onReceived(msg));
-        }
-
+        MainData.getIns().getRedisHandler().getRedisReceivers().forEach(redisReceiver -> redisReceiver.onReceived(msg));
 
     }
 

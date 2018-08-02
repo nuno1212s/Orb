@@ -8,6 +8,7 @@ import lombok.ToString;
 import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,7 +31,7 @@ public class SInventoryItem extends InventoryItem {
     }
 
     public SInventoryItem(ItemStack item, int slot, List<String> itemFlags, SearchParameter parameter) {
-        super(item, ImmutableList.copyOf(itemFlags), slot, null);
+        super(item, ImmutableList.copyOf(itemFlags), slot, null, new ArrayList<>());
         this.searchParameter = parameter;
 
         for (String s : this.getItemFlags()) {

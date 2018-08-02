@@ -49,6 +49,10 @@ public class ConfirmSellInventoryListener implements Listener {
                 return;
             }
 
+            if (item == null) {
+                return;
+            }
+
             if (item.hasItemFlag("CONFIRM")) {
                 Main.getIns().getInventoryManager().buyBooster((Player) e.getWhoClicked(),
                         e.getInventory().getItem(boosterItem.getSlot()));
