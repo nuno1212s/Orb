@@ -58,6 +58,16 @@ public class InventoryManager implements Listener {
         return true;
     }
 
+    /**
+     * Remove the inventory from the inventory registers
+     * @param data
+     */
+    public void removeInventory(InventoryData data) {
+
+        this.inventories.remove(data.getInventoryID());
+
+    }
+
     @EventHandler
     public void onInventoryDrag(InventoryDragEvent e) {
         if (getInventoryByName(e.getInventory().getName()) != null) {
