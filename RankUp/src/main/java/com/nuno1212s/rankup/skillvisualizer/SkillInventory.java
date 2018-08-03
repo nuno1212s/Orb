@@ -126,7 +126,7 @@ class SkillItem extends InventoryItem {
 
         formats.put("%playerName%", player.getName());
 
-        if (clone.getType() == Material.SKULL_ITEM) {
+        if (clone.getType() == Material.SKULL_ITEM && hasItemFlag("STATS")) {
             SkullMeta itemMeta = (SkullMeta) clone.getItemMeta();
 
             itemMeta.setOwner(player.getName());

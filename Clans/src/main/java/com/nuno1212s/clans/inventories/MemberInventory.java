@@ -121,14 +121,18 @@ public class MemberInventory extends InventoryData<MemberItem> {
 
         ItemStack item = e.getCurrentItem();
 
-        if (e.getCurrentItem() == null) {
+        if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR) {
             return;
         }
 
         NBTCompound nbt = new NBTCompound(item);
 
-        UUID playerID = UUID.fromString((String) nbt.getValues().get("PlayerID"));
+        Map<String, Object> values = nbt.getValues();
 
+        if (!values.containsKey("PlayerID"))
+            return;
+
+        UUID playerID = UUID.fromString((String) values.get("PlayerID"));
 
         if (e.getClick() == ClickType.SHIFT_LEFT) {
 

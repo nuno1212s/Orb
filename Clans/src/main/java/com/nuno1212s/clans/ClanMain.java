@@ -51,7 +51,7 @@ public class ClanMain extends Module {
         this.inventoryManager = new InventoryManager(this);
         this.redisHandler = new ClanRedisHandler();
 
-        registerCommand(new String[]{"clan"}, new ClanCommand());
+        registerCommand(new String[]{"clan", "clans"}, new ClanCommand());
         registerCommand(new String[]{"resetKDR"}, new ResetKDRCommand());
 
         Bukkit.getServer().getPluginManager().registerEvents(chatRequests, BukkitMain.getIns());

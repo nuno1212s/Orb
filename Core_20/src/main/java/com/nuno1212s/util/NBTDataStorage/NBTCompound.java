@@ -54,6 +54,17 @@ public class NBTCompound {
          */
         Method getTag = reflectionManager.getMethod(nmsItemStack, "getTag");
 
+        if (nmsItem == null) {
+
+            Class nbtDataCompound = reflectionManager.getClass(reflectionManager.NMS + "NBTTagCompound");
+
+            this.nbtTagCompound = reflectionManager.invokeConstructor(reflectionManager.getConstructor(nbtDataCompound));
+
+            this.values = loadFromNBTData(this.nbtTagCompound);
+
+            return;
+        }
+
         //NBT Tag data
         this.nbtTagCompound = reflectionManager.invokeMethod(getTag, nmsItem);
 

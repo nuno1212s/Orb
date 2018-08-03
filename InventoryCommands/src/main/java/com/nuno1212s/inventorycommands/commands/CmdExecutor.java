@@ -28,6 +28,10 @@ public class CmdExecutor implements CommandExecutor {
 
                     if (inventory != null) {
                         ((Player) commandSender).openInventory(inventory.buildInventory((Player) commandSender));
+                    } else {
+
+                        commandSender.sendMessage(ChatColor.RED + "Este comando não tem inventário conectado.");
+
                     }
 
                 } else {

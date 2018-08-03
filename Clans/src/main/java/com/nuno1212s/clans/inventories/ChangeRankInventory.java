@@ -11,6 +11,8 @@ import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.NBTDataStorage.NBTCompound;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -28,13 +30,37 @@ public class ChangeRankInventory extends InventoryData<RankItem> {
 
     public ChangeRankInventory(File file) {
         super(file, RankItem.class, true);
+
+        setOpenFuction((inv) -> {
+            HumanEntity player = inv.getKey();
+            if (inv.getValue() instanceof ClanInventory) {
+
+                player.openInventory(((ClanInventory) inv.getValue()).buildInventory(MainData.getIns().getPlayerManager().getPlayer(player.getUniqueId())));
+
+            } else if (inv.getValue() instanceof MemberInventory) {
+
+                PlayerData pD = MainData.getIns().getPlayerManager().getPlayer(player.getUniqueId());
+
+                if (pD instanceof ClanPlayer && ((ClanPlayer) pD).hasClan()) {
+
+                    Clan c = ClanMain.getIns().getClanManager().getClan(((ClanPlayer) pD).getClan());
+
+                    if (c != null) {
+                        ((MemberInventory) inv.getValue()).buildMemberInventory(c).thenAccept(player::openInventory);
+
+                        return;
+                    }
+                }
+
+                inv.getKey().openInventory(inv.getValue().buildInventory());
+
+            } else {
+                ((HumanEntity) player).openInventory(inv.getValue().buildInventory((Player) player));
+            }
+        });
     }
 
     public Inventory buildInventory(PlayerData playerData) {
-
-        Inventory i = Bukkit.getServer().createInventory(null, this.inventorySize, this.inventoryName);
-
-        int slot = 0;
 
         Clan.Rank rank = Clan.Rank.MEMBER;
 
@@ -48,8 +74,14 @@ public class ChangeRankInventory extends InventoryData<RankItem> {
 
         }
 
+        return buildInventory(playerData.getPlayerID(), rank);
+    }
+
+    public Inventory buildInventory(UUID playerID, Clan.Rank playerRank) {
+        Inventory i = Bukkit.getServer().createInventory(null, this.inventorySize, this.inventoryName);
+
         for (RankItem item : this.items) {
-            i.setItem(slot++, item.getItem(playerData, rank));
+            i.setItem(item.getSlot(), item.getItem(playerID, playerRank));
         }
 
         return i;
@@ -89,16 +121,9 @@ public class ChangeRankInventory extends InventoryData<RankItem> {
 
             if (c.getMembers().containsKey(playerID)) {
 
-                c.setClanRank(playerID, rank);
+                c.setClanRank(playerID, item.getRank());
 
-                PlayerData playerData = MainData.getIns().getPlayerManager().getPlayer(playerID);
-
-                if (playerData != null && playerData.isPlayerOnServer()) {
-                    MainData.getIns().getMessageManager().getMessage("RANK_UPDATED")
-                            .format("%rank%", item.getRank().name())
-                            .format("%settingPlayer%", e.getWhoClicked().getName())
-                            .sendTo(playerData);
-                }
+                e.getClickedInventory().setContents(buildInventory(playerID, item.getRank()).getContents());
 
             } else {
 
@@ -119,10 +144,12 @@ class RankItem extends InventoryItem {
     public RankItem(JSONObject data) {
         super(data);
 
-        rank = Clan.Rank.valueOf((String) data.get("Rank"));
+        if (data.containsKey("Rank")) {
+            rank = Clan.Rank.valueOf((String) data.getOrDefault("Rank", null));
+        }
     }
 
-    public ItemStack getItem(PlayerData player, Clan.Rank playerRank) {
+    public ItemStack getItem(UUID player, Clan.Rank playerRank) {
         ItemStack item = getItem().clone();
 
         if (rank == playerRank) {
@@ -147,7 +174,7 @@ class RankItem extends InventoryItem {
 
         NBTCompound nbt = new NBTCompound(item);
 
-        nbt.add("PlayerID", player.getPlayerID().toString());
+        nbt.add("PlayerID", player.toString());
 
         return nbt.write(item);
     }

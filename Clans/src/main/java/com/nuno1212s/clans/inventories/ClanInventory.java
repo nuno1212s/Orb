@@ -145,7 +145,7 @@ public class ClanInventory extends InventoryData<ClanItem> {
 
         if (item == null) {
 
-            if (e.getCurrentItem() == null) {
+            if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR) {
                 return;
             }
 
@@ -174,8 +174,6 @@ public class ClanInventory extends InventoryData<ClanItem> {
                     ((ClanPlayer) playerData).setClan(c.getClanID());
 
                     c.addMember(playerData.getPlayerID());
-
-                    ((ClanPlayer) playerData).removeInvite(c.getClanID());
 
                     e.getWhoClicked().closeInventory();
                     e.getWhoClicked().openInventory(ClanMain.getIns().getInventoryManager().getMainInventory(playerData).buildClanInventory(playerData));
@@ -224,6 +222,13 @@ public class ClanInventory extends InventoryData<ClanItem> {
                 e.getWhoClicked().closeInventory();
 
                 ClanMain.getIns().getChatRequests().requestChatInformation((Player) e.getWhoClicked(), "SELECT_INVITED_PLAYER", (response) -> {
+
+                    if (response.equalsIgnoreCase("cancelar")) {
+
+                        e.getWhoClicked().openInventory(buildInventory(playerData));
+
+                        return;
+                    }
 
                     Player player = Bukkit.getServer().getPlayer(response);
 
@@ -354,7 +359,7 @@ class ClanItem extends InventoryItem {
 
         ItemStack item = this.item.clone();
 
-        if (item.getType() == Material.SKULL_ITEM) {
+        if (item.getType() == Material.SKULL_ITEM && hasItemFlag("STATS")) {
 
             SkullMeta itemMeta = (SkullMeta) item.getItemMeta();
 
@@ -387,6 +392,7 @@ class ClanItem extends InventoryItem {
                 formats.put("%clanDeaths%", String.valueOf(c.getDeaths()));
                 formats.put("%clanKDR%", String.format(".%2f", ((float) c.getKills()) / c.getDeaths()));
                 formats.put("%clanKDD%", String.valueOf(c.getKills() - c.getDeaths()));
+                formats.put("%clanRank%", c.getRank(player.getPlayerID()).getName());
 
                 if (this.hasItemFlag("MEMBERS")) {
 
