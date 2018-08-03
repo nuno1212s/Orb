@@ -28,7 +28,10 @@ public class InventoryManager {
     private MemberInventory memberInventory;
 
     @Getter
-    private ClanInventory landingInventoryClan, landingInventoryNoClan, inviteInventory;
+    private ClanInventory landingInventoryClan, landingInventoryNoClan;
+
+    @Getter
+    private InviteInventory inviteInventory;
 
 
     public InventoryManager(Module module) {
@@ -89,7 +92,7 @@ public class InventoryManager {
 
         this.landingInventoryClan = new ClanInventory(landingInventory);
         this.landingInventoryNoClan = new ClanInventory(landingInventory2);
-        this.inviteInventory = new ClanInventory(inviteInventory);
+        this.inviteInventory = new InviteInventory(inviteInventory);
 
     }
 

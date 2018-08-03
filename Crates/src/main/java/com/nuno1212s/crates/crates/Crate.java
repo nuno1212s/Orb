@@ -5,6 +5,7 @@ import com.nuno1212s.crates.animations.Animation;
 import com.nuno1212s.economy.CurrencyHandler;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
+import com.nuno1212s.util.ItemUtils;
 import com.nuno1212s.util.NBTDataStorage.NBTCompound;
 import com.nuno1212s.util.Pair;
 import com.nuno1212s.inventories.InventoryData;
@@ -134,26 +135,21 @@ public class Crate {
         return null;
     }
 
+    /**
+     * Get the key item for the Crate
+     * @return
+     */
     public ItemStack formatKeyItem() {
         ItemStack clone = Main.getIns().getCrateManager().getDefaultKeyItem().clone();
-        ItemMeta itemMeta = clone.getItemMeta();
 
-        if (itemMeta.hasDisplayName()) {
-            itemMeta.setDisplayName(itemMeta.getDisplayName().replace("%crateName%", getDisplayName()));
-        }
+        Map<String, String> formats = new HashMap<>();
 
-        List<String> lore = itemMeta.getLore() == null ? new ArrayList<>() : itemMeta.getLore(), newLore = new ArrayList<>();
-
-        lore.forEach(loreLine ->
-                newLore.add(loreLine.replace("%crateName%", getDisplayName()))
-        );
-
-        itemMeta.setLore(newLore);
-        clone.setItemMeta(itemMeta);
+        formats.put("%crateName%", this.getDisplayName());
 
         NBTCompound compound = new NBTCompound(clone);
         compound.add("Crate", getCrateName());
-        return compound.write(clone);
+
+        return ItemUtils.formatItem(compound.write(clone), formats);
     }
 
     public void buyKey(Player p) {

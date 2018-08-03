@@ -116,7 +116,7 @@ public class InventoryManager implements Listener {
                         if (inventoryByName.getOpenFuction() != null) {
                             inventoryByName.getOpenFuction().callback(new Pair<>(e.getWhoClicked(), inventory));
                         } else {
-                            e.getWhoClicked().openInventory(inventory.buildInventory());
+                            e.getWhoClicked().openInventory(inventory.buildInventory((Player) e.getWhoClicked()));
                         }
 
                         return;

@@ -1,6 +1,10 @@
 {
-  "OPENING_CRATE": {"TEXT": "&7You are opening the crate %crateName%"},
-  "NO_KEY_FOR_CRATE": {"TEXT": "&7You don't have the key to open the crate %crateName%"},
-  "BOUGHT_KEY_CASH": "&cYou have bought a key for the crate %crateName% &cfor &a%price% cash",
-  "BOUGHT_KEY_COINS": "&cYou have bought a key for the crate %crateName% &cfor &6%price% coins"
+  "OPENING_CRATE": "&aVocê está abrindo uma caixa misteriosa...",
+  "NO_KEY_FOR_CRATE": "&r ",
+  "BOUGHT_KEY_CASH": "&aVocê comprou uma chave para caixas misteriosas.",
+  "BOUGHT_KEY_COINS": "&aVocê comprou uma chave para caixas misteriosas.",
+  "CRATE_BUY_CASH": "&6%price% cash",
+  "CRATE_BUY_COINS": "&a%price% coins",
+  "KEYS_ADDED": "&aChaves adicionadas ao jogador",
+  "ADDED_KEYS": "&aRecebeste %keyAmount% chaves da caixa %crateName%"
 }

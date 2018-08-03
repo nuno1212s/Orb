@@ -26,7 +26,6 @@ public class CrateCommandManager extends CommandManager {
         addCommand(new SetDefaultKeyItemCommand());
         addCommand(new BuyCrateKeyCommand());
         addCommand(new CrateRewardAddItemCommand());
-
     }
 
     @Override

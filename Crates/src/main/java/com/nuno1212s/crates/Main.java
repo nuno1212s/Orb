@@ -1,6 +1,7 @@
 package com.nuno1212s.crates;
 
 import com.nuno1212s.crates.commands.CrateCommandManager;
+import com.nuno1212s.crates.commands.KeysCommand;
 import com.nuno1212s.crates.crates.CrateManager;
 import com.nuno1212s.crates.events.*;
 import com.nuno1212s.main.BukkitMain;
@@ -30,6 +31,7 @@ public class Main extends Module {
 
 
         registerCommand(new String[]{"crate", "crates"}, new CrateCommandManager());
+        registerCommand(new String[]{"addcratekeys"}, new KeysCommand());
 
         MainData.getIns().getMessageManager().addMessageFile(getFile("messages.json", true));
 
