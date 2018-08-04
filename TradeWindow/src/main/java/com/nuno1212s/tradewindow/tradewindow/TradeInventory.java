@@ -2,15 +2,21 @@ package com.nuno1212s.tradewindow.tradewindow;
 
 import com.nuno1212s.inventories.InventoryData;
 import com.nuno1212s.inventories.InventoryItem;
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.tradewindow.TradeMain;
 import com.nuno1212s.tradewindow.trades.Trade;
-import com.nuno1212s.tradewindow.trades.TradeManager;
+import com.nuno1212s.util.ItemUtils;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.json.simple.JSONObject;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TradeInventory extends InventoryData<TradeItem> {
 
@@ -18,11 +24,8 @@ public class TradeInventory extends InventoryData<TradeItem> {
         super(file, TradeItem.class, true);
     }
 
-
     @Override
     public void handleClick(InventoryClickEvent e) {
-        e.setResult(Event.Result.DENY);
-
         TradeItem item = getItem(e.getSlot());
 
         Trade t = TradeMain.getIns().getTradeManager().getTrade(e.getWhoClicked().getUniqueId());
@@ -30,11 +33,9 @@ public class TradeInventory extends InventoryData<TradeItem> {
         if (item != null) {
 
             if (item.hasItemFlag("PLAYER1_ACCEPT")) {
-
+                e.setResult(Event.Result.DENY);
 
                 if (!t.player1ToggleAccept(e.getWhoClicked().getUniqueId())) {
-                    e.setResult(Event.Result.DENY);
-
                     return;
                 }
 
@@ -45,10 +46,9 @@ public class TradeInventory extends InventoryData<TradeItem> {
                 }
 
             } else if (item.hasItemFlag("PLAYER2_ACCEPT")) {
+                e.setResult(Event.Result.DENY);
 
                 if (!t.player2ToggleAccept(e.getWhoClicked().getUniqueId())) {
-                    e.setResult(Event.Result.DENY);
-
                     return;
                 }
 
@@ -57,20 +57,101 @@ public class TradeInventory extends InventoryData<TradeItem> {
                 } else {
                     e.getClickedInventory().setItem(item.getSlot(), TradeMain.getIns().getTradeManager().getRejectedItem());
                 }
+
+            } else if (item.hasItemFlag("COINS")) {
+                e.setResult(Event.Result.DENY);
+
+                if (item.hasItemFlag("PLAYER1_COINS") && !t.isPlayer1(e.getWhoClicked().getUniqueId())) {
+                    return;
+                } else if (item.hasItemFlag("PLAYER2_COINS") && !t.isPlayer2(e.getWhoClicked().getUniqueId())) {
+                    return;
+                }
+
+                TradeMain.getIns().getTradeManager().getCloseExceptions().add(e.getWhoClicked().getUniqueId());
+
+                e.getWhoClicked().closeInventory();
+
+                requestCoinsFromChat((Player) e.getWhoClicked(), t);
+
+            } else if (canPlayerPlace(t, (Player) e.getWhoClicked(), e.getSlot())) {
+
+                t.playerChangedTrade();
+
+                List<TradeItem> accept = getItemsWithFlag("ACCEPT");
+
+                for (TradeItem tradeItem : accept) {
+                    e.getClickedInventory().setItem(tradeItem.getSlot(), TradeMain.getIns().getTradeManager().getRejectedItem());
+                }
+
+            } else {
+                e.setResult(Event.Result.DENY);
             }
-
-            return;
         }
-
-        t.playerChangedTrade();
-
-        List<TradeItem> accept = getItemsWithFlag("ACCEPT");
-
-        for (TradeItem tradeItem : accept) {
-            e.getClickedInventory().setItem(tradeItem.getSlot(), TradeMain.getIns().getTradeManager().getRejectedItem());
-        }
-
     }
+
+    /**
+     * Request the coin amount from the chat
+     *
+     * @param player
+     * @param t
+     */
+    public void requestCoinsFromChat(Player player, Trade t) {
+        TradeMain.getIns().getChatRequests().requestChatInformation(player, "INSERT_COIN_AMOUND")
+                .thenAccept((message) -> {
+                    int coins;
+
+                    try {
+
+                        coins = Integer.parseInt(message);
+
+                    } catch (NumberFormatException ex) {
+
+                        MainData.getIns().getMessageManager().getMessage("COINS_MUST_BE_NUMBER")
+                                .sendTo(player);
+
+                        requestCoinsFromChat(player, t);
+
+                        return;
+                    }
+
+                    t.setCoins(player.getUniqueId(), coins);
+
+                    Inventory tradeInventory = t.getTradeInventory();
+
+                    player.openInventory(tradeInventory);
+
+                    List<TradeItem> coinsItems = getItemsWithFlag("COINS");
+
+                    for (TradeItem coinsItem : coinsItems) {
+                        tradeInventory.setItem(coinsItem.getSlot(), coinsItem.getItem(t));
+                    }
+
+                });
+    }
+
+    /**
+     * Check if a player can place an item in a position
+     *
+     * @param t The trade in question
+     * @param player The player that tried to player the item
+     * @param slot The slot the item was placed in
+     * @return
+     */
+    public boolean canPlayerPlace(Trade t, Player player, int slot) {
+
+        TradeItem item = getItem(slot);
+
+        if (item == null) {
+            return false;
+        }
+
+        if (t.isPlayer1(player.getUniqueId())) {
+            return item.hasItemFlag("PLAYER1");
+        }
+
+        return item.hasItemFlag("PLAYER2");
+    }
+
 }
 
 class TradeItem extends InventoryItem {
@@ -78,4 +159,15 @@ class TradeItem extends InventoryItem {
     public TradeItem(JSONObject data) {
         super(data);
     }
+
+    public ItemStack getItem(Trade t) {
+
+        Map<String, String> formats = new HashMap<>();
+
+        formats.put("%player1Coins%", String.valueOf(t.getPlayer1Coins()));
+        formats.put("%player2Coins%", String.valueOf(t.getPlayer2Coins()));
+
+        return ItemUtils.formatItem(this.item.clone(), formats);
+    }
+
 }

@@ -20,11 +20,15 @@ public class TradeManager {
     private Map<UUID, UUID> tradingRequests;
 
     @Getter
+    private List<UUID> closeExceptions;
+
+    @Getter
     private ItemStack acceptedItem, rejectedItem;
 
     public TradeManager(Module module) {
         this.activeTrades = new ArrayList<>();
         this.tradingRequests = new HashMap<>();
+        this.closeExceptions = new ArrayList<>();
 
         File configFile = new File(module.getDataFolder(), "config.json");
 
@@ -36,7 +40,7 @@ public class TradeManager {
 
         JSONObject json;
 
-        try (FileReader reader = new FileReader(configFile)){
+        try (FileReader reader = new FileReader(configFile)) {
 
             json = (JSONObject) new JSONParser().parse(reader);
 
@@ -96,6 +100,17 @@ public class TradeManager {
      */
     public boolean hasTradeRequest(UUID player) {
         return this.tradingRequests.containsKey(player);
+    }
+
+    /**
+     * Destroy a specific trade
+     *
+     * @param t
+     */
+    public void destroyTrade(Trade t) {
+        this.activeTrades.remove(t);
+
+        t.destroyTrade();
     }
 
 }
