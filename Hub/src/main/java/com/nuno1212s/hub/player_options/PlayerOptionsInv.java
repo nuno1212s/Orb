@@ -20,8 +20,8 @@ import java.io.File;
 public class PlayerOptionsInv extends InventoryData<PlayerOptionsItem> {
 
 
-    public PlayerOptionsInv(File jsonFile, Class<PlayerOptionsItem> itemClass, boolean directRedirect) {
-        super(jsonFile, itemClass, directRedirect);
+    public PlayerOptionsInv(File jsonFile) {
+        super(jsonFile, PlayerOptionsItem.class, true);
     }
 
     public Inventory buildInventory() {
@@ -32,6 +32,7 @@ public class PlayerOptionsInv extends InventoryData<PlayerOptionsItem> {
 
             if (!item.isToggleable())
                 i.setItem(item.getSlot(), item.getItem().clone());
+
         }
 
         //TODO: Build inventory

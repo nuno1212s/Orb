@@ -6,11 +6,11 @@
 
     {
       "Slot": 4,
-      "Flag": ["ACCEPT", "PLAYER1_ACCEPT"]
+      "Flags": ["ACCEPT", "SELF_ACCEPT"]
     },
     {
       "Slot": 22,
-      "Flag": ["ACCEPT", "PLAYER2_ACCEPT"]
+      "Flags": ["ACCEPT", "OTHER_ACCEPT"]
     },
     {
       "Slot": 13,
@@ -22,99 +22,99 @@
     },
     {
       "Slot": 0,
-      "Flag": ["PLAYER1"]
+      "Flags": ["SELF"]
     },
     {
       "Slot": 1,
-      "Flag": ["PLAYER1"]
+      "Flags": ["SELF"]
     },
     {
       "Slot": 2,
-      "Flag": ["PLAYER1"]
+      "Flags": ["SELF"]
     },
     {
       "Slot": 3,
-      "Flag": ["PLAYER1"]
+      "Flags": ["SELF"]
     },
     {
       "Slot": 9,
-      "Flag": ["PLAYER1"]
+      "Flags": ["SELF"]
     },
     {
       "Slot": 10,
-      "Flag": ["PLAYER1"]
+      "Flags": ["SELF"]
     },
     {
       "Slot": 11,
-      "Flag": ["PLAYER1"]
+      "Flags": ["SELF"]
     },
     {
       "Slot": 12,
-      "Flag": ["PLAYER1"]
+      "Flags": ["SELF"]
     },
     {
       "Slot": 18,
-      "Flag": ["PLAYER1"]
+      "Flags": ["SELF"]
     },
     {
       "Slot": 19,
-      "Flag": ["PLAYER1"]
+      "Flags": ["SELF"]
     },
     {
       "Slot": 20,
-      "Flag": ["PLAYER1"]
+      "Flags": ["SELF"]
     },
     {
       "Slot": 21,
-      "Flag": ["PLAYER1"]
+      "Flags": ["SELF"]
     },
     {
       "Slot": 5,
-      "Flag": ["PLAYER2"]
+      "Flags": ["OTHER"]
     },
     {
       "Slot": 6,
-      "Flag": ["PLAYER2"]
+      "Flags": ["OTHER"]
     },
     {
       "Slot": 7,
-      "Flag": ["PLAYER2"]
+      "Flags": ["OTHER"]
     },
     {
       "Slot": 8,
-      "Flag": ["PLAYER2"]
+      "Flags": ["OTHER"]
     },
     {
       "Slot": 14,
-      "Flag": ["PLAYER2"]
+      "Flags": ["OTHER"]
     },
     {
       "Slot": 15,
-      "Flag": ["PLAYER2"]
+      "Flags": ["OTHER"]
     },
     {
       "Slot": 16,
-      "Flag": ["PLAYER2"]
+      "Flags": ["OTHER"]
     },
     {
       "Slot": 17,
-      "Flag": ["PLAYER2"]
+      "Flags": ["OTHER"]
     },
     {
-      "Slot": 22,
-      "Flag": ["PLAYER2"]
+      "Slot": 23,
+      "Flags": ["OTHER"]
     },
     {
       "Slot": 24,
-      "Flag": ["PLAYER2"]
+      "Flags": ["OTHER"]
     },
     {
       "Slot": 25,
-      "Flag": ["PLAYER2"]
+      "Flags": ["OTHER"]
     },
     {
       "Slot": 26,
-      "Flag": ["PLAYER2"]
+      "Flags": ["OTHER"]
     }
   ]
 }

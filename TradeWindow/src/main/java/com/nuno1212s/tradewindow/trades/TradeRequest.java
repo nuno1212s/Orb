@@ -46,13 +46,15 @@ public class TradeRequest {
 
             TradeMain.getIns().getTradeManager().addTrade(trade);
 
+            TradeMain.getIns().getTradeManager().removeTradeRequest(this);
+
             Player player1 = Bukkit.getPlayer(this.requestingPlayer), player2 = Bukkit.getPlayer(this.requestedPlayer);
 
             if (player1 != null && player2 != null && player1.isOnline() && player2.isOnline()) {
 
-                player1.openInventory(trade.getTradeInventory());
+                player1.openInventory(trade.getPlayer1Inv());
 
-                player2.openInventory(trade.getTradeInventory());
+                player2.openInventory(trade.getPlayer2Inv());
 
             } else {
                 throw new IllegalArgumentException("Players have to be online");

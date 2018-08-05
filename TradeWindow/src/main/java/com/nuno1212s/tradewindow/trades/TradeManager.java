@@ -180,6 +180,10 @@ public class TradeManager {
         t.destroyTrade();
     }
 
+    public void finishTrade(Trade t) {
+        this.activeTrades.remove(t);
+    }
+
     /**
      * Get the current active trades
      *
@@ -191,5 +195,9 @@ public class TradeManager {
 
     public void addTrade(Trade trade) {
         this.activeTrades.add(trade);
+    }
+
+    public void removeTradeRequest(TradeRequest tradeRequest) {
+        this.tradingRequests.remove(tradeRequest);
     }
 }

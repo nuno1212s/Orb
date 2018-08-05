@@ -21,12 +21,12 @@ public class PlayerDamageListener implements Listener {
 
             if (d instanceof ClanPlayer && d2 instanceof ClanPlayer) {
 
-                e.setCancelled(((ClanPlayer) d).getClan().equals(((ClanPlayer) d2).getClan()));
+                if (((ClanPlayer) d).hasClan() && ((ClanPlayer) d2).hasClan()) {
+                    e.setCancelled(((ClanPlayer) d).getClan().equals(((ClanPlayer) d2).getClan()));
+                }
 
             }
-
         }
-
     }
 
 }
