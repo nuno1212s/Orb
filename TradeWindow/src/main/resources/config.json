@@ -1,0 +1,12 @@
+{
+  "AcceptedItem": {
+    "Material": "WOOL",
+    "Data": 5,
+    "DisplayName": "&aAceite"
+  },
+  "RejectedItem": {
+    "Material": "WOOL",
+    "Data": 14,
+    "DisplayName": "&cRejeitada"
+  }
+}

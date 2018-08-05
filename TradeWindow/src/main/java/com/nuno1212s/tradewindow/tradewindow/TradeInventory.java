@@ -32,6 +32,11 @@ public class TradeInventory extends InventoryData<TradeItem> {
 
         Trade t = TradeMain.getIns().getTradeManager().getTrade(e.getWhoClicked().getUniqueId());
 
+        if (t == null) {
+            e.setResult(Event.Result.DENY);
+            return;
+        }
+
         if (item != null) {
 
             if (item.hasItemFlag("PLAYER1_ACCEPT")) {
@@ -179,7 +184,11 @@ public class TradeInventory extends InventoryData<TradeItem> {
         Inventory i = Bukkit.getServer().createInventory(null, this.inventorySize, this.inventoryName);
 
         for (TradeItem item : this.items) {
-            i.setItem(item.getSlot(), item.getItem(t));
+            if (item.hasItemFlag("ACCEPT")) {
+                i.setItem(item.getSlot(), TradeMain.getIns().getTradeManager().getRejectedItem());
+            } else {
+                i.setItem(item.getSlot(), item.getItem(t));
+            }
         }
 
         return i;
@@ -194,6 +203,10 @@ class TradeItem extends InventoryItem {
     }
 
     public ItemStack getItem(Trade t) {
+
+        if (this.item == null) {
+            return super.getItem();
+        }
 
         Map<String, String> formats = new HashMap<>();
 

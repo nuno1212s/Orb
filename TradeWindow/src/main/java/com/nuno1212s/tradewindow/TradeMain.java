@@ -5,7 +5,9 @@ import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.modulemanager.ModuleData;
 import com.nuno1212s.tradewindow.chathandlers.ChatRequests;
+import com.nuno1212s.tradewindow.commands.TradeCommand;
 import com.nuno1212s.tradewindow.listeneres.InventoryCloseListener;
+import com.nuno1212s.tradewindow.timers.RemoveRequestsTimer;
 import com.nuno1212s.tradewindow.trades.TradeManager;
 import com.nuno1212s.tradewindow.tradewindow.TradeInventory;
 import lombok.Getter;
@@ -29,6 +31,8 @@ public class TradeMain extends Module {
 
     @Override
     public void onEnable() {
+        ins = this;
+
         chatRequests = new ChatRequests();
         tradeManager = new TradeManager(this);
 
@@ -54,6 +58,10 @@ public class TradeMain extends Module {
 
         BukkitMain.getIns().getServer().getPluginManager().registerEvents(chatRequests, BukkitMain.getIns());
         BukkitMain.getIns().getServer().getPluginManager().registerEvents(new InventoryCloseListener(), BukkitMain.getIns());
+
+        MainData.getIns().getScheduler().runTaskTimerAsync(new RemoveRequestsTimer(), 1200, 1200);
+
+        registerCommand(new String[]{"trade"}, new TradeCommand());
     }
 
     @Override

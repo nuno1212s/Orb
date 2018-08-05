@@ -1,0 +1,120 @@
+{
+  "InventoryID": "tradeInventory",
+  "InventoryName": "&cTrade inventory",
+  "InventorySize": 27,
+  "InventoryItems": [
+
+    {
+      "Slot": 4,
+      "Flag": ["ACCEPT", "PLAYER1_ACCEPT"]
+    },
+    {
+      "Slot": 22,
+      "Flag": ["ACCEPT", "PLAYER2_ACCEPT"]
+    },
+    {
+      "Slot": 13,
+      "Item": {
+        "Material": "STAINED_GLASS_PANE",
+        "Data": 7,
+        "DisplayName": "&r "
+      }
+    },
+    {
+      "Slot": 0,
+      "Flag": ["PLAYER1"]
+    },
+    {
+      "Slot": 1,
+      "Flag": ["PLAYER1"]
+    },
+    {
+      "Slot": 2,
+      "Flag": ["PLAYER1"]
+    },
+    {
+      "Slot": 3,
+      "Flag": ["PLAYER1"]
+    },
+    {
+      "Slot": 9,
+      "Flag": ["PLAYER1"]
+    },
+    {
+      "Slot": 10,
+      "Flag": ["PLAYER1"]
+    },
+    {
+      "Slot": 11,
+      "Flag": ["PLAYER1"]
+    },
+    {
+      "Slot": 12,
+      "Flag": ["PLAYER1"]
+    },
+    {
+      "Slot": 18,
+      "Flag": ["PLAYER1"]
+    },
+    {
+      "Slot": 19,
+      "Flag": ["PLAYER1"]
+    },
+    {
+      "Slot": 20,
+      "Flag": ["PLAYER1"]
+    },
+    {
+      "Slot": 21,
+      "Flag": ["PLAYER1"]
+    },
+    {
+      "Slot": 5,
+      "Flag": ["PLAYER2"]
+    },
+    {
+      "Slot": 6,
+      "Flag": ["PLAYER2"]
+    },
+    {
+      "Slot": 7,
+      "Flag": ["PLAYER2"]
+    },
+    {
+      "Slot": 8,
+      "Flag": ["PLAYER2"]
+    },
+    {
+      "Slot": 14,
+      "Flag": ["PLAYER2"]
+    },
+    {
+      "Slot": 15,
+      "Flag": ["PLAYER2"]
+    },
+    {
+      "Slot": 16,
+      "Flag": ["PLAYER2"]
+    },
+    {
+      "Slot": 17,
+      "Flag": ["PLAYER2"]
+    },
+    {
+      "Slot": 22,
+      "Flag": ["PLAYER2"]
+    },
+    {
+      "Slot": 24,
+      "Flag": ["PLAYER2"]
+    },
+    {
+      "Slot": 25,
+      "Flag": ["PLAYER2"]
+    },
+    {
+      "Slot": 26,
+      "Flag": ["PLAYER2"]
+    }
+  ]
+}

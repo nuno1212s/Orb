@@ -44,9 +44,9 @@ public class TradeCommand implements CommandExecutor {
             return true;
         }
 
-        if (TradeMain.getIns().getTradeManager().hasTradeRequestFrom(player2.getUniqueId(), player1.getUniqueId())) {
+        if (TradeMain.getIns().getTradeManager().hasTradeRequestFrom(player1.getUniqueId(), player2.getUniqueId())) {
 
-            TradeRequest tradeRequest = TradeMain.getIns().getTradeManager().getTradeRequest(player2.getUniqueId(), player1.getUniqueId());
+            TradeRequest tradeRequest = TradeMain.getIns().getTradeManager().getTradeRequest(player1.getUniqueId(), player2.getUniqueId());
 
             Trade trade = tradeRequest.createTrade();
 
@@ -54,6 +54,7 @@ public class TradeCommand implements CommandExecutor {
 
                 MainData.getIns().getMessageManager().getMessage("TRADE_EXPIRED").sendTo(commandSender);
 
+                return true;
             }
 
         } else {

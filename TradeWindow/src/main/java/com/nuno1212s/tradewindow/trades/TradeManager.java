@@ -12,13 +12,17 @@ import org.json.simple.parser.ParseException;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 public class TradeManager {
 
     private List<Trade> activeTrades;
 
-    private List<TradeRequest> tradingRequests;
+    @Getter
+    private final List<TradeRequest> tradingRequests;
 
     @Getter
     private List<UUID> closeExceptions;
@@ -28,7 +32,7 @@ public class TradeManager {
 
     public TradeManager(Module module) {
         this.activeTrades = new ArrayList<>();
-        this.tradingRequests = new ArrayList<>();
+        this.tradingRequests = Collections.synchronizedList(new ArrayList<>());
         this.closeExceptions = new ArrayList<>();
 
         File configFile = new File(module.getDataFolder(), "config.json");
@@ -101,9 +105,11 @@ public class TradeManager {
      */
     public boolean hasTradeRequest(UUID player) {
 
-        for (TradeRequest tradingRequest : this.tradingRequests) {
-            if (tradingRequest.getRequestedPlayer().equals(player)) {
-                return true;
+        synchronized (this.tradingRequests) {
+            for (TradeRequest tradingRequest : this.tradingRequests) {
+                if (tradingRequest.getRequestedPlayer().equals(player)) {
+                    return true;
+                }
             }
         }
 
@@ -119,9 +125,12 @@ public class TradeManager {
      */
     public boolean hasTradeRequestFrom(UUID playerRequested, UUID playerResquesting) {
 
-        for (TradeRequest tradingRequest : this.tradingRequests) {
-            if (tradingRequest.getRequestedPlayer().equals(playerRequested) && tradingRequest.getRequestingPlayer().equals(playerResquesting)) {
-                return true;
+        synchronized (this.tradingRequests) {
+            for (TradeRequest tradingRequest : this.tradingRequests) {
+                if (tradingRequest.getRequestedPlayer().equals(playerRequested) &&
+                        tradingRequest.getRequestingPlayer().equals(playerResquesting)) {
+                    return true;
+                }
             }
         }
 
@@ -137,9 +146,12 @@ public class TradeManager {
      */
     public TradeRequest getTradeRequest(UUID playerRequested, UUID playerRequesting) {
 
-        for (TradeRequest tradingRequest : this.tradingRequests) {
-            if (tradingRequest.getRequestedPlayer().equals(playerRequested) && tradingRequest.getRequestingPlayer().equals(playerRequesting)) {
-                return tradingRequest;
+        synchronized (this.tradingRequests) {
+            for (TradeRequest tradingRequest : this.tradingRequests) {
+                if (tradingRequest.getRequestedPlayer().equals(playerRequested) &&
+                        tradingRequest.getRequestingPlayer().equals(playerRequesting)) {
+                    return tradingRequest;
+                }
             }
         }
 
@@ -177,4 +189,7 @@ public class TradeManager {
         return ImmutableList.copyOf(this.activeTrades);
     }
 
+    public void addTrade(Trade trade) {
+        this.activeTrades.add(trade);
+    }
 }

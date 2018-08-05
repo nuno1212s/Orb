@@ -1,6 +1,11 @@
 package com.nuno1212s.tradewindow.trades;
 
+import com.nuno1212s.tradewindow.TradeMain;
 import lombok.Getter;
+import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
@@ -17,7 +22,8 @@ public class TradeRequest {
     private long requestTime;
 
     public TradeRequest(UUID requestingPlayer, UUID requestedPlayer) {
-        this.requestID = "";
+        this.requestID = RandomStringUtils.random(5, true, true);
+
         this.requestingPlayer = requestingPlayer;
         this.requestedPlayer = requestedPlayer;
 
@@ -36,7 +42,23 @@ public class TradeRequest {
     public Trade createTrade() {
 
         if (!hasExpired()) {
-            return new Trade(this.requestingPlayer, this.requestedPlayer);
+            Trade trade = new Trade(this.requestingPlayer, this.requestedPlayer);
+
+            TradeMain.getIns().getTradeManager().addTrade(trade);
+
+            Player player1 = Bukkit.getPlayer(this.requestingPlayer), player2 = Bukkit.getPlayer(this.requestedPlayer);
+
+            if (player1 != null && player2 != null && player1.isOnline() && player2.isOnline()) {
+
+                player1.openInventory(trade.getTradeInventory());
+
+                player2.openInventory(trade.getTradeInventory());
+
+            } else {
+                throw new IllegalArgumentException("Players have to be online");
+            }
+
+            return trade;
         }
 
         return null;

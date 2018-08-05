@@ -140,11 +140,15 @@ public class Trade {
         }
     }
 
+    /**
+     * Destroys this trade and returns everything to their owners
+     */
     void destroyTrade() {
 
         Player player1 = Bukkit.getServer().getPlayer(this.getPlayer1()), player2 = Bukkit.getServer().getPlayer(this.getPlayer2());
 
         try {
+
             if (player1.getOpenInventory() != null && player1.getOpenInventory().getTitle().equalsIgnoreCase(this.tradeInventory.getName())) {
                 player1.closeInventory();
             }
@@ -152,6 +156,7 @@ public class Trade {
             if (player2.getOpenInventory() != null && player2.getOpenInventory().getTitle().equalsIgnoreCase(this.tradeInventory.getName())) {
                 player2.closeInventory();
             }
+
         } finally {
 
             //Even if there is an error with closing the inventories, this code will be executed
