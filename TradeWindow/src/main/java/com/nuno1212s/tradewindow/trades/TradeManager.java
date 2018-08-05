@@ -1,5 +1,6 @@
 package com.nuno1212s.tradewindow.trades;
 
+import com.google.common.collect.ImmutableList;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.util.SerializableItem;
 import lombok.Getter;
@@ -17,7 +18,7 @@ public class TradeManager {
 
     private List<Trade> activeTrades;
 
-    private Map<UUID, UUID> tradingRequests;
+    private List<TradeRequest> tradingRequests;
 
     @Getter
     private List<UUID> closeExceptions;
@@ -27,7 +28,7 @@ public class TradeManager {
 
     public TradeManager(Module module) {
         this.activeTrades = new ArrayList<>();
-        this.tradingRequests = new HashMap<>();
+        this.tradingRequests = new ArrayList<>();
         this.closeExceptions = new ArrayList<>();
 
         File configFile = new File(module.getDataFolder(), "config.json");
@@ -88,7 +89,7 @@ public class TradeManager {
      */
     public void registerTradeRequest(UUID playerRequesting, UUID playerRequested) {
 
-        this.tradingRequests.put(playerRequested, playerRequesting);
+        this.tradingRequests.add(new TradeRequest(playerRequesting, playerRequested));
 
     }
 
@@ -99,7 +100,61 @@ public class TradeManager {
      * @return
      */
     public boolean hasTradeRequest(UUID player) {
-        return this.tradingRequests.containsKey(player);
+
+        for (TradeRequest tradingRequest : this.tradingRequests) {
+            if (tradingRequest.getRequestedPlayer().equals(player)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Is there a trade request involving
+     *
+     * @param playerRequested
+     * @param playerResquesting
+     * @return
+     */
+    public boolean hasTradeRequestFrom(UUID playerRequested, UUID playerResquesting) {
+
+        for (TradeRequest tradingRequest : this.tradingRequests) {
+            if (tradingRequest.getRequestedPlayer().equals(playerRequested) && tradingRequest.getRequestingPlayer().equals(playerResquesting)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Get the trade request for the player
+     *
+     * @param playerRequested
+     * @param playerRequesting
+     * @return
+     */
+    public TradeRequest getTradeRequest(UUID playerRequested, UUID playerRequesting) {
+
+        for (TradeRequest tradingRequest : this.tradingRequests) {
+            if (tradingRequest.getRequestedPlayer().equals(playerRequested) && tradingRequest.getRequestingPlayer().equals(playerRequesting)) {
+                return tradingRequest;
+            }
+        }
+
+        return null;
+    }
+
+    public TradeRequest getTradeRequest(String requestID) {
+
+        for (TradeRequest tradingRequest : this.tradingRequests) {
+            if (tradingRequest.getRequestID().equals(requestID)) {
+                return tradingRequest;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -111,6 +166,15 @@ public class TradeManager {
         this.activeTrades.remove(t);
 
         t.destroyTrade();
+    }
+
+    /**
+     * Get the current active trades
+     *
+     * @return
+     */
+    public ImmutableList<Trade> getTrades() {
+        return ImmutableList.copyOf(this.activeTrades);
     }
 
 }

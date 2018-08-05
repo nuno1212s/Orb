@@ -3,9 +3,11 @@ package com.nuno1212s.tradewindow.tradewindow;
 import com.nuno1212s.inventories.InventoryData;
 import com.nuno1212s.inventories.InventoryItem;
 import com.nuno1212s.main.MainData;
+import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.tradewindow.TradeMain;
 import com.nuno1212s.tradewindow.trades.Trade;
 import com.nuno1212s.util.ItemUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -114,27 +116,38 @@ public class TradeInventory extends InventoryData<TradeItem> {
                         return;
                     }
 
-                    t.setCoins(player.getUniqueId(), coins);
+                    PlayerData pD = MainData.getIns().getPlayerManager().getPlayer(player.getUniqueId());
 
-                    Inventory tradeInventory = t.getTradeInventory();
+                    MainData.getIns().getServerCurrencyHandler().removeCurrency(pD, coins)
+                            .thenAccept((result) -> {
 
-                    player.openInventory(tradeInventory);
+                                if (result) {
 
-                    List<TradeItem> coinsItems = getItemsWithFlag("COINS");
+                                    t.setCoins(player.getUniqueId(), coins);
 
-                    for (TradeItem coinsItem : coinsItems) {
-                        tradeInventory.setItem(coinsItem.getSlot(), coinsItem.getItem(t));
-                    }
+                                    Inventory tradeInventory = t.getTradeInventory();
 
+                                    player.openInventory(tradeInventory);
+
+                                    updateCoinItems(t);
+                                } else {
+
+                                    MainData.getIns().getMessageManager().getMessage("NOT_ENOUGH_COINS")
+                                            .format("%coins%", coins)
+                                            .sendTo(pD);
+
+                                    requestCoinsFromChat(player, t);
+                                }
+                            });
                 });
     }
 
     /**
      * Check if a player can place an item in a position
      *
-     * @param t The trade in question
+     * @param t      The trade in question
      * @param player The player that tried to player the item
-     * @param slot The slot the item was placed in
+     * @param slot   The slot the item was placed in
      * @return
      */
     public boolean canPlayerPlace(Trade t, Player player, int slot) {
@@ -150,6 +163,26 @@ public class TradeInventory extends InventoryData<TradeItem> {
         }
 
         return item.hasItemFlag("PLAYER2");
+    }
+
+    /**
+     * Update the items that represent coins
+     * @param t
+     */
+    public void updateCoinItems(Trade t) {
+        for (TradeItem coins : this.getItemsWithFlag("COINS")) {
+            t.getTradeInventory().setItem(coins.getSlot(), coins.getItem(t));
+        }
+    }
+
+    public Inventory buildInventory(Trade t) {
+        Inventory i = Bukkit.getServer().createInventory(null, this.inventorySize, this.inventoryName);
+
+        for (TradeItem item : this.items) {
+            i.setItem(item.getSlot(), item.getItem(t));
+        }
+
+        return i;
     }
 
 }

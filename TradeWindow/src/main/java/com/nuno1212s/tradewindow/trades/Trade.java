@@ -11,6 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import sun.applet.Main;
 
 import java.util.List;
 import java.util.UUID;
@@ -30,10 +31,12 @@ public class Trade {
     @Getter
     private Inventory tradeInventory;
 
-    public Trade(UUID player1, UUID player2, Inventory tradeInventory) {
+    public Trade(UUID player1, UUID player2) {
         this.player1 = player1;
         this.player2 = player2;
-        this.tradeInventory = tradeInventory;
+        this.player1Coins = 0;
+        this.player2Coins = 0;
+        this.tradeInventory = TradeMain.getIns().getTradeInventory().buildInventory(this);
         this.player1Accepted = false;
         this.player2Accepted = false;
     }
@@ -57,17 +60,6 @@ public class Trade {
         return true;
     }
 
-    private void doTrade() {
-
-        PlayerData player1 = MainData.getIns().getPlayerManager().getPlayer(this.player1),
-                player2 = MainData.getIns().getPlayerManager().getPlayer(this.player2);
-
-        if (player1.isPlayerOnServer() && player2.isPlayerOnServer()) {
-
-        }
-
-    }
-
     public boolean player2ToggleAccept(UUID player) {
         if (player.equals(player2)) {
             return false;
@@ -75,7 +67,43 @@ public class Trade {
 
         this.player2Accepted = !this.player2Accepted;
 
+        checkTrade();
+
         return true;
+    }
+
+    /**
+     * Checks if the trade can be executed and if it can, executes it
+     */
+    private void checkTrade() {
+
+        if (this.player1Accepted && this.player2Accepted) {
+            doTrade();
+        }
+
+    }
+
+    private void doTrade() {
+
+        PlayerData player1 = MainData.getIns().getPlayerManager().getPlayer(this.player1),
+                player2 = MainData.getIns().getPlayerManager().getPlayer(this.player2);
+
+        if (player1.isPlayerOnServer() && player2.isPlayerOnServer()) {
+            giveItems("PLAYER1", player2.getPlayerReference(Player.class));
+
+            giveItems("PLAYER2", player1.getPlayerReference(Player.class));
+
+            MainData.getIns().getServerCurrencyHandler().addCurrency(player1, this.player2Coins);
+
+            MainData.getIns().getServerCurrencyHandler().addCurrency(player2, this.player1Coins);
+
+        } else {
+
+            //Players participating in trade not in the server, destroy the trade
+
+            destroyTrade();
+        }
+
     }
 
     /**
@@ -116,28 +144,39 @@ public class Trade {
 
         Player player1 = Bukkit.getServer().getPlayer(this.getPlayer1()), player2 = Bukkit.getServer().getPlayer(this.getPlayer2());
 
+        try {
+            if (player1.getOpenInventory() != null && player1.getOpenInventory().getTitle().equalsIgnoreCase(this.tradeInventory.getName())) {
+                player1.closeInventory();
+            }
 
-        if (player1.getOpenInventory() != null && player1.getOpenInventory().getTitle().equalsIgnoreCase(this.tradeInventory.getName())) {
-            player1.closeInventory();
+            if (player2.getOpenInventory() != null && player2.getOpenInventory().getTitle().equalsIgnoreCase(this.tradeInventory.getName())) {
+                player2.closeInventory();
+            }
+        } finally {
+
+            //Even if there is an error with closing the inventories, this code will be executed
+
+            /*
+            Give items to the original owner
+             */
+            giveItems("PLAYER1", player1);
+
+            giveItems("PLAYER2", player2);
+
+            PlayerData pD1 = MainData.getIns().getPlayerManager().getPlayer(this.player1),
+                    pD2 = MainData.getIns().getPlayerManager().getPlayer(this.player2);
+
+            MainData.getIns().getServerCurrencyHandler().addCurrency(pD1, this.player1Coins);
+
+            MainData.getIns().getServerCurrencyHandler().addCurrency(pD2, this.player2Coins);
         }
-
-        if (player2.getOpenInventory() != null && player2.getOpenInventory().getTitle().equalsIgnoreCase(this.tradeInventory.getName())) {
-            player2.closeInventory();
-        }
-
-        /*
-        Give items to the original owner
-         */
-        giveItems("PLAYER1", player1);
-
-        giveItems("PLAYER2", player2);
 
     }
 
     /**
      * Give the items in the slots with the given flag to the given playerInstance
      *
-     * @param flag The flag to look for
+     * @param flag           The flag to look for
      * @param playerInstance The player instance
      */
     private void giveItems(String flag, Player playerInstance) {

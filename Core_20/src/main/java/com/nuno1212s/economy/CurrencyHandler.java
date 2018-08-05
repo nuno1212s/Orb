@@ -100,6 +100,15 @@ public class CurrencyHandler {
 
     }
 
+    /**
+     * Load aditional server information if needed and adds the coins to the player
+     * <p>
+     * Does not need to explicitly save the player information because since the PlayerData is already provided we can assume that it is
+     * either loaded and saved somewhere else, or the player is on the server
+     *
+     * @param data  The PlayerData
+     * @param coins The coins to add
+     */
     private void loadAndAddCurrency(PlayerData data, long coins) {
 
         if (data instanceof ServerCurrency) {
@@ -118,17 +127,17 @@ public class CurrencyHandler {
     public CompletableFuture<Boolean> removeCurrency(PlayerData data, long coins) {
         if (data instanceof ServerCurrency) {
 
-            boolean b = ((ServerCurrency) data).removeCurrency(coins);
+            boolean successFull = ((ServerCurrency) data).removeCurrency(coins);
 
-            MainData.getIns().getEventCaller().callUpdateInformationEvent(data,
-                    PlayerInformationUpdateEvent.Reason.CURRENCY_UPDATE);
+            if (successFull)
+                MainData.getIns().getEventCaller().callUpdateInformationEvent(data,
+                        PlayerInformationUpdateEvent.Reason.CURRENCY_UPDATE);
 
-            return CompletableFuture.completedFuture(b);
+            return CompletableFuture.completedFuture(successFull);
         }
 
-        return CompletableFuture.supplyAsync(() -> {
-            return loadAndRemoveCurrency(data, coins);
-        }, MainData.getIns().getAsyncExecutor());
+        return CompletableFuture.supplyAsync(() -> loadAndRemoveCurrency(data, coins)
+                , MainData.getIns().getAsyncExecutor());
     }
 
     public CompletableFuture<Boolean> removeCurrency(UUID player, long coins) {
