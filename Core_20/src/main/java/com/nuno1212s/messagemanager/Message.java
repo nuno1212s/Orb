@@ -83,6 +83,12 @@ public class Message {
         send(players);
     }
 
+    public void sendTo(PlayerData... playerData) {
+        for (PlayerData playerDatum : playerData) {
+            sendTo(playerDatum);
+        }
+    }
+
     public void sendTo(Collection<? extends CommandSender> players) {
         if (MainData.getIns().isBungee()) {
             return;

@@ -106,7 +106,6 @@ public class TradeInventory extends InventoryData<TradeItem> {
 
                                     player.openInventory(tradeInventory);
 
-                                    updateCoinItems(t);
                                 } else {
 
                                     MainData.getIns().getMessageManager().getMessage("NOT_ENOUGH_COINS")
@@ -134,17 +133,6 @@ public class TradeInventory extends InventoryData<TradeItem> {
         }
 
         return item.hasItemFlag("SELF");
-    }
-
-    /**
-     * Update the items that represent coins
-     *
-     * @param t
-     */
-    public void updateCoinItems(Trade t) {
-        //for (TradeItem coins : this.getItemsWithFlag("COINS")) {
-        //    t.getTradeInventory().setItem(coins.getSlot(), coins.getItem(t));
-        //}
     }
 
     public Inventory buildInventory(Trade t) {

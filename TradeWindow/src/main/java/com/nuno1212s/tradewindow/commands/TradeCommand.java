@@ -3,6 +3,7 @@ package com.nuno1212s.tradewindow.commands;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.tradewindow.TradeMain;
 import com.nuno1212s.tradewindow.trades.Trade;
+import com.nuno1212s.tradewindow.trades.TradeManager;
 import com.nuno1212s.tradewindow.trades.TradeRequest;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -44,6 +45,12 @@ public class TradeCommand implements CommandExecutor {
             return true;
         }
 
+        if (player1.getUniqueId().equals(player2.getUniqueId())) {
+            MainData.getIns().getMessageManager().getMessage("CANNOT_TRADE_SELF")
+                    .sendTo(player1);
+            return true;
+        }
+
         if (TradeMain.getIns().getTradeManager().hasTradeRequestFrom(player1.getUniqueId(), player2.getUniqueId())) {
 
             TradeRequest tradeRequest = TradeMain.getIns().getTradeManager().getTradeRequest(player1.getUniqueId(), player2.getUniqueId());
@@ -59,6 +66,15 @@ public class TradeCommand implements CommandExecutor {
 
         } else {
 
+            if (TradeMain.getIns().getTradeManager().hasTradeRequestFrom(player2.getUniqueId(), player1.getUniqueId())
+                    && !TradeMain.getIns().getTradeManager().getTradeRequest(player2.getUniqueId(), player1.getUniqueId()).hasExpired()) {
+
+                MainData.getIns().getMessageManager().getMessage("TRADE_REQUEST_NOT_EXPIRED")
+                        .sendTo(player1);
+
+                return true;
+            }
+
             TradeMain.getIns().getTradeManager().registerTradeRequest(player1.getUniqueId(), player2.getUniqueId());
 
             MainData.getIns().getMessageManager().getMessage("TRADE_REQUEST_SENT").sendTo(player1);
@@ -70,7 +86,7 @@ public class TradeCommand implements CommandExecutor {
             BaseComponent[] messageComponents = TextComponent.fromLegacyText(trade_request_received);
 
             for (BaseComponent baseComponent : messageComponents) {
-                baseComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "trade " + player1.getName()));
+                baseComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/trade " + player1.getName()));
             }
 
             player2.spigot().sendMessage(messageComponents);

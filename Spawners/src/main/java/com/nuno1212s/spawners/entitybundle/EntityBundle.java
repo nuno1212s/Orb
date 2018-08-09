@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 
 import java.lang.ref.WeakReference;
@@ -97,6 +98,7 @@ public class EntityBundle {
     public void kill(ItemStack itemInHand) {
         this.mobCount--;
         Entity entityReference = getEntityReference();
+
         EntityType type = entityReference.getType();
 
         ItemStack[] dropsForEntity = Main.getIns().getEntityManager().getDropsForEntity(type);

@@ -207,6 +207,9 @@ public class Trade {
 
             MainData.getIns().getServerCurrencyHandler().addCurrency(player2, this.player1Coins);
 
+            MainData.getIns().getMessageManager().getMessage("TRADE_COMPLETED")
+                    .sendTo(player1, player2);
+
         } else {
 
             //Players participating in trade not in the server, destroy the trade
