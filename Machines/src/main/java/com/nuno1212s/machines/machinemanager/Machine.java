@@ -165,7 +165,9 @@ public class Machine {
             }
 
             case WHEN_LOADED: {
-                if (this.getMachineLocation().getLocation().getChunk().isLoaded()) {
+                LLocation machineLocation = this.getMachineLocation();
+                if (machineLocation.getLocation().getWorld()
+                        .isChunkLoaded(machineLocation.getBlockX() >> 4, machineLocation.getBlockZ() >> 4)) {
                     tick();
                 }
 

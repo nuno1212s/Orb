@@ -174,6 +174,15 @@ public class PlayerManager {
         return new Pair<>(MainData.getIns().getMySql().getPlayerData(playerID, null), true);
     }
 
+    /**
+     * Load (or get if the player is already loaded) the player with the given UUID, returns a completablefuture that get's executed
+     * when the player data is finished loading.
+     *
+     * This method uses async so be careful of Bukkit calls
+     *
+     * @param playerID
+     * @return
+     */
     public CompletableFuture<PlayerData> loadPlayer(UUID playerID) {
 
         if (players.containsKey(playerID)) {

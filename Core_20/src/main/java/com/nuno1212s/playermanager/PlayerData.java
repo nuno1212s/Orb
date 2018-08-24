@@ -1,5 +1,6 @@
 package com.nuno1212s.playermanager;
 
+import com.nuno1212s.economy.EconomyRedisHandler;
 import com.nuno1212s.events.PlayerInformationUpdateEvent;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.permissionmanager.Group;
@@ -239,7 +240,7 @@ public abstract class PlayerData {
         if (MainData.getIns().getEventCaller() != null && isPlayerOnServer()) {
             MainData.getIns().getEventCaller().callUpdateInformationEvent(this);
         } else if (!isPlayerOnServer() && shouldUseRedis) {
-            MainData.getIns().getPlayerManager().getEconomyRedisHandler().sendCashUpdate(getPlayerID(), cash);
+            MainData.getIns().getPlayerManager().getEconomyRedisHandler().sendCashUpdate(getPlayerID(), cash, EconomyRedisHandler.Operation.SET);
         }
     }
 
@@ -249,14 +250,17 @@ public abstract class PlayerData {
      * @param cash
      */
     public final void addCash(long cash) {
-        this.cash.addAndGet(cash);
+        addCash(cash, true);
+    }
 
+    public final void addCash(long cash, boolean useRedis) {
+        this.cash.addAndGet(cash);
 
         if (this.isPlayerOnServer())
             MainData.getIns().getEventCaller().callUpdateInformationEvent(this, PlayerInformationUpdateEvent.Reason.CURRENCY_UPDATE);
-        else
-            MainData.getIns().getPlayerManager().getEconomyRedisHandler().sendCashUpdate(getPlayerID(), cash);
-
+        else if (useRedis)
+            MainData.getIns().getPlayerManager().getEconomyRedisHandler().sendCashUpdate(getPlayerID(), cash,
+                    EconomyRedisHandler.Operation.ADD);
     }
 
     /**
@@ -266,6 +270,10 @@ public abstract class PlayerData {
      * @return
      */
     public final boolean removeCash(long cash) {
+        return removeCash(cash, true);
+    }
+
+    public final boolean removeCash(long cash, boolean useRedis) {
 
         while (true) {
 
@@ -276,8 +284,9 @@ public abstract class PlayerData {
 
                     if (this.isPlayerOnServer())
                         MainData.getIns().getEventCaller().callUpdateInformationEvent(this, PlayerInformationUpdateEvent.Reason.CURRENCY_UPDATE);
-                    else
-                        MainData.getIns().getPlayerManager().getEconomyRedisHandler().sendCashUpdate(getPlayerID(), cash);
+                    else if (useRedis)
+                        MainData.getIns().getPlayerManager().getEconomyRedisHandler().sendCashUpdate(getPlayerID(), cash,
+                                EconomyRedisHandler.Operation.REMOVE);
 
                     return true;
                 }
@@ -285,7 +294,6 @@ public abstract class PlayerData {
                 return false;
             }
         }
-
     }
 
     public final void setCash(long cash) {

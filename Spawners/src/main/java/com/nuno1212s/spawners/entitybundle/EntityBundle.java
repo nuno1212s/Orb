@@ -53,9 +53,7 @@ public class EntityBundle {
             return;
         }
 
-        System.out.println(location.getChunk().isLoaded());
-
-        if (location.getChunk().isLoaded()) {
+        if (location.getWorld().isChunkLoaded(location.getBlockX() >> 4,  location.getBlockZ() >> 4)) {
             load();
         } else {
             this.entity = UUID.randomUUID();

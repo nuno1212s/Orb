@@ -37,7 +37,7 @@ public class PlayerJoinListener implements Listener {
 
         if (coreData == null) {
             coreData = new CorePlayerData(e.getUniqueId(), new PlayerGroupData(), e.getName(),
-                    0, System.currentTimeMillis(), true, false,
+                    0, System.currentTimeMillis(), Bukkit.getOnlineMode(), false,
                     MainData.getIns().getRewardManager().getDefaultRewards(), null);
         }
 
