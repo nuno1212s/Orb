@@ -9,22 +9,10 @@ import java.util.List;
 
 public class CustomEntityWolf extends EntityWolf {
 
-    public CustomEntityWolf(World world, List<PathFinder> goalSelector, List<PathFinder> targetSelector) {
+    public CustomEntityWolf(World world) {
         super(world);
 
         CustomEntity.clearPathFinders(this);
-
-        for (PathFinder pathFinder : goalSelector) {
-
-            this.goalSelector.a(pathFinder);
-
-        }
-
-        for (PathFinder pathFinder : targetSelector) {
-
-            this.targetSelector.a(pathFinder);
-
-        }
 
 
     }

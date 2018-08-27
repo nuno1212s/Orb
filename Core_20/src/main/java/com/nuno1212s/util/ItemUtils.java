@@ -2,6 +2,7 @@ package com.nuno1212s.util;
 
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 
@@ -18,6 +19,15 @@ import java.util.Map;
  */
 public class ItemUtils {
 
+    /**
+     * Format the item with the given place holders
+     *
+     * Also formats the skull owner if the item is a skull
+     *
+     * @param itemToFormat
+     * @param placeHolders
+     * @return
+     */
     public static ItemStack formatItem(ItemStack itemToFormat, Map<String, String> placeHolders) {
 
         if (!itemToFormat.hasItemMeta()) {
@@ -49,6 +59,14 @@ public class ItemUtils {
             });
 
             itemMeta.setLore(newLore);
+        }
+
+        if (itemMeta instanceof SkullMeta) {
+
+            placeHolders.forEach((key, value) -> {
+                ((SkullMeta) itemMeta).setOwner(((SkullMeta) itemMeta).getOwner().replace(key, value));
+            });
+
         }
 
         itemToFormat.setItemMeta(itemMeta);

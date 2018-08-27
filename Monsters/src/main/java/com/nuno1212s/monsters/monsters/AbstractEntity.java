@@ -9,8 +9,6 @@ public abstract class AbstractEntity {
     @Getter
     private int id;
 
-    private EntityType type;
 
-    private PathFinder pathFinder;
 
 }

@@ -1,30 +1,21 @@
 package com.nuno1212s.monsters.pathfinders;
 
-import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.server.v1_8_R3.PathfinderGoal;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
+import org.json.simple.JSONObject;
 
-public abstract class PathFinder extends PathfinderGoal {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
-    @Getter
-    private final int id;
+public class PathFinder{
 
-    @Getter
-    @Setter
-    LivingEntity entity;
+    public List<? extends PathfinderGoal> loadPathFinders(Object entity, JSONObject config) {
 
+        for (Object o : config.keySet()) {
 
-    public PathFinder(int id) {
-        this.id = id;
+        }
+
+        return new ArrayList<>();
     }
-
-    @Override
-    public boolean a() {
-        return tick(entity);
-    }
-
-    public abstract boolean tick(Entity e);
 
 }

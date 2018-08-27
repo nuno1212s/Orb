@@ -254,6 +254,17 @@ public class InventoryData<T extends InventoryItem> {
         return items;
     }
 
+    /**
+     * Passes along the inventory click event of clicks in this inventory
+     *
+     * Already ignored if the clicked inventory is not this inventory
+     *
+     * Does not check if the clicked item is null
+     *
+     * Auto does stuff like COMMAND: and CONNECTING_INV: (if direct redirect is enabled {@link #directRedirect}
+     *
+     * @param e
+     */
     public void handleClick(InventoryClickEvent e) {
         e.setResult(Event.Result.DENY);
     }

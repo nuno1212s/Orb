@@ -4,14 +4,11 @@ import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.rediscommunication.Message;
 import com.nuno1212s.rediscommunication.RedisReceiver;
-import com.nuno1212s.util.Callback;
 import com.nuno1212s.util.Pair;
 import org.json.simple.JSONObject;
 
 import java.util.UUID;
-import java.util.concurrent.Callable;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class EconomyRedisHandler implements RedisReceiver {
 
