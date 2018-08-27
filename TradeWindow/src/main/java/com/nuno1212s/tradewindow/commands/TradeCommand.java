@@ -3,7 +3,6 @@ package com.nuno1212s.tradewindow.commands;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.tradewindow.TradeMain;
 import com.nuno1212s.tradewindow.trades.Trade;
-import com.nuno1212s.tradewindow.trades.TradeManager;
 import com.nuno1212s.tradewindow.trades.TradeRequest;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;

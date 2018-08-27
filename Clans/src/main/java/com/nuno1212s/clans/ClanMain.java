@@ -21,7 +21,7 @@ import org.bukkit.Bukkit;
 
 import java.io.File;
 
-@ModuleData(name = "Clans", version = "1.0-SNAPSHOT", dependencies = {"Displays"})
+@ModuleData(name = "Clans", version = "1.1", dependencies = {"Displays"})
 public class ClanMain extends Module {
 
     @Getter

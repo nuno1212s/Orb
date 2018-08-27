@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.nuno1212s.clans.ClanMain;
 import com.nuno1212s.clans.clanmanager.Clan;
 import com.nuno1212s.clans.clanplayer.ClanPlayer;
+import com.nuno1212s.clans.events.ClanPlayerKickEvent;
 import com.nuno1212s.events.PlayerInformationUpdateEvent;
 import com.nuno1212s.inventories.InventoryData;
 import com.nuno1212s.inventories.InventoryItem;
@@ -30,7 +31,6 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class MemberInventory extends InventoryData<MemberItem> {
-
 
     public MemberInventory(File jsonFile) {
         super(jsonFile, MemberItem.class, true);
@@ -193,6 +193,8 @@ public class MemberInventory extends InventoryData<MemberItem> {
                 if (player.getValue()) {
                     player.setKey(MainData.getIns().getPlayerManager().requestAditionalServerData(player.getKey()));
                 }
+
+                Bukkit.getServer().getPluginManager().callEvent(new ClanPlayerKickEvent(c, playerID));
 
                 c.removeMember(playerID);
 

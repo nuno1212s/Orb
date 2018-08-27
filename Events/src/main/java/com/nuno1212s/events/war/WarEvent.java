@@ -9,8 +9,8 @@ public class WarEvent {
 
     private Map<String, List<UUID>> players;
 
-    public WarEvent() {
-        players = new HashMap<>();
+    public WarEvent(Map<String, List<UUID>> players) {
+        this.players = players;
 
 
     }

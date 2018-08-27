@@ -6,6 +6,7 @@ import com.nuno1212s.events.war.inventories.SelectPlayersInventory;
 import com.nuno1212s.main.BukkitMain;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -19,6 +20,7 @@ public class WarEventScheduler {
 
     public long startDate;
 
+    @Getter
     private SelectPlayersInventory selectPlayersInventory;
 
     public WarEventScheduler(Module m) {
@@ -32,8 +34,6 @@ public class WarEventScheduler {
         }
 
         this.selectPlayersInventory = new SelectPlayersInventory(jsonFile);
-
-        Bukkit.getServer().getPluginManager().registerEvents(this.selectPlayersInventory, BukkitMain.getIns());
     }
 
     public void reset(long newStartDate) {
@@ -56,6 +56,10 @@ public class WarEventScheduler {
      */
     public void registerClan(Clan c, Player register) {
 
+        if (!canRegisterClan()) {
+            return;
+        }
+
         List<UUID> onlineMembers = c.getOnlineMembers();
         if (onlineMembers.size() < 5) {
             MainData.getIns().getMessageManager().getMessage("NOT_ENOUGH_MEMBERS_ONLINE").sendTo(register);
@@ -68,6 +72,8 @@ public class WarEventScheduler {
             register.openInventory(this.selectPlayersInventory.buildInventory(register));
         } else {
 
+            MainData.getIns().getMessageManager().getMessage("CLAN_REGISTERED").sendTo(register);
+
             registerClan(c.getClanID(), onlineMembers);
 
         }
@@ -75,6 +81,10 @@ public class WarEventScheduler {
     }
 
     public void registerClan(String clanID, List<UUID> membersAssigned) {
+
+        if (!canRegisterClan()) {
+            return;
+        }
 
         this.signedUpClans.put(clanID, membersAssigned);
 
@@ -84,6 +94,30 @@ public class WarEventScheduler {
             // TODO: 26/08/2018 teleport to some location idk
 //                player.teleport()
         }
+    }
+
+    public void registerPlayer(String clanID, UUID player) {
+
+        if (!canRegisterClan()) {
+            return;
+        }
+
+        if (!this.signedUpClans.containsKey(clanID)) {
+            return;
+        }
+
+        List<UUID> memberSignedUp = this.signedUpClans.get(clanID);
+
+        memberSignedUp.add(player);
+
+        // TODO: 27-08-2018 Send message saying the player joined
+
+        this.signedUpClans.put(clanID, memberSignedUp);
+
+        Player p = Bukkit.getPlayer(player);
+
+        // TODO: 27-08-2018 Teleport to the location
+
     }
 
     /**
@@ -97,6 +131,10 @@ public class WarEventScheduler {
         this.signedUpClans.values().forEach(players::addAll);
 
         return players;
+    }
+
+    public List<UUID> getPlayersRegistered(String clanID) {
+        return this.signedUpClans.getOrDefault(clanID, new ArrayList<>());
     }
 
     /**
@@ -114,6 +152,8 @@ public class WarEventScheduler {
                     break;
                 }
 
+                // TODO: 27-08-2018 Send message to inform that the player left
+
                 players.getValue().remove(playerID);
 
                 if (players.getValue().size() < 5) {
@@ -122,7 +162,24 @@ public class WarEventScheduler {
                     break;
                 }
 
-                if (c.getOnlineMembers().size() > players.getValue().size()) {
+                List<UUID> onlineMembers = c.getOnlineMembers();
+
+
+                //There are still some more online members
+                if (onlineMembers.size() > players.getValue().size()) {
+
+                    for (UUID onlineMember : onlineMembers) {
+                        if (c.getRank(onlineMember).ordinal() >= Clan.Rank.ADMIN.ordinal()) {
+
+                            Player player = Bukkit.getPlayer(onlineMember);
+
+                            this.selectPlayersInventory.getSelected().put(player.getUniqueId(), players.getValue());
+
+                            player.openInventory(this.selectPlayersInventory.buildInventory(player, c));
+
+                            break;
+                        }
+                    }
 
                 }
             }
@@ -158,10 +215,20 @@ public class WarEventScheduler {
         return this.signedUpClans.keySet();
     }
 
+    /**
+     * Is this clan registered in the war event
+     * @param clanID
+     * @return
+     */
+    public boolean isClanRegistered(String clanID) {
+        return this.signedUpClans.containsKey(clanID);
+    }
+
     public void start() {
 
+        new WarEvent(this.signedUpClans);
 
-
+        this.reset(this.startDate + TimeUnit.DAYS.toMillis(7));
     }
 
 }

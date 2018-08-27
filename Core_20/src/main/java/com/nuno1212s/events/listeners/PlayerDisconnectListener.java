@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
  */
 public class PlayerDisconnectListener implements Listener {
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onQuit(PlayerQuitEvent e) {
         PlayerData p = MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
 

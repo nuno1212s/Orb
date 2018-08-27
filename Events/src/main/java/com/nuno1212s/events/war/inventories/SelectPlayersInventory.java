@@ -56,17 +56,29 @@ public class SelectPlayersInventory extends InventoryData<InventoryItem> impleme
         }
     }
 
-    @Override
-    public Inventory buildInventory(Player p) {
+    public void updateInventoriesFor(Clan c) {
 
-        PlayerData playerData = MainData.getIns().getPlayerManager().getPlayer(p.getUniqueId());
+        for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+            if (player.getOpenInventory().getTitle().equals(getInventoryName())) {
 
-        if (!(playerData instanceof ClanPlayer)) {
-            return null;
+                PlayerData playerData = MainData.getIns().getPlayerManager().getPlayer(player.getUniqueId());
+
+                if (playerData instanceof ClanPlayer) {
+
+                    if (((ClanPlayer) playerData).getClan().equals(c.getClanID())) {
+
+                        player.getOpenInventory().getTopInventory().setContents(buildInventory(player, c).getContents());
+
+                    }
+
+                }
+
+            }
         }
 
-        Clan clan = ClanMain.getIns().getClanManager().getClan(((ClanPlayer) playerData).getClan());
+    }
 
+    public Inventory buildInventory(Player p, Clan clan) {
         List<UUID> onlineMembers = clan.getOnlineMembers();
 
         Inventory inventory = super.buildInventory(p);
@@ -97,6 +109,24 @@ public class SelectPlayersInventory extends InventoryData<InventoryItem> impleme
         }
 
         return inventory;
+    }
+
+    @Override
+    public Inventory buildInventory(Player p) {
+
+        PlayerData playerData = MainData.getIns().getPlayerManager().getPlayer(p.getUniqueId());
+
+        if (!(playerData instanceof ClanPlayer)) {
+            return null;
+        }
+
+        if (!((ClanPlayer) playerData).hasClan()) {
+            return buildInventory();
+        }
+
+        Clan clan = ClanMain.getIns().getClanManager().getClan(((ClanPlayer) playerData).getClan());
+
+        return buildInventory(p, clan);
     }
 
     @Override
@@ -153,7 +183,7 @@ public class SelectPlayersInventory extends InventoryData<InventoryItem> impleme
 
                 PlayerData playerData = MainData.getIns().getPlayerManager().getPlayer(e.getWhoClicked().getUniqueId());
 
-                if (playerData instanceof ClanPlayer) {
+                if (playerData instanceof ClanPlayer && ((ClanPlayer) playerData).hasClan()) {
                     EventMain.getIns().getWarEvent().registerClan(((ClanPlayer) playerData).getClan(), this.selected.get(e.getWhoClicked().getUniqueId()));
 
                     e.getWhoClicked().closeInventory();

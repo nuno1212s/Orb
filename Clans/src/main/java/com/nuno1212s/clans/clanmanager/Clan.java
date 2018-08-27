@@ -3,6 +3,9 @@ package com.nuno1212s.clans.clanmanager;
 import com.google.common.collect.ImmutableMap;
 import com.nuno1212s.clans.ClanMain;
 import com.nuno1212s.clans.clanplayer.ClanPlayer;
+import com.nuno1212s.clans.events.ClanDeleteEvent;
+import com.nuno1212s.clans.events.ClanPlayerJoinEvent;
+import com.nuno1212s.clans.events.ClanPlayerLeaveEvent;
 import com.nuno1212s.events.PlayerInformationUpdateEvent;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.messagemanager.Message;
@@ -11,6 +14,7 @@ import com.nuno1212s.util.Pair;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.commons.lang.RandomStringUtils;
+import org.bukkit.Bukkit;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -100,6 +104,8 @@ public class Clan {
             }
         });
 
+        Bukkit.getServer().getPluginManager().callEvent(new ClanPlayerJoinEvent(this, member));
+
         if (useRedis) {
             MainData.getIns().getScheduler().runTaskAsync(() -> {
                 ClanMain.getIns().getRedisHandler().addMember(this, member);
@@ -135,6 +141,8 @@ public class Clan {
 
     public void removeMember(UUID player, boolean useRedis) {
         this.members.remove(player);
+
+        Bukkit.getServer().getPluginManager().callEvent(new ClanPlayerLeaveEvent(this, player));
 
         //We load the player because we always want to show that someone left
         MainData.getIns().getPlayerManager().loadPlayer(player).thenAccept((d) -> {
@@ -251,6 +259,8 @@ public class Clan {
     }
 
     public void delete(boolean useDatabase) {
+        Bukkit.getServer().getPluginManager().callEvent(new ClanDeleteEvent(this));
+
         MainData.getIns().getScheduler().runTaskAsync(() -> {
             PlayerData player;
 
