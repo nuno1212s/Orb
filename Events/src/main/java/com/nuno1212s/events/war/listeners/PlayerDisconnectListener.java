@@ -22,13 +22,27 @@ public class PlayerDisconnectListener implements Listener {
         PlayerData playerData = MainData.getIns().getPlayerManager().getPlayer(e.getPlayer().getUniqueId());
 
         if (playerData instanceof ClanPlayer && ((ClanPlayer) playerData).hasClan()) {
-            EventMain.getIns().getWarEvent().getSelectPlayersInventory()
-                    .updateInventoriesFor(ClanMain.getIns().getClanManager().getClan(((ClanPlayer) playerData).getClan()));
+            if (EventMain.getIns().getWarEvent().canRegisterClan()) {
+
+                //Only update the inventories if the registering is active
+                EventMain.getIns().getWarEvent().getSelectPlayersInventory()
+                        .updateInventoriesFor(ClanMain.getIns().getClanManager().getClan(((ClanPlayer) playerData).getClan()));
+            }
+
+            if (EventMain.getIns().getWarEvent().getOnGoing() != null) {
+                if (EventMain.getIns().getWarEvent().getOnGoing().getAlivePlayersForClan(((ClanPlayer) playerData).getClan()).contains(e.getPlayer().getUniqueId())) {
+
+                    EventMain.getIns().getWarEvent().getOnGoing().kill(null, e.getPlayer());
+
+                }
+            }
+
         }
 
         if (playersRegistered.contains(e.getPlayer().getUniqueId())) {
             EventMain.getIns().getWarEvent().removePlayer(e.getPlayer().getUniqueId());
         }
+
 
     }
 

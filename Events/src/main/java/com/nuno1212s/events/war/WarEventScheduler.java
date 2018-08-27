@@ -3,11 +3,13 @@ package com.nuno1212s.events.war;
 import com.nuno1212s.clans.ClanMain;
 import com.nuno1212s.clans.clanmanager.Clan;
 import com.nuno1212s.events.war.inventories.SelectPlayersInventory;
+import com.nuno1212s.events.war.util.WarEventHelper;
 import com.nuno1212s.main.BukkitMain;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
 import lombok.Getter;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -23,6 +25,12 @@ public class WarEventScheduler {
     @Getter
     private SelectPlayersInventory selectPlayersInventory;
 
+    @Getter
+    private WarEventHelper helper;
+
+    @Getter
+    private WarEvent onGoing;
+
     public WarEventScheduler(Module m) {
 
         this.signedUpClans = new HashMap<>();
@@ -34,6 +42,8 @@ public class WarEventScheduler {
         }
 
         this.selectPlayersInventory = new SelectPlayersInventory(jsonFile);
+
+        this.helper = new WarEventHelper(m);
     }
 
     public void reset(long newStartDate) {
@@ -91,8 +101,7 @@ public class WarEventScheduler {
         for (UUID onlineMember : membersAssigned) {
             Player player = Bukkit.getPlayer(onlineMember);
 
-            // TODO: 26/08/2018 teleport to some location idk
-//                player.teleport()
+            player.teleport(this.helper.getSpectatorLocation());
         }
     }
 
@@ -116,7 +125,7 @@ public class WarEventScheduler {
 
         Player p = Bukkit.getPlayer(player);
 
-        // TODO: 27-08-2018 Teleport to the location
+        p.teleport(this.helper.getSpectatorLocation());
 
     }
 
@@ -151,6 +160,10 @@ public class WarEventScheduler {
                 if (c == null) {
                     break;
                 }
+
+                Player p = Bukkit.getPlayer(playerID);
+
+                p.teleport(this.helper.getFallbackLocation());
 
                 // TODO: 27-08-2018 Send message to inform that the player left
 
@@ -192,7 +205,7 @@ public class WarEventScheduler {
      * Disqualifies a clan from the war event
      * @param c
      */
-    private void disqualify(Clan c) {
+    public void disqualify(Clan c) {
 
         this.signedUpClans.get(c.getClanID()).forEach((player) -> {
 
@@ -226,7 +239,7 @@ public class WarEventScheduler {
 
     public void start() {
 
-        new WarEvent(this.signedUpClans);
+        this.onGoing = new WarEvent(this.signedUpClans, this.helper);
 
         this.reset(this.startDate + TimeUnit.DAYS.toMillis(7));
     }

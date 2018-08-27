@@ -1,13 +1,8 @@
 package com.nuno1212s.events;
 
 import com.nuno1212s.events.war.WarEventScheduler;
-import com.nuno1212s.events.war.commands.JoinCommand;
-import com.nuno1212s.events.war.commands.LeaveCommand;
-import com.nuno1212s.events.war.commands.RegisterCommand;
-import com.nuno1212s.events.war.listeners.PlayerConnectListener;
-import com.nuno1212s.events.war.listeners.PlayerDisconnectListener;
-import com.nuno1212s.events.war.listeners.PlayerJoinClanListener;
-import com.nuno1212s.events.war.listeners.PlayerLeaveClanListener;
+import com.nuno1212s.events.war.commands.*;
+import com.nuno1212s.events.war.listeners.*;
 import com.nuno1212s.main.BukkitMain;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.modulemanager.ModuleData;
@@ -34,10 +29,13 @@ public class EventMain extends Module {
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerDisconnectListener(), BukkitMain.getIns());
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinClanListener(), BukkitMain.getIns());
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerLeaveClanListener(), BukkitMain.getIns());
+        Bukkit.getServer().getPluginManager().registerEvents(new ClanDisbandListener(), BukkitMain.getIns());
 
         registerCommand(new String[]{"registarclan"}, new RegisterCommand());
         registerCommand(new String[]{"entrarevento"}, new JoinCommand());
         registerCommand(new String[]{"sairevento"}, new LeaveCommand());
+        registerCommand(new String[]{"setfallbacklocation"}, new SetFallbackLocationCommand());
+        registerCommand(new String[]{"setspectatorlocation"}, new SetSpectatorLocationCommand());
 
     }
 
