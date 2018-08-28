@@ -59,7 +59,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <finalName>Hub</finalName>
+                    <finalName>Events</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>

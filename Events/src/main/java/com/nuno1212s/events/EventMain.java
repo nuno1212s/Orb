@@ -30,17 +30,24 @@ public class EventMain extends Module {
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerJoinClanListener(), BukkitMain.getIns());
         Bukkit.getServer().getPluginManager().registerEvents(new PlayerLeaveClanListener(), BukkitMain.getIns());
         Bukkit.getServer().getPluginManager().registerEvents(new ClanDisbandListener(), BukkitMain.getIns());
+        Bukkit.getServer().getPluginManager().registerEvents(new EntityDamageListener(), BukkitMain.getIns());
+        Bukkit.getServer().getPluginManager().registerEvents(new EntityDeathListener(), BukkitMain.getIns());
 
         registerCommand(new String[]{"registarclan"}, new RegisterCommand());
         registerCommand(new String[]{"entrarevento"}, new JoinCommand());
         registerCommand(new String[]{"sairevento"}, new LeaveCommand());
         registerCommand(new String[]{"setfallbacklocation"}, new SetFallbackLocationCommand());
         registerCommand(new String[]{"setspectatorlocation"}, new SetSpectatorLocationCommand());
+        registerCommand(new String[]{"addspawnlocation"}, new AddSpawnLocationCommand());
 
     }
 
     @Override
     public void onDisable() {
+        if (this.warEvent.getOnGoing() != null) {
+            this.warEvent.getOnGoing().forceEnd();
+        }
 
+        this.warEvent.save();
     }
 }

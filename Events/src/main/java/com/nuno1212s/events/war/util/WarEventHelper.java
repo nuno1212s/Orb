@@ -2,6 +2,7 @@ package com.nuno1212s.events.war.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.nuno1212s.events.war.WarEvent;
 import com.nuno1212s.messagemanager.Message;
 import com.nuno1212s.modulemanager.Module;
@@ -17,6 +18,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -47,13 +49,15 @@ public class WarEventHelper {
                 dataFile.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
-
-                spawns = new ArrayList<>();
-
-                spectatorLocation = Bukkit.getWorlds().get(0).getSpawnLocation();
-
-                fallbackLocation = Bukkit.getWorlds().get(0).getSpawnLocation();
             }
+
+            spawns = new ArrayList<>();
+
+            spectatorLocation = Bukkit.getWorlds().get(0).getSpawnLocation();
+
+            fallbackLocation = Bukkit.getWorlds().get(0).getSpawnLocation();
+
+            previousWarEvents = new ArrayList<>();
         } else {
             load();
         }
@@ -80,6 +84,13 @@ public class WarEventHelper {
 
             }
 
+            Gson gson = new GsonBuilder().create();
+
+            Type type = new TypeToken<List<WarEvent>>(){}.getType();
+
+            String warEvents = (String) object.get("WarEvents");
+
+            this.previousWarEvents = gson.fromJson(warEvents, type);
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
@@ -131,6 +142,14 @@ public class WarEventHelper {
             e.printStackTrace();
         }
 
+    }
+
+    /**
+     * Save a previous war event
+     * @param event
+     */
+    public void addPrevious(WarEvent event) {
+        this.previousWarEvents.add(event);
     }
 
     public void addSpawn(Location l) {

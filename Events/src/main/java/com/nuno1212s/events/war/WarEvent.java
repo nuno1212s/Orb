@@ -2,10 +2,12 @@ package com.nuno1212s.events.war;
 
 import com.nuno1212s.clans.ClanMain;
 import com.nuno1212s.clans.clanmanager.Clan;
+import com.nuno1212s.events.EventMain;
 import com.nuno1212s.events.war.util.WarEventHelper;
 import com.nuno1212s.main.MainData;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nullable;
@@ -15,7 +17,7 @@ public class WarEvent {
 
     private Map<String, List<UUID>> players;
 
-    private Map<String, List<UUID>> alivePlayers;
+    private transient Map<String, List<UUID>> alivePlayers;
 
     private List<Kill> kills;
 
@@ -56,6 +58,15 @@ public class WarEvent {
      */
     public void kill(@Nullable Player killer, Player killed) {
 
+        //The event has already been won, but the player left, teleport the player to the fallback location
+        if (this.winner != null) {
+
+            killed.teleport(this.helper.getFallbackLocation());
+
+            return;
+
+        }
+
         this.kills.add(new Kill(killer == null ? null :  killer.getUniqueId(), killed.getUniqueId()));
 
         for (Map.Entry<String, List<UUID>> players : alivePlayers.entrySet()) {
@@ -94,14 +105,47 @@ public class WarEvent {
 
         if (this.alivePlayers.size() == 1) {
             win(this.alivePlayers.entrySet().stream().findAny().orElse(new AbstractMap.SimpleEntry<>("", new ArrayList<>())).getKey());
+        } else if (this.alivePlayers.isEmpty()) {
+            //?????
         }
 
+    }
+
+    /**
+     * Force the end
+     */
+    public void forceEnd() {
+        for (UUID uuid : getAllAlivePlayers()) {
+            Player player = Bukkit.getPlayer(uuid);
+
+            if (player == null || player.isOnline()) {
+                continue;
+            }
+
+            player.teleport(this.helper.getFallbackLocation());
+        }
     }
 
     private void win(String clanID) {
 
         this.winner = clanID;
 
+        MainData.getIns().getScheduler().runTaskLater(() -> {
+
+            this.getAlivePlayersForClan(clanID).forEach((player) -> {
+
+                Player player1 = Bukkit.getPlayer(player);
+
+                if (player1 == null || !player1.isOnline()) {
+                    return;
+                }
+
+                player1.teleport(this.helper.getFallbackLocation());
+
+            });
+
+            EventMain.getIns().getWarEvent().handleEnd();
+        }, 60L);
         // TODO: 27-08-2018 Give rewards
 
     }
@@ -114,6 +158,14 @@ public class WarEvent {
      */
     public List<UUID> getAlivePlayersForClan(String clan) {
         return this.alivePlayers.get(clan);
+    }
+
+    public List<UUID> getAllAlivePlayers() {
+        List<UUID> players = new ArrayList<>();
+
+        this.alivePlayers.values().forEach(players::addAll);
+
+        return players;
     }
 
     public List<UUID> getAllPlayers() {

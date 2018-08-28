@@ -11,8 +11,11 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
-import java.io.File;
+import java.io.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -22,6 +25,8 @@ public class WarEventScheduler {
 
     public long startDate;
 
+    private File dataFile;
+
     @Getter
     private SelectPlayersInventory selectPlayersInventory;
 
@@ -30,6 +35,8 @@ public class WarEventScheduler {
 
     @Getter
     private WarEvent onGoing;
+
+    private List<Integer> minutesAnnounced;
 
     public WarEventScheduler(Module m) {
 
@@ -43,13 +50,63 @@ public class WarEventScheduler {
 
         this.selectPlayersInventory = new SelectPlayersInventory(jsonFile);
 
+        dataFile = new File(m.getDataFolder(), "nextWarEvent.json");
+
+        if (!dataFile.exists()) {
+            try {
+                dataFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            this.startDate = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(5);
+            // TODO: 27/08/2018 Make it schedule to the next saturday
+        } else {
+
+            try (Reader r = new FileReader(dataFile)) {
+                JSONObject object = (JSONObject) new JSONParser().parse(r);
+
+                this.startDate = (Long) object.get("StartDate");
+            } catch (ParseException | IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
         this.helper = new WarEventHelper(m);
+    }
+
+    public void save() {
+
+        this.helper.save();
+
+        try (Writer r = new FileWriter(dataFile)) {
+
+            JSONObject json = new JSONObject();
+
+            json.put("StartDate", this.startDate);
+
+            json.writeJSONString(r);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void reset(long newStartDate) {
         this.signedUpClans = new HashMap<>();
 
         this.startDate = newStartDate;
+    }
+
+    public void checkTime() {
+        if (this.startDate - System.currentTimeMillis() < TimeUnit.MINUTES.toMillis(5)) {
+
+
+
+        } else if (System.currentTimeMillis() >= this.startDate) {
+            this.start();
+        }
     }
 
     /**
@@ -211,7 +268,7 @@ public class WarEventScheduler {
 
             Player p = Bukkit.getServer().getPlayer(player);
 
-            p.teleport(p.getWorld().getSpawnLocation());
+            p.teleport(this.helper.getFallbackLocation());
 
         });
 
@@ -237,11 +294,45 @@ public class WarEventScheduler {
         return this.signedUpClans.containsKey(clanID);
     }
 
+    /**
+     * Start the war event
+     */
     public void start() {
+
+        if (this.signedUpClans.size() < 2) {
+            MainData.getIns().getMessageManager().getMessage("NOT_ENOUGH_CLANS_SIGNED_UP")
+                    .sendTo(Bukkit.getServer().getOnlinePlayers());
+
+            this.reset(this.startDate + TimeUnit.DAYS.toMillis(7));
+
+            return;
+        }
 
         this.onGoing = new WarEvent(this.signedUpClans, this.helper);
 
+        getPlayersRegistered().forEach((player) -> {
+            Player p = Bukkit.getPlayer(player);
+
+            if (p == null || !p.isOnline()) {
+                return;
+            }
+
+            p.teleport(this.helper.getRandomSpawnLocation());
+
+        });
+
         this.reset(this.startDate + TimeUnit.DAYS.toMillis(7));
+    }
+
+    /**
+     * Handles the end of a war event
+     */
+    public void handleEnd() {
+
+        this.helper.addPrevious(this.onGoing);
+
+        this.onGoing = null;
+
     }
 
 }
