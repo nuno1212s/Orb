@@ -92,8 +92,6 @@ public class WarEvent {
 
                 killed.spigot().respawn();
 
-                killed.teleport(this.helper.getFallbackLocation());
-
                 break;
             }
 

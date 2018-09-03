@@ -4,12 +4,10 @@ import com.nuno1212s.clans.ClanMain;
 import com.nuno1212s.clans.clanmanager.Clan;
 import com.nuno1212s.events.war.inventories.SelectPlayersInventory;
 import com.nuno1212s.events.war.util.WarEventHelper;
-import com.nuno1212s.main.BukkitMain;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
 import lombok.Getter;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -20,6 +18,11 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class WarEventScheduler {
+
+    public static int MAX_START_PLAYERS = 10, MIN_START_PLAYERS = 5;
+
+    private static List<Integer> minutesToAnnounce = Arrays.asList(30, 20, 15, 10, 5, 4, 3, 2, 1)
+            , secondsToAnnounce = Arrays.asList(30, 15, 10, 5, 4, 3, 2, 1);
 
     private Map<String, List<UUID>> signedUpClans;
 
@@ -36,7 +39,7 @@ public class WarEventScheduler {
     @Getter
     private WarEvent onGoing;
 
-    private List<Integer> minutesAnnounced;
+    private List<Integer> minutesAnnounced = new ArrayList<>(), secondsAnnounced = new ArrayList<>();
 
     public WarEventScheduler(Module m) {
 
@@ -93,24 +96,50 @@ public class WarEventScheduler {
 
     }
 
-    public void reset(long newStartDate) {
-        this.signedUpClans = new HashMap<>();
-
-        this.startDate = newStartDate;
-    }
-
+    /**
+     * Send the time for the
+     */
     public void checkTime() {
-        if (this.startDate - System.currentTimeMillis() < TimeUnit.MINUTES.toMillis(5)) {
 
-
-
-        } else if (System.currentTimeMillis() >= this.startDate) {
-            this.start();
+        if (this.startDate < System.currentTimeMillis()) {
+            start();
+            return;
         }
+
+        for (Integer time : minutesToAnnounce) {
+            if (this.startDate - System.currentTimeMillis() <= TimeUnit.MINUTES.toMillis(time)) {
+                if (!this.minutesAnnounced.contains(time)) {
+
+                    this.minutesAnnounced.add(time);
+
+                    this.helper.sendMessage(this.getPlayersRegistered(),
+                            MainData.getIns().getMessageManager().getMessage("WAR_EVENT_STARTS_IN")
+                                    .format("%minutes%", time));
+
+                }
+
+            }
+        }
+
+        for (int time : secondsToAnnounce) {
+            if (this.startDate - System.currentTimeMillis() <= TimeUnit.SECONDS.toMillis(time)) {
+                if (!this.secondsAnnounced.contains(time)) {
+
+                    this.secondsAnnounced.add(time);
+
+                    this.helper.sendMessage(this.getPlayersRegistered(),
+                            MainData.getIns().getMessageManager().getMessage("WAR_EVENT_STARTS_SECONDS")
+                                    .format("%seconds%", time));
+
+                }
+            }
+        }
+
     }
 
     /**
      * Only allow for clans to register in the 30 minutes before the war event starts
+     *
      * @return
      */
     public boolean canRegisterClan() {
@@ -119,6 +148,7 @@ public class WarEventScheduler {
 
     /**
      * Registers a given clan into the war event
+     *
      * @param c
      */
     public void registerClan(Clan c, Player register) {
@@ -128,10 +158,10 @@ public class WarEventScheduler {
         }
 
         List<UUID> onlineMembers = c.getOnlineMembers();
-        if (onlineMembers.size() < 5) {
+        if (onlineMembers.size() < MIN_START_PLAYERS) {
             MainData.getIns().getMessageManager().getMessage("NOT_ENOUGH_MEMBERS_ONLINE").sendTo(register);
 
-        } else if (onlineMembers.size() > 10) {
+        } else if (onlineMembers.size() > MAX_START_PLAYERS) {
 
             MainData.getIns().getMessageManager().getMessage("TOO_MANY_MEMBERS_ONLINE").sendTo(register);
 
@@ -176,11 +206,17 @@ public class WarEventScheduler {
 
         memberSignedUp.add(player);
 
-        // TODO: 27-08-2018 Send message saying the player joined
-
         this.signedUpClans.put(clanID, memberSignedUp);
 
         Player p = Bukkit.getPlayer(player);
+
+        if (p == null) {
+            return;
+        }
+
+        this.helper.sendMessage(getPlayersRegistered(clanID),
+                MainData.getIns().getMessageManager().getMessage("PLAYER_JOINED")
+                        .format("%player%", p.getName()));
 
         p.teleport(this.helper.getSpectatorLocation());
 
@@ -188,6 +224,7 @@ public class WarEventScheduler {
 
     /**
      * Get all the players registered in this war event
+     *
      * @return
      */
     public List<UUID> getPlayersRegistered() {
@@ -205,6 +242,7 @@ public class WarEventScheduler {
 
     /**
      * Unregister a player from the war event
+     *
      * @param playerID
      */
     public void removePlayer(UUID playerID) {
@@ -222,11 +260,13 @@ public class WarEventScheduler {
 
                 p.teleport(this.helper.getFallbackLocation());
 
-                // TODO: 27-08-2018 Send message to inform that the player left
+                this.getHelper().sendMessage(this.getPlayersRegistered(c.getClanID()),
+                        MainData.getIns().getMessageManager().getMessage("PLAYER_LEFT")
+                                .format("%player%", p.getName()));
 
                 players.getValue().remove(playerID);
 
-                if (players.getValue().size() < 5) {
+                if (players.getValue().size() < MIN_START_PLAYERS) {
                     disqualify(c);
 
                     break;
@@ -260,6 +300,7 @@ public class WarEventScheduler {
 
     /**
      * Disqualifies a clan from the war event
+     *
      * @param c
      */
     public void disqualify(Clan c) {
@@ -287,6 +328,7 @@ public class WarEventScheduler {
 
     /**
      * Is this clan registered in the war event
+     *
      * @param clanID
      * @return
      */
@@ -333,6 +375,15 @@ public class WarEventScheduler {
 
         this.onGoing = null;
 
+    }
+
+    public void reset(long newStartDate) {
+        this.signedUpClans = new HashMap<>();
+
+        this.startDate = newStartDate;
+
+        this.secondsAnnounced = new ArrayList<>();
+        this.minutesAnnounced = new ArrayList<>();
     }
 
 }

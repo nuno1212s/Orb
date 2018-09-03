@@ -4,6 +4,7 @@ import com.nuno1212s.events.war.WarEventScheduler;
 import com.nuno1212s.events.war.commands.*;
 import com.nuno1212s.events.war.listeners.*;
 import com.nuno1212s.main.BukkitMain;
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.modulemanager.Module;
 import com.nuno1212s.modulemanager.ModuleData;
 import lombok.Getter;
@@ -32,6 +33,9 @@ public class EventMain extends Module {
         Bukkit.getServer().getPluginManager().registerEvents(new ClanDisbandListener(), BukkitMain.getIns());
         Bukkit.getServer().getPluginManager().registerEvents(new EntityDamageListener(), BukkitMain.getIns());
         Bukkit.getServer().getPluginManager().registerEvents(new EntityDeathListener(), BukkitMain.getIns());
+        Bukkit.getServer().getPluginManager().registerEvents(new RespawnListener(), BukkitMain.getIns());
+
+        MainData.getIns().getScheduler().runTaskTimer(warEvent::checkTime, 20, 20);
 
         registerCommand(new String[]{"registarclan"}, new RegisterCommand());
         registerCommand(new String[]{"entrarevento"}, new JoinCommand());

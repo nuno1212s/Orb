@@ -4,6 +4,7 @@ import com.nuno1212s.clans.ClanMain;
 import com.nuno1212s.clans.clanmanager.Clan;
 import com.nuno1212s.clans.clanplayer.ClanPlayer;
 import com.nuno1212s.events.EventMain;
+import com.nuno1212s.events.war.WarEventScheduler;
 import com.nuno1212s.inventories.InventoryData;
 import com.nuno1212s.inventories.InventoryItem;
 import com.nuno1212s.main.MainData;
@@ -153,7 +154,7 @@ public class SelectPlayersInventory extends InventoryData<InventoryItem> impleme
                     if (uuids.contains(playerID)) {
                         uuids.remove(playerID);
                     } else {
-                        if (uuids.size() >= 10) {
+                        if (uuids.size() >= WarEventScheduler.MAX_START_PLAYERS) {
 
                             MainData.getIns().getMessageManager().getMessage("YOU_CANNOT_SELECT_ANYMORE")
                                     .sendTo(e.getWhoClicked());
