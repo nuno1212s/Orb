@@ -14,12 +14,15 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import java.io.*;
+import java.time.*;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class WarEventScheduler {
 
-    public static int MAX_START_PLAYERS = 10, MIN_START_PLAYERS = 5;
+    public static int MAX_START_PLAYERS = 1, MIN_START_PLAYERS = 1;
 
     private static List<Integer> minutesToAnnounce = Arrays.asList(30, 20, 15, 10, 5, 4, 3, 2, 1)
             , secondsToAnnounce = Arrays.asList(30, 15, 10, 5, 4, 3, 2, 1);
@@ -62,8 +65,7 @@ public class WarEventScheduler {
                 e.printStackTrace();
             }
 
-            this.startDate = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(5);
-            // TODO: 27/08/2018 Make it schedule to the next saturday
+            this.startDate = getNextSaturday();
         } else {
 
             try (Reader r = new FileReader(dataFile)) {
@@ -384,6 +386,18 @@ public class WarEventScheduler {
 
         this.secondsAnnounced = new ArrayList<>();
         this.minutesAnnounced = new ArrayList<>();
+    }
+
+    private long getNextSaturday() {
+
+        LocalDateTime date = LocalDateTime.now();
+
+        date.with(TemporalAdjusters.next(DayOfWeek.SATURDAY));
+
+        date = date.withHour(14).withMinute(0).withSecond(0);
+
+        return date.toInstant(ZoneOffset.UTC).toEpochMilli();
+
     }
 
 }

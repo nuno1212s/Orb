@@ -31,7 +31,6 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
 /**
  * Handles inventory listeners data
@@ -65,8 +64,6 @@ public class InventoryData<T extends InventoryItem> {
 
     /**
      * A function that get's called to open the next inventory, after the current inventory is closed
-     *
-     *
      */
     @Setter(value = AccessLevel.PROTECTED)
     private Callback<Pair<HumanEntity, InventoryData>> openFuction;
@@ -84,7 +81,7 @@ public class InventoryData<T extends InventoryItem> {
     public InventoryData(JSONObject obj) {
         this.directRedirect = true;
 
-        load(obj, false,(Class<T>) InventoryItem.class);
+        load(obj, false, (Class<T>) InventoryItem.class);
     }
 
     public InventoryData(JSONObject obj, Class<T> itemClass) {
@@ -167,6 +164,7 @@ public class InventoryData<T extends InventoryItem> {
 
     /**
      * Get the function to open the connection inventory
+     *
      * @return
      */
     public Callback<Pair<HumanEntity, InventoryData>> getOpenFuction() {
@@ -256,11 +254,11 @@ public class InventoryData<T extends InventoryItem> {
 
     /**
      * Passes along the inventory click event of clicks in this inventory
-     *
+     * <p>
      * Already ignored if the clicked inventory is not this inventory
-     *
+     * <p>
      * Does not check if the clicked item is null
-     *
+     * <p>
      * Auto does stuff like COMMAND: and CONNECTING_INV: (if direct redirect is enabled {@link #directRedirect}
      *
      * @param e

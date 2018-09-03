@@ -43,6 +43,7 @@ public class EventMain extends Module {
         registerCommand(new String[]{"setfallbacklocation"}, new SetFallbackLocationCommand());
         registerCommand(new String[]{"setspectatorlocation"}, new SetSpectatorLocationCommand());
         registerCommand(new String[]{"addspawnlocation"}, new AddSpawnLocationCommand());
+        registerCommand(new String[]{"schedulestart"}, new ScheduleStartSoon());
 
     }
 
