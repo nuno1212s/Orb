@@ -21,6 +21,8 @@ import java.util.concurrent.TimeUnit;
 
 public class WarEventScheduler {
 
+    public static int MINIMUM_PLAYER_PER_CLAN = 5, MAX_PLAYERS_PER_CLAN = 10;
+
     private Map<String, List<UUID>> signedUpClans;
 
     public long startDate;
@@ -74,6 +76,8 @@ public class WarEventScheduler {
         }
 
         this.helper = new WarEventHelper(m);
+
+        this.minutesAnnounced = new ArrayList<>();
     }
 
     public void save() {
@@ -128,10 +132,10 @@ public class WarEventScheduler {
         }
 
         List<UUID> onlineMembers = c.getOnlineMembers();
-        if (onlineMembers.size() < 5) {
+        if (onlineMembers.size() < MINIMUM_PLAYER_PER_CLAN) {
             MainData.getIns().getMessageManager().getMessage("NOT_ENOUGH_MEMBERS_ONLINE").sendTo(register);
 
-        } else if (onlineMembers.size() > 10) {
+        } else if (onlineMembers.size() > MAX_PLAYERS_PER_CLAN) {
 
             MainData.getIns().getMessageManager().getMessage("TOO_MANY_MEMBERS_ONLINE").sendTo(register);
 
@@ -226,7 +230,7 @@ public class WarEventScheduler {
 
                 players.getValue().remove(playerID);
 
-                if (players.getValue().size() < 5) {
+                if (players.getValue().size() < MINIMUM_PLAYER_PER_CLAN) {
                     disqualify(c);
 
                     break;

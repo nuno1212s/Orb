@@ -4,6 +4,7 @@ import com.nuno1212s.clans.ClanMain;
 import com.nuno1212s.clans.clanmanager.Clan;
 import com.nuno1212s.clans.clanplayer.ClanPlayer;
 import com.nuno1212s.events.EventMain;
+import com.nuno1212s.events.war.WarEventScheduler;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
 import org.bukkit.event.EventHandler;
@@ -32,7 +33,7 @@ public class PlayerConnectListener implements Listener {
                 if (EventMain.getIns().getWarEvent().isClanRegistered(clan.getClanID())) {
                     List<UUID> playersRegistered = EventMain.getIns().getWarEvent().getPlayersRegistered(clan.getClanID());
 
-                    if (playersRegistered.size() < 10) {
+                    if (playersRegistered.size() < WarEventScheduler.MAX_PLAYERS_PER_CLAN) {
 
                         MainData.getIns().getMessageManager().getMessage("SPACE_AVAILABLE_ON_WAR_EVENT").sendTo(e.getPlayer());
 

@@ -4,6 +4,7 @@ import com.nuno1212s.clans.ClanMain;
 import com.nuno1212s.clans.clanmanager.Clan;
 import com.nuno1212s.clans.clanplayer.ClanPlayer;
 import com.nuno1212s.events.EventMain;
+import com.nuno1212s.events.war.WarEventScheduler;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
 import org.bukkit.ChatColor;
@@ -42,7 +43,7 @@ public class JoinCommand implements CommandExecutor {
 
             if (EventMain.getIns().getWarEvent().isClanRegistered(c.getClanID())) {
 
-                if (EventMain.getIns().getWarEvent().getPlayersRegistered(c.getClanID()).size() >= 10) {
+                if (EventMain.getIns().getWarEvent().getPlayersRegistered(c.getClanID()).size() >= WarEventScheduler.MAX_PLAYERS_PER_CLAN) {
 
                     MainData.getIns().getMessageManager().getMessage("CLAN_ALREADY_FULL")
                             .sendTo(commandSender);

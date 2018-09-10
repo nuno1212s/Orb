@@ -30,9 +30,12 @@ public class WarEventHelper {
     @Setter
     private Location spectatorLocation, fallbackLocation;
 
+    @Getter
+    private long coinReward;
+
     private List<Location> spawns;
 
-    private File dataFile;
+    private File dataFile, configFile;
 
     private List<WarEvent> previousWarEvents;
 
@@ -43,6 +46,12 @@ public class WarEventHelper {
         this.random = new Random();
 
         dataFile = new File(m.getDataFolder(), "warFile.json");
+
+        configFile = new File(m.getDataFolder(), "warConfig.json");
+
+        if (!configFile.exists()) {
+            m.saveResource(configFile, "warConfig.json");
+        }
 
         if (!dataFile.exists()) {
             try {
@@ -60,6 +69,22 @@ public class WarEventHelper {
             previousWarEvents = new ArrayList<>();
         } else {
             load();
+        }
+
+        loadConfig();
+
+    }
+
+    private void loadConfig() {
+
+        try (Reader r = new FileReader(this.configFile)) {
+
+            JSONObject object = (JSONObject) new JSONParser().parse(r);
+
+            this.coinReward = (Long) object.get("CoinReward");
+
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
         }
 
     }

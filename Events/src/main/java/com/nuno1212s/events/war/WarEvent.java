@@ -67,7 +67,7 @@ public class WarEvent {
 
         }
 
-        this.kills.add(new Kill(killer == null ? null :  killer.getUniqueId(), killed.getUniqueId()));
+        this.kills.add(new Kill(killer == null ? null : killer.getUniqueId(), killed.getUniqueId()));
 
         for (Map.Entry<String, List<UUID>> players : alivePlayers.entrySet()) {
 
@@ -130,6 +130,26 @@ public class WarEvent {
 
         this.winner = clanID;
 
+        List<UUID> alivePlayersForClan = this.getSignedUpPlayerForClan(clanID);
+
+        long coinReward = Math.floorDiv(this.helper.getCoinReward(), alivePlayersForClan.size());
+
+        alivePlayersForClan.forEach((player) -> {
+
+            MainData.getIns().getServerCurrencyHandler().addCurrency(player, coinReward);
+
+            Player player1 = Bukkit.getPlayer(player);
+
+            if (player1 == null || !player1.isOnline()) {
+                return;
+            }
+
+            MainData.getIns().getMessageManager().getMessage("CLAN_EVENT_WON")
+                    .format("%coinAmount%", coinReward).sendTo(player1);
+
+
+        });
+
         MainData.getIns().getScheduler().runTaskLater(() -> {
 
             this.getAlivePlayersForClan(clanID).forEach((player) -> {
@@ -146,7 +166,6 @@ public class WarEvent {
 
             EventMain.getIns().getWarEvent().handleEnd();
         }, 60L);
-        // TODO: 27-08-2018 Give rewards
 
     }
 
@@ -158,6 +177,10 @@ public class WarEvent {
      */
     public List<UUID> getAlivePlayersForClan(String clan) {
         return this.alivePlayers.get(clan);
+    }
+
+    public List<UUID> getSignedUpPlayerForClan(String clan) {
+        return this.players.get(clan);
     }
 
     public List<UUID> getAllAlivePlayers() {
