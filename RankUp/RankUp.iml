@@ -7,9 +7,12 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.nuno1212s:Enderchest:1-ALPHA" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.nuno1212s:Minas:1.0-SNAPSHOT" level="project" />
     <orderEntry type="module" module-name="Core" scope="PROVIDED" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.zaxxer:HikariCP:2.4.3" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.slf4j:slf4j-api:1.7.12" level="project" />
@@ -35,9 +38,27 @@
     </orderEntry>
     <orderEntry type="module" module-name="Boosters" scope="PROVIDED" />
     <orderEntry type="module" module-name="Classes" scope="PROVIDED" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.nuno1212s:Enderchest:1-ALPHA" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.nuno1212s:Minas:1.0-SNAPSHOT" level="project" />
-    <orderEntry type="module" module-name="Clans" scope="PROVIDED" />
+    <orderEntry type="module" module-name="Enderchest" scope="PROVIDED" />
+    <orderEntry type="module" module-name="Minas" scope="PROVIDED" />
+    <orderEntry type="module-library">
+      <library name="Maven: com.boydti:fawe-api:16.09.11-3a8d54b-284">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../Minas/src/main/libs/fawe-api-16.09.11-3a8d54b-284.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: com.sk89q:world-edit:6.1">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/../Minas/src/main/libs/worldedit-bukkit-6.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.nuno1212s:Clans:1.0" level="project" />
     <orderEntry type="module-library">
       <library name="Maven: com.gmail.nossr50:mcMMO:1.1">
         <CLASSES>
