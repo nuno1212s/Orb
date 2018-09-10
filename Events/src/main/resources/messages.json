@@ -1,0 +1,8 @@
+{
+  "WAR_EVENT_STARTS_IN": "&cO evento de guerra começa em &7%minutes% &cminutos",
+  "LOCATION_SET": "&aSucesso. Localização adicionada",
+  "CLAN_REGISTERED": "&aO seu clan foi registado",
+  "PLAYER_LEFT": "&aO jogador %player% saiu do evento de guerra",
+  "NOT_ENOUGH_CLANS_SIGNED_UP": "&cNão há clans suficientes",
+  "PLAYER_JOINED": "6aO jogador %player% entrou no evento de guerra"
+}

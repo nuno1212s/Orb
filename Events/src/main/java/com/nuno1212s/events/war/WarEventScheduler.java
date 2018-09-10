@@ -27,8 +27,7 @@ public class WarEventScheduler {
 
     public static int MINIMUM_PLAYER_PER_CLAN = 5, MAX_PLAYERS_PER_CLAN = 10;
 
-    private static List<Integer> minutesToAnnounce = Arrays.asList(30, 20, 15, 10, 5, 4, 3, 2, 1)
-            , secondsToAnnounce = Arrays.asList(30, 15, 10, 5, 4, 3, 2, 1);
+    private static List<Integer> minutesToAnnounce = Arrays.asList(30, 20, 15, 10, 5, 4, 3, 2, 1), secondsToAnnounce = Arrays.asList(30, 15, 10, 5, 4, 3, 2, 1);
 
     private Map<String, List<UUID>> signedUpClans;
 

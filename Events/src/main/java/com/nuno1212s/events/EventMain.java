@@ -10,6 +10,8 @@ import com.nuno1212s.modulemanager.ModuleData;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 
+import java.io.File;
+
 @ModuleData(name = "Events", version = "1.0-BETA", dependencies = {"Clans"})
 public class EventMain extends Module {
 
@@ -37,6 +39,8 @@ public class EventMain extends Module {
 
         MainData.getIns().getScheduler().runTaskTimer(warEvent::checkTime, 20, 20);
 
+        addMessageFile();
+
         registerCommand(new String[]{"registarclan"}, new RegisterCommand());
         registerCommand(new String[]{"entrarevento"}, new JoinCommand());
         registerCommand(new String[]{"sairevento"}, new LeaveCommand());
@@ -45,6 +49,17 @@ public class EventMain extends Module {
         registerCommand(new String[]{"addspawnlocation"}, new AddSpawnLocationCommand());
         registerCommand(new String[]{"schedulestart"}, new ScheduleStartSoon());
 
+    }
+
+    private void addMessageFile() {
+
+        File f = new File(getDataFolder(), "messages.json");
+
+        if (!f.exists()) {
+            saveResource(f, "messages.json");
+        }
+
+        MainData.getIns().getMessageManager().addMessageFile(f);
     }
 
     @Override
