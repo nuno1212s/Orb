@@ -1,0 +1,35 @@
+{
+  "InventoryID": "selectPlayersInventory",
+  "InventoryName": "&cChoose the players",
+  "InventorySize": 27,
+  "InventoryItems": [
+    {
+      "Slot": 26,
+      "Item": {
+        "Material": "WOOL",
+        "Data": 14,
+        "DisplayName": "&aAccept",
+        "Glow": true
+      },
+      "Flags": ["ACCEPT"]
+    }
+  ],
+  "SelectItem": {
+    "Material": "SKULL_ITEM",
+    "Data": 3,
+    "DisplayName": "&a%playerName%",
+    "Lore": [
+      "&aClica para escolher"
+    ],
+    "Owner": "%playerName%"
+  },
+  "SelectedItem": {
+    "Material": "SKULL_ITEM",
+    "Data": 3,
+    "DisplayName": "&c%playerName%",
+    "Lore": [
+      "&cEscolhido"
+    ],
+    "Owner": "%playerName%"
+  }
+}
