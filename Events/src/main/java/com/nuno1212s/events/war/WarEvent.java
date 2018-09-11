@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class WarEvent {
 
@@ -23,9 +24,19 @@ public class WarEvent {
 
     private String winner;
 
+    private long startDate;
+
     private transient WarEventHelper helper;
 
+    private transient static List<Integer> secondsToAnnounce = Arrays.asList(15, 10, 5, 4, 3, 2, 1);
+
+    private transient List<Integer> secondsAnnounced = new ArrayList<>();
+
+    private transient int taskId;
+
     public WarEvent(Map<String, List<UUID>> players, WarEventHelper helper) {
+        this.startDate = System.currentTimeMillis();
+
         this.players = players;
 
         this.alivePlayers = new HashMap<>(players);
@@ -33,6 +44,32 @@ public class WarEvent {
         this.kills = new ArrayList<>();
 
         this.helper = helper;
+
+
+        taskId = MainData.getIns().getScheduler().runTaskTimerAsync(this::doTick, 0, 20);
+
+    }
+
+    public void doTick() {
+
+        //TODO: make this a separate method in war event helper to prevent spaghetti code
+        for (int time : secondsToAnnounce) {
+            if (this.startDate - System.currentTimeMillis() <= TimeUnit.SECONDS.toMillis(time)) {
+                if (!this.secondsAnnounced.contains(time)) {
+
+                    this.secondsAnnounced.add(time);
+
+                    this.helper.sendMessage(this.getAllPlayers(),
+                            MainData.getIns().getMessageManager().getMessage("PVP_UNLOCKED_IN")
+                                    .format("%seconds%", time));
+
+                }
+            }
+        }
+
+        if (this.secondsAnnounced.size() == secondsToAnnounce.size()) {
+            Bukkit.getScheduler().cancelTask(this.taskId);
+        }
 
     }
 
@@ -48,6 +85,10 @@ public class WarEvent {
 
     public boolean isPlayerParticipating(UUID playerID) {
         return this.getAllPlayers().contains(playerID);
+    }
+
+    public boolean canDamage() {
+        return this.startDate + TimeUnit.SECONDS.toMillis(15) < System.currentTimeMillis();
     }
 
     /**

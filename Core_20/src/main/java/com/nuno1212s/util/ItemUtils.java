@@ -64,7 +64,13 @@ public class ItemUtils {
         if (itemMeta instanceof SkullMeta) {
 
             placeHolders.forEach((key, value) -> {
-                ((SkullMeta) itemMeta).setOwner(((SkullMeta) itemMeta).getOwner().replace(key, value));
+                String owner = ((SkullMeta) itemMeta).getOwner();
+
+                if (owner == null) {
+                    return;
+                }
+
+                ((SkullMeta) itemMeta).setOwner(owner.replace(key, value));
             });
 
         }

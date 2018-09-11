@@ -27,23 +27,23 @@ public class BungeeScheduler implements Scheduler {
     }
 
     @Override
-    public void runTaskLater(Runnable r, long ticks) {
-        scheduler.schedule(p, r, ticks * 50, TimeUnit.MILLISECONDS);
+    public int runTaskLater(Runnable r, long ticks) {
+        return scheduler.schedule(p, r, ticks * 50, TimeUnit.MILLISECONDS).getId();
     }
 
     @Override
-    public void runTaskLaterAsync(Runnable r, long ticks) {
-        runTaskLater(r, ticks);
+    public int runTaskLaterAsync(Runnable r, long ticks) {
+        return runTaskLater(r, ticks);
     }
 
     @Override
-    public void runTaskTimer(Runnable r, long initDelay, long delay) {
-        scheduler.schedule(p, r, initDelay * 50, delay * 50, TimeUnit.MILLISECONDS);
+    public int runTaskTimer(Runnable r, long initDelay, long delay) {
+        return scheduler.schedule(p, r, initDelay * 50, delay * 50, TimeUnit.MILLISECONDS).getId();
     }
 
     @Override
-    public void runTaskTimerAsync(Runnable r, long initDelay, long delay) {
-        runTaskTimer(r, initDelay, delay);
+    public int runTaskTimerAsync(Runnable r, long initDelay, long delay) {
+        return runTaskTimer(r, initDelay, delay);
     }
 
 }

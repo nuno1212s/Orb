@@ -4,12 +4,11 @@ import com.nuno1212s.clans.ClanMain;
 import com.nuno1212s.clans.clanmanager.Clan;
 import com.nuno1212s.events.war.inventories.SelectPlayersInventory;
 import com.nuno1212s.events.war.util.WarEventHelper;
-import com.nuno1212s.main.BukkitMain;
 import com.nuno1212s.main.MainData;
+import com.nuno1212s.messagemanager.Message;
 import com.nuno1212s.modulemanager.Module;
 import lombok.Getter;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -25,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 public class WarEventScheduler {
 
-    public static int MINIMUM_PLAYER_PER_CLAN = 5, MAX_PLAYERS_PER_CLAN = 10;
+    public static int MINIMUM_PLAYER_PER_CLAN = 1, MAX_PLAYERS_PER_CLAN = 1;
 
     private static List<Integer> minutesToAnnounce = Arrays.asList(30, 20, 15, 10, 5, 4, 3, 2, 1), secondsToAnnounce = Arrays.asList(30, 15, 10, 5, 4, 3, 2, 1);
 
@@ -116,9 +115,8 @@ public class WarEventScheduler {
 
                     this.minutesAnnounced.add(time);
 
-                    this.helper.sendMessage(this.getPlayersRegistered(),
-                            MainData.getIns().getMessageManager().getMessage("WAR_EVENT_STARTS_IN")
-                                    .format("%minutes%", time));
+                    MainData.getIns().getMessageManager().getMessage("WAR_EVENT_STARTS_IN")
+                            .format("%minutes%", time).sendTo(Bukkit.getOnlinePlayers());
 
                 }
 
@@ -131,9 +129,9 @@ public class WarEventScheduler {
 
                     this.secondsAnnounced.add(time);
 
-                    this.helper.sendMessage(this.getPlayersRegistered(),
-                            MainData.getIns().getMessageManager().getMessage("WAR_EVENT_STARTS_SECONDS")
-                                    .format("%seconds%", time));
+
+                    MainData.getIns().getMessageManager().getMessage("WAR_EVENT_STARTS_SECONDS")
+                            .format("%seconds%", time).sendTo(Bukkit.getOnlinePlayers());
 
                 }
             }
@@ -189,8 +187,12 @@ public class WarEventScheduler {
 
         this.signedUpClans.put(clanID, membersAssigned);
 
+        Message registered_for_event = MainData.getIns().getMessageManager().getMessage("REGISTERED_FOR_EVENT");
+
         for (UUID onlineMember : membersAssigned) {
             Player player = Bukkit.getPlayer(onlineMember);
+
+            registered_for_event.sendTo(player);
 
             player.teleport(this.helper.getSpectatorLocation());
         }
@@ -270,14 +272,10 @@ public class WarEventScheduler {
 
                 players.getValue().remove(playerID);
 
-                if (players.getValue().size() < MINIMUM_PLAYER_PER_CLAN) {
-                    disqualify(c);
-
-                    break;
-                }
-
                 List<UUID> onlineMembers = c.getOnlineMembers();
 
+
+                onlineMembers.remove(playerID);
 
                 //There are still some more online members
                 if (onlineMembers.size() > players.getValue().size()) {
@@ -295,6 +293,12 @@ public class WarEventScheduler {
                         }
                     }
 
+                } else {
+                    if (players.getValue().size() < MINIMUM_PLAYER_PER_CLAN) {
+                        disqualify(c);
+
+                        break;
+                    }
                 }
             }
 
@@ -354,6 +358,7 @@ public class WarEventScheduler {
             return;
         }
 
+        // TODO: 11/09/2018 Check if every clan has enough players
         this.onGoing = new WarEvent(this.signedUpClans, this.helper);
 
         getPlayersRegistered().forEach((player) -> {
@@ -364,8 +369,12 @@ public class WarEventScheduler {
             }
 
             p.teleport(this.helper.getRandomSpawnLocation());
-
         });
+
+        MainData.getIns().getMessageManager().getMessage("WAR_EVENT_STARTED")
+                .format("%signedClans%", this.signedUpClans.size())
+                .format("%signedPlayers%", this.getPlayersRegistered().size())
+                .sendTo(Bukkit.getOnlinePlayers());
 
         this.reset(this.startDate + TimeUnit.DAYS.toMillis(7));
     }

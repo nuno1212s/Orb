@@ -99,7 +99,7 @@ public class WarEventHelper {
 
             this.spawns = new ArrayList<>();
 
-            JSONArray spawns = (JSONArray) object.get("Spawns");
+            JSONArray spawns = (JSONArray) object.get("SpawnLocations");
 
             for (Object spawn : spawns) {
 

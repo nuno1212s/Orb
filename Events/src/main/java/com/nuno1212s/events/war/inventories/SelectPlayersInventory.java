@@ -174,6 +174,8 @@ public class SelectPlayersInventory extends InventoryData<InventoryItem> impleme
                     uuids.add(playerID);
 
                     this.selected.put(e.getWhoClicked().getUniqueId(), uuids);
+
+                    e.getClickedInventory().setContents(buildInventory((Player) e.getWhoClicked()).getContents());
                 }
 
             }

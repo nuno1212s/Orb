@@ -43,6 +43,13 @@ public class JoinCommand implements CommandExecutor {
 
             if (EventMain.getIns().getWarEvent().isClanRegistered(c.getClanID())) {
 
+                if ( !EventMain.getIns().getWarEvent().getPlayersRegistered().contains(playerData.getPlayerID())) {
+                    MainData.getIns().getMessageManager().getMessage("ALREADY_IN_EVENT")
+                            .sendTo(commandSender);
+
+                    return true;
+                }
+
                 if (EventMain.getIns().getWarEvent().getPlayersRegistered(c.getClanID()).size() >= WarEventScheduler.MAX_PLAYERS_PER_CLAN) {
 
                     MainData.getIns().getMessageManager().getMessage("CLAN_ALREADY_FULL")

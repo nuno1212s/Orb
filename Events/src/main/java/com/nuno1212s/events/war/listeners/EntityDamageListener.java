@@ -2,6 +2,7 @@ package com.nuno1212s.events.war.listeners;
 
 import com.nuno1212s.clans.clanplayer.ClanPlayer;
 import com.nuno1212s.events.EventMain;
+import com.nuno1212s.events.war.WarEvent;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
 import org.bukkit.entity.Player;
@@ -20,12 +21,20 @@ public class EntityDamageListener implements Listener {
 
             if (playerData instanceof ClanPlayer && ((ClanPlayer) playerData).hasClan()) {
 
-                if (EventMain.getIns().getWarEvent().getPlayersRegistered().contains(playerData.getPlayerID())) {
+                WarEvent onGoing = EventMain.getIns().getWarEvent().getOnGoing();
+                if (onGoing != null) {
+
+                    if (!onGoing.canDamage() && onGoing.isPlayerParticipating(e.getEntity().getUniqueId())) {
+
+                        e.setCancelled(true);
+
+                    }
+
+                } else if (EventMain.getIns().getWarEvent().getPlayersRegistered().contains(playerData.getPlayerID())) {
 
                     e.setCancelled(true);
 
                 }
-
             }
         }
 

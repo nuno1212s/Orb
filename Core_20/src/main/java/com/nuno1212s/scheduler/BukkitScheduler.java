@@ -24,22 +24,22 @@ public class BukkitScheduler implements Scheduler {
     }
 
     @Override
-    public void runTaskLater(Runnable r, long ticks) {
-        scheduler.runTaskLater(p, r, ticks);
+    public int runTaskLater(Runnable r, long ticks) {
+        return scheduler.runTaskLater(p, r, ticks).getTaskId();
     }
 
     @Override
-    public void runTaskLaterAsync(Runnable r, long ticks) {
-        scheduler.runTaskLaterAsynchronously(p, r, ticks);
+    public int runTaskLaterAsync(Runnable r, long ticks) {
+        return scheduler.runTaskLaterAsynchronously(p, r, ticks).getTaskId();
     }
 
     @Override
-    public void runTaskTimer(Runnable r, long initDelay, long delay) {
-        scheduler.runTaskTimer(p, r, initDelay, delay);
+    public int runTaskTimer(Runnable r, long initDelay, long delay) {
+        return scheduler.runTaskTimer(p, r, initDelay, delay).getTaskId();
     }
 
     @Override
-    public void runTaskTimerAsync(Runnable r, long initDelay, long delay) {
-        scheduler.runTaskTimerAsynchronously(p, r, initDelay, delay);
+    public int runTaskTimerAsync(Runnable r, long initDelay, long delay) {
+        return scheduler.runTaskTimerAsynchronously(p, r, initDelay, delay).getTaskId();
     }
 }
