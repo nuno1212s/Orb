@@ -16,6 +16,8 @@ import java.util.concurrent.TimeUnit;
 
 public class WarEvent {
 
+    public transient static final int PROTECTION_TIME = 15;
+
     private Map<String, List<UUID>> players;
 
     private transient Map<String, List<UUID>> alivePlayers;
@@ -54,7 +56,7 @@ public class WarEvent {
 
         //TODO: make this a separate method in war event helper to prevent spaghetti code
         for (int time : secondsToAnnounce) {
-            if (this.startDate - System.currentTimeMillis() <= TimeUnit.SECONDS.toMillis(time)) {
+            if (System.currentTimeMillis() - this.startDate >= TimeUnit.SECONDS.toMillis(time)) {
                 if (!this.secondsAnnounced.contains(time)) {
 
                     this.secondsAnnounced.add(time);
@@ -67,8 +69,13 @@ public class WarEvent {
             }
         }
 
-        if (this.secondsAnnounced.size() == secondsToAnnounce.size()) {
-            Bukkit.getScheduler().cancelTask(this.taskId);
+        if (System.currentTimeMillis() - this.startDate >= TimeUnit.SECONDS.toMillis(PROTECTION_TIME)) {
+
+            this.helper.sendMessage(this.getAllPlayers(),
+                    MainData.getIns().getMessageManager().getMessage("PVP_UNLOCKED"));
+
+            Bukkit.getScheduler().cancelTask(taskId);
+
         }
 
     }
@@ -88,7 +95,7 @@ public class WarEvent {
     }
 
     public boolean canDamage() {
-        return this.startDate + TimeUnit.SECONDS.toMillis(15) < System.currentTimeMillis();
+        return this.startDate + TimeUnit.SECONDS.toMillis(PROTECTION_TIME) < System.currentTimeMillis();
     }
 
     /**
@@ -121,14 +128,14 @@ public class WarEvent {
 
                     alivePlayers.remove(players.getKey());
 
-                    checkWinConditions();
-
                     Clan c = ClanMain.getIns().getClanManager().getClan(players.getKey());
 
                     if (c != null) {
                         this.helper.sendMessage(getAllPlayers(), MainData.getIns().getMessageManager().getMessage("CLAN_ELIMINATED")
                                 .format("%clanName%", c.getClanName()));
                     }
+
+                    checkWinConditions();
                 }
 
                 killed.spigot().respawn();
@@ -185,8 +192,6 @@ public class WarEvent {
 
             MainData.getIns().getMessageManager().getMessage("CLAN_EVENT_WON")
                     .format("%coinAmount%", coinReward).sendTo(player1);
-
-
         });
 
         MainData.getIns().getScheduler().runTaskLater(() -> {

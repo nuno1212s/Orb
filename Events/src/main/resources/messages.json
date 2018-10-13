@@ -1,8 +1,19 @@
 {
   "WAR_EVENT_STARTS_IN": "&cO evento de guerra começa em &7%minutes% &cminutos",
+  "WAR_EVENT_STARTS_SECONDS": "&cO evento de guerra começa em &7%seconds% &csegundos!",
   "LOCATION_SET": "&aSucesso. Localização adicionada",
   "CLAN_REGISTERED": "&aO seu clan foi registado",
   "PLAYER_LEFT": "&aO jogador %player% saiu do evento de guerra",
   "NOT_ENOUGH_CLANS_SIGNED_UP": "&cNão há clans suficientes",
-  "PLAYER_JOINED": "6aO jogador %player% entrou no evento de guerra"
+  "PLAYER_JOINED": "6aO jogador %player% entrou no evento de guerra",
+  "CLAN_ALREADY_REGISTERED": "O teu clan já está registado!",
+  "TOO_MANY_MEMBERS_ONLINE": "&cTens demasiados membros online, por favor escolhe os membros para irem para a guerra",
+  "YOU_CANNOT_SELECT_ANYMORE": "&cNão podes escolher mais jogadores.",
+  "REGISTERED_FOR_EVENT": "Registado para evento de guerra",
+  "PVP_UNLOCKED_IN": "PVP desbloqueado em: %seconds% segundos",
+  "PVP_UNLOCKED": "O PVP foi desbloqueado",
+  "WAR_EVENT_STARTED": "O evento de guerra começou",
+  "CLAN_EVENT_WON": "Ganhaste o evento de guerra, recompensa %coinAmount%",
+  "CLAN_ELIMINATED": "O clan %clanName% foi eliminado do evento de guerra",
+  "WAR_EVENT_NOT_ACTIVE": "Só podes registar o teu clan quando faltarem 30 minutos para o evento de guerra"
 }
