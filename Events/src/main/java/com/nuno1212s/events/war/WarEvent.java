@@ -56,7 +56,7 @@ public class WarEvent {
 
         //TODO: make this a separate method in war event helper to prevent spaghetti code
         for (int time : secondsToAnnounce) {
-            if (System.currentTimeMillis() - this.startDate >= TimeUnit.SECONDS.toMillis(time)) {
+            if ((this.startDate + TimeUnit.SECONDS.toMillis(PROTECTION_TIME)) - System.currentTimeMillis() >= TimeUnit.SECONDS.toMillis(time)) {
                 if (!this.secondsAnnounced.contains(time)) {
 
                     this.secondsAnnounced.add(time);
