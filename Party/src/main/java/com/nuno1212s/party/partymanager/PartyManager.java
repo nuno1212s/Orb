@@ -1,5 +1,7 @@
 package com.nuno1212s.party.partymanager;
 
+import com.nuno1212s.messagemanager.Message;
+import com.nuno1212s.party.PartyMain;
 import com.nuno1212s.party.exceptions.PlayerHasNoPartyException;
 
 import java.util.ArrayList;
@@ -25,12 +27,35 @@ public class PartyManager {
         return party;
     }
 
+    public void destroyParty(UUID owner) {
+
+        Party party = getPartyByOwner(owner);
+
+        if (party == null) {
+            return;
+        }
+
+        PartyMain.getIns().getInviteManager().handlePartyDestruction(party);
+        this.parties.remove(party);
+    }
+
     public Party getPartyForPlayer(UUID playerID) {
 
         for (Party party : parties) {
 
             if (party.isMember(playerID)) {
 
+                return party;
+            }
+        }
+
+        return null;
+    }
+
+    public Party getPartyByOwner(UUID player) {
+
+        for (Party party : parties) {
+            if (party.isOwner(player)) {
                 return party;
             }
         }
@@ -46,8 +71,11 @@ public class PartyManager {
             throw new PlayerHasNoPartyException();
         }
 
+        partyForPlayer.removeMember(player);
+    }
 
-
+    public boolean addPlayerToParty(UUID player, Party p) {
+        return p.addMember(player);
     }
 
 }
