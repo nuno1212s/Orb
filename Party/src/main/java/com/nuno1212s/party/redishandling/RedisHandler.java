@@ -35,7 +35,7 @@ public class RedisHandler implements RedisReceiver {
             }
 
             try {
-                PartyMain.getIns().getInviteManager().createInvite(party, playerID);
+                PartyMain.getIns().getInviteManager().createInvite(party, playerID, false);
             } catch (WaitForInviteCooldownException e) {
 
                 System.out.println("This shouldn't happen ?");
@@ -54,7 +54,7 @@ public class RedisHandler implements RedisReceiver {
                 return;
             }
 
-            PartyMain.getIns().getInviteManager().rejectInvite(playerID, ownerID);
+            PartyMain.getIns().getInviteManager().rejectInvite(playerID, ownerID, false);
 
         } else if (message.getReason().equalsIgnoreCase("ACCEPT_INVITE")) {
 
@@ -67,7 +67,7 @@ public class RedisHandler implements RedisReceiver {
                 return;
             }
 
-            PartyMain.getIns().getInviteManager().acceptInvite(playerID, ownerID);
+            PartyMain.getIns().getInviteManager().acceptInvite(playerID, ownerID, false);
 
         } else if (message.getReason().equalsIgnoreCase("DELETE_PARTY")) {
 

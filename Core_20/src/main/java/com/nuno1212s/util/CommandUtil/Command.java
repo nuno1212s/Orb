@@ -1,16 +1,14 @@
 package com.nuno1212s.util.CommandUtil;
 
-import org.bukkit.entity.Player;
-
 /**
  * Command interface
  */
-public interface Command {
+public interface Command <T> {
 
     String[] names();
 
     String usage();
 
-    void execute(Player player, String[] args);
+    void execute(T player, String[] args);
 
 }

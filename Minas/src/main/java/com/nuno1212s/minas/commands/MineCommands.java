@@ -1,7 +1,7 @@
 package com.nuno1212s.minas.commands;
 
 import com.nuno1212s.main.MainData;
-import com.nuno1212s.util.CommandUtil.CommandManager;
+import com.nuno1212s.util.CommandUtil.commandexecutors.CommandManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

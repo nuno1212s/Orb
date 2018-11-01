@@ -1,5 +1,7 @@
-package com.nuno1212s.util.CommandUtil;
+package com.nuno1212s.util.CommandUtil.commandexecutors;
 
+import com.nuno1212s.util.CommandUtil.Command;
+import com.nuno1212s.util.CommandUtil.Commands;
 import lombok.AccessLevel;
 import lombok.Getter;
 import org.bukkit.command.CommandExecutor;
@@ -12,7 +14,7 @@ import java.util.List;
 /**
  * Command manager
  */
-public abstract class CommandManager implements CommandExecutor {
+public abstract class CommandManager implements CommandExecutor, Commands {
 
     @Getter(value = AccessLevel.PROTECTED)
     protected List<Command> commands;
@@ -21,11 +23,11 @@ public abstract class CommandManager implements CommandExecutor {
         commands = new ArrayList<>();
     }
 
-    protected void addCommand(Command command) {
+    public void addCommand(Command command) {
         this.commands.add(command);
     }
 
-    protected Command getCommand(String commandName) {
+    public Command getCommand(String commandName) {
         for (Command command : commands) {
             for (String s : command.names()) {
                 if (s.equalsIgnoreCase(commandName)) {

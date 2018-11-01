@@ -44,7 +44,7 @@ public class InviteManager {
         createInvite(p, player, true);
     }
 
-    private void createInvite(Party p, UUID player, boolean shouldUseRedis) throws WaitForInviteCooldownException {
+    public void createInvite(Party p, UUID player, boolean shouldUseRedis) throws WaitForInviteCooldownException {
 
         List<Invite> invites = this.invites.get(p);
 
@@ -98,7 +98,7 @@ public class InviteManager {
     }
 
 
-    private boolean acceptInvite(UUID playerID, UUID inviteID, boolean shouldUseRedis) {
+    public boolean acceptInvite(UUID playerID, UUID inviteID, boolean shouldUseRedis) {
 
         Party partyByOwner = PartyMain.getIns().getPartyManager().getPartyByOwner(inviteID);
 
@@ -142,7 +142,7 @@ public class InviteManager {
         rejectInvite(playerID, partyOwnerID, true);
     }
 
-    private void rejectInvite(UUID playerID, UUID partyOwnerID, boolean shouldUseRedis) {
+    public void rejectInvite(UUID playerID, UUID partyOwnerID, boolean shouldUseRedis) {
 
         Party party = PartyMain.getIns().getPartyManager().getPartyByOwner(partyOwnerID);
 
