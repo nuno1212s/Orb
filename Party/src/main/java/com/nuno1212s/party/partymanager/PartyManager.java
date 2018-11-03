@@ -1,8 +1,10 @@
 package com.nuno1212s.party.partymanager;
 
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.messagemanager.Message;
 import com.nuno1212s.party.PartyMain;
 import com.nuno1212s.party.exceptions.PlayerHasNoPartyException;
+import com.nuno1212s.playermanager.PlayerData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,11 +50,13 @@ public class PartyManager {
 
         PartyMain.getIns().getInviteManager().handlePartyDestruction(party);
 
+        this.parties.remove(party);
+
+        party.delete();
+
         if (shouldUseRedis) {
             PartyMain.getIns().getRedis().deleteParty(owner);
         }
-
-        this.parties.remove(party);
 
     }
 
@@ -93,6 +97,15 @@ public class PartyManager {
         }
 
         partyForPlayer.removeMember(player);
+
+        PlayerData pD = MainData.getIns().getPlayerManager().getPlayer(player);
+
+        if (pD != null && pD.isPlayerOnServer()) {
+
+            MainData.getIns().getMessageManager().getMessage("LEFT_PARTY")
+                    .sendTo(pD);
+
+        }
 
         if (shouldUseRedis)
             PartyMain.getIns().getRedis().removePlayerFromParty(partyForPlayer.getOwner(), player);

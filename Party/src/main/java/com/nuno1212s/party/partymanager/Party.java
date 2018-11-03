@@ -1,5 +1,7 @@
 package com.nuno1212s.party.partymanager;
 
+import com.nuno1212s.main.MainData;
+import com.nuno1212s.playermanager.PlayerData;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -54,6 +56,23 @@ public class Party {
         }
 
         return false;
+    }
+
+    void delete() {
+
+        for (UUID playerID : this.members) {
+
+            PlayerData playerData = MainData.getIns().getPlayerManager().getPlayer(playerID);
+
+            if (playerData != null && playerData.isPlayerOnServer()) {
+
+                MainData.getIns().getMessageManager().getMessage("PARTY_DELETED")
+                        .sendTo(playerData);
+
+            }
+
+        }
+
     }
 
     @Override

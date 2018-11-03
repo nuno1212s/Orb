@@ -23,7 +23,7 @@ public class CreatePartyCommand implements Command<Player> {
 
         Party partyForPlayer = PartyMain.getIns().getPartyManager().getPartyForPlayer(player.getUniqueId());
 
-        if (partyForPlayer == null) {
+        if (partyForPlayer != null) {
 
             MainData.getIns().getMessageManager().getMessage("ALREADY_HAVE_PARTY")
                     .sendTo(player);

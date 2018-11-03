@@ -278,8 +278,15 @@ public class MySql {
     public void savePlayer(PlayerData d) {
 
         try (Connection c = getConnection();
-             PreparedStatement st = c.prepareStatement("INSERT INTO playerData (UUID, GROUPDATA, PLAYERNAME, CASH, PREMIUM, AUTOLOGIN, LASTLOGIN, TELL, REWARDSTOCLAIM, PUNISHMENT) VALUES(?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?, ?) " +
-                     "ON DUPLICATE KEY UPDATE GROUPDATA=?, CASH=?, PLAYERNAME=?, LASTLOGIN=CURRENT_TIMESTAMP, PREMIUM=?, AUTOLOGIN=?, TELL=?, REWARDSTOCLAIM=?, PUNISHMENT=?")) {
+             PreparedStatement st = c.prepareStatement("INSERT INTO playerData (UUID, GROUPDATA, PLAYERNAME, CASH, PREMIUM, AUTOLOGIN, LASTLOGIN, TELL, REWARDSTOCLAIM, PUNISHMENT, ONLINE) VALUES(?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, ?, ?, ?, ?) " +
+                     "ON DUPLICATE KEY UPDATE GROUPDATA=?, CASH=?, PLAYERNAME=?, LASTLOGIN=CURRENT_TIMESTAMP, PREMIUM=?, AUTOLOGIN=?, TELL=?, REWARDSTOCLAIM=?, PUNISHMENT=?, ONLINE=?")) {
+
+            String punishments;
+            if (d.getPunishment() == null) {
+                punishments = "";
+            } else {
+                punishments = d.getPunishment().toString();
+            }
 
             st.setString(1, d.getPlayerID().toString());
             st.setString(2, d.getGroups().toDatabase());
@@ -289,23 +296,18 @@ public class MySql {
             st.setBoolean(6, d.isAutoLogin());
             st.setBoolean(7, d.isTell());
             st.setString(8, d.getToClaimToString());
-
-            String punishments;
-            if (d.getPunishment() == null) {
-                punishments = "";
-            } else {
-                punishments = d.getPunishment().toString();
-            }
-
             st.setString(9, punishments);
-            st.setString(10, d.getGroups().toDatabase());
-            st.setLong(11, d.getCash());
-            st.setString(12, d.getPlayerName());
-            st.setBoolean(13, d.isPremium());
-            st.setBoolean(14, d.isAutoLogin());
-            st.setBoolean(15, d.isTell());
-            st.setString(16, d.getToClaimToString());
-            st.setString(17, punishments);
+            st.setBoolean(10, d.isOnline());
+
+            st.setString(11, d.getGroups().toDatabase());
+            st.setLong(12, d.getCash());
+            st.setString(13, d.getPlayerName());
+            st.setBoolean(14, d.isPremium());
+            st.setBoolean(15, d.isAutoLogin());
+            st.setBoolean(16, d.isTell());
+            st.setString(17, d.getToClaimToString());
+            st.setString(18, punishments);
+            st.setBoolean(19, d.isOnline());
 
             st.executeUpdate();
 

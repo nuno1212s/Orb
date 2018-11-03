@@ -5,11 +5,9 @@ import com.nuno1212s.party.PartyMain;
 import com.nuno1212s.party.exceptions.PlayerHasNoPartyException;
 import com.nuno1212s.party.partymanager.Party;
 import com.nuno1212s.util.CommandUtil.Command;
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import org.bukkit.entity.Player;
 
-public class RemovePlayerFromPartyCommand implements Command<ProxiedPlayer> {
+public class RemovePlayerFromPartyCommand implements Command<Player> {
     @Override
     public String[] names() {
         return new String[]{"remove"};
@@ -21,11 +19,11 @@ public class RemovePlayerFromPartyCommand implements Command<ProxiedPlayer> {
     }
 
     @Override
-    public void execute(ProxiedPlayer player, String[] args) {
+    public void execute(Player player, String[] args) {
 
         if (args.length < 2) {
 
-            player.sendMessage(TextComponent.fromLegacyText(usage()));
+            player.sendMessage(usage());
 
             return;
         }
@@ -48,24 +46,44 @@ public class RemovePlayerFromPartyCommand implements Command<ProxiedPlayer> {
             return;
         }
 
-        ProxiedPlayer proxiedPlayer = ProxyServer.getInstance().getPlayer(args[1]);
+        MainData.getIns().getPlayerManager().loadPlayer(args[1])
+                .thenAccept((d) -> {
 
-        if (proxiedPlayer == null || !proxiedPlayer.isConnected()) {
+                    if (d == null || !d.isOnline()) {
 
-            MainData.getIns().getMessageManager().getMessage("NO_PLAYER_WITH_THAT_NAME")
-                    .sendTo(player);
+                        MainData.getIns().getMessageManager().getMessage("PLAYER_NOT_ONLINE")
+                                .sendTo(player);
 
-            return;
-        }
+                        return;
+                    }
 
+                    if (d.getPlayerID().equals(player.getUniqueId())) {
 
-        try {
-            PartyMain.getIns().getPartyManager().removePlayerFromParty(proxiedPlayer.getUniqueId());
-        } catch (PlayerHasNoPartyException e) {
+                        MainData.getIns().getMessageManager().getMessage("CANNOT_KICK_YOURSELF")
+                                .sendTo(player);
 
+                        return;
+                    }
 
+                    Party playerParty = PartyMain.getIns().getPartyManager().getPartyForPlayer(d.getPlayerID());
 
-        }
+                    if (playerParty.getOwner().equals(p.getOwner())) {
+
+                        try {
+                            PartyMain.getIns().getPartyManager().removePlayerFromParty(d.getPlayerID());
+                        } catch (PlayerHasNoPartyException e) {
+                            System.out.println("Failed");
+                        }
+
+                        MainData.getIns().getMessageManager().getMessage("PLAYER_KICKED")
+                                .sendTo(player);
+
+                    } else {
+                        MainData.getIns().getMessageManager().getMessage("PLAYER_NOT_IN_YOUR_PARTY")
+                                .sendTo(player);
+                    }
+
+                });
 
     }
 }

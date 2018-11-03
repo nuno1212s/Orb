@@ -2,13 +2,12 @@ package com.nuno1212s.party.commands;
 
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.party.PartyMain;
+import com.nuno1212s.party.exceptions.WaitForInviteCooldownException;
 import com.nuno1212s.party.partymanager.Party;
-import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.CommandUtil.Command;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.bukkit.entity.Player;
 
-public class InvitePlayerCommand implements Command<ProxiedPlayer> {
+public class InvitePlayerCommand implements Command<Player> {
 
     @Override
     public String[] names() {
@@ -21,17 +20,9 @@ public class InvitePlayerCommand implements Command<ProxiedPlayer> {
     }
 
     @Override
-    public void execute(ProxiedPlayer player, String[] strings) {
+    public void execute(Player player, String[] strings) {
 
         Party p = PartyMain.getIns().getPartyManager().getPartyForPlayer(player.getUniqueId());
-
-        if (p == null) {
-
-            MainData.getIns().getMessageManager().getMessage("NO_PARTY")
-                    .sendTo(player);
-
-            return;
-        }
 
         if (strings.length < 1) {
 
@@ -40,7 +31,30 @@ public class InvitePlayerCommand implements Command<ProxiedPlayer> {
             return;
         }
 
-        PlayerData playerData = MainData.getIns().getPlayerManager().getPlayer(strings[1]);
+        MainData.getIns().getPlayerManager().loadPlayer(strings[1])
+                .thenAccept((d) -> {
 
+                    if (d == null || !d.isOnline()) {
+                        MainData.getIns().getMessageManager().getMessage("PLAYER_NOT_OFFLINE")
+                                .sendTo(player);
+
+                        return;
+                    }
+
+                    Party party = p;
+
+                    if (party == null) {
+                        party = PartyMain.getIns().getPartyManager().createNewParty(player.getUniqueId());
+                    }
+
+                    try {
+                        PartyMain.getIns().getInviteManager().createInvite(party, d.getPlayerID());
+                    } catch (WaitForInviteCooldownException e) {
+
+                        MainData.getIns().getMessageManager().getMessage("INVITE_COOLDOWN")
+                                .sendTo(player);
+
+                    }
+                });
     }
 }

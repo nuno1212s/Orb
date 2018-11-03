@@ -28,6 +28,8 @@ public class PlayerDisconnectListener implements Listener {
             return;
         }
 
+        p.setOnline(false);
+
         p.save((o) ->
             MainData.getIns().getPlayerManager().removePlayer(p)
         );

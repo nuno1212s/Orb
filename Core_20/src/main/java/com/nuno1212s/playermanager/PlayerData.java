@@ -183,6 +183,10 @@ public abstract class PlayerData {
      */
     public abstract void save(Callback c);
 
+    public final void save() {
+        save((o) -> {});
+    }
+
     /**
      * Set the server group
      *

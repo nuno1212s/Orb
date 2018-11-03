@@ -31,6 +31,7 @@ public class LoginEvent implements Listener {
             }
 
             cachedPlayer.setLastLogin(System.currentTimeMillis());
+            cachedPlayer.setOnline(true);
 
             Punishment punishment = cachedPlayer.getPunishment();
 
@@ -45,6 +46,7 @@ public class LoginEvent implements Listener {
             }
 
             MainData.getIns().getPlayerManager().validatePlayerJoin(cachedPlayer.getPlayerID());
+
             cachedPlayer.save((arg) ->
                     e.completeIntent(Main.getPlugin())
             );
@@ -55,6 +57,7 @@ public class LoginEvent implements Listener {
     @EventHandler
     public void onBungeeLogin(BungeeCoreLogin core) {
         System.out.println(core.getData().getPlayerID().toString());
+
         core.setData(new BungeePlayerData(core.getData()));
     }
 

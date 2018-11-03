@@ -73,6 +73,12 @@ public class PlayerJoinListener implements Listener {
 
         d.setPlayerReference(e.getPlayer());
 
+        if (!d.isOnline()) {
+            d.setOnline(true);
+
+            MainData.getIns().getScheduler().runTaskAsync(d::save);
+        }
+
         MainData.getIns().getPermissionManager().getPlayerPermissions().injectPermission(e.getPlayer(), d);
         MainData.getIns().getServerManager().savePlayerCount(Bukkit.getOnlinePlayers().size(), Bukkit.getMaxPlayers());
     }

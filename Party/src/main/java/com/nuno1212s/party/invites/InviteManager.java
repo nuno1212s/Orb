@@ -114,6 +114,18 @@ public class InviteManager {
 
         }
 
+        List<Invite> invites = this.invites.get(partyByOwner);
+
+        Invite invite = getInvite(partyByOwner, playerID);
+
+        invites.remove(invite);
+
+        if (!invites.isEmpty()) {
+            this.invites.put(partyByOwner, invites);
+        } else {
+            this.invites.remove(partyByOwner);
+        }
+
         return PartyMain.getIns().getPartyManager().addPlayerToParty(playerID, partyByOwner);
     }
 

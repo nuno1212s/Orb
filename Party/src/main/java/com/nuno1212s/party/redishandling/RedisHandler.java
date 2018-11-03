@@ -5,8 +5,6 @@ import com.nuno1212s.party.PartyMain;
 import com.nuno1212s.party.exceptions.PlayerHasNoPartyException;
 import com.nuno1212s.party.exceptions.WaitForInviteCooldownException;
 import com.nuno1212s.party.partymanager.Party;
-import com.nuno1212s.party.partymanager.PartyManager;
-import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.rediscommunication.Message;
 import com.nuno1212s.rediscommunication.RedisReceiver;
 
