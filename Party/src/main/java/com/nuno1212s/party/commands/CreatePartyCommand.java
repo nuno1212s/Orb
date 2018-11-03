@@ -6,7 +6,7 @@ import com.nuno1212s.party.partymanager.Party;
 import com.nuno1212s.util.CommandUtil.Command;
 import org.bukkit.entity.Player;
 
-public class CreatePartyCommand implements Command {
+public class CreatePartyCommand implements Command<Player> {
 
     @Override
     public String[] names() {
@@ -32,6 +32,7 @@ public class CreatePartyCommand implements Command {
         }
 
         PartyMain.getIns().getPartyManager().createNewParty(player.getUniqueId());
+
         MainData.getIns().getMessageManager().getMessage("CREATED_PARTY")
                 .sendTo(player);
     }

@@ -19,15 +19,26 @@ public class PartyManager {
     }
 
     public Party createNewParty(UUID owner) {
+        return createNewParty(owner, true);
+    }
+
+    public Party createNewParty(UUID owner, boolean shouldUseRedis) {
 
         Party party = new Party(owner);
 
         this.parties.add(party);
 
+        if (shouldUseRedis)
+            PartyMain.getIns().getRedis().createParty(owner);
+
         return party;
     }
 
     public void destroyParty(UUID owner) {
+        destroyParty(owner, true);
+    }
+
+    public void destroyParty(UUID owner, boolean shouldUseRedis) {
 
         Party party = getPartyByOwner(owner);
 
@@ -36,7 +47,13 @@ public class PartyManager {
         }
 
         PartyMain.getIns().getInviteManager().handlePartyDestruction(party);
+
+        if (shouldUseRedis) {
+            PartyMain.getIns().getRedis().deleteParty(owner);
+        }
+
         this.parties.remove(party);
+
     }
 
     public Party getPartyForPlayer(UUID playerID) {
@@ -64,6 +81,10 @@ public class PartyManager {
     }
 
     public void removePlayerFromParty(UUID player) throws PlayerHasNoPartyException {
+        removePlayerFromParty(player, true);
+    }
+
+    public void removePlayerFromParty(UUID player, boolean shouldUseRedis) throws PlayerHasNoPartyException {
 
         Party partyForPlayer = getPartyForPlayer(player);
 
@@ -72,6 +93,9 @@ public class PartyManager {
         }
 
         partyForPlayer.removeMember(player);
+
+        if (shouldUseRedis)
+            PartyMain.getIns().getRedis().removePlayerFromParty(partyForPlayer.getOwner(), player);
     }
 
     public boolean addPlayerToParty(UUID player, Party p) {

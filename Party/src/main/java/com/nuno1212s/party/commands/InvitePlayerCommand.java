@@ -5,9 +5,10 @@ import com.nuno1212s.party.PartyMain;
 import com.nuno1212s.party.partymanager.Party;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.CommandUtil.Command;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.bukkit.entity.Player;
 
-public class InvitePlayerCommand implements Command {
+public class InvitePlayerCommand implements Command<ProxiedPlayer> {
 
     @Override
     public String[] names() {
@@ -20,7 +21,7 @@ public class InvitePlayerCommand implements Command {
     }
 
     @Override
-    public void execute(Player player, String[] strings) {
+    public void execute(ProxiedPlayer player, String[] strings) {
 
         Party p = PartyMain.getIns().getPartyManager().getPartyForPlayer(player.getUniqueId());
 

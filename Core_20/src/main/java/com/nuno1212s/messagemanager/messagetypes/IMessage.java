@@ -1,7 +1,6 @@
 package com.nuno1212s.messagemanager.messagetypes;
 
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.command.CommandSender;
 
 import java.util.Map;
 

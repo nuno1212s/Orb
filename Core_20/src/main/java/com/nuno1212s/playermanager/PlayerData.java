@@ -43,6 +43,8 @@ public abstract class PlayerData {
 
     protected boolean tell;
 
+    private boolean online;
+
     protected List<Integer> toClaim;
 
     protected Punishment punishment;

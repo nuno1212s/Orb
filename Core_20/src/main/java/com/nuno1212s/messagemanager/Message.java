@@ -126,6 +126,12 @@ public class Message {
         }
     }
 
+    public void sendTo(ProxiedPlayer... players) {
+
+        this.messages.forEach(message -> message.sendTo(this.formats, players));
+
+    }
+
     private void send(CommandSender... sender) {
         this.messages.forEach(message -> message.sendTo(this.formats, sender));
     }

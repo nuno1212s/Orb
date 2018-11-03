@@ -21,6 +21,7 @@ public class Sound implements IMessage {
                 if (!(commandSender instanceof Player)) {
                     continue;
                 }
+
                 ((Player) commandSender).playSound(((Player) commandSender).getLocation(), soundName, volume, pitch);
             }
         }
