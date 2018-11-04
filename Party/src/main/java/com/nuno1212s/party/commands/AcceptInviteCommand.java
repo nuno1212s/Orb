@@ -2,6 +2,7 @@ package com.nuno1212s.party.commands;
 
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.party.PartyMain;
+import com.nuno1212s.party.invites.Invite;
 import com.nuno1212s.party.partymanager.Party;
 import com.nuno1212s.util.CommandUtil.Command;
 import org.bukkit.entity.Player;
@@ -43,7 +44,7 @@ public class AcceptInviteCommand implements Command<Player> {
                     if (d == null || !d.isOnline()) {
 
                         MainData.getIns().getMessageManager().getMessage("PLAYER_NOT_ONLINE")
-                                .sendTo(d);
+                                .sendTo(player);
 
                         return;
                     }
@@ -51,6 +52,18 @@ public class AcceptInviteCommand implements Command<Player> {
                     Party party = PartyMain.getIns().getPartyManager().getPartyByOwner(d.getPlayerID());
 
                     if (party != null) {
+
+                        Invite i = PartyMain.getIns().getInviteManager().getInvite(party, player.getUniqueId());
+
+                        if (i.hasExpired()) {
+
+                            MainData.getIns().getMessageManager().getMessage("INVITE_EXPIRED")
+                                    .sendTo(player);
+
+                            PartyMain.getIns().getInviteManager().rejectInvite(player.getUniqueId(), party.getOwner());
+
+                            return;
+                        }
 
                         PartyMain.getIns().getInviteManager().acceptInvite(player.getUniqueId(), d.getPlayerID());
 

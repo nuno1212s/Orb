@@ -13,4 +13,10 @@ public class Invite {
 
     long timeOfInvite;
 
+    public boolean hasExpired() {
+
+        return System.currentTimeMillis() - timeOfInvite > InviteManager.INVITE_EXPIRATION;
+
+    }
+
 }

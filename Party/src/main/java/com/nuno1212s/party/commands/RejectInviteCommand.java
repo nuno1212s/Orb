@@ -35,6 +35,15 @@ public class RejectInviteCommand implements Command<Player> {
 
             MainData.getIns().getMessageManager().getMessage("ALREADY_HAVE_PARTY")
                     .sendTo(player);
+
+            return;
+        }
+
+        if (!PartyMain.getIns().getInviteManager().hasInvites(player.getUniqueId())) {
+
+            MainData.getIns().getMessageManager().getMessage("NO_INVITES")
+                    .sendTo(player);
+
             return;
         }
 
@@ -54,6 +63,9 @@ public class RejectInviteCommand implements Command<Player> {
                     if (party != null) {
 
                         PartyMain.getIns().getInviteManager().rejectInvite(player.getUniqueId(), d.getPlayerID());
+
+                        MainData.getIns().getMessageManager().getMessage("REJECTED_INVITE")
+                                .sendTo(player);
 
                     } else {
 

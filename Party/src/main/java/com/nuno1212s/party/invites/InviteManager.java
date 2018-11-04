@@ -1,24 +1,39 @@
 package com.nuno1212s.party.invites;
 
 import com.nuno1212s.main.MainData;
+import com.nuno1212s.messagemanager.Message;
 import com.nuno1212s.party.PartyMain;
 import com.nuno1212s.party.exceptions.WaitForInviteCooldownException;
 import com.nuno1212s.party.partymanager.Party;
 import com.nuno1212s.playermanager.PlayerData;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.entity.Player;
+import sun.applet.Main;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 public class InviteManager {
 
-    private static final long INVITE_EXPIRATION = TimeUnit.MINUTES.toMillis(3);
+    static final long INVITE_EXPIRATION = TimeUnit.MINUTES.toMillis(3);
 
     private Map<Party, List<Invite>> invites;
 
     public InviteManager() {
 
-        invites = new HashMap<>();
+        invites = new ConcurrentHashMap<>();
 
+        MainData.getIns().getScheduler().runTaskTimerAsync(this::checkExpiration, 3600, 3600);
+    }
+
+    public void checkExpiration() {
+        for (List<Invite> value : invites.values()) {
+            value.removeIf(Invite::hasExpired);
+        }
     }
 
     public void handlePartyDestruction(Party p) {
@@ -32,6 +47,11 @@ public class InviteManager {
             for (Invite invite : value) {
 
                 if (invite.getInvited().equals(player)) {
+
+                    if (invite.hasExpired()) {
+                        continue;
+                    }
+
                     return true;
                 }
             }
@@ -39,6 +59,7 @@ public class InviteManager {
 
         return false;
     }
+
 
     public void createInvite(Party p, UUID player) throws WaitForInviteCooldownException {
         createInvite(p, player, true);
@@ -78,10 +99,25 @@ public class InviteManager {
 
         if (player1 != null && player1.isPlayerOnServer()) {
 
-            MainData.getIns().getPlayerManager().loadPlayer(p.getOwner()).thenAccept((ownerData) ->
-                    MainData.getIns().getMessageManager().getMessage("RECEIVED_INVITE")
-                            .format("%owner%", ownerData.getNameWithPrefix())
-                            .sendTo(player1));
+            MainData.getIns().getPlayerManager().loadPlayer(p.getOwner()).thenAccept((ownerData) -> {
+
+                Message received_invite = MainData.getIns().getMessageManager().getMessage("RECEIVED_INVITE")
+                        .format("%owner%", ownerData.getNameWithPrefix());
+
+                BaseComponent[] components = TextComponent.fromLegacyText(received_invite.toString());
+
+                for (BaseComponent component : components) {
+                    component.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                            TextComponent.fromLegacyText(
+                                    MainData.getIns().getMessageManager().getMessage("CLICK_TO_ACCEPT_INVITE")
+                                            .toString())));
+
+                    component.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/party accept " + ownerData.getPlayerName()));
+                }
+
+                player1.getPlayerReference(Player.class).spigot().sendMessage(components);
+
+            });
 
         }
 
