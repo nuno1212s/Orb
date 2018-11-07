@@ -1,9 +1,11 @@
 package com.nuno1212s.party.partymanager;
 
+import com.google.common.collect.ImmutableList;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.messagemanager.Message;
 import com.nuno1212s.party.PartyMain;
 import com.nuno1212s.party.exceptions.PlayerHasNoPartyException;
+import com.nuno1212s.party.timers.CheckOwnerOnline;
 import com.nuno1212s.playermanager.PlayerData;
 
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ public class PartyManager {
 
         this.parties = new ArrayList<>();
 
+        MainData.getIns().getScheduler().runTaskTimerAsync(new CheckOwnerOnline(), 1200, 3600);
     }
 
     public Party createNewParty(UUID owner) {
@@ -113,6 +116,12 @@ public class PartyManager {
 
     public boolean addPlayerToParty(UUID player, Party p) {
         return p.addMember(player);
+    }
+
+    public List<Party> getParties() {
+
+        return ImmutableList.copyOf(this.parties);
+
     }
 
 }
