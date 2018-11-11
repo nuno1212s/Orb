@@ -1,23 +1,34 @@
 package com.nuno1212s.duels.duelmanager;
 
+import lombok.Getter;
+
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 public class Duel {
 
-    private UUID player1, player2;
+    @Getter
+    private List<UUID> team1, team2;
 
-    private UUID winner;
+    private List<UUID> winners;
 
-    private long date;
+    private long dateStart;
 
     public Duel(UUID player1, UUID player2) {
-        this.player1 = player1;
+        this.team1 = Collections.singletonList(player1);
 
-        this.player2 = player2;
+        this.team2 = Collections.singletonList(player2);
+
+        this.dateStart = System.currentTimeMillis();
     }
 
-    public void setWinner(UUID playerID) {
-        this.winner = playerID;
+    /**
+     * Set the winner of the duel to the team
+     * @param team
+     */
+    public void setWinner(List<UUID> team) {
+        this.winners = team;
     }
 
 }
