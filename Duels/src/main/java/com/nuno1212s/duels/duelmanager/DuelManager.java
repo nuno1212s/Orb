@@ -18,7 +18,7 @@ public class DuelManager {
 
     private List<Duel> onGoingDuels;
 
-    public DuelManager(Module parent) {
+    public DuelManager() {
 
         onGoingDuels = new ArrayList<>();
 
@@ -57,6 +57,8 @@ public class DuelManager {
         Duel d = new Duel(player1, player2);
 
         //Teleport all the players to the spawns
+
+        this.onGoingDuels.add(d);
 
         return d;
     }
