@@ -98,6 +98,10 @@ public class Message {
     }
 
     public void sendTo(PlayerData d) {
+        if (d == null) {
+            throw new IllegalArgumentException("Player cannot be null");
+        }
+
         if (MainData.getIns().isBungee()) {
 
             /*if (d.getPlayerReference() != null)

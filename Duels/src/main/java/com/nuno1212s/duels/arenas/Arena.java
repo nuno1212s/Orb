@@ -45,6 +45,13 @@ public class Arena {
         this.spawns2.add(spawnLocation);
     }
 
+    public void clearArena() {
+
+        this.ocupied = false;
+        this.ocupying = null;
+
+    }
+
     /**
      * Teleports the players to the arena and marks the arena as full
      *
