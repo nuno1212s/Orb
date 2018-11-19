@@ -3,16 +3,12 @@ package com.nuno1212s.duels.duelmanager;
 import com.google.common.collect.ImmutableList;
 import com.nuno1212s.duels.DuelMain;
 import com.nuno1212s.duels.arenas.Arena;
-import com.nuno1212s.modulemanager.Module;
-import com.nuno1212s.util.LLocation;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import com.nuno1212s.duels.matchmaking.PendingMatchmaking;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.UUID;
 
 public class DuelManager {
 
@@ -105,6 +101,10 @@ public class DuelManager {
         checkAndFill(d, clearArena);
 
         return d;
+    }
+
+    public Duel startDuel(PendingMatchmaking matchmaking) {
+        return startDuel(matchmaking.getQueue1().getPlayerList(), matchmaking.getQueue2().getPlayerList());
     }
 
     private void checkAndFill(Duel d, Arena clearArena) {

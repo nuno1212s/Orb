@@ -97,6 +97,18 @@ public class Message {
         send(players.toArray(new CommandSender[players.size()]));
     }
 
+    public void send(Collection<UUID> uuids)  {
+        for (UUID uuid : uuids) {
+            sendTo(MainData.getIns().getPlayerManager().getPlayer(uuid));
+        }
+    }
+
+    public void sendTo(UUID... uuids)  {
+        for (UUID uuid : uuids) {
+            sendTo(MainData.getIns().getPlayerManager().getPlayer(uuid));
+        }
+    }
+
     public void sendTo(PlayerData d) {
         if (d == null) {
             throw new IllegalArgumentException("Player cannot be null");

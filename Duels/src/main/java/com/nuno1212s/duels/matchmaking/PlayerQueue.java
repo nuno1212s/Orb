@@ -2,6 +2,7 @@ package com.nuno1212s.duels.matchmaking;
 
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.messagemanager.Message;
+import com.nuno1212s.party.partymanager.Party;
 import com.nuno1212s.playermanager.PlayerData;
 import lombok.Getter;
 
@@ -17,10 +18,21 @@ public class PlayerQueue implements Comparable<PlayerQueue> {
     @Getter
     private long startQueue;
 
+    private long elo;
+
+    private boolean competitive;
+
     public PlayerQueue() {
         playerList = new ArrayList<>();
 
         this.startQueue = System.currentTimeMillis();
+    }
+
+    public PlayerQueue(Party party) {
+        playerList = new ArrayList<>(party.getMembers());
+
+        this.startQueue = System.currentTimeMillis();
+
     }
 
     public void notifyPlayerLeave(PlayerData data) {

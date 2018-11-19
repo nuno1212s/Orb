@@ -15,6 +15,7 @@ public class Party {
     @Getter
     private UUID owner;
 
+    @Getter
     private List<UUID> members;
 
     Party(UUID owner) {

@@ -1,10 +1,12 @@
 package com.nuno1212s.duels.arenas;
 
 import com.nuno1212s.duels.duelmanager.Duel;
+import com.nuno1212s.duels.events.ArenaClearEvent;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.playermanager.PlayerData;
 import com.nuno1212s.util.LLocation;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -50,6 +52,7 @@ public class Arena {
         this.ocupied = false;
         this.ocupying = null;
 
+        Bukkit.getServer().getPluginManager().callEvent(new ArenaClearEvent(this));
     }
 
     /**

@@ -1,5 +1,8 @@
 package com.nuno1212s.duels.matchmaking;
 
+import com.nuno1212s.duels.DuelMain;
+import com.nuno1212s.duels.arenas.Arena;
+import com.nuno1212s.party.partymanager.Party;
 import com.nuno1212s.playermanager.PlayerData;
 
 import java.util.*;
@@ -9,14 +12,30 @@ public class MatchmakingManager {
 
     private Map<Integer, PriorityQueue<PlayerQueue>> queuedPlayers;
 
-    private List<PendingMatchmaking> pendingMatchmakings;
+    private PriorityQueue<PendingMatchmaking> pendingMatchmakings;
 
     public MatchmakingManager() {
 
         queuedPlayers = new ConcurrentHashMap<>();
 
-        pendingMatchmakings = new ArrayList<>();
+        pendingMatchmakings = new PriorityQueue<>();
 
+    }
+
+    /**
+     * Add the players to the queuePlayers list
+     *
+     * @param party
+     */
+    public void addPlayersToQueue(Party party) {
+
+        PlayerQueue playerQueue = new PlayerQueue(party);
+
+        PriorityQueue<PlayerQueue> pQ = this.queuedPlayers.getOrDefault(playerQueue.getPlayerList().size(), new PriorityQueue<>());
+
+        pQ.add(playerQueue);
+
+        queuedPlayers.put(party.getMembers().size(), pQ);
     }
 
     /**
@@ -28,9 +47,10 @@ public class MatchmakingManager {
 
             if (playerQueues.size() > 1) {
 
-                createMatchMaking(playerQueues.peek(), playerQueues.peek());
+                createMatchMaking(playerQueues.poll(), playerQueues.poll());
 
             }
+
         });
     }
 
@@ -44,6 +64,17 @@ public class MatchmakingManager {
 
         pendingMatchmakings.add(new PendingMatchmaking(queue, queue2));
 
+    }
+
+    public void removePendingMatchmaking(PendingMatchmaking pendingMatchmaking)  {
+        this.pendingMatchmakings.remove(pendingMatchmaking);
+    }
+
+    void handleArenaClearEvent() {
+        if (!pendingMatchmakings.isEmpty())
+            if (pendingMatchmakings.peek().isReady()) {
+                DuelMain.getIns().getDuelManager().startDuel(pendingMatchmakings.poll());
+            }
     }
 
     /**

@@ -1,5 +1,7 @@
 package com.nuno1212s.duels.matchmaking;
 
+import com.nuno1212s.duels.DuelMain;
+import com.nuno1212s.duels.arenas.ArenaManager;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.messagemanager.Message;
 import com.nuno1212s.playermanager.PlayerData;
@@ -8,11 +10,12 @@ import org.bukkit.ChatColor;
 
 import java.util.*;
 
-public class PendingMatchmaking {
+public class PendingMatchmaking implements Comparable<PendingMatchmaking> {
 
     @Getter
     PlayerQueue queue1, queue2;
 
+    @Getter
     private long matchmakingTime;
 
     private List<UUID> accepted;
@@ -28,9 +31,23 @@ public class PendingMatchmaking {
 
     }
 
+    public boolean isReady() {
+        return this.accepted.size() >= (queue1.getPlayerList().size() + queue2.getPlayerList().size());
+    }
+
     public void accept(PlayerData player) {
 
         this.accepted.add(player.getPlayerID());
+
+        if (isReady()) {
+
+            Message duel_accepted_starting_soon = MainData.getIns().getMessageManager().getMessage("DUEL_ACCEPTED_STARTING_SOON");
+
+            duel_accepted_starting_soon.send(this.queue1.getPlayerList());
+            duel_accepted_starting_soon.send(this.queue2.getPlayerList());
+
+            DuelMain.getIns().getDuelManager().startDuel(this);
+        }
 
     }
 
@@ -96,7 +113,7 @@ public class PendingMatchmaking {
 
     public void notifyPlayerLeave(PlayerData player) {
 
-        if (this.queue1.getPlayerList().contains(player.getPlayerID()))  {
+        if (this.queue1.getPlayerList().contains(player.getPlayerID())) {
 
             queue1.notifyPlayerLeave(player);
 
@@ -122,4 +139,19 @@ public class PendingMatchmaking {
     }
 
 
+    @Override
+    public int compareTo(PendingMatchmaking pendingMatchmaking) {
+
+        if (isReady() && !pendingMatchmaking.isReady()) {
+
+            return 1;
+
+        } else if (!isReady() && pendingMatchmaking.isReady()) {
+
+            return -1;
+
+        }
+
+        return Long.compare(this.matchmakingTime, pendingMatchmaking.getMatchmakingTime());
+    }
 }
