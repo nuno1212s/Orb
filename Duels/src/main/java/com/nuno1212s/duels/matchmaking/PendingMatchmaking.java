@@ -6,9 +6,7 @@ import com.nuno1212s.playermanager.PlayerData;
 import lombok.Getter;
 import org.bukkit.ChatColor;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class PendingMatchmaking {
 
@@ -17,7 +15,7 @@ public class PendingMatchmaking {
 
     private long matchmakingTime;
 
-    private Map<UUID, Boolean> accepted;
+    private List<UUID> accepted;
 
     public PendingMatchmaking(PlayerQueue queue1, PlayerQueue queue2) {
 
@@ -26,20 +24,18 @@ public class PendingMatchmaking {
 
         this.matchmakingTime = System.currentTimeMillis();
 
-        accepted = new HashMap<>();
+        accepted = new ArrayList<>(queue1.getPlayerList().size() + queue2.getPlayerList().size());
+
+    }
+
+    public void accept(PlayerData player) {
+
+        this.accepted.add(player.getPlayerID());
 
     }
 
     private int calculateAccepted() {
-        int playersAccepted = 0;
-
-        for (Boolean value : this.accepted.values()) {
-            if (value) {
-                playersAccepted++;
-            }
-        }
-
-        return playersAccepted;
+        return this.accepted.size();
     }
 
     private void notifyAccept() {
@@ -80,7 +76,7 @@ public class PendingMatchmaking {
 
             message.sendTo(player);
 
-            if (!this.accepted.getOrDefault(uuid, false)) {
+            if (this.accepted.contains(uuid)) {
 
                 accept_message.sendTo(player);
 
