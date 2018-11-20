@@ -1,11 +1,14 @@
 package com.nuno1212s.duels.matchmaking;
 
 import com.nuno1212s.duels.DuelMain;
-import com.nuno1212s.duels.arenas.Arena;
+import com.nuno1212s.main.MainData;
 import com.nuno1212s.party.partymanager.Party;
 import com.nuno1212s.playermanager.PlayerData;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class MatchmakingManager {
@@ -19,6 +22,8 @@ public class MatchmakingManager {
         queuedPlayers = new ConcurrentHashMap<>();
 
         pendingMatchmakings = new PriorityQueue<>();
+
+        MainData.getIns().getScheduler().runTaskTimer(this::tick, 100, 20);
 
     }
 

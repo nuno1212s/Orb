@@ -1,9 +1,12 @@
 package com.nuno1212s.duels.duelmanager;
 
+import com.nuno1212s.duels.spectator.SpectatorMode;
 import com.nuno1212s.main.MainData;
 import com.nuno1212s.messagemanager.Message;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -16,10 +19,15 @@ public class Duel implements Comparable<Duel> {
 
     private transient List<Integer> notifiedTimes = new ArrayList<>(toNotify.size());
 
+    @Getter
     private transient List<UUID> spectators = new ArrayList<>();
+
+    private transient SpectatorMode spectatorMode;
 
     @Getter
     private List<UUID> team1, team2;
+
+    private transient List<UUID> alivePlayers1, alivePlayers2;
 
     @Getter
     private List<UUID> winners;
@@ -44,7 +52,12 @@ public class Duel implements Comparable<Duel> {
         this.team1 = player1;
         this.team2 = player2;
 
+        this.alivePlayers1 = new ArrayList<>(player1);
+        this.alivePlayers2 = new ArrayList<>(player2);
+
         this.dateStart = System.currentTimeMillis();
+
+        spectatorMode = new SpectatorMode(this);
     }
 
     /**
@@ -54,6 +67,12 @@ public class Duel implements Comparable<Duel> {
      */
     public void setWinner(List<UUID> team) {
         this.winners = team;
+    }
+
+    private void win(List<UUID> team) {
+
+
+
     }
 
     public boolean isDamageEnabled() {
@@ -83,11 +102,39 @@ public class Duel implements Comparable<Duel> {
 
     }
 
-    public void addAsSpectator(UUID player) {
-        this.spectators.add(player);
+    public void handleDeath(Player player) {
+
+        if (alivePlayers2.contains(player.getUniqueId())) {
+            alivePlayers2.remove(player.getUniqueId());
+        } else {
+            alivePlayers1.remove(player.getUniqueId());
+        }
+
+        if (alivePlayers1.isEmpty()) {
+            win(team2);
+        } else {
+            win(team1);
+        }
+
+        addAsSpectator(player);
+
     }
 
-    public boolean isSpectator(UUID player)  {
+    public void addAsSpectator(Player player) {
+
+        this.spectators.add(player.getUniqueId());
+
+        spectatorMode.setAsSpectator(player);
+    }
+
+    public void removeAsSpectator(Player player) {
+
+        this.spectators.remove(player.getUniqueId());
+
+        spectatorMode.removeSpectator(player);
+    }
+
+    public boolean isSpectator(UUID player) {
         return this.spectators.contains(player);
     }
 

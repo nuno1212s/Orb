@@ -2,7 +2,10 @@ package com.nuno1212s.duels;
 
 import com.nuno1212s.duels.arenas.ArenaManager;
 import com.nuno1212s.duels.duelmanager.DuelManager;
+import com.nuno1212s.duels.listeners.EntityDamageByEntityListener;
 import com.nuno1212s.duels.listeners.EntityDamageListener;
+import com.nuno1212s.duels.listeners.ItemDropListener;
+import com.nuno1212s.duels.listeners.PlayerInteractListener;
 import com.nuno1212s.duels.matchmaking.MatchmakingManager;
 import com.nuno1212s.main.BukkitMain;
 import com.nuno1212s.modulemanager.Module;
@@ -36,6 +39,9 @@ public class DuelMain extends Module  {
         matchmakingManager = new MatchmakingManager();
 
         Bukkit.getServer().getPluginManager().registerEvents(new EntityDamageListener(), BukkitMain.getIns());
+        Bukkit.getServer().getPluginManager().registerEvents(new EntityDamageByEntityListener(), BukkitMain.getIns());
+        Bukkit.getServer().getPluginManager().registerEvents(new ItemDropListener(), BukkitMain.getIns());
+        Bukkit.getServer().getPluginManager().registerEvents(new PlayerInteractListener(), BukkitMain.getIns());
 
     }
 
